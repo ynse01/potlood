@@ -1,5 +1,6 @@
 import { SvgRenderer } from '../build/module/svg-renderer.js';
 import { Fonts } from '../build/module/fonts.js';
+import { Package } from '../build/module/package.js';
 
 "use strict";
 
@@ -21,7 +22,9 @@ export function init() {
     var content = document.getElementById("content");
     renderer = new SvgRenderer(content);
     fillFontFamilyList();
-    writeAllText(svg);
+    Package.loadFromUrl('./demo.docx').then((pack) => {
+        writeAllText(svg);
+    });
 }
 
 function clearSvg(svg) {
