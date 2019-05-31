@@ -8,14 +8,14 @@ import { WordDocument } from '../build/module/word-document.js';
 var renderer;
 var texts;
 
-function writeAllText(svg) {
+function writeAllText() {
     var fontFamilyElement = document.getElementById("font-family");
     var fontFamily = fontFamilyElement.options[fontFamilyElement.selectedIndex].value;
     var fontSize = document.getElementById("font-size").value;
     var x = 20;
     var posY = 20;
     texts.forEach((text) => {
-        posY = renderer.flowText(svg, text, fontFamily, fontSize, x, posY);
+        posY = renderer.flowText(text, fontFamily, fontSize, x, posY);
     });
 }
 
@@ -33,16 +33,9 @@ export function init() {
     });
 }
 
-function clearSvg(svg) {
-    while (svg.lastChild) {
-        svg.removeChild(svg.lastChild);
-    }
-}
-
 export function onFontChanged() {
-    var svg = document.getElementById("svg");
-    clearSvg(svg);
-    writeAllText(svg);
+    renderer.clear();
+    writeAllText();
 }
 
 function fillFontFamilyList() {
