@@ -6,7 +6,7 @@ import { WordDocument } from '../build/module/word-document.js';
 "use strict";
 
 var renderer;
-var texts;
+var texts = [];
 
 function writeAllText() {
     var fontFamilyElement = document.getElementById("font-family");
@@ -27,7 +27,9 @@ export function init() {
         pack.loadPart('word/document.xml').then(part => {
             const doc = new WordDocument(part);
             doc.parseContent();
-            texts = doc.paragraphs;
+            doc.paragraphs.forEach(par => {
+                texts.push(...par.texts);
+            });
             writeAllText(svg);
         });
     });
