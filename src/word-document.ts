@@ -1,10 +1,12 @@
 import { Part } from "./part.js";
 import { Xml } from "./xml.js";
 import { WordParagraph } from "./word-paragraph.js";
+import { WordStyles } from "./word-styles.js";
 
 export class WordDocument {
     private part: Part;
     private pars: WordParagraph[] = [];
+    private _styles: WordStyles | undefined;
 
     constructor(part: Part) {
         this.part = part;
@@ -20,7 +22,7 @@ export class WordDocument {
                         switch(element.nodeName) {
                             case "p":
                             case "w:p":
-                                this.pars.push(new WordParagraph(element));
+                                this.pars.push(new WordParagraph(this, element));
                                 break;
                             default:
                                 console.log("Don't know how to parse " + element.nodeName);
@@ -30,6 +32,14 @@ export class WordDocument {
                 }
             }
         }
+    }
+
+    public get styles(): WordStyles | undefined {
+        return this._styles;
+    }
+
+    public setNamedStyles(styles: WordStyles): void {
+        this._styles = styles;
     }
 
     public get paragraphs(): WordParagraph[] {

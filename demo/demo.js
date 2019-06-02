@@ -16,7 +16,7 @@ export function onFontChanged() {
     var fontFamilyElement = document.getElementById("font-family");
     var fontFamily = fontFamilyElement.options[fontFamilyElement.selectedIndex].value;
     var fontSize = document.getElementById("font-size").value;
-    yord.updateFont(fontFamily, fontSize);
+    // TODO: Re-implement yord.updateFont(fontFamily, fontSize);
 }
 
 function fillFontFamilyList() {

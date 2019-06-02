@@ -17,7 +17,7 @@ export class WordStyles {
                 Xml.getChildrenOfName(root, "w:style").forEach(node => {
                     const styleType = (node as Element).getAttribute("w:type");
                     if (styleType !== null && styleType !== "numbering") {
-                        const style = Style.fromStyleNode(node);
+                        const style = Style.fromStyleNode(this, node);
                         const styleId = (node as Element).getAttribute("w:styleId");
                         if (styleId !== null) {
                             this.named[styleId] = style;
@@ -26,5 +26,9 @@ export class WordStyles {
                 });
             }
         }
+    }
+
+    public getNamedStyle(name: string): Style | undefined {
+        return this.named[name];
     }
 }

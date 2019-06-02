@@ -1,16 +1,17 @@
 import { Xml } from "./xml.js";
 import { Style } from "./style.js";
 import { SvgRenderer } from "./svg-renderer.js";
+import { WordStyles } from "./word-styles.js";
 
 export class WordRun {
     private text: string;
     private style: Style;
 
-    constructor(rNode: ChildNode) {
+    constructor(styles: WordStyles | undefined, rNode: ChildNode) {
         this.text = "";
         const presentationNode = Xml.getFirstChildOfName(rNode, "w:rPr");
         if (presentationNode !== undefined) {
-            this.style = Style.fromPresentationNode(presentationNode);
+            this.style = Style.fromPresentationNode(styles, presentationNode);
         } else {
             this.style = new Style();
         }

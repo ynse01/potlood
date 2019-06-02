@@ -1,4 +1,5 @@
 import { Xml } from "./xml.js";
+import { WordStyles } from "./word-styles.js";
 
 export class Style {
     private basedOn: Style | undefined;
@@ -12,18 +13,25 @@ export class Style {
     private _caps: boolean | undefined;
     private _smallCaps: boolean | undefined;
 
-    public static fromStyleNode(styleNode: ChildNode): Style {
+    public static fromStyleNode(styles: WordStyles | undefined, styleNode: ChildNode): Style {
         const runPrNode = Xml.getFirstChildOfName(styleNode, "w:rPr");
-        return Style.fromPresentationNode(runPrNode!);
+        return Style.fromPresentationNode(styles, runPrNode!);
     }
 
-    public static fromPresentationNode(runPresentationNode: ChildNode): Style {
+    public static fromPresentationNode(styles: WordStyles | undefined, runPresentationNode: ChildNode): Style {
         const style = new Style();
+        const basedOn = Xml.getStringValueFromNode(runPresentationNode, "w:basedOn");
+        if (basedOn !== undefined && styles !== undefined) {
+            const baseStyle = styles.getNamedStyle(basedOn);
+            if (baseStyle !== undefined) {
+                style.setBaseStyle(baseStyle);
+            }
+        }
         style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
         style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
         style._underlined = Xml.getBooleanValueFromNode(runPresentationNode, "w:u");
         style._fontFamily = Xml.getStringValueFromNode(runPresentationNode, "w:rFonts");
-        style._fontSize = Xml.getNumberValueFromNode(runPresentationNode, "w:cs");
+        style._fontSize = Xml.getNumberValueFromNode(runPresentationNode, "w:sz");
         style._spacing = Xml.getNumberValueFromNode(runPresentationNode, "w:spacing");
         style._color = Xml.getStringValueFromNode(runPresentationNode, "w:color");
         style._caps = Xml.getBooleanValueFromNode(runPresentationNode, "w:caps");
@@ -65,6 +73,10 @@ export class Style {
 
     public get color(): string {
         return this.getRecursive((style) => style._color, "000000");
+    }
+
+    public setBaseStyle(baseStyle: Style): void {
+        this.basedOn = baseStyle;
     }
 
     public updateFont(fontFamily: string, fontSize: number): void {
