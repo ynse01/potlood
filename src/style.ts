@@ -140,7 +140,7 @@ export class Style {
         if (fontNode !== undefined) {
             const csFont = fontNode.getAttribute("w:cs");
             if (csFont !== null) {
-                fonts.push(csFont);
+                fonts.push(...csFont.split(';'));
             }
         }
         return fonts;
