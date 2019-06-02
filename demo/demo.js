@@ -2,6 +2,7 @@ import { SvgRenderer } from '../build/module/svg-renderer.js';
 import { Fonts } from '../build/module/fonts.js';
 import { Package } from '../build/module/package.js';
 import { WordDocument } from '../build/module/word-document.js';
+import { WordStyles } from '../build/module/word-styles.js';
 
 "use strict";
 
@@ -24,13 +25,17 @@ export function init() {
     renderer = new SvgRenderer(content);
     fillFontFamilyList();
     Package.loadFromUrl('./demo.docx').then((pack) => {
-        pack.loadPart('word/document.xml').then(part => {
-            const doc = new WordDocument(part);
-            doc.parseContent();
-            doc.paragraphs.forEach(par => {
-                texts.push(...par.texts);
+        pack.loadPart('word/styles.xml').then(stylePart => {
+            const styles = new WordStyles(stylePart);
+            styles.parseContent();
+            pack.loadPart('word/document.xml').then(part => {
+                const doc = new WordDocument(part);
+                doc.parseContent();
+                doc.paragraphs.forEach(par => {
+                    texts.push(...par.texts);
+                });
+                writeAllText(svg);
             });
-            writeAllText(svg);
         });
     });
 }

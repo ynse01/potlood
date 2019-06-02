@@ -1,0 +1,99 @@
+import { Xml } from "./xml.js";
+
+export class Style {
+    private basedOn: Style | undefined;
+    private _italic: boolean | undefined;
+    private _bold: boolean | undefined;
+    private _underlined: boolean | undefined;
+    private _fontFamily: string | undefined;
+    private _fontSize: number | undefined;
+    private _spacing: number | undefined;
+    private _color: string | undefined;
+    private _caps: boolean | undefined;
+    private _smallCaps: boolean | undefined;
+
+    public static fromStyleNode(styleNode: ChildNode): Style {
+        const runPrNode = Xml.getFirstChildOfName(styleNode, "w:rPr");
+        return Style.fromPresentationNode(runPrNode!);
+    }
+
+    public static fromPresentationNode(runPresentationNode: ChildNode): Style {
+        const style = new Style();
+        style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
+        style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
+        style._underlined = Xml.getBooleanValueFromNode(runPresentationNode, "w:u");
+        style._fontFamily = Xml.getStringValueFromNode(runPresentationNode, "w:rFonts");
+        style._fontSize = Xml.getNumberValueFromNode(runPresentationNode, "w:cs");
+        style._spacing = Xml.getNumberValueFromNode(runPresentationNode, "w:spacing");
+        style._color = Xml.getStringValueFromNode(runPresentationNode, "w:color");
+        style._caps = Xml.getBooleanValueFromNode(runPresentationNode, "w:caps");
+        style._smallCaps = Xml.getBooleanValueFromNode(runPresentationNode, "w:smallcaps");
+        return style;
+    }
+
+    public get italic(): boolean {
+        return this.getRecursive((style) => style._italic, false);
+    }
+
+    public get bold(): boolean {
+        return this.getRecursive((style) => style._bold, false);
+    }
+
+    public get underlined(): boolean {
+        return this.getRecursive((style) => style._underlined, false);
+    }
+
+    public get fontFamily(): string {
+        return this.getRecursive((style) => style._fontFamily, "Arial");
+    }
+
+    public get fontSize(): number {
+        return this.getRecursive((style) => style._fontSize, 12);
+    }
+
+    public get spacing(): number {
+        return this.getRecursive((style) => style._spacing, 0);
+    }
+
+    public get caps(): boolean {
+        return this.getRecursive((style) => style._caps, false);
+    }
+
+    public get smallCaps(): boolean {
+        return this.getRecursive((style) => style._smallCaps, false);
+    }
+
+    public get color(): string {
+        return this.getRecursive((style) => style._color, "000000");
+    }
+
+    public toCss(): string {
+        const prefix = "{\n";
+        const bold = (this.bold) ? "bold" : " ";
+        const italic = (this.italic) ? "italic" : " ";
+        const fontFamily = this.fontFamily;;
+        const fontSize = this.fontSize.toString() + " px ";
+        const font = "font: " + bold + italic + fontSize + fontFamily + ";\n";
+        const underlined = (this.underlined) ? "text-decoration: underline;\n" : "";
+        // TODO: Spacing
+        const caps = (this.caps) ? "text-transform: uppercase;\n" : "";
+        // TODO: Small Caps
+        const color = "fill: #"+ this.color + ";\n";
+        const postfix = "}\n";
+        return prefix + font + underlined + caps + color + postfix;
+    }
+
+    private getRecursive<T>(cb: (style: Style) => T | undefined, initial: T): T {
+        let val: T | undefined = initial;
+        const local = cb(this);
+        if (local !== undefined) {
+            val = local;
+        } else {
+            const basedOn = this.basedOn;
+            if (basedOn !== undefined) {
+                val = basedOn.getRecursive<T>(cb, initial);
+            }
+        }
+        return val;
+    }
+}
