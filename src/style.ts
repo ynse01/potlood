@@ -30,7 +30,7 @@ export class Style {
         style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
         style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
         style._underlined = Xml.getBooleanValueFromNode(runPresentationNode, "w:u");
-        style._fontFamily = Xml.getStringValueFromNode(runPresentationNode, "w:rFonts");
+        style._fontFamily = Style.getFontFamilyFromNode(runPresentationNode)[0];
         style._fontSize = Xml.getNumberValueFromNode(runPresentationNode, "w:sz");
         style._spacing = Xml.getNumberValueFromNode(runPresentationNode, "w:spacing");
         style._color = Xml.getStringValueFromNode(runPresentationNode, "w:color");
@@ -75,6 +75,10 @@ export class Style {
         return this.getRecursive((style) => style._color, "000000");
     }
 
+    public get font(): string {
+        return this.fontSize.toString() + " px "+ this.fontFamily;
+    }
+
     public setBaseStyle(baseStyle: Style): void {
         this.basedOn = baseStyle;
     }
@@ -86,11 +90,9 @@ export class Style {
 
     public toCss(): string {
         const prefix = "{\n";
-        const bold = (this.bold) ? "bold" : " ";
-        const italic = (this.italic) ? "italic" : " ";
-        const fontFamily = this.fontFamily;;
-        const fontSize = this.fontSize.toString() + " px ";
-        const font = "font: " + bold + italic + fontSize + fontFamily + ";\n";
+        const bold = (this.bold) ? "bold " : " ";
+        const italic = (this.italic) ? "italic " : " ";
+        const font = "font: " + bold + italic + this.font + ";\n";
         const underlined = (this.underlined) ? "text-decoration: underline;\n" : "";
         // TODO: Spacing
         const caps = (this.caps) ? "text-transform: uppercase;\n" : "";
@@ -112,5 +114,17 @@ export class Style {
             }
         }
         return val;
+    }
+
+    private static getFontFamilyFromNode(styleNode: ChildNode): string[] {
+        const fonts: string[] = ["Arial"];
+        const fontNode = Xml.getFirstChildOfName(styleNode, "w:rFonts") as Element;
+        if (fontNode !== undefined) {
+            const csFont = fontNode.getAttribute("w:cs");
+            if (csFont !== null) {
+                fonts.push(csFont);
+            }
+        }
+        return fonts.reverse();
     }
 }
