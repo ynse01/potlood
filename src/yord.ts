@@ -2,15 +2,16 @@ import { SvgRenderer } from "./svg-renderer.js";
 import { Package } from "./package.js";
 import { WordStyles } from "./word-styles.js";
 import { WordDocument } from "./word-document.js";
+import { Style } from "./style.js";
 
 export class Yord {
     private renderer: SvgRenderer;
     private texts: string[] = [];
-    private fontFamily: string = "Arial";
-    private fontSize: number = 12;
+    private style: Style;
 
     constructor(element: HTMLElement) {
         this.renderer = new SvgRenderer(element);
+        this.style = new Style();
     }
 
     public loadDocxFromUrl(url: string) {
@@ -31,17 +32,16 @@ export class Yord {
     }
 
     public updateFont(fontFamily: string, fontSize: number): void {
-        this.fontFamily = fontFamily;
-        this.fontSize = fontSize;
+        this.style.updateFont(fontFamily, fontSize);
         this.renderer.clear();
         this.writeAllText();           
     }
 
     private writeAllText() {
-        var x = 20;
         var posY = 20;
         this.texts.forEach((text) => {
-            posY = this.renderer.flowText(text, this.fontFamily, this.fontSize, x, posY);
+            posY = this.renderer.flowText(text, this.style, posY);
         });
+        this.renderer.ensureHeight(posY);
     }    
 }

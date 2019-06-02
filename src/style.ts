@@ -67,6 +67,11 @@ export class Style {
         return this.getRecursive((style) => style._color, "000000");
     }
 
+    public updateFont(fontFamily: string, fontSize: number): void {
+        this._fontFamily = fontFamily;
+        this._fontSize = fontSize;
+    }
+
     public toCss(): string {
         const prefix = "{\n";
         const bold = (this.bold) ? "bold" : " ";

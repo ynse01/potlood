@@ -1,8 +1,10 @@
 import { Metrics } from './metrics.js';
+import { Style } from './style.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
   private svg: SVGElement;
+  private x = 20;
   private width: number;
 
   constructor(content: HTMLElement) {
@@ -17,24 +19,21 @@ export class SvgRenderer {
 
   public flowText(
     text: string,
-    fontFamily: string,
-    fontSize: number,
-    x: number,
+    style: Style,
     y: number
   ): number {
-    const width = this.width - x - x;
+    const width = this.width - this.x - this.x;
     let remainder = text;
-    const deltaY = fontSize * 1.08;
+    const deltaY = style.fontSize * 1.08;
     if (!text) { return y + deltaY; }
     let i = 0;
     while (remainder.length > 0) {
-      const line = this.fitText(remainder, fontFamily, fontSize, width);
-      this.addText(line, fontFamily, fontSize, x, y + i * deltaY);
+      const line = this.fitText(remainder, style, width);
+      this.addText(line, style, y + i * deltaY);
       remainder = remainder.substring(line.length);
       i++;
     }
     const yPos = y + i * deltaY;
-    this.ensureHeight(yPos);
     return yPos;
   }
 
@@ -51,12 +50,11 @@ export class SvgRenderer {
 
   private fitText(
     text: string,
-    fontFamily: string,
-    fontSize: number,
+    style: Style,
     width: number
   ): string {
     let subText = text;
-    while (Metrics.getTextWidth(subText, fontFamily, fontSize) > width) {
+    while (Metrics.getTextWidth(subText, style) > width) {
       subText = this.stripLastWord(subText);
     }
     return subText;
@@ -64,22 +62,20 @@ export class SvgRenderer {
 
   private addText(
     text: string,
-    fontFamily: string,
-    fontSize: number,
-    x: number,
+    style: Style,
     y: number
   ): void {
     const newText = document.createElementNS(SvgRenderer.svgNS, 'text');
-    newText.setAttribute('x', x.toString());
+    newText.setAttribute('x', this.x.toString());
     newText.setAttribute('y', y.toString());
-    newText.setAttribute('font-family', fontFamily);
-    newText.setAttribute('font-size', fontSize.toString());
+    newText.setAttribute('font-family', style.fontFamily);
+    newText.setAttribute('font-size', style.fontSize.toString());
     const textNode = document.createTextNode(text);
     newText.appendChild(textNode);
     this.svg.appendChild(newText);
   }
 
-  private ensureHeight(newHeight: number): void {
+  public ensureHeight(newHeight: number): void {
     const height = this.svg.getAttribute("height");
     if (height !== null) {
       const heightNum = parseFloat(height);

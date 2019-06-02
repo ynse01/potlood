@@ -1,4 +1,5 @@
 import { Metrics } from './metrics.js';
+import { Style } from './style.js';
 
 export class Fonts {
   public static availableFonts(): string[] {
@@ -17,15 +18,14 @@ export class Fonts {
       'Impact'
     ];
     const testString = 'mmmmmllnnrr';
+    const style = new Style();
     const testSize = 72;
-    const baseline = Metrics.getTextWidth(
-      testString,
-      'Times New Roman',
-      testSize
-    );
+    style.updateFont('Times New Roman', testSize);
+    const baseline = Metrics.getTextWidth(testString, style);
     availableFonts.push('Times New Roman');
     families.forEach(family => {
-      const width = Metrics.getTextWidth(testString, family, testSize);
+      style.updateFont(family, testSize);
+      const width = Metrics.getTextWidth(testString, style);
       if (width !== baseline) {
         availableFonts.push(family);
       }
