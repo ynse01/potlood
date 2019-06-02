@@ -1,5 +1,6 @@
 import { Xml } from "./xml.js";
 import { WordStyles } from "./word-styles.js";
+import { Fonts } from "./fonts.js";
 
 export class Style {
     private basedOn: Style | undefined;
@@ -30,7 +31,8 @@ export class Style {
         style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
         style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
         style._underlined = Xml.getBooleanValueFromNode(runPresentationNode, "w:u");
-        style._fontFamily = Style.getFontFamilyFromNode(runPresentationNode)[0];
+        const families = Style.getFontFamilyFromNode(runPresentationNode);
+        style._fontFamily = families[Fonts.tryAddFonts(families)];
         style._fontSize = Xml.getNumberValueFromNode(runPresentationNode, "w:sz");
         style._spacing = Xml.getNumberValueFromNode(runPresentationNode, "w:spacing");
         style._color = Xml.getStringValueFromNode(runPresentationNode, "w:color");
@@ -116,6 +118,9 @@ export class Style {
         return val;
     }
 
+    /**
+     * Return fonts from specified node in reverse order.
+     */
     private static getFontFamilyFromNode(styleNode: ChildNode): string[] {
         const fonts: string[] = ["Arial"];
         const fontNode = Xml.getFirstChildOfName(styleNode, "w:rFonts") as Element;
@@ -125,6 +130,6 @@ export class Style {
                 fonts.push(csFont);
             }
         }
-        return fonts.reverse();
+        return fonts;
     }
 }
