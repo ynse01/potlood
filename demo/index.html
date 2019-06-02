@@ -8,16 +8,10 @@
         <script>
             import('./demo.js').then(module => {
                 module.init();
-                onFontChanged = module.onFontChanged;
             })
         </script>
     </head>
     <body>
-        <form>
-            <select id="font-family" onChange="onFontChanged();">
-            </select>
-            <input id="font-size" type="number" value="12" step="1" min="1" onChange="onFontChanged();">
-        </form>
         <div id="content" style="margin: auto; width: 75%;">
         </div>
     </body>
