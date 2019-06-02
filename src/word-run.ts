@@ -7,11 +7,13 @@ export class WordRun {
     private text: string;
     private style: Style;
 
-    constructor(styles: WordStyles | undefined, rNode: ChildNode) {
+    constructor(styles: WordStyles | undefined, parStyle: Style | undefined, rNode: ChildNode) {
         this.text = "";
         const presentationNode = Xml.getFirstChildOfName(rNode, "w:rPr");
-        if (presentationNode !== undefined) {
+        if (presentationNode !== undefined && presentationNode.hasChildNodes()) {
             this.style = Style.fromPresentationNode(styles, presentationNode);
+        } else if (parStyle !== undefined) {
+            this.style = parStyle;
         } else {
             this.style = new Style();
         }

@@ -18,8 +18,8 @@ export class Yord {
                 styles.parseContent();
                 pack.loadPart('word/document.xml').then(part => {
                     const doc = new WordDocument(part);
-                    doc.parseContent();
                     doc.setNamedStyles(styles);
+                    doc.parseContent();
                     this.doc = doc;
                     this.writeAllText();
                 });

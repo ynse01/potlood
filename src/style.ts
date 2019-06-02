@@ -19,6 +19,19 @@ export class Style {
         return Style.fromPresentationNode(styles, runPrNode!);
     }
 
+    public static fromParPresentationNode(styles: WordStyles | undefined, parPresentationNode: ChildNode): Style | undefined {
+        if (parPresentationNode != undefined && styles !== undefined) {
+            const pStyle = Xml.getStringValueFromNode(parPresentationNode, "w:pStyle");
+            if (pStyle !== undefined) {
+                const parStyle = styles.getNamedStyle(pStyle);
+                if (parStyle !== undefined) {
+                    return parStyle;
+                }
+            }
+        }
+        return undefined;
+    }
+    
     public static fromPresentationNode(styles: WordStyles | undefined, runPresentationNode: ChildNode): Style {
         const style = new Style();
         const basedOn = Xml.getStringValueFromNode(runPresentationNode, "w:basedOn");
