@@ -6,7 +6,7 @@ import { Style } from "./style.js";
 
 export class Yord {
     private renderer: SvgRenderer;
-    private texts: string[] = [];
+    private doc: WordDocument | undefined;
     private style: Style;
 
     constructor(element: HTMLElement) {
@@ -22,9 +22,7 @@ export class Yord {
                 pack.loadPart('word/document.xml').then(part => {
                     const doc = new WordDocument(part);
                     doc.parseContent();
-                    doc.paragraphs.forEach(par => {
-                        this.texts.push(...par.texts);
-                    });
+                    this.doc = doc;
                     this.writeAllText();
                 });
             });
@@ -38,10 +36,15 @@ export class Yord {
     }
 
     private writeAllText() {
-        var posY = 20;
-        this.texts.forEach((text) => {
-            posY = this.renderer.flowText(text, this.style, posY);
-        });
-        this.renderer.ensureHeight(posY);
-    }    
+        let posY = 20;
+        const doc = this.doc;
+        if (doc !== undefined) {
+            doc.paragraphs.forEach(par => {
+                par.runs.forEach(run => {
+                    posY = run.render(this.renderer, posY);
+                });
+            });
+            this.renderer.ensureHeight(posY);
+        }
+}    
 }

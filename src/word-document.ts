@@ -11,21 +11,23 @@ export class WordDocument {
     }
 
     public parseContent(): void {
-        const doc = Xml.getFirstChildOfName(this.part.document, "w:document");
-        if (doc !== undefined) {
-            const body = Xml.getFirstChildOfName(doc, "w:body");
-            if (body !== undefined) {
-                body.childNodes.forEach(element => {
-                    switch(element.nodeName) {
-                        case "p":
-                        case "w:p":
-                            this.pars.push(new WordParagraph(element));
-                            break;
-                        default:
-                            console.log("Don't know how to parse " + element.nodeName);
-                            break;
-                    }
-                });
+        if (this.pars.length === 0) {
+            const doc = Xml.getFirstChildOfName(this.part.document, "w:document");
+            if (doc !== undefined) {
+                const body = Xml.getFirstChildOfName(doc, "w:body");
+                if (body !== undefined) {
+                    body.childNodes.forEach(element => {
+                        switch(element.nodeName) {
+                            case "p":
+                            case "w:p":
+                                this.pars.push(new WordParagraph(element));
+                                break;
+                            default:
+                                console.log("Don't know how to parse " + element.nodeName);
+                                break;
+                        }
+                    });
+                }
             }
         }
     }
