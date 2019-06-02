@@ -1,48 +1,22 @@
-import { SvgRenderer } from '../build/module/svg-renderer.js';
+import { Yord } from '../build/module/yord.js';
 import { Fonts } from '../build/module/fonts.js';
-import { Package } from '../build/module/package.js';
-import { WordDocument } from '../build/module/word-document.js';
-import { WordStyles } from '../build/module/word-styles.js';
 
 "use strict";
 
-var renderer;
-var texts = [];
-
-function writeAllText() {
-    var fontFamilyElement = document.getElementById("font-family");
-    var fontFamily = fontFamilyElement.options[fontFamilyElement.selectedIndex].value;
-    var fontSize = document.getElementById("font-size").value;
-    var x = 20;
-    var posY = 20;
-    texts.forEach((text) => {
-        posY = renderer.flowText(text, fontFamily, fontSize, x, posY);
-    });
-}
+var yord;
 
 export function init() {
     var content = document.getElementById("content");
-    renderer = new SvgRenderer(content);
+    yord = new Yord(content);
     fillFontFamilyList();
-    Package.loadFromUrl('./demo.docx').then((pack) => {
-        pack.loadPart('word/styles.xml').then(stylePart => {
-            const styles = new WordStyles(stylePart);
-            styles.parseContent();
-            pack.loadPart('word/document.xml').then(part => {
-                const doc = new WordDocument(part);
-                doc.parseContent();
-                doc.paragraphs.forEach(par => {
-                    texts.push(...par.texts);
-                });
-                writeAllText(svg);
-            });
-        });
-    });
+    yord.loadDocxFromUrl('./demo.docx');
 }
 
 export function onFontChanged() {
-    renderer.clear();
-    writeAllText();
+    var fontFamilyElement = document.getElementById("font-family");
+    var fontFamily = fontFamilyElement.options[fontFamilyElement.selectedIndex].value;
+    var fontSize = document.getElementById("font-size").value;
+    yord.updateFont(fontFamily, fontSize);
 }
 
 function fillFontFamilyList() {
