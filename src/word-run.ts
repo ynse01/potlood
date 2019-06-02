@@ -12,10 +12,11 @@ export class WordRun {
         const presentationNode = Xml.getFirstChildOfName(rNode, "w:rPr");
         if (presentationNode !== undefined && presentationNode.hasChildNodes()) {
             this.style = Style.fromPresentationNode(styles, presentationNode);
-        } else if (parStyle !== undefined) {
-            this.style = parStyle;
         } else {
             this.style = new Style();
+        }
+        if (parStyle !== undefined) {
+            this.style.setBaseStyle(parStyle);
         }
         const textNode = Xml.getFirstChildOfName(rNode, "w:t");
         if (textNode !== undefined) {
