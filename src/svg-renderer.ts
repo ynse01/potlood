@@ -70,6 +70,15 @@ export class SvgRenderer {
     newText.setAttribute('y', y.toString());
     newText.setAttribute('font-family', style.fontFamily);
     newText.setAttribute('font-size', style.fontSize.toString());
+    if (style.bold) {
+      newText.setAttribute('font-weight', 'bold');
+    }
+    if (style.italic) {
+      newText.setAttribute('font-style', 'italic');
+    }
+    if (style.caps) {
+      text = text.toLocaleUpperCase();
+    }
     const textNode = document.createTextNode(text);
     newText.appendChild(textNode);
     this.svg.appendChild(newText);
