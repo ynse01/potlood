@@ -66,6 +66,7 @@ export class SvgRenderer {
     y: number
   ): void {
     const newText = document.createElementNS(SvgRenderer.svgNS, 'text');
+    y = y + style.fontSize / 2;
     newText.setAttribute('x', this.x.toString());
     newText.setAttribute('y', y.toString());
     newText.setAttribute('font-family', style.fontFamily);
