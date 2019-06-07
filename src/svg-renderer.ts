@@ -29,7 +29,8 @@ export class SvgRenderer {
     let i = 0;
     while (remainder.length > 0) {
       const line = this.fitText(remainder, style, width);
-      this.addText(line, style, y + i * deltaY);
+      let lineWidth = (line.length !== remainder.length) ? width : undefined;
+      this.addText(line, style, y + i * deltaY, lineWidth);
       remainder = remainder.substring(line.length);
       i++;
     }
@@ -63,7 +64,8 @@ export class SvgRenderer {
   private addText(
     text: string,
     style: Style,
-    y: number
+    y: number,
+    width: number | undefined
   ): void {
     const newText = document.createElementNS(SvgRenderer.svgNS, 'text');
     y = y + style.fontSize / 2;
@@ -79,6 +81,10 @@ export class SvgRenderer {
     }
     if (style.caps) {
       text = text.toLocaleUpperCase();
+    }
+    if (width !== undefined) {
+      newText.setAttribute('textLength', width.toString());
+      newText.setAttribute('lengthAdjust', 'spacing');
     }
     const textNode = document.createTextNode(text);
     newText.appendChild(textNode);
