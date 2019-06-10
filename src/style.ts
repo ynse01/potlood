@@ -1,6 +1,7 @@
 import { Xml } from "./xml.js";
 import { WordStyles } from "./word-styles.js";
 import { Fonts } from "./fonts.js";
+import { Metrics } from "./metrics.js";
 
 export class Style {
     private basedOn: Style | undefined;
@@ -16,6 +17,7 @@ export class Style {
     private _caps: boolean | undefined;
     private _smallCaps: boolean | undefined;
     private _justification: string | undefined;
+    private _identation: number | undefined;
 
     public static fromStyleNode(styles: WordStyles | undefined, styleNode: ChildNode): Style {
         const runPrNode = Xml.getFirstChildOfName(styleNode, "w:rPr");
@@ -35,6 +37,7 @@ export class Style {
                 }
             }
             parStyle._justification = Xml.getStringValueFromNode(parPresentationNode, "w:jc");
+            parStyle._identation = Style.getIdentationFromNode(parPresentationNode);
         }
         return parStyle;
     }
@@ -93,6 +96,10 @@ export class Style {
 
     public get spacing(): number {
         return this.getRecursive((style) => style._spacing, 0);
+    }
+
+    public get identation(): number {
+        return this.getRecursive((style) => style._identation, 0);
     }
 
     public get caps(): boolean {
@@ -165,5 +172,22 @@ export class Style {
             }
         }
         return fonts;
+    }
+
+    private static getIdentationFromNode(styleNode: ChildNode): number {
+        let left = 0;
+        const indNode = Xml.getFirstChildOfName(styleNode, "w:ind") as Element;
+        if (indNode !== undefined) {
+            const hangingAttr = indNode.getAttribute("w:hanging");
+            if (hangingAttr !== null) {
+                left = Metrics.convertTwipsToPixels(-parseInt(hangingAttr, 10));
+            } else {
+                const leftAttr = indNode.getAttribute("w:left");
+                if (leftAttr !== null) {
+                    left = Metrics.convertTwipsToPixels(parseInt(leftAttr, 10));
+                }
+            }
+        }
+        return left;
     }
 }

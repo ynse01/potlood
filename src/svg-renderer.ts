@@ -4,7 +4,7 @@ import { Style } from './style.js';
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
   private svg: SVGElement;
-  private x = 20;
+  private x = 40;
   private width: number;
 
   constructor(content: HTMLElement) {
@@ -66,7 +66,7 @@ export class SvgRenderer {
     width: number
   ): string {
     let subText = text;
-    while (Metrics.getTextWidth(subText, style) > width) {
+    while (Metrics.getTextWidth(subText, style) + style.identation > width) {
       subText = this.stripLastWord(subText);
     }
     return subText;
@@ -105,27 +105,28 @@ export class SvgRenderer {
   }
 
   private setHorizontalAlignment(textNode: Element, style: Style, width: number | undefined): void {
+    const x = this.x + style.identation;
     switch(style.justification) {
       case "both":
-        textNode.setAttribute('x', this.x.toString());
+        textNode.setAttribute('x', x.toString());
         if (width !== undefined) {
-          textNode.setAttribute('textLength', width.toString());
+          textNode.setAttribute('textLength', (width - style.identation).toString());
           textNode.setAttribute('lengthAdjust', 'spacing');
         }
         break;
       case "right":
-        const right = this.x + this.width;
+        const right = x + this.width;
         textNode.setAttribute('x', right.toString());
         textNode.setAttribute('text-anchor', "end");
         break;
       case "center":
-        const center = this.x + this.width / 2;
+        const center = x + this.width / 2;
         textNode.setAttribute('x', center.toString());
         textNode.setAttribute('text-anchor', "middle");
         break;
       case "left":
       default:
-        textNode.setAttribute('x', this.x.toString());
+        textNode.setAttribute('x', x.toString());
         textNode.setAttribute('text-anchor', "start");
         break;
     }
