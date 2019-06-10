@@ -2,10 +2,12 @@ import { Part } from "./part.js";
 import { Xml } from "./xml.js";
 import { WordParagraph } from "./word-paragraph.js";
 import { WordStyles } from "./word-styles.js";
+import { WordSection } from "./word-section.js";
 
 export class WordDocument {
     private part: Part;
     private pars: WordParagraph[] = [];
+    private _section: WordSection | undefined;
     private _styles: WordStyles | undefined;
 
     constructor(part: Part) {
@@ -20,9 +22,11 @@ export class WordDocument {
                 if (body !== undefined) {
                     body.childNodes.forEach(element => {
                         switch(element.nodeName) {
-                            case "p":
                             case "w:p":
                                 this.pars.push(new WordParagraph(this, element));
+                                break;
+                            case "w:sectPr":
+                                this._section = new WordSection(this, element);
                                 break;
                             default:
                                 console.log("Don't know how to parse " + element.nodeName);
