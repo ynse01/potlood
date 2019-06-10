@@ -44,6 +44,17 @@ export class SvgRenderer {
     }
   }
 
+  public ensureHeight(newHeight: number): void {
+    const height = this.svg.getAttribute("height");
+    if (height !== null) {
+      const heightNum = parseFloat(height);
+      const maxY = Math.max(heightNum, newHeight);
+      if (maxY > heightNum) {
+        this.svg.setAttribute("height", maxY.toString());
+      }
+    }
+  }
+
   private stripLastWord(text: string): string {
     const stop = text.lastIndexOf(' ');
     return text.substring(0, stop);
@@ -69,7 +80,6 @@ export class SvgRenderer {
   ): void {
     const newText = document.createElementNS(SvgRenderer.svgNS, 'text');
     y = y + style.fontSize / 2;
-    newText.setAttribute('x', this.x.toString());
     newText.setAttribute('y', y.toString());
     newText.setAttribute('font-family', style.fontFamily);
     newText.setAttribute('font-size', style.fontSize.toString());
@@ -82,23 +92,31 @@ export class SvgRenderer {
     if (style.caps) {
       text = text.toLocaleUpperCase();
     }
-    if (width !== undefined && style.justification === "both") {
-      newText.setAttribute('textLength', width.toString());
-      newText.setAttribute('lengthAdjust', 'spacing');
-    }
+    this.setHorizontalAlignment(newText, style, width);
     const textNode = document.createTextNode(text);
     newText.appendChild(textNode);
     this.svg.appendChild(newText);
+    this.renderUnderline(newText, style, y, width);
   }
 
-  public ensureHeight(newHeight: number): void {
-    const height = this.svg.getAttribute("height");
-    if (height !== null) {
-      const heightNum = parseFloat(height);
-      const maxY = Math.max(heightNum, newHeight);
-      if (maxY > heightNum) {
-        this.svg.setAttribute("height", maxY.toString());
-      }
+  private setHorizontalAlignment(textNode: Element, style: Style, width: number | undefined): void {
+    textNode.setAttribute('x', this.x.toString());
+    if (width !== undefined && style.justification === "both") {
+      textNode.setAttribute('textLength', width.toString());
+      textNode.setAttribute('lengthAdjust', 'spacing');
+    }
+  }
+
+  private renderUnderline(textNode: Element, style: Style, y: number, width: number | undefined): void {
+    if (style.underlineMode !== "none") {
+      const line = document.createElementNS(SvgRenderer.svgNS, "line");
+      let lineLength = (width !== undefined) ? width : (textNode as any).getComputedTextLength();
+      line.setAttribute("x1", this.x.toString());
+      line.setAttribute("y1", y.toString());
+      line.setAttribute("x2", (this.x + lineLength).toString());
+      line.setAttribute("y2", y.toString());
+      line.setAttribute("stroke", `#${style.color}`);
+      this.svg.appendChild(line);
     }
   }
 }
