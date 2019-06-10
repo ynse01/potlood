@@ -49,4 +49,8 @@ export class WordDocument {
     public get paragraphs(): WordParagraph[] {
         return this.pars;
     }
+
+    public get section(): WordSection | undefined {
+        return this._section;
+    }
 }
