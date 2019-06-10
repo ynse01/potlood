@@ -143,12 +143,12 @@ export class SvgRenderer {
       let lineLength = (width !== undefined) ? width : (textNode as any).getComputedTextLength();
       switch(style.underlineMode) {
         case "double":
-            this.renderHorizontalLine(lineLength, y, style.color);
-            this.renderHorizontalLine(lineLength, y + 2, style.color);
+            this.renderHorizontalLine(lineLength, y + style.fontSize / 10, style.color);
+            this.renderHorizontalLine(lineLength, y + 2 * style.fontSize / 10, style.color);
             break;
         default:
         case "single":
-            this.renderHorizontalLine(lineLength, y, style.color);
+            this.renderHorizontalLine(lineLength, y + style.fontSize / 10, style.color);
             break;
       }
       if (style.strike) {
