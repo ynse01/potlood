@@ -58,7 +58,7 @@ export class Style {
         style._dstrike = Xml.getBooleanValueFromNode(runPresentationNode, "w:dstrike");
         const families = Style.getFontFamilyFromNode(runPresentationNode);
         style._fontFamily = families[Fonts.tryAddFonts(families)];
-        style._fontSize = Xml.getNumberValueFromNode(runPresentationNode, "w:sz");
+        style._fontSize = Style.getFontSizeFromNode(runPresentationNode);
         style._spacing = Xml.getNumberValueFromNode(runPresentationNode, "w:spacing");
         style._color = Xml.getStringValueFromNode(runPresentationNode, "w:color");
         style._caps = Xml.getBooleanValueFromNode(runPresentationNode, "w:caps");
@@ -174,6 +174,11 @@ export class Style {
         return fonts;
     }
 
+    private static getFontSizeFromNode(styleNode: ChildNode): number | undefined {
+        const sizeInPoints = Xml.getNumberValueFromNode(styleNode, "w:sz");
+        return (sizeInPoints !== undefined) ? Metrics.convertPointToPixels(sizeInPoints) : undefined;
+    }
+    
     private static getIdentationFromNode(styleNode: ChildNode): number {
         let left = 0;
         const indNode = Xml.getFirstChildOfName(styleNode, "w:ind") as Element;
