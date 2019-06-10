@@ -6,13 +6,14 @@ export class Style {
     private basedOn: Style | undefined;
     private _italic: boolean | undefined;
     private _bold: boolean | undefined;
-    private _underlined: boolean | undefined;
+    private _underlineMode: string | undefined;
     private _fontFamily: string | undefined;
     private _fontSize: number | undefined;
     private _spacing: number | undefined;
     private _color: string | undefined;
     private _caps: boolean | undefined;
     private _smallCaps: boolean | undefined;
+    private _justification: string | undefined;
 
     public static fromStyleNode(styles: WordStyles | undefined, styleNode: ChildNode): Style {
         const runPrNode = Xml.getFirstChildOfName(styleNode, "w:rPr");
@@ -20,16 +21,20 @@ export class Style {
     }
 
     public static fromParPresentationNode(styles: WordStyles | undefined, parPresentationNode: ChildNode): Style | undefined {
-        if (parPresentationNode != undefined && styles !== undefined) {
-            const pStyle = Xml.getStringValueFromNode(parPresentationNode, "w:pStyle");
-            if (pStyle !== undefined) {
-                const parStyle = styles.getNamedStyle(pStyle);
-                if (parStyle !== undefined) {
-                    return parStyle;
+        let parStyle = new Style();
+        if (parPresentationNode !== undefined) {
+            if (styles !== undefined) {
+                const pStyle = Xml.getStringValueFromNode(parPresentationNode, "w:pStyle");
+                if (pStyle !== undefined) {
+                    const namedStyle = styles.getNamedStyle(pStyle);
+                    if (namedStyle !== undefined) {
+                        parStyle = namedStyle;
+                    }
                 }
             }
+            parStyle._justification = Xml.getStringValueFromNode(parPresentationNode, "w:jc");
         }
-        return undefined;
+        return parStyle;
     }
     
     public static fromPresentationNode(styles: WordStyles | undefined, runPresentationNode: ChildNode): Style {
@@ -43,7 +48,7 @@ export class Style {
         }
         style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
         style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
-        style._underlined = Xml.getBooleanValueFromNode(runPresentationNode, "w:u");
+        style._underlineMode = Xml.getStringValueFromNode(runPresentationNode, "w:u");
         const families = Style.getFontFamilyFromNode(runPresentationNode);
         style._fontFamily = families[Fonts.tryAddFonts(families)];
         style._fontSize = Xml.getNumberValueFromNode(runPresentationNode, "w:sz");
@@ -62,8 +67,8 @@ export class Style {
         return this.getRecursive((style) => style._bold, false);
     }
 
-    public get underlined(): boolean {
-        return this.getRecursive((style) => style._underlined, false);
+    public get underlineMode(): string {
+        return this.getRecursive((style) => style._underlineMode, "none");
     }
 
     public get fontFamily(): string {
@@ -94,6 +99,10 @@ export class Style {
         return this.fontSize.toString() + " px "+ this.fontFamily;
     }
 
+    public get justification(): string {
+        return this.getRecursive((style) => style._justification, "left");
+    }
+
     public setBaseStyle(baseStyle: Style): void {
         this.basedOn = baseStyle;
     }
@@ -108,7 +117,7 @@ export class Style {
         const bold = (this.bold) ? "bold " : " ";
         const italic = (this.italic) ? "italic " : " ";
         const font = "font: " + bold + italic + this.font + ";\n";
-        const underlined = (this.underlined) ? "text-decoration: underline;\n" : "";
+        const underlined = (this.underlineMode !== "none") ? "text-decoration: underline;\n" : "";
         // TODO: Spacing
         const caps = (this.caps) ? "text-transform: uppercase;\n" : "";
         // TODO: Small Caps

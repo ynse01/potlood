@@ -82,7 +82,7 @@ export class SvgRenderer {
     if (style.caps) {
       text = text.toLocaleUpperCase();
     }
-    if (width !== undefined) {
+    if (width !== undefined && style.justification === "both") {
       newText.setAttribute('textLength', width.toString());
       newText.setAttribute('lengthAdjust', 'spacing');
     }
