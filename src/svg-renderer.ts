@@ -138,17 +138,25 @@ export class SvgRenderer {
   private renderUnderline(textNode: Element, style: Style, y: number, width: number | undefined): void {
     // TODO: Support all underline modes
     // TODO: Support strike and dstrike
-    if (style.underlineMode !== "none") {
+    if (style.underlineMode !== "none" || style.strike || style.doubleStrike) {
       let lineLength = (width !== undefined) ? width : (textNode as any).getComputedTextLength();
       switch(style.underlineMode) {
         case "double":
             this.renderHorizontalLine(lineLength, y, style.color);
-            this.renderHorizontalLine(lineLength, y + 3, style.color);
+            this.renderHorizontalLine(lineLength, y + 2, style.color);
             break;
         default:
         case "single":
             this.renderHorizontalLine(lineLength, y, style.color);
             break;
+      }
+      if (style.strike) {
+        this.renderHorizontalLine(lineLength, y - style.fontSize / 2, style.color);
+      }
+      if (style.doubleStrike) {
+        const middleY = y - style.fontSize / 2;
+        this.renderHorizontalLine(lineLength, middleY - 1, style.color);
+        this.renderHorizontalLine(lineLength, middleY + 1, style.color);
       }
     }
   }

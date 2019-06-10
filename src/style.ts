@@ -7,6 +7,8 @@ export class Style {
     private _italic: boolean | undefined;
     private _bold: boolean | undefined;
     private _underlineMode: string | undefined;
+    private _strike: boolean | undefined;
+    private _dstrike: boolean | undefined;
     private _fontFamily: string | undefined;
     private _fontSize: number | undefined;
     private _spacing: number | undefined;
@@ -49,6 +51,8 @@ export class Style {
         style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
         style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
         style._underlineMode = Xml.getStringValueFromNode(runPresentationNode, "w:u");
+        style._strike = Xml.getBooleanValueFromNode(runPresentationNode, "w:strike");
+        style._dstrike = Xml.getBooleanValueFromNode(runPresentationNode, "w:dstrike");
         const families = Style.getFontFamilyFromNode(runPresentationNode);
         style._fontFamily = families[Fonts.tryAddFonts(families)];
         style._fontSize = Xml.getNumberValueFromNode(runPresentationNode, "w:sz");
@@ -69,6 +73,14 @@ export class Style {
 
     public get underlineMode(): string {
         return this.getRecursive((style) => style._underlineMode, "none");
+    }
+
+    public get strike(): boolean {
+        return this.getRecursive((style) => style._strike, false);
+    }
+
+    public get doubleStrike(): boolean {
+        return this.getRecursive((style) => style._dstrike, false);
     }
 
     public get fontFamily(): string {
