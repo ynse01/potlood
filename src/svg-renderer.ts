@@ -121,7 +121,16 @@ export class SvgRenderer {
     // TODO: Support strike and dstrike
     if (style.underlineMode !== "none") {
       let lineLength = (width !== undefined) ? width : (textNode as any).getComputedTextLength();
-      this.renderHorizontalLine(lineLength, y, style.color);
+      switch(style.underlineMode) {
+        case "double":
+            this.renderHorizontalLine(lineLength, y, style.color);
+            this.renderHorizontalLine(lineLength, y + 3, style.color);
+            break;
+        default:
+        case "single":
+            this.renderHorizontalLine(lineLength, y, style.color);
+            break;
+      }
     }
   }
 
