@@ -105,10 +105,29 @@ export class SvgRenderer {
   }
 
   private setHorizontalAlignment(textNode: Element, style: Style, width: number | undefined): void {
-    textNode.setAttribute('x', this.x.toString());
-    if (width !== undefined && style.justification === "both") {
-      textNode.setAttribute('textLength', width.toString());
-      textNode.setAttribute('lengthAdjust', 'spacing');
+    switch(style.justification) {
+      case "both":
+        textNode.setAttribute('x', this.x.toString());
+        if (width !== undefined) {
+          textNode.setAttribute('textLength', width.toString());
+          textNode.setAttribute('lengthAdjust', 'spacing');
+        }
+        break;
+      case "right":
+        const right = this.x + this.width;
+        textNode.setAttribute('x', right.toString());
+        textNode.setAttribute('text-anchor', "end");
+        break;
+      case "center":
+        const center = this.x + this.width / 2;
+        textNode.setAttribute('x', center.toString());
+        textNode.setAttribute('text-anchor', "middle");
+        break;
+      case "left":
+      default:
+        textNode.setAttribute('x', this.x.toString());
+        textNode.setAttribute('text-anchor', "start");
+        break;
     }
   }
 
