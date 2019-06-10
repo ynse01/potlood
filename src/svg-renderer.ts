@@ -80,23 +80,28 @@ export class SvgRenderer {
   ): void {
     const newText = document.createElementNS(SvgRenderer.svgNS, 'text');
     y = y + style.fontSize / 2;
-    newText.setAttribute('y', y.toString());
-    newText.setAttribute('font-family', style.fontFamily);
-    newText.setAttribute('font-size', style.fontSize.toString());
-    if (style.bold) {
-      newText.setAttribute('font-weight', 'bold');
-    }
-    if (style.italic) {
-      newText.setAttribute('font-style', 'italic');
-    }
     if (style.caps) {
       text = text.toLocaleUpperCase();
     }
+    this.setFont(newText, style);
     this.setHorizontalAlignment(newText, style, width);
+    this.setVerticalAlignment(newText, style, y);
     const textNode = document.createTextNode(text);
     newText.appendChild(textNode);
     this.svg.appendChild(newText);
+    // Render underline after adding text to DOM.
     this.renderUnderline(newText, style, y, width);
+  }
+
+  private setFont(textNode: Element, style: Style): void {
+    textNode.setAttribute('font-family', style.fontFamily);
+    textNode.setAttribute('font-size', style.fontSize.toString());
+    if (style.bold) {
+      textNode.setAttribute('font-weight', 'bold');
+    }
+    if (style.italic) {
+      textNode.setAttribute('font-style', 'italic');
+    }
   }
 
   private setHorizontalAlignment(textNode: Element, style: Style, width: number | undefined): void {
@@ -107,16 +112,26 @@ export class SvgRenderer {
     }
   }
 
+  private setVerticalAlignment(textNode: Element, _style: Style, y: number): void {
+    textNode.setAttribute('y', y.toString());
+  }
+
   private renderUnderline(textNode: Element, style: Style, y: number, width: number | undefined): void {
+    // TODO: Support all underline modes
+    // TODO: Support strike and dstrike
     if (style.underlineMode !== "none") {
-      const line = document.createElementNS(SvgRenderer.svgNS, "line");
       let lineLength = (width !== undefined) ? width : (textNode as any).getComputedTextLength();
-      line.setAttribute("x1", this.x.toString());
-      line.setAttribute("y1", y.toString());
-      line.setAttribute("x2", (this.x + lineLength).toString());
-      line.setAttribute("y2", y.toString());
-      line.setAttribute("stroke", `#${style.color}`);
-      this.svg.appendChild(line);
+      this.renderHorizontalLine(lineLength, y, style.color);
     }
+  }
+
+  private renderHorizontalLine(lineLength: number, y: number, color: string) {
+    const line = document.createElementNS(SvgRenderer.svgNS, "line");
+    line.setAttribute("x1", this.x.toString());
+    line.setAttribute("y1", y.toString());
+    line.setAttribute("x2", (this.x + lineLength).toString());
+    line.setAttribute("y2", y.toString());
+    line.setAttribute("stroke", `#${color}`);
+    this.svg.appendChild(line);
   }
 }
