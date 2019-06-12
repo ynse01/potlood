@@ -3,6 +3,13 @@ import { WordStyles } from "./word-styles.js";
 import { Fonts } from "./fonts.js";
 import { Metrics } from "./metrics.js";
 
+export enum Justification {
+    center = "center",
+    both = "both",
+    left = "left",
+    right = "right"
+}
+
 export class Style {
     private basedOn: Style | undefined;
     private _italic: boolean | undefined;
@@ -16,7 +23,7 @@ export class Style {
     private _color: string | undefined;
     private _caps: boolean | undefined;
     private _smallCaps: boolean | undefined;
-    private _justification: string | undefined;
+    private _justification: Justification | undefined = undefined;
     private _identation: number | undefined;
 
     public static fromStyleNode(styles: WordStyles | undefined, styleNode: ChildNode): Style {
@@ -40,7 +47,10 @@ export class Style {
                     }
                 }
             }
-            parStyle._justification = Xml.getStringValueFromNode(parPresentationNode, "w:jc");
+            const justification = Xml.getStringValueFromNode(parPresentationNode, "w:jc");
+            if (justification !== undefined) {
+                parStyle._justification = Justification[justification as keyof typeof Justification];
+            }
             parStyle._identation = Style.getIdentationFromNode(parPresentationNode);
         }
         return parStyle;
@@ -122,8 +132,8 @@ export class Style {
         return this.fontSize.toString() + " px "+ this.fontFamily;
     }
 
-    public get justification(): string {
-        return this.getRecursive((style) => style._justification, "left");
+    public get justification(): Justification {
+        return this.getRecursive((style) => style._justification, Justification.left);
     }
 
     public setBaseStyle(baseStyle: Style): void {

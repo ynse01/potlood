@@ -1,5 +1,5 @@
 import { Metrics } from './metrics.js';
-import { Style } from './style.js';
+import { Style, Justification } from './style.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -107,24 +107,24 @@ export class SvgRenderer {
   private setHorizontalAlignment(textNode: Element, style: Style, width: number | undefined): void {
     const x = this.x + style.identation;
     switch(style.justification) {
-      case "both":
+      case Justification.both:
         textNode.setAttribute('x', x.toString());
         if (width !== undefined) {
           textNode.setAttribute('textLength', (width - style.identation).toString());
           textNode.setAttribute('lengthAdjust', 'spacing');
         }
         break;
-      case "right":
+      case Justification.right:
         const right = x + this.width;
         textNode.setAttribute('x', right.toString());
         textNode.setAttribute('text-anchor', "end");
         break;
-      case "center":
+      case Justification.center:
         const center = x + this.width / 2;
         textNode.setAttribute('x', center.toString());
         textNode.setAttribute('text-anchor', "middle");
         break;
-      case "left":
+      case Justification.left:
       default:
         textNode.setAttribute('x', x.toString());
         textNode.setAttribute('text-anchor', "start");

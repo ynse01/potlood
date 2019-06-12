@@ -3,34 +3,34 @@ import { WordStyles } from "./word-styles.js";
 import { Xml } from "./xml.js";
 
 export enum NumberingFormat {
-    None = "none",
-    Bullet = "bullet",
-    CardinalText = "cardinalText",
-    Chicago = "chicago",
-    Decimal = "decimal",
-    DecimalEnclosedCircle = "decimalEnclosedCircle",
-    DecimalEnclodedFullStop = "decimalEnclosedFullstop",
-    DecimalEnclosedParentheses = "decimalEnclosedParen",
-    DecimalZero = "decimalZero",
-    LowerLetter = "lowerLetter",
-    LowerRoman = "lowerRoman",
-    OrdinalText = "ordinalText",
-    UpperLetter = "upperLetter",
-    UpperRoman = "upperRoman"
+    none = "none",
+    bullet = "bullet",
+    cardinalText = "cardinalText",
+    chicago = "chicago",
+    decimal = "decimal",
+    decimalEnclosedCircle = "decimalEnclosedCircle",
+    decimalEnclodedFullStop = "decimalEnclosedFullstop",
+    decimalEnclosedParentheses = "decimalEnclosedParen",
+    decimalZero = "decimalZero",
+    lowerLetter = "lowerLetter",
+    lowerRoman = "lowerRoman",
+    ordinalText = "ordinalText",
+    upperLetter = "upperLetter",
+    upperRoman = "upperRoman"
 }
 
 export enum NumberingSuffix {
-    Nothing = "nothing",
-    Space = "space",
-    Tab = "tab"
+    nothing = "nothing",
+    space = "space",
+    tab = "tab"
 } 
 
 export class NumberingLevel {
     public index: number;
     public style: Style = new Style();
-    public format: NumberingFormat = NumberingFormat.None;
+    public format: NumberingFormat = NumberingFormat.none;
     public start: number | undefined = undefined;
-    public suffix: NumberingSuffix = NumberingSuffix.Tab;
+    public suffix: NumberingSuffix = NumberingSuffix.tab;
     public text: string | undefined = undefined;
 
     public static fromLevelNode(styles: WordStyles | undefined, levelNode: ChildNode): NumberingLevel | undefined {
