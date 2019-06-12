@@ -20,8 +20,12 @@ export class Style {
     private _identation: number | undefined;
 
     public static fromStyleNode(styles: WordStyles | undefined, styleNode: ChildNode): Style {
+        // TODO: Read Paragraph presentation node, w:pRp
         const runPrNode = Xml.getFirstChildOfName(styleNode, "w:rPr");
-        return Style.fromPresentationNode(styles, runPrNode!);
+        if (runPrNode !== undefined) {
+            return Style.fromPresentationNode(styles, runPrNode);
+        }
+        return new Style();
     }
 
     public static fromParPresentationNode(styles: WordStyles | undefined, parPresentationNode: ChildNode): Style | undefined {

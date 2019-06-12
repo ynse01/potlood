@@ -3,12 +3,14 @@ import { Xml } from "./xml.js";
 import { WordParagraph } from "./word-paragraph.js";
 import { WordStyles } from "./word-styles.js";
 import { WordSection } from "./word-section.js";
+import { WordNumberings } from "./word-numberings.js";
 
 export class WordDocument {
     private part: Part;
     private pars: WordParagraph[] = [];
     private _section: WordSection | undefined;
     private _styles: WordStyles | undefined;
+    private _numberings: WordNumberings | undefined;
 
     constructor(part: Part) {
         this.part = part;
@@ -42,8 +44,16 @@ export class WordDocument {
         return this._styles;
     }
 
+    public get numberings(): WordNumberings | undefined {
+        return this._numberings;
+    }
+
     public setNamedStyles(styles: WordStyles): void {
         this._styles = styles;
+    }
+
+    public setNumberings(numberings: WordNumberings): void {
+        this._numberings = numberings;
     }
 
     public get paragraphs(): WordParagraph[] {
