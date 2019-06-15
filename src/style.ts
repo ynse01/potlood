@@ -1,212 +1,155 @@
-import { Xml } from "./xml.js";
 import { WordStyles } from "./word-styles.js";
-import { Fonts } from "./fonts.js";
-import { Metrics } from "./metrics.js";
-
-export enum Justification {
-    center = "center",
-    both = "both",
-    left = "left",
-    right = "right"
-}
+import { ParStyle, Justification } from "./par-style.js";
+import { RunStyle } from "./run-style.js";
+import { Xml } from "./xml.js";
 
 export class Style {
-    private basedOn: Style | undefined;
-    private _italic: boolean | undefined;
-    private _bold: boolean | undefined;
-    private _underlineMode: string | undefined;
-    private _strike: boolean | undefined;
-    private _dstrike: boolean | undefined;
-    private _fontFamily: string | undefined;
-    private _fontSize: number | undefined;
-    private _spacing: number | undefined;
-    private _color: string | undefined;
-    private _caps: boolean | undefined;
-    private _smallCaps: boolean | undefined;
-    private _justification: Justification | undefined = undefined;
-    private _identation: number | undefined;
+    private _basedOn: Style | undefined;
+    private _basedOnId: string | undefined;
 
-    public static fromStyleNode(styles: WordStyles | undefined, styleNode: ChildNode): Style {
-        // TODO: Read Paragraph presentation node, w:pRp
-        const runPrNode = Xml.getFirstChildOfName(styleNode, "w:rPr");
-        if (runPrNode !== undefined) {
-            return Style.fromPresentationNode(styles, runPrNode);
-        }
-        return new Style();
-    }
+    public runStyle: RunStyle | undefined;
+    public parStyle: ParStyle | undefined;
 
-    public static fromParPresentationNode(styles: WordStyles | undefined, parPresentationNode: ChildNode): Style | undefined {
-        let parStyle = new Style();
-        if (parPresentationNode !== undefined) {
-            if (styles !== undefined) {
-                const pStyle = Xml.getStringValueFromNode(parPresentationNode, "w:pStyle");
-                if (pStyle !== undefined) {
-                    const namedStyle = styles.getNamedStyle(pStyle);
-                    if (namedStyle !== undefined) {
-                        parStyle = namedStyle;
-                    }
-                }
-            }
-            const justification = Xml.getStringValueFromNode(parPresentationNode, "w:jc");
-            if (justification !== undefined) {
-                parStyle._justification = Justification[justification as keyof typeof Justification];
-            }
-            parStyle._identation = Style.getIdentationFromNode(parPresentationNode);
-        }
-        return parStyle;
-    }
-    
-    public static fromPresentationNode(styles: WordStyles | undefined, runPresentationNode: ChildNode): Style {
+    public static fromStyleNode(styleNode: ChildNode): Style {
         const style = new Style();
-        const basedOn = Xml.getStringValueFromNode(runPresentationNode, "w:basedOn");
-        if (basedOn !== undefined && styles !== undefined) {
-            const baseStyle = styles.getNamedStyle(basedOn);
-            if (baseStyle !== undefined) {
-                style.setBaseStyle(baseStyle);
-            }
+        style._basedOnId = Xml.getStringValueFromNode(styleNode, "w:basedOn");
+        const parNode = Xml.getFirstChildOfName(styleNode, "w:pPr");
+        if (parNode !== undefined) {
+            style.parStyle = ParStyle.fromParPresentationNode(parNode);
         }
-        style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
-        style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
-        style._underlineMode = Xml.getStringValueFromNode(runPresentationNode, "w:u");
-        style._strike = Xml.getBooleanValueFromNode(runPresentationNode, "w:strike");
-        style._dstrike = Xml.getBooleanValueFromNode(runPresentationNode, "w:dstrike");
-        const families = Style.getFontFamilyFromNode(runPresentationNode);
-        style._fontFamily = families[Fonts.tryAddFonts(families)];
-        style._fontSize = Style.getFontSizeFromNode(runPresentationNode);
-        style._spacing = Xml.getNumberValueFromNode(runPresentationNode, "w:spacing");
-        style._color = Xml.getStringValueFromNode(runPresentationNode, "w:color");
-        style._caps = Xml.getBooleanValueFromNode(runPresentationNode, "w:caps");
-        style._smallCaps = Xml.getBooleanValueFromNode(runPresentationNode, "w:smallcaps");
+        const runNode = Xml.getFirstChildOfName(styleNode, "w:rPr");
+        if (runNode !== undefined) {
+            style.runStyle = RunStyle.fromPresentationNode(runNode);
+        }
         return style;
     }
 
+    public applyNamedStyles(namedStyles: WordStyles | undefined): void {
+        if (this._basedOnId !== undefined && namedStyles !== undefined) {
+            const baseStyle = namedStyles.getNamedStyle(this._basedOnId);
+            if (baseStyle !== undefined) {
+                this._basedOn = baseStyle;
+            }
+        }
+        if (this.parStyle !== undefined) {
+            this.parStyle.applyNamedStyles(namedStyles);
+        }
+    }
+
     public get italic(): boolean {
-        return this.getRecursive((style) => style._italic, false);
+        return this.getValue(false, undefined, (runStyle) => runStyle._italic);
     }
 
     public get bold(): boolean {
-        return this.getRecursive((style) => style._bold, false);
+        return this.getValue(false, undefined, (runStyle) => runStyle._bold);
     }
 
     public get underlineMode(): string {
-        return this.getRecursive((style) => style._underlineMode, "none");
+        return this.getValue("none", undefined, (runStyle) => runStyle._underlineMode);
     }
 
     public get strike(): boolean {
-        return this.getRecursive((style) => style._strike, false);
+        return this.getValue(false, undefined, (runStyle) => runStyle._strike);
     }
 
     public get doubleStrike(): boolean {
-        return this.getRecursive((style) => style._dstrike, false);
+        return this.getValue(false, undefined, (runStyle) => runStyle._dstrike);
     }
 
     public get fontFamily(): string {
-        return this.getRecursive((style) => style._fontFamily, "Arial");
+        return this.getValue("Arial", undefined, (runStyle) => runStyle._fontFamily);
     }
 
     public get fontSize(): number {
-        return this.getRecursive((style) => style._fontSize, 12);
+        return this.getValue(12, undefined, (runStyle) => runStyle._fontSize);
     }
 
     public get spacing(): number {
-        return this.getRecursive((style) => style._spacing, 0);
+        return this.getValue(0, (parStyle) => parStyle._spacing, (runStyle) => runStyle._spacing);
     }
 
     public get identation(): number {
-        return this.getRecursive((style) => style._identation, 0);
+        return this.getValue(0, (parStyle) => parStyle._identation, undefined);
     }
 
     public get caps(): boolean {
-        return this.getRecursive((style) => style._caps, false);
+        return this.getValue(false, undefined, (runStyle) => runStyle._caps);
     }
 
     public get smallCaps(): boolean {
-        return this.getRecursive((style) => style._smallCaps, false);
+        return this.getValue(false, undefined, (runStyle) => runStyle._smallCaps);
     }
 
     public get color(): string {
-        return this.getRecursive((style) => style._color, "000000");
+        return this.getValue("000000", undefined, (runStyle) => runStyle._color);
+    }
+
+    public get justification(): Justification {
+        return this.getValue(Justification.left, (parStyle) => parStyle._justification, undefined);
     }
 
     public get font(): string {
         return this.fontSize.toString() + " px "+ this.fontFamily;
     }
 
-    public get justification(): Justification {
-        return this.getRecursive((style) => style._justification, Justification.left);
+    public toString(): string {
+        const base = (this._basedOnId !== undefined) ? `base=${this._basedOnId}` : "";
+        const just = `jc=${this.justification.toString()}`;
+        const ind = `ind=${this.identation.toString()}`;
+        const i = `i=${this.italic}`;
+        const b = `b=${this.bold.toString()}`;
+        const u = `u=${this.underlineMode.toString()}`;
+        const strike = `strike=${this.strike.toString()}`;
+        const font = `font=${this.fontFamily.toString()}`;
+        const size = `size=${this.fontSize.toString()}`;
+        const dstrike = `dstrike=${this.doubleStrike.toString()}`;
+        const spacing = `spacing=${this.spacing.toString()}`;
+        const color = `color=${this.color.toString()}`;
+        const caps = `caps=${this.caps.toString()}`;
+        const smallcaps = `smallcaps=${this.smallCaps.toString()}`;
+        return `Style: ${base} ${just} ${ind} ${i} ${b} ${u} ${strike} ${font} ${size} ${dstrike} ${spacing} ${color} ${caps} ${smallcaps}`;
     }
 
-    public setBaseStyle(baseStyle: Style): void {
-        this.basedOn = baseStyle;
-    }
-
-    public updateFont(fontFamily: string, fontSize: number): void {
-        this._fontFamily = fontFamily;
-        this._fontSize = fontSize;
-    }
-
-    public toCss(): string {
-        const prefix = "{\n";
-        const bold = (this.bold) ? "bold " : " ";
-        const italic = (this.italic) ? "italic " : " ";
-        const font = "font: " + bold + italic + this.font + ";\n";
-        const underlined = (this.underlineMode !== "none") ? "text-decoration: underline;\n" : "";
-        // TODO: Spacing
-        const caps = (this.caps) ? "text-transform: uppercase;\n" : "";
-        // TODO: Small Caps
-        const color = "fill: #"+ this.color + ";\n";
-        const postfix = "}\n";
-        return prefix + font + underlined + caps + color + postfix;
-    }
-
-    private getRecursive<T>(cb: (style: Style) => T | undefined, initial: T): T {
-        let val: T | undefined = initial;
-        const local = cb(this);
-        if (local !== undefined) {
-            val = local;
-        } else {
-            const basedOn = this.basedOn;
-            if (basedOn !== undefined) {
-                val = basedOn.getRecursive<T>(cb, initial);
-            }
+    private getValue<T>(initial: T, parCb?: (parStyle: ParStyle) => T | undefined, runCb?: (runStyle: RunStyle) => T | undefined): T {
+        let val = this.getRecursive(parCb, runCb);
+        // If still not defined, assign the initial value.
+        if (val === undefined) {
+            val = initial;
         }
         return val;
     }
 
-    /**
-     * Return fonts from specified node in reverse order.
-     */
-    private static getFontFamilyFromNode(styleNode: ChildNode): string[] {
-        const fonts: string[] = ["Arial"];
-        const fontNode = Xml.getFirstChildOfName(styleNode, "w:rFonts") as Element;
-        if (fontNode !== undefined) {
-            const csFont = fontNode.getAttribute("w:cs");
-            if (csFont !== null) {
-                fonts.push(...csFont.split(';'));
+    private getRecursive<T>(parCb?: (parStyle: ParStyle) => T | undefined, runCb?: (runStyle: RunStyle) => T | undefined): T | undefined {
+        let val: T | undefined = undefined;
+        // First look at local RUN presentation.
+        if (runCb !== undefined && this.runStyle !== undefined) {
+            const localRun = runCb(this.runStyle);
+            if (localRun !== undefined) {
+                val = localRun;
             }
         }
-        return fonts;
-    }
-
-    private static getFontSizeFromNode(styleNode: ChildNode): number | undefined {
-        const sizeInPoints = Xml.getNumberValueFromNode(styleNode, "w:sz");
-        return (sizeInPoints !== undefined) ? Metrics.convertPointToPixels(sizeInPoints) : undefined;
-    }
-    
-    private static getIdentationFromNode(styleNode: ChildNode): number {
-        let left = 0;
-        const indNode = Xml.getFirstChildOfName(styleNode, "w:ind") as Element;
-        if (indNode !== undefined) {
-            const hangingAttr = indNode.getAttribute("w:hanging");
-            if (hangingAttr !== null) {
-                left = Metrics.convertTwipsToPixels(-parseInt(hangingAttr, 10));
-            } else {
-                const leftAttr = indNode.getAttribute("w:left");
-                if (leftAttr !== null) {
-                    left = Metrics.convertTwipsToPixels(parseInt(leftAttr, 10));
+        // Secondly look at local PARAGRAPH presentation.
+        if (val === undefined) {
+            if (this.parStyle !== undefined) {
+                if (parCb !== undefined) {
+                    const localPar = parCb(this.parStyle);
+                    if (localPar !== undefined) {
+                        val = localPar;
+                    }
+                }
+                if (val === undefined && this.parStyle._basedOn !== undefined) {
+                    // Thirdly look at the base styles of the PARAGRAPH style.
+                    val = this.parStyle._basedOn.getRecursive<T>(parCb, runCb);
                 }
             }
         }
-        return left;
+        // Fourthly look at the Style where this style is based upon.
+        if (val === undefined) {
+            const basedOn = this._basedOn;
+            if (basedOn !== undefined) {
+                val = basedOn.getRecursive<T>(parCb, runCb);
+            }
+        }
+        return val;
     }
 }

@@ -1,22 +1,22 @@
 import { Xml } from "./xml.js";
-import { Style } from "./style.js";
+import { RunStyle } from "./run-style.js";
 import { SvgRenderer } from "./svg-renderer.js";
-import { WordStyles } from "./word-styles.js";
+import { ParStyle } from "./par-style.js";
+import { Style } from "./style.js";
 
 export class WordRun {
     private text: string;
     private style: Style;
 
-    constructor(styles: WordStyles | undefined, parStyle: Style | undefined, rNode: ChildNode) {
+    constructor(parStyle: ParStyle | undefined, rNode: ChildNode) {
+        this.style = new Style();
         this.text = "";
         const presentationNode = Xml.getFirstChildOfName(rNode, "w:rPr");
         if (presentationNode !== undefined && presentationNode.hasChildNodes()) {
-            this.style = Style.fromPresentationNode(styles, presentationNode);
-        } else {
-            this.style = new Style();
+            this.style.runStyle = RunStyle.fromPresentationNode(presentationNode);
         }
         if (parStyle !== undefined) {
-            this.style.setBaseStyle(parStyle);
+            this.style.parStyle = parStyle;
         }
         const textNode = Xml.getFirstChildOfName(rNode, "w:t");
         if (textNode !== undefined) {

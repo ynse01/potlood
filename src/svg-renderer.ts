@@ -1,5 +1,6 @@
 import { Metrics } from './metrics.js';
-import { Style, Justification } from './style.js';
+import { Style } from './style.js';
+import { Justification } from './par-style.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';

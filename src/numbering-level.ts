@@ -33,14 +33,15 @@ export class NumberingLevel {
     public suffix: NumberingSuffix = NumberingSuffix.tab;
     public text: string | undefined = undefined;
 
-    public static fromLevelNode(styles: WordStyles | undefined, levelNode: ChildNode): NumberingLevel | undefined {
+    public static fromLevelNode(namedStyles: WordStyles | undefined, levelNode: ChildNode): NumberingLevel | undefined {
         const indexAttr = (levelNode as Element).getAttribute("w:ilvl");
         if (indexAttr === null) {
             return undefined;
         }
         const index = parseInt(indexAttr, 10);
         const level = new NumberingLevel(index);
-        level.style = Style.fromStyleNode(styles, levelNode);
+        level.style = Style.fromStyleNode(levelNode);
+        level.style.applyNamedStyles(namedStyles);
         level.start = Xml.getNumberValueFromNode(levelNode, "w:start");
         const suffix = Xml.getStringValueFromNode(levelNode, "w:suff");
         if (suffix !== undefined) {
@@ -56,5 +57,25 @@ export class NumberingLevel {
 
     constructor(index: number) {
         this.index = index;
+    }
+
+    public getText(indices: number[]): string {
+        if (this.text !== undefined) {
+            return this.text;
+        }
+        return this.getFormatted(indices);
+    }
+
+    private getFormatted(_indices: number[]): string {
+        let text: string;
+        switch (this.format) {
+            case NumberingFormat.bullet:
+                text = "O";
+                break;
+            default:
+                text = "";
+                break;
+        }
+        return text;
     }
 }

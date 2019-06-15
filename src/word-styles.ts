@@ -17,7 +17,7 @@ export class WordStyles {
                 Xml.getChildrenOfName(root, "w:style").forEach(node => {
                     const styleType = (node as Element).getAttribute("w:type");
                     if (styleType !== null && styleType !== "numbering") {
-                        const style = Style.fromStyleNode(this, node);
+                        const style = Style.fromStyleNode(node);
                         const styleId = (node as Element).getAttribute("w:styleId");
                         if (styleId !== null) {
                             this.named[styleId] = style;
@@ -25,10 +25,31 @@ export class WordStyles {
                     }
                 });
             }
+            for (const name in this.named) {
+                if (this.named.hasOwnProperty(name)) {
+                    const style = this.named[name];
+                    style.applyNamedStyles(this);
+                }
+            }
         }
     }
 
     public getNamedStyle(name: string): Style | undefined {
         return this.named[name];
+    }
+
+    public printDebugInfo(): void {
+        for (const name in this.named) {
+            if (this.named.hasOwnProperty(name)) {
+                const style = this.named[name];
+                console.log(`${name}: ${style.toString()}`);
+                if (style.parStyle) {
+                    console.log(style.parStyle.toString());
+                }
+                if (style.runStyle) {
+                    console.log(style.runStyle.toString());
+                }
+            }
+        }
     }
 }
