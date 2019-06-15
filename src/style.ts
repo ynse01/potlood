@@ -137,13 +137,20 @@ export class Style {
                         val = localPar;
                     }
                 }
-                if (val === undefined && this.parStyle._basedOn !== undefined) {
+                if (val === undefined && this.parStyle._numStyle !== undefined) {
                     // Thirdly look at the base styles of the PARAGRAPH style.
+                    const numStyle = this.parStyle._numStyle.style;
+                    if (numStyle !== undefined) {
+                        val = this.parStyle._numStyle.style.getRecursive<T>(parCb, runCb);
+                    }
+                }
+                if (val === undefined && this.parStyle._basedOn !== undefined) {
+                    // Fourthly look at the base styles of the PARAGRAPH style.
                     val = this.parStyle._basedOn.getRecursive<T>(parCb, runCb);
                 }
             }
         }
-        // Fourthly look at the Style where this style is based upon.
+        // Fiftly look at the Style where this style is based upon.
         if (val === undefined) {
             const basedOn = this._basedOn;
             if (basedOn !== undefined) {

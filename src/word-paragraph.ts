@@ -1,17 +1,16 @@
 import { Xml } from "./xml.js";
 import { WordRun } from "./word-run.js";
 import { WordDocument } from "./word-document.js";
-import { WordStyles } from "./word-styles.js";
 import { ParStyle } from "./par-style.js";
 
 export class WordParagraph {
     private pNode: ChildNode;
-    private styles: WordStyles | undefined;
+    private doc: WordDocument;
     private _runs: WordRun[] | undefined;
 
     constructor(doc: WordDocument, pNode: ChildNode) {
         this.pNode = pNode;
-        this.styles = doc.styles;
+        this.doc = doc;
     }
 
     public get runs(): WordRun[] {
@@ -31,7 +30,8 @@ export class WordParagraph {
         if (parPrNode !== undefined) {
             const parStyle = ParStyle.fromParPresentationNode(parPrNode);
             if (parStyle !== undefined) {
-                parStyle.applyNamedStyles(this.styles);
+                parStyle.applyNamedStyles(this.doc.styles);
+                parStyle.applyNumberings(this.doc.numberings);
                 return parStyle;
             }
         }

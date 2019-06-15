@@ -2,6 +2,8 @@ import { Xml } from "./xml.js";
 import { Metrics } from "./metrics.js";
 import { WordStyles } from "./word-styles.js";
 import { Style } from "./style.js";
+import { NumberingStyle } from "./num-style.js";
+import { WordNumberings } from "./word-numberings.js";
 
 export enum Justification {
     center = "center",
@@ -16,6 +18,7 @@ export class ParStyle {
     public _justification: Justification | undefined = undefined;
     public _identation: number | undefined;
     public _spacing: number | undefined;
+    public _numStyle: NumberingStyle | undefined;
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
         const parStyle = new ParStyle();
@@ -25,6 +28,10 @@ export class ParStyle {
             parStyle._justification = Justification[justification as keyof typeof Justification];
         }
         parStyle._identation = ParStyle.getIdentationFromNode(parPresentationNode);
+        const numPrNode = Xml.getFirstChildOfName(parPresentationNode, "w:numPr");
+        if (numPrNode !== undefined) {
+            parStyle._numStyle = NumberingStyle.fromNumPresentationNode(numPrNode);
+        }
         return parStyle;
     }
 
@@ -34,6 +41,12 @@ export class ParStyle {
             if (baseStyle !== undefined) {
                 this._basedOn = baseStyle;
             }
+        }
+    }
+
+    public applyNumberings(numberings: WordNumberings | undefined): void {
+        if (this._numStyle !== undefined) {
+            this._numStyle.applyNumberings(numberings);
         }
     }
 
