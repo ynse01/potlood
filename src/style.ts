@@ -1,6 +1,6 @@
 import { WordStyles } from "./word-styles.js";
 import { ParStyle, Justification } from "./par-style.js";
-import { RunStyle } from "./run-style.js";
+import { RunStyle, UnderlineMode } from "./run-style.js";
 import { Xml } from "./xml.js";
 
 export class Style {
@@ -44,8 +44,8 @@ export class Style {
         return this.getValue(false, undefined, (runStyle) => runStyle._bold);
     }
 
-    public get underlineMode(): string {
-        return this.getValue("none", undefined, (runStyle) => runStyle._underlineMode);
+    public get underlineMode(): UnderlineMode {
+        return this.getValue(UnderlineMode.none, undefined, (runStyle) => runStyle._underlineMode);
     }
 
     public get strike(): boolean {

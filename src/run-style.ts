@@ -2,10 +2,31 @@ import { Xml } from "./xml.js";
 import { Fonts } from "./fonts.js";
 import { Metrics } from "./metrics.js";
 
+export enum UnderlineMode {
+    none = "none",
+    dash = "dash",
+    dashDotDotHeavy = "dashDotDotHeavy",
+    dashDotHeavy = "dashDotHeavy",
+    dashedHeavy = "dashedHeavy",
+    dashLong = "dashLong",
+    dashLongHeavy = "dashLongHeavy",
+    dotDash = "dotDash",
+    dotDotDash = "dotDotDash",
+    dotted = "dotted",
+    dottedHeavy = "dottedHeavy",
+    double = "double",
+    single = "single",
+    thick = "thick",
+    wave = "wave",
+    wavyDouble = "wavyDouble",
+    wavyHeavy = "wavyHeavy",
+    words = "words"
+}
+
 export class RunStyle {
     public _italic: boolean | undefined;
     public _bold: boolean | undefined;
-    public _underlineMode: string | undefined;
+    public _underlineMode: UnderlineMode | undefined;
     public _strike: boolean | undefined;
     public _dstrike: boolean | undefined;
     public _fontFamily: string | undefined;
@@ -19,7 +40,10 @@ export class RunStyle {
         const style = new RunStyle();
         style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
         style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
-        style._underlineMode = Xml.getStringValueFromNode(runPresentationNode, "w:u");
+        const underlineMode = Xml.getStringValueFromNode(runPresentationNode, "w:u");
+        if (underlineMode !== undefined) {
+            style._underlineMode = UnderlineMode[underlineMode as keyof typeof UnderlineMode];
+        }
         style._strike = Xml.getBooleanValueFromNode(runPresentationNode, "w:strike");
         style._dstrike = Xml.getBooleanValueFromNode(runPresentationNode, "w:dstrike");
         const families = RunStyle.getFontFamilyFromNode(runPresentationNode);

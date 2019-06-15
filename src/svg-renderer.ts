@@ -1,6 +1,7 @@
 import { Metrics } from './metrics.js';
 import { Style } from './style.js';
 import { Justification } from './par-style.js';
+import { UnderlineMode } from './run-style.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -140,15 +141,15 @@ export class SvgRenderer {
   private renderUnderline(textNode: Element, style: Style, y: number, width: number | undefined): void {
     // TODO: Support all underline modes
     // TODO: Support strike and dstrike
-    if (style.underlineMode !== "none" || style.strike || style.doubleStrike) {
+    if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
       let lineLength = (width !== undefined) ? width : (textNode as any).getComputedTextLength();
       switch(style.underlineMode) {
-        case "double":
+        case UnderlineMode.double:
             this.renderHorizontalLine(lineLength, y + style.fontSize / 10, style.color);
             this.renderHorizontalLine(lineLength, y + 2 * style.fontSize / 10, style.color);
             break;
         default:
-        case "single":
+        case UnderlineMode.single:
             this.renderHorizontalLine(lineLength, y + style.fontSize / 10, style.color);
             break;
       }
