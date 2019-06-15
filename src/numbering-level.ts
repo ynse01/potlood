@@ -70,8 +70,9 @@ export class NumberingLevel {
         let text: string;
         switch (this.format) {
             case NumberingFormat.bullet:
-                text = "&bull;";
+                text = "&#x2002;";
                 break;
+            case NumberingFormat.none:
             default:
                 text = "";
                 break;
