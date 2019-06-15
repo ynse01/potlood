@@ -70,7 +70,7 @@ export class NumberingLevel {
         let text: string;
         switch (this.format) {
             case NumberingFormat.bullet:
-                text = "O";
+                text = "&bull;";
                 break;
             default:
                 text = "";

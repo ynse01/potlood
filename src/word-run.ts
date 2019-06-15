@@ -8,23 +8,28 @@ export class WordRun {
     private text: string;
     private style: Style;
 
-    constructor(parStyle: ParStyle | undefined, rNode: ChildNode) {
-        this.style = new Style();
-        this.text = "";
+    public static fromRunNode(rNode: ChildNode, parStyle: ParStyle | undefined): WordRun {
+        const run = new WordRun("", new Style());
         const presentationNode = Xml.getFirstChildOfName(rNode, "w:rPr");
         if (presentationNode !== undefined && presentationNode.hasChildNodes()) {
-            this.style.runStyle = RunStyle.fromPresentationNode(presentationNode);
+            run.style.runStyle = RunStyle.fromPresentationNode(presentationNode);
         }
         if (parStyle !== undefined) {
-            this.style.parStyle = parStyle;
+            run.style.parStyle = parStyle;
         }
         const textNode = Xml.getFirstChildOfName(rNode, "w:t");
         if (textNode !== undefined) {
             const text = textNode.textContent;
             if (text !== null) {
-                this.text = text;
+                run.text = text;
             }
         }
+        return run;
+    }
+
+    constructor(text: string, style: Style) {
+        this.style = style;
+        this.text = text;
     }
 
     public render(renderer: SvgRenderer, yPos: number): number {

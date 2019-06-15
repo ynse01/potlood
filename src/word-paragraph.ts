@@ -16,9 +16,12 @@ export class WordParagraph {
     public get runs(): WordRun[] {
         if (this._runs === undefined) {
             const runs: WordRun[] = [];
-            const mainStyle = this.parStyle;
+            const parStyle = this.parStyle;
+            if (parStyle !== undefined && parStyle._numStyle !== undefined) {
+                runs.push(new WordRun(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style));
+            }
             Xml.getChildrenOfName(this.pNode, "w:r").forEach(node => {
-                runs.push(new WordRun(mainStyle, node));
+                runs.push(WordRun.fromRunNode(node, parStyle));
             });
             this._runs = runs;
         }
