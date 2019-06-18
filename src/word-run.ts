@@ -1,12 +1,11 @@
 import { Xml } from "./xml.js";
 import { RunStyle } from "./run-style.js";
-import { SvgRenderer } from "./svg-renderer.js";
 import { ParStyle } from "./par-style.js";
 import { Style } from "./style.js";
 
 export class WordRun {
-    private text: string;
-    private style: Style;
+    public text: string;
+    public style: Style;
 
     public static fromRunNode(rNode: ChildNode, parStyle: ParStyle | undefined): WordRun {
         const run = new WordRun("", new Style());
@@ -30,9 +29,5 @@ export class WordRun {
     constructor(text: string, style: Style) {
         this.style = style;
         this.text = text;
-    }
-
-    public render(renderer: SvgRenderer, yPos: number): number {
-        return renderer.flowText(this.text, this.style, yPos);
     }
 }

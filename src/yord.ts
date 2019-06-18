@@ -34,15 +34,9 @@ export class Yord {
     }
 
     private writeAllText() {
-        let posY = 20;
-        const doc = this.doc;
-        if (doc !== undefined) {
-            doc.paragraphs.forEach(par => {
-                par.runs.forEach(run => {
-                    posY = run.render(this.renderer, posY);
-                });
-            });
+        if (this.doc !== undefined) {
+            const posY = this.renderer.renderDocument(this.doc);
             this.renderer.ensureHeight(posY);
         }
-}    
+    }    
 }
