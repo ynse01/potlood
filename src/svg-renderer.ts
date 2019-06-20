@@ -58,8 +58,7 @@ export class SvgRenderer {
     flow: VirtualFlow,
     pos: FlowPosition
   ): void {
-    const padding = flow.getX(pos);
-    const width = flow.getWidth(pos) - padding - padding;
+    const width = flow.getWidth(pos);
     let remainder = text;
     const deltaY = style.fontSize * 1.08;
     if (width < 0 || !text) {
@@ -69,7 +68,7 @@ export class SvgRenderer {
     while (remainder.length > 0) {
       const line = this.fitText(remainder, style, width);
       let fillLine = (line.length !== remainder.length);
-      this.addText(line, style, flow, pos.add(deltaY), width, fillLine);
+      this.addText(line, style, flow, pos.add(deltaY), fillLine);
       remainder = remainder.substring(line.length);
     }
   }
@@ -96,7 +95,6 @@ export class SvgRenderer {
     style: Style,
     flow: VirtualFlow,
     pos: FlowPosition,
-    width: number,
     fillLine: boolean
   ): void {
     const newText = document.createElementNS(SvgRenderer.svgNS, 'text');
@@ -104,7 +102,7 @@ export class SvgRenderer {
       text = text.toLocaleUpperCase();
     }
     this.setFont(newText, style);
-    this.setHorizontalAlignment(newText, style, flow, pos, width, fillLine);
+    this.setHorizontalAlignment(newText, style, flow, pos, fillLine);
     this.setVerticalAlignment(newText, style, pos);
     const textNode = document.createTextNode(text);
     newText.appendChild(textNode);
@@ -124,8 +122,9 @@ export class SvgRenderer {
     }
   }
 
-  private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, width: number, fillLine: boolean): void {
+  private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, fillLine: boolean): void {
     const x = flow.getX(pos) + style.identation;
+    const width = flow.getWidth(pos);
     switch(style.justification) {
       case Justification.both:
         textNode.setAttribute('x', x.toString());

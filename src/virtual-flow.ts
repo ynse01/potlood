@@ -5,7 +5,7 @@ export class VirtualFlow {
     private _width: number;
 
     constructor(content: Element, _doc: WordDocument) {
-        this._width = content.clientWidth;
+        this._width = content.clientWidth - 2 * 40;
     }
 
     public getX(_flowPos: FlowPosition): number {
