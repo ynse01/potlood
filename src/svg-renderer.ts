@@ -4,11 +4,12 @@ import { Justification } from './par-style.js';
 import { UnderlineMode } from './run-style.js';
 import { WordDocument } from './word-document.js';
 import { VirtualFlow } from './virtual-flow.js';
+import { WordParagraph } from './word-paragraph.js';
+import { FlowPosition } from './flow-position.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
   private svg: SVGElement;
-  private x = 40;
 
   constructor(content: HTMLElement) {
     const svg = document.createElementNS(SvgRenderer.svgNS, 'svg');
@@ -21,35 +22,11 @@ export class SvgRenderer {
 
   public renderDocument(doc: WordDocument): number {
     const flow = new VirtualFlow(this.svg.parentElement!, doc);
-    let posY = 20;
+    const pos = new FlowPosition(20);
     doc.paragraphs.forEach(par => {
-      par.runs.forEach(run => {
-        posY = this.flowText(run.text, run.style, flow, posY);
-      });
+      this.renderParagraph(par, flow, pos);
     });
-    return posY;
-  }
-
-  public flowText(
-    text: string,
-    style: Style,
-    flow: VirtualFlow,
-    y: number
-  ): number {
-    const width = flow.getWidth(y) - this.x - this.x;
-    let remainder = text;
-    const deltaY = style.fontSize * 1.08;
-    if (width < 0 || !text) { return y + deltaY; }
-    let i = 0;
-    while (remainder.length > 0) {
-      const line = this.fitText(remainder, style, width);
-      let fillLine = (line.length !== remainder.length);
-      this.addText(line, style, y + i * deltaY, width, fillLine);
-      remainder = remainder.substring(line.length);
-      i++;
-    }
-    const yPos = y + i * deltaY;
-    return yPos;
+    return pos.flowPosition;
   }
 
   public clear() {
@@ -66,6 +43,34 @@ export class SvgRenderer {
       if (maxY > heightNum) {
         this.svg.setAttribute("height", maxY.toString());
       }
+    }
+  }
+
+  private renderParagraph(par: WordParagraph, flow: VirtualFlow, pos: FlowPosition): void {
+    par.runs.forEach(run => {
+      this.flowText(run.text, run.style, flow, pos);
+    });
+  }
+
+  private flowText(
+    text: string,
+    style: Style,
+    flow: VirtualFlow,
+    pos: FlowPosition
+  ): void {
+    const padding = flow.getX(pos);
+    const width = flow.getWidth(pos) - padding - padding;
+    let remainder = text;
+    const deltaY = style.fontSize * 1.08;
+    if (width < 0 || !text) {
+      pos.add(deltaY);
+      return;
+    }
+    while (remainder.length > 0) {
+      const line = this.fitText(remainder, style, width);
+      let fillLine = (line.length !== remainder.length);
+      this.addText(line, style, flow, pos.add(deltaY), width, fillLine);
+      remainder = remainder.substring(line.length);
     }
   }
 
@@ -89,23 +94,23 @@ export class SvgRenderer {
   private addText(
     text: string,
     style: Style,
-    y: number,
+    flow: VirtualFlow,
+    pos: FlowPosition,
     width: number,
     fillLine: boolean
   ): void {
     const newText = document.createElementNS(SvgRenderer.svgNS, 'text');
-    y = y + style.fontSize / 2;
     if (style.caps) {
       text = text.toLocaleUpperCase();
     }
     this.setFont(newText, style);
-    this.setHorizontalAlignment(newText, style, width, fillLine);
-    this.setVerticalAlignment(newText, style, y);
+    this.setHorizontalAlignment(newText, style, flow, pos, width, fillLine);
+    this.setVerticalAlignment(newText, style, pos);
     const textNode = document.createTextNode(text);
     newText.appendChild(textNode);
     this.svg.appendChild(newText);
     // Render underline after adding text to DOM.
-    this.renderUnderline(newText, style, y);
+    this.renderUnderline(newText, style, flow, pos);
   }
 
   private setFont(textNode: Element, style: Style): void {
@@ -119,8 +124,8 @@ export class SvgRenderer {
     }
   }
 
-  private setHorizontalAlignment(textNode: Element, style: Style, width: number, fillLine: boolean): void {
-    const x = this.x + style.identation;
+  private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, width: number, fillLine: boolean): void {
+    const x = flow.getX(pos) + style.identation;
     switch(style.justification) {
       case Justification.both:
         textNode.setAttribute('x', x.toString());
@@ -147,41 +152,44 @@ export class SvgRenderer {
     }
   }
 
-  private setVerticalAlignment(textNode: Element, _style: Style, y: number): void {
-    textNode.setAttribute('y', y.toString());
+  private setVerticalAlignment(textNode: Element, style: Style, pos: FlowPosition): void {
+    textNode.setAttribute('y', (pos.flowPosition + style.fontSize / 2).toString());
   }
 
-  private renderUnderline(textNode: Element, style: Style, y: number): void {
+  private renderUnderline(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition): void {
     // TODO: Support all underline modes
     // TODO: Support strike and dstrike
     if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
       let lineLength = (textNode as any).getComputedTextLength();
+      const y = pos.clone().add(style.fontSize / 2);
       switch(style.underlineMode) {
         case UnderlineMode.double:
-            this.renderHorizontalLine(lineLength, y + style.fontSize / 10, style.color);
-            this.renderHorizontalLine(lineLength, y + 2 * style.fontSize / 10, style.color);
+            this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
+            this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
             break;
         default:
         case UnderlineMode.single:
-            this.renderHorizontalLine(lineLength, y + style.fontSize / 10, style.color);
+            this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
             break;
       }
       if (style.strike) {
-        this.renderHorizontalLine(lineLength, y - style.fontSize / 2, style.color);
+        this.renderHorizontalLine(lineLength, flow, y.subtract(style.fontSize / 2), style.color);
       }
       if (style.doubleStrike) {
-        const middleY = y - style.fontSize / 2;
-        this.renderHorizontalLine(lineLength, middleY - 1, style.color);
-        this.renderHorizontalLine(lineLength, middleY + 1, style.color);
+        const middle = y.subtract(style.fontSize / 2);
+        this.renderHorizontalLine(lineLength, flow, middle.subtract(1), style.color);
+        this.renderHorizontalLine(lineLength, flow, middle.add(2), style.color);
       }
     }
   }
 
-  private renderHorizontalLine(lineLength: number, y: number, color: string) {
+  private renderHorizontalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string) {
     const line = document.createElementNS(SvgRenderer.svgNS, "line");
-    line.setAttribute("x1", this.x.toString());
+    const x = flow.getX(pos);
+    const y = pos.flowPosition;
+    line.setAttribute("x1", x.toString());
     line.setAttribute("y1", y.toString());
-    line.setAttribute("x2", (this.x + lineLength).toString());
+    line.setAttribute("x2", (x + lineLength).toString());
     line.setAttribute("y2", y.toString());
     line.setAttribute("stroke", `#${color}`);
     this.svg.appendChild(line);
