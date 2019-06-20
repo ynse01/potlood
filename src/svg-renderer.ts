@@ -26,7 +26,7 @@ export class SvgRenderer {
     doc.paragraphs.forEach(par => {
       this.renderParagraph(par, flow, pos);
     });
-    return pos.flowPosition;
+    return flow.getY(pos);
   }
 
   public clear() {
@@ -103,7 +103,7 @@ export class SvgRenderer {
     }
     this.setFont(newText, style);
     this.setHorizontalAlignment(newText, style, flow, pos, fillLine);
-    this.setVerticalAlignment(newText, style, pos);
+    this.setVerticalAlignment(newText, style, flow, pos);
     const textNode = document.createTextNode(text);
     newText.appendChild(textNode);
     this.svg.appendChild(newText);
@@ -151,8 +151,8 @@ export class SvgRenderer {
     }
   }
 
-  private setVerticalAlignment(textNode: Element, style: Style, pos: FlowPosition): void {
-    textNode.setAttribute('y', (pos.flowPosition + style.fontSize / 2).toString());
+  private setVerticalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition): void {
+    textNode.setAttribute('y', (flow.getY(pos) + style.fontSize / 2).toString());
   }
 
   private renderUnderline(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition): void {
@@ -185,7 +185,7 @@ export class SvgRenderer {
   private renderHorizontalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string) {
     const line = document.createElementNS(SvgRenderer.svgNS, "line");
     const x = flow.getX(pos);
-    const y = pos.flowPosition;
+    const y = flow.getY(pos);
     line.setAttribute("x1", x.toString());
     line.setAttribute("y1", y.toString());
     line.setAttribute("x2", (x + lineLength).toString());

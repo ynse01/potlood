@@ -12,6 +12,10 @@ export class VirtualFlow {
         return 40;
     }
 
+    public getY(flowPos: FlowPosition): number {
+        return flowPos.flowPosition;
+    }
+
     public getWidth(_flowPos: FlowPosition): number {
         return this._width;
     }
