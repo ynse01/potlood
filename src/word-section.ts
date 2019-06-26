@@ -64,4 +64,52 @@ export class WordSection {
         }
         return pageNumberFormat;
     }
+
+    public get marginTop(): number | undefined {
+        let marginTop: number | undefined = undefined;
+        const margin = Xml.getFirstChildOfName(this.sectionNode, "w:pgMar") as Element;
+        if (margin !== undefined) {
+            const top = margin.getAttribute("w:top");
+            if (top !== null) {
+                marginTop = parseInt(top);
+            }
+        }
+        return marginTop;
+    }
+
+    public get marginLeft(): number | undefined {
+        let marginLeft: number | undefined = undefined;
+        const margin = Xml.getFirstChildOfName(this.sectionNode, "w:pgMar") as Element;
+        if (margin !== undefined) {
+            const left = margin.getAttribute("w:left");
+            if (left !== null) {
+                marginLeft = parseInt(left);
+            }
+        }
+        return marginLeft;
+    }
+
+    public get marginBottom(): number | undefined {
+        let marginBottom: number | undefined = undefined;
+        const margin = Xml.getFirstChildOfName(this.sectionNode, "w:pgMar") as Element;
+        if (margin !== undefined) {
+            const bottom = margin.getAttribute("w:bottom");
+            if (bottom !== null) {
+                marginBottom = parseInt(bottom);
+            }
+        }
+        return marginBottom;
+    }
+
+    public get marginRight(): number | undefined {
+        let marginRight: number | undefined = undefined;
+        const margin = Xml.getFirstChildOfName(this.sectionNode, "w:pgMar") as Element;
+        if (margin !== undefined) {
+            const right = margin.getAttribute("w:right");
+            if (right !== null) {
+                marginRight = parseInt(right);
+            }
+        }
+        return marginRight;
+    }
 }
