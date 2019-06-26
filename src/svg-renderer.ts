@@ -48,12 +48,17 @@ export class SvgRenderer {
   }
 
   private renderParagraph(par: WordParagraph, flow: VirtualFlow, pos: FlowPosition): void {
+    let firstRun = true;
+    if (par.numberingRun !== undefined) {
+      this.renderRun(par.numberingRun, flow, pos.clone(), firstRun);
+    }
     par.runs.forEach(run => {
-      this.renderRun(run, flow, pos);
+      this.renderRun(run, flow, pos, firstRun);
+      firstRun = false;
     });
   }
 
-  private renderRun(run: WordRun, flow: VirtualFlow, pos: FlowPosition): void {
+  private renderRun(run: WordRun, flow: VirtualFlow, pos: FlowPosition, firstRun: boolean): void {
     const width = flow.getWidth(pos);
     let remainder = run.text;
     const deltaY = run.style.fontSize * 1.08;
@@ -61,7 +66,7 @@ export class SvgRenderer {
       pos.add(deltaY);
       return;
     }
-    let inParagraph = RunInParagraph.FirstRun;
+    let inParagraph = (firstRun) ? RunInParagraph.FirstRun : RunInParagraph.Normal;
     while (remainder.length > 0) {
       const line = this.fitText(remainder, run.style, width);
       // Check for last line of pargraph.

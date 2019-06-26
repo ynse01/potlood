@@ -7,25 +7,35 @@ export class WordParagraph {
     private pNode: ChildNode;
     private doc: WordDocument;
     private _runs: WordRun[] | undefined;
+    private _numberingRun: WordRun | undefined;
 
     constructor(doc: WordDocument, pNode: ChildNode) {
         this.pNode = pNode;
         this.doc = doc;
     }
 
-    public get runs(): WordRun[] {
+    public parseContent(): void {
         if (this._runs === undefined) {
             const runs: WordRun[] = [];
             const parStyle = this.parStyle;
             if (parStyle !== undefined && parStyle._numStyle !== undefined) {
-                runs.push(new WordRun(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style));
+                this._numberingRun = new WordRun(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style);
             }
             Xml.getChildrenOfName(this.pNode, "w:r").forEach(node => {
                 runs.push(WordRun.fromRunNode(node, parStyle));
             });
             this._runs = runs;
         }
-        return this._runs;
+    }
+
+    public get runs(): WordRun[] {
+        this.parseContent();
+        return this._runs!;
+    }
+
+    public get numberingRun(): WordRun | undefined {
+        this.parseContent();
+        return this._numberingRun;
     }
 
     private get parStyle(): ParStyle | undefined {
