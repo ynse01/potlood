@@ -3,6 +3,12 @@ import { RunStyle } from "./run-style.js";
 import { ParStyle } from "./par-style.js";
 import { Style } from "./style.js";
 
+export enum RunInParagraph {
+    Normal = 0,
+    FirstRun = 1,
+    LastRun = 2
+}
+
 export class WordRun {
     public text: string;
     public style: Style;

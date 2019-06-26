@@ -6,6 +6,7 @@ import { WordDocument } from './word-document.js';
 import { VirtualFlow } from './virtual-flow.js';
 import { WordParagraph } from './word-paragraph.js';
 import { FlowPosition } from './flow-position.js';
+import { RunInParagraph } from './word-run.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -67,8 +68,8 @@ export class SvgRenderer {
     }
     while (remainder.length > 0) {
       const line = this.fitText(remainder, style, width);
-      let fillLine = (line.length !== remainder.length);
-      this.addText(line, style, flow, pos.add(deltaY), fillLine);
+      let inParagraph = (line.length !== remainder.length) ? RunInParagraph.LastRun : RunInParagraph.Normal;
+      this.addText(line, style, flow, pos.add(deltaY), inParagraph);
       remainder = remainder.substring(line.length);
     }
   }
@@ -95,14 +96,14 @@ export class SvgRenderer {
     style: Style,
     flow: VirtualFlow,
     pos: FlowPosition,
-    fillLine: boolean
+    inParagraph: RunInParagraph
   ): void {
     const newText = document.createElementNS(SvgRenderer.svgNS, 'text');
     if (style.caps) {
       text = text.toLocaleUpperCase();
     }
     this.setFont(newText, style);
-    this.setHorizontalAlignment(newText, style, flow, pos, fillLine);
+    this.setHorizontalAlignment(newText, style, flow, pos, inParagraph);
     this.setVerticalAlignment(newText, style, flow, pos);
     const textNode = document.createTextNode(text);
     newText.appendChild(textNode);
@@ -122,13 +123,13 @@ export class SvgRenderer {
     }
   }
 
-  private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, fillLine: boolean): void {
+  private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
     const x = flow.getX(pos) + style.identation;
     const width = flow.getWidth(pos);
     switch(style.justification) {
       case Justification.both:
         textNode.setAttribute('x', x.toString());
-        if (fillLine) {
+        if (inParagraph == RunInParagraph.LastRun) {
           textNode.setAttribute('textLength', (width - style.identation).toString());
           textNode.setAttribute('lengthAdjust', 'spacing');
         }
