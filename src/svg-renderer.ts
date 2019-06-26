@@ -61,21 +61,24 @@ export class SvgRenderer {
         inParagraph = RunInParagraph.LastRun;
       }
       this.renderRun(run, flow, pos, inParagraph);
-      inParagraph = RunInParagraph.Normal;
     });
   }
 
   private renderRun(run: WordRun, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
-    const width = flow.getWidth(pos);
+    let width = flow.getWidth(pos);
     let remainder = run.text;
     const deltaY = run.style.fontSize * 1.08;
-    if (width < 0 || !run.text) {
+    if (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) {
       pos.add(deltaY);
+    }
+    if (width < 0 || !run.text) {
       return;
     }
     let inRun = (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) ? LineInRun.FirstLine : LineInRun.Normal;
     while (remainder.length > 0) {
+      width = flow.getWidth(pos);
       const line = this.fitText(remainder, run.style, width);
+      let usedWidth = 0;
       // Check for last line of run.
       if (line.length === remainder.length) {
         if (inRun == LineInRun.FirstLine) {
@@ -83,8 +86,16 @@ export class SvgRenderer {
         } else {
           inRun = LineInRun.LastLine;
         }
+        if (inParagraph !== RunInParagraph.LastRun && inParagraph !== RunInParagraph.OnlyRun) {
+          usedWidth = Metrics.getTextWidth(line, run.style) - run.style.identation;
+        }
       }
-      this.addText(line, run.style, flow, pos.add(deltaY), inRun);
+      this.addText(line, run.style, flow, pos, inRun);
+      if (usedWidth > 0) {
+        flow.useWidth(pos, usedWidth);
+      } else {
+        pos.add(deltaY);
+      }
       remainder = remainder.substring(line.length);
       inRun = LineInRun.Normal;
     }
