@@ -17,6 +17,7 @@ export class ParStyle {
     private _basedOnId: string | undefined;
     public _justification: Justification | undefined = undefined;
     public _identation: number | undefined;
+    public _hanging: number | undefined;
     public _spacing: number | undefined;
     public _numStyle: NumberingStyle | undefined;
 
@@ -27,6 +28,7 @@ export class ParStyle {
         if (justification !== undefined) {
             parStyle._justification = Justification[justification as keyof typeof Justification];
         }
+        parStyle._hanging = ParStyle.getHangingFromNode(parPresentationNode);
         parStyle._identation = ParStyle.getIdentationFromNode(parPresentationNode);
         const numPrNode = Xml.getFirstChildOfName(parPresentationNode, "w:numPr");
         if (numPrNode !== undefined) {
@@ -57,18 +59,25 @@ export class ParStyle {
         return `ParStyle: ${baseText} ${justText} ${indText}`;
     }
 
-    private static getIdentationFromNode(styleNode: ChildNode): number {
-        let left = 0;
+    private static getHangingFromNode(styleNode: ChildNode): number {
+        let hanging = 0;
         const indNode = Xml.getFirstChildOfName(styleNode, "w:ind") as Element;
         if (indNode !== undefined) {
             const hangingAttr = indNode.getAttribute("w:hanging");
             if (hangingAttr !== null) {
-                left = Metrics.convertTwipsToPixels(-parseInt(hangingAttr, 10));
-            } else {
-                const leftAttr = indNode.getAttribute("w:left");
-                if (leftAttr !== null) {
-                    left = Metrics.convertTwipsToPixels(parseInt(leftAttr, 10));
-                }
+                hanging = Metrics.convertTwipsToPixels(-parseInt(hangingAttr, 10));
+            }
+        }
+        return hanging;
+    }
+
+    private static getIdentationFromNode(styleNode: ChildNode): number {
+        let left = 0;
+        const indNode = Xml.getFirstChildOfName(styleNode, "w:ind") as Element;
+        if (indNode !== undefined) {
+            const leftAttr = indNode.getAttribute("w:left");
+            if (leftAttr !== null) {
+                left = Metrics.convertTwipsToPixels(parseInt(leftAttr, 10));
             }
         }
         return left;

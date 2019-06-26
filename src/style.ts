@@ -68,6 +68,10 @@ export class Style {
         return this.getValue(0, (parStyle) => parStyle._spacing, (runStyle) => runStyle._spacing);
     }
 
+    public get hanging(): number {
+        return this.getValue(0, (parStyle) => parStyle._hanging, undefined);
+    }
+
     public get identation(): number {
         return this.getValue(0, (parStyle) => parStyle._identation, undefined);
     }

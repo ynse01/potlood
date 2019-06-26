@@ -6,7 +6,8 @@ import { Style } from "./style.js";
 export enum RunInParagraph {
     Normal = 0,
     FirstRun = 1,
-    LastRun = 2
+    LastRun = 2,
+    OnlyRun = 3
 }
 
 export class WordRun {

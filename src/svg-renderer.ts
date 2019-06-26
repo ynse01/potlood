@@ -6,7 +6,7 @@ import { WordDocument } from './word-document.js';
 import { VirtualFlow } from './virtual-flow.js';
 import { WordParagraph } from './word-paragraph.js';
 import { FlowPosition } from './flow-position.js';
-import { RunInParagraph } from './word-run.js';
+import { RunInParagraph, WordRun } from './word-run.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -49,28 +49,32 @@ export class SvgRenderer {
 
   private renderParagraph(par: WordParagraph, flow: VirtualFlow, pos: FlowPosition): void {
     par.runs.forEach(run => {
-      this.flowText(run.text, run.style, flow, pos);
+      this.renderRun(run, flow, pos);
     });
   }
 
-  private flowText(
-    text: string,
-    style: Style,
-    flow: VirtualFlow,
-    pos: FlowPosition
-  ): void {
+  private renderRun(run: WordRun, flow: VirtualFlow, pos: FlowPosition): void {
     const width = flow.getWidth(pos);
-    let remainder = text;
-    const deltaY = style.fontSize * 1.08;
-    if (width < 0 || !text) {
+    let remainder = run.text;
+    const deltaY = run.style.fontSize * 1.08;
+    if (width < 0 || !run.text) {
       pos.add(deltaY);
       return;
     }
+    let inParagraph = RunInParagraph.FirstRun;
     while (remainder.length > 0) {
-      const line = this.fitText(remainder, style, width);
-      let inParagraph = (line.length !== remainder.length) ? RunInParagraph.LastRun : RunInParagraph.Normal;
-      this.addText(line, style, flow, pos.add(deltaY), inParagraph);
+      const line = this.fitText(remainder, run.style, width);
+      // Check for last line of pargraph.
+      if (line.length !== remainder.length) {
+        if (inParagraph == RunInParagraph.FirstRun) {
+          inParagraph = RunInParagraph.OnlyRun;
+        } else {
+          inParagraph = RunInParagraph.LastRun;
+        }
+      }
+      this.addText(line, run.style, flow, pos.add(deltaY), inParagraph);
       remainder = remainder.substring(line.length);
+      inParagraph = RunInParagraph.Normal;
     }
   }
 
@@ -124,12 +128,13 @@ export class SvgRenderer {
   }
 
   private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
-    const x = flow.getX(pos) + style.identation;
+    const xDelta = (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) ? style.hanging : style.identation;
+    const x = flow.getX(pos) + xDelta;
     const width = flow.getWidth(pos);
     switch(style.justification) {
       case Justification.both:
         textNode.setAttribute('x', x.toString());
-        if (inParagraph == RunInParagraph.LastRun) {
+        if (inParagraph === RunInParagraph.LastRun || inParagraph === RunInParagraph.OnlyRun) {
           textNode.setAttribute('textLength', (width - style.identation).toString());
           textNode.setAttribute('lengthAdjust', 'spacing');
         }
