@@ -6,6 +6,7 @@ export class VirtualFlow {
     // private _width: number;
     private _pageWidth: number;
     // private _pageHeight: number;
+    private _usedWidth: { [pos: number]: number} = {};
 
     constructor(_content: Element, doc: WordDocument) {
         // this._width = content.clientWidth - 2 * 40;
@@ -23,15 +24,27 @@ export class VirtualFlow {
         };
     }
 
-    public getX(_flowPos: FlowPosition): number {
+    public getX(flowPos: FlowPosition): number {
+        const used = this._usedWidth[flowPos.flowPosition];
+        if (used !== undefined) {
+            return 40 + used;
+        }
         return 40;
+    }
+
+    public useWidth(flowPos: FlowPosition, used: number) {
+        this._usedWidth[flowPos.flowPosition] = used;
     }
 
     public getY(flowPos: FlowPosition): number {
         return flowPos.flowPosition;
     }
 
-    public getWidth(_flowPos: FlowPosition): number {
+    public getWidth(flowPos: FlowPosition): number {
+        const used = this._usedWidth[flowPos.flowPosition];
+        if (used !== undefined) {
+            return this._pageWidth - used;
+        }
         return this._pageWidth;
     }
 }
