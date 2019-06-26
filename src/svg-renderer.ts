@@ -4,7 +4,7 @@ import { Justification } from './par-style.js';
 import { UnderlineMode } from './run-style.js';
 import { WordDocument } from './word-document.js';
 import { VirtualFlow } from './virtual-flow.js';
-import { WordParagraph } from './word-paragraph.js';
+import { WordParagraph, RunInParagraph } from './word-paragraph.js';
 import { FlowPosition } from './flow-position.js';
 import { LineInRun, WordRun } from './word-run.js';
 
@@ -48,17 +48,24 @@ export class SvgRenderer {
   }
 
   private renderParagraph(par: WordParagraph, flow: VirtualFlow, pos: FlowPosition): void {
-    let firstRun = true;
     if (par.numberingRun !== undefined) {
-      this.renderRun(par.numberingRun, flow, pos.clone(), firstRun);
+      this.renderRun(par.numberingRun, flow, pos.clone(), RunInParagraph.FirstRun);
     }
-    par.runs.forEach(run => {
-      this.renderRun(run, flow, pos, firstRun);
-      firstRun = false;
+    par.runs.forEach((run, index, runs) => {
+      let inParagraph = RunInParagraph.Normal;
+      if (runs.length === 1) {
+        inParagraph = RunInParagraph.OnlyRun;
+      } else if (index === 0) {
+        inParagraph = RunInParagraph.FirstRun;
+      } else if (index === runs.length - 1) {
+        inParagraph = RunInParagraph.LastRun;
+      }
+      this.renderRun(run, flow, pos, inParagraph);
+      inParagraph = RunInParagraph.Normal;
     });
   }
 
-  private renderRun(run: WordRun, flow: VirtualFlow, pos: FlowPosition, firstRun: boolean): void {
+  private renderRun(run: WordRun, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
     const width = flow.getWidth(pos);
     let remainder = run.text;
     const deltaY = run.style.fontSize * 1.08;
@@ -66,20 +73,20 @@ export class SvgRenderer {
       pos.add(deltaY);
       return;
     }
-    let inParagraph = (firstRun) ? LineInRun.FirstLine : LineInRun.Normal;
+    let inRun = (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) ? LineInRun.FirstLine : LineInRun.Normal;
     while (remainder.length > 0) {
       const line = this.fitText(remainder, run.style, width);
       // Check for last line of run.
-      if (line.length !== remainder.length) {
-        if (inParagraph == LineInRun.FirstLine) {
-          inParagraph = LineInRun.OnlyLine;
+      if (line.length === remainder.length) {
+        if (inRun == LineInRun.FirstLine) {
+          inRun = LineInRun.OnlyLine;
         } else {
-          inParagraph = LineInRun.LastLine;
+          inRun = LineInRun.LastLine;
         }
       }
-      this.addText(line, run.style, flow, pos.add(deltaY), inParagraph);
+      this.addText(line, run.style, flow, pos.add(deltaY), inRun);
       remainder = remainder.substring(line.length);
-      inParagraph = LineInRun.Normal;
+      inRun = LineInRun.Normal;
     }
   }
 
@@ -105,14 +112,14 @@ export class SvgRenderer {
     style: Style,
     flow: VirtualFlow,
     pos: FlowPosition,
-    inParagraph: LineInRun
+    inRun: LineInRun
   ): void {
     const newText = document.createElementNS(SvgRenderer.svgNS, 'text');
     if (style.caps) {
       text = text.toLocaleUpperCase();
     }
     this.setFont(newText, style);
-    this.setHorizontalAlignment(newText, style, flow, pos, inParagraph);
+    this.setHorizontalAlignment(newText, style, flow, pos, inRun);
     this.setVerticalAlignment(newText, style, flow, pos);
     const textNode = document.createTextNode(text);
     newText.appendChild(textNode);
@@ -132,14 +139,14 @@ export class SvgRenderer {
     }
   }
 
-  private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, inParagraph: LineInRun): void {
-    const xDelta = (inParagraph === LineInRun.FirstLine || inParagraph === LineInRun.OnlyLine) ? style.hanging : style.identation;
+  private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, inRun: LineInRun): void {
+    const xDelta = (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) ? style.hanging : style.identation;
     const x = flow.getX(pos) + xDelta;
     const width = flow.getWidth(pos);
     switch(style.justification) {
       case Justification.both:
         textNode.setAttribute('x', x.toString());
-        if (inParagraph === LineInRun.LastLine || inParagraph === LineInRun.OnlyLine) {
+        if (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine) {
           textNode.setAttribute('textLength', (width - style.identation).toString());
           textNode.setAttribute('lengthAdjust', 'spacing');
         }

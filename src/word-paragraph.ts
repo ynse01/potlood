@@ -3,6 +3,14 @@ import { WordRun } from "./word-run.js";
 import { WordDocument } from "./word-document.js";
 import { ParStyle } from "./par-style.js";
 
+export enum RunInParagraph {
+    Normal = 0,
+    FirstRun = 1,
+    LastRun = 2,
+    OnlyRun = 3,
+    Numbering = 4
+}
+
 export class WordParagraph {
     private pNode: ChildNode;
     private doc: WordDocument;
