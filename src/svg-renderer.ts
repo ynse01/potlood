@@ -6,7 +6,7 @@ import { WordDocument } from './word-document.js';
 import { VirtualFlow } from './virtual-flow.js';
 import { WordParagraph } from './word-paragraph.js';
 import { FlowPosition } from './flow-position.js';
-import { RunInParagraph, WordRun } from './word-run.js';
+import { LineInRun, WordRun } from './word-run.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -66,20 +66,20 @@ export class SvgRenderer {
       pos.add(deltaY);
       return;
     }
-    let inParagraph = (firstRun) ? RunInParagraph.FirstRun : RunInParagraph.Normal;
+    let inParagraph = (firstRun) ? LineInRun.FirstLine : LineInRun.Normal;
     while (remainder.length > 0) {
       const line = this.fitText(remainder, run.style, width);
-      // Check for last line of pargraph.
+      // Check for last line of run.
       if (line.length !== remainder.length) {
-        if (inParagraph == RunInParagraph.FirstRun) {
-          inParagraph = RunInParagraph.OnlyRun;
+        if (inParagraph == LineInRun.FirstLine) {
+          inParagraph = LineInRun.OnlyLine;
         } else {
-          inParagraph = RunInParagraph.LastRun;
+          inParagraph = LineInRun.LastLine;
         }
       }
       this.addText(line, run.style, flow, pos.add(deltaY), inParagraph);
       remainder = remainder.substring(line.length);
-      inParagraph = RunInParagraph.Normal;
+      inParagraph = LineInRun.Normal;
     }
   }
 
@@ -105,7 +105,7 @@ export class SvgRenderer {
     style: Style,
     flow: VirtualFlow,
     pos: FlowPosition,
-    inParagraph: RunInParagraph
+    inParagraph: LineInRun
   ): void {
     const newText = document.createElementNS(SvgRenderer.svgNS, 'text');
     if (style.caps) {
@@ -132,14 +132,14 @@ export class SvgRenderer {
     }
   }
 
-  private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
-    const xDelta = (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) ? style.hanging : style.identation;
+  private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, inParagraph: LineInRun): void {
+    const xDelta = (inParagraph === LineInRun.FirstLine || inParagraph === LineInRun.OnlyLine) ? style.hanging : style.identation;
     const x = flow.getX(pos) + xDelta;
     const width = flow.getWidth(pos);
     switch(style.justification) {
       case Justification.both:
         textNode.setAttribute('x', x.toString());
-        if (inParagraph === RunInParagraph.LastRun || inParagraph === RunInParagraph.OnlyRun) {
+        if (inParagraph === LineInRun.LastLine || inParagraph === LineInRun.OnlyLine) {
           textNode.setAttribute('textLength', (width - style.identation).toString());
           textNode.setAttribute('lengthAdjust', 'spacing');
         }

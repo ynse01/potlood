@@ -3,11 +3,11 @@ import { RunStyle } from "./run-style.js";
 import { ParStyle } from "./par-style.js";
 import { Style } from "./style.js";
 
-export enum RunInParagraph {
+export enum LineInRun {
     Normal = 0,
-    FirstRun = 1,
-    LastRun = 2,
-    OnlyRun = 3
+    FirstLine = 1,
+    LastLine = 2,
+    OnlyLine = 3
 }
 
 export class WordRun {
