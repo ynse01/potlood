@@ -80,16 +80,16 @@ export class SvgRenderer {
     // TODO: Figure out why this offset is required.
     pos = pos.clone().add(Metrics.getLineSpacing(cell.pars[0].runs[0].style) * 0.75);
     if (style.borderTop !== undefined) {
-      this.renderHorizontalLine(cell.getWidth(), flow, pos, "000000");
+      this.renderHorizontalLine(cell.getWidth(), flow, pos, style.borderTop.color, style.borderTop.size);
     }
     if (style.borderBottom !== undefined) {
-      this.renderHorizontalLine(cell.getWidth(), flow, pos.clone().add(height), "000000");
+      this.renderHorizontalLine(cell.getWidth(), flow, pos.clone().add(height), style.borderBottom.color, style.borderBottom.size);
     }
     if (style.borderStart !== undefined) {
-      this.renderVerticalLine(height, flow, pos, "000000");
+      this.renderVerticalLine(height, flow, pos, style.borderStart.color, style.borderStart.size);
     }
     if (style.borderEnd !== undefined) {
-      this.renderVerticalLine(height, flow, pos.clone().add(cell.getWidth()), "000000");
+      this.renderVerticalLine(height, flow, pos.clone().add(cell.getWidth()), style.borderEnd.color, style.borderEnd.size);
     }
   }
 
@@ -183,47 +183,48 @@ export class SvgRenderer {
       const y = pos.clone().add(style.fontSize / 2);
       switch(style.underlineMode) {
         case UnderlineMode.double:
-          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
-          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
+          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
+          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
           break;
         case UnderlineMode.none:
           // Nothing to be done
           break;
         default:
         case UnderlineMode.single:
-          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
+          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
           break;
       }
       if (style.strike) {
-        this.renderHorizontalLine(lineLength, flow, y.subtract(style.fontSize / 2), style.color);
+        this.renderHorizontalLine(lineLength, flow, y.subtract(style.fontSize / 2), style.color, 1);
       }
       if (style.doubleStrike) {
         const middle = y.subtract(style.fontSize / 2);
-        this.renderHorizontalLine(lineLength, flow, middle.subtract(1), style.color);
-        this.renderHorizontalLine(lineLength, flow, middle.add(2), style.color);
+        this.renderHorizontalLine(lineLength, flow, middle.subtract(1), style.color, 1);
+        this.renderHorizontalLine(lineLength, flow, middle.add(2), style.color, 1);
       }
     }
   }
 
-  private renderHorizontalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string) {
+  private renderHorizontalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string, thickness: number) {
     const x = flow.getX(pos);
     const y = flow.getY(pos);
-    this.renderLine(x, y, x + lineLength, y, color);
+    this.renderLine(x, y, x + lineLength, y, color, thickness);
   }
 
-  private renderVerticalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string) {
+  private renderVerticalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string, thickness: number) {
     const x = flow.getX(pos);
     const y = flow.getY(pos);
-    this.renderLine(x, y, x, y + lineLength, color);
+    this.renderLine(x, y, x, y + lineLength, color, thickness);
   }
 
-  private renderLine(x1: number, y1: number, x2: number, y2: number, color: string): void {
+  private renderLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void {
     const line = document.createElementNS(SvgRenderer.svgNS, "line");
     line.setAttribute("x1", x1.toString());
     line.setAttribute("y1", y1.toString());
     line.setAttribute("x2", x2.toString());
     line.setAttribute("y2", y2.toString());
     line.setAttribute("stroke", `#${color}`);
+    line.setAttribute("stroke-width", thickness.toString());
     this.svg.appendChild(line);
   }
 }
