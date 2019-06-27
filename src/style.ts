@@ -1,4 +1,4 @@
-import { WordStyles } from "./word-styles.js";
+import { NamedStyles } from "./named-styles.js";
 import { ParStyle, Justification } from "./par-style.js";
 import { RunStyle, UnderlineMode } from "./run-style.js";
 import { Xml } from "./xml.js";
@@ -24,7 +24,7 @@ export class Style {
         return style;
     }
 
-    public applyNamedStyles(namedStyles: WordStyles | undefined): void {
+    public applyNamedStyles(namedStyles: NamedStyles | undefined): void {
         if (this._basedOnId !== undefined && namedStyles !== undefined) {
             const baseStyle = namedStyles.getNamedStyle(this._basedOnId);
             if (baseStyle !== undefined) {

@@ -2,7 +2,7 @@ import { Style } from "./style.js";
 import { Xml } from "./xml.js";
 import { Part } from "./part.js";
 
-export class WordStyles {
+export class NamedStyles {
     private doc: Document;
     private named: { [name: string]: Style} = {};
 

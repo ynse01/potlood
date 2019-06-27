@@ -1,9 +1,9 @@
 import { Part } from "./part.js";
 import { Numbering } from "./numbering.js";
 import { Xml } from "./xml.js";
-import { WordStyles } from "./word-styles.js";
+import { NamedStyles } from "./named-styles.js";
 
-export class WordNumberings {
+export class AbstractNumberings {
 
     private doc: Document;
     private _numberings: Numbering[] = [];
@@ -12,7 +12,7 @@ export class WordNumberings {
         this.doc = part.document;
     }
 
-    public parseContent(styles: WordStyles | undefined): void {
+    public parseContent(styles: NamedStyles | undefined): void {
         if (this._numberings.length === 0) {
             const root = Xml.getFirstChildOfName(this.doc, "w:numbering");
             if (root !== undefined) {

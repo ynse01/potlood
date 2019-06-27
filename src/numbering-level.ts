@@ -1,5 +1,5 @@
 import { Style } from "./style.js";
-import { WordStyles } from "./word-styles.js";
+import { NamedStyles } from "./named-styles.js";
 import { Xml } from "./xml.js";
 
 export enum NumberingFormat {
@@ -33,7 +33,7 @@ export class NumberingLevel {
     public suffix: NumberingSuffix = NumberingSuffix.tab;
     public text: string | undefined = undefined;
 
-    public static fromLevelNode(namedStyles: WordStyles | undefined, levelNode: ChildNode): NumberingLevel | undefined {
+    public static fromLevelNode(namedStyles: NamedStyles | undefined, levelNode: ChildNode): NumberingLevel | undefined {
         const indexAttr = (levelNode as Element).getAttribute("w:ilvl");
         if (indexAttr === null) {
             return undefined;

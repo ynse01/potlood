@@ -1,4 +1,4 @@
-import { WordNumberings } from "./word-numberings.js";
+import { AbstractNumberings } from "./abstract-numberings.js";
 import { Xml } from "./xml.js";
 import { NumberingLevel } from "./numbering-level.js";
 import { Style } from "./style.js";
@@ -35,7 +35,7 @@ export class NumberingStyle {
         return this.level!.style;
     }
 
-    public applyNumberings(numberings: WordNumberings | undefined): void {
+    public applyNumberings(numberings: AbstractNumberings | undefined): void {
         if (numberings !== undefined) {
             const numbering = numberings.getNumberingById(this.numId);
             this.level = numbering.getLevel(this.index);

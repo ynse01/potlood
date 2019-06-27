@@ -1,9 +1,9 @@
 import { Xml } from "./xml.js";
 import { Metrics } from "./metrics.js";
-import { WordStyles } from "./word-styles.js";
+import { NamedStyles } from "./named-styles.js";
 import { Style } from "./style.js";
 import { NumberingStyle } from "./num-style.js";
-import { WordNumberings } from "./word-numberings.js";
+import { AbstractNumberings } from "./abstract-numberings.js";
 
 export enum Justification {
     center = "center",
@@ -37,7 +37,7 @@ export class ParStyle {
         return parStyle;
     }
 
-    public applyNamedStyles(namedStyles: WordStyles | undefined): void {
+    public applyNamedStyles(namedStyles: NamedStyles | undefined): void {
         if (this._basedOnId !== undefined && namedStyles !== undefined) {
             const baseStyle = namedStyles.getNamedStyle(this._basedOnId);
             if (baseStyle !== undefined) {
@@ -46,7 +46,7 @@ export class ParStyle {
         }
     }
 
-    public applyNumberings(numberings: WordNumberings | undefined): void {
+    public applyNumberings(numberings: AbstractNumberings | undefined): void {
         if (this._numStyle !== undefined) {
             this._numStyle.applyNumberings(numberings);
         }

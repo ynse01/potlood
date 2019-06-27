@@ -4,9 +4,9 @@ import { Justification } from './par-style.js';
 import { UnderlineMode } from './run-style.js';
 import { WordDocument } from './word-document.js';
 import { VirtualFlow } from './virtual-flow.js';
-import { WordParagraph, RunInParagraph } from './word-paragraph.js';
+import { Paragraph, RunInParagraph } from './paragraph.js';
 import { FlowPosition } from './flow-position.js';
-import { LineInRun, WordRun } from './word-run.js';
+import { LineInRun, Run } from './run.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -47,7 +47,7 @@ export class SvgRenderer {
     }
   }
 
-  private renderParagraph(par: WordParagraph, flow: VirtualFlow, pos: FlowPosition): void {
+  private renderParagraph(par: Paragraph, flow: VirtualFlow, pos: FlowPosition): void {
     if (par.numberingRun !== undefined) {
       this.renderRun(par.numberingRun, flow, pos.clone(), RunInParagraph.FirstRun);
     }
@@ -64,7 +64,7 @@ export class SvgRenderer {
     });
   }
 
-  private renderRun(run: WordRun, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
+  private renderRun(run: Run, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
     let width = flow.getWidth(pos);
     let remainder = run.text;
     const deltaY = run.style.fontSize * 1.08;

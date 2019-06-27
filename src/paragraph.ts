@@ -1,5 +1,5 @@
 import { Xml } from "./xml.js";
-import { WordRun } from "./word-run.js";
+import { Run } from "./run.js";
 import { WordDocument } from "./word-document.js";
 import { ParStyle } from "./par-style.js";
 
@@ -11,11 +11,11 @@ export enum RunInParagraph {
     Numbering = 4
 }
 
-export class WordParagraph {
+export class Paragraph {
     private pNode: ChildNode;
     private doc: WordDocument;
-    private _runs: WordRun[] | undefined;
-    private _numberingRun: WordRun | undefined;
+    private _runs: Run[] | undefined;
+    private _numberingRun: Run | undefined;
 
     constructor(doc: WordDocument, pNode: ChildNode) {
         this.pNode = pNode;
@@ -24,24 +24,24 @@ export class WordParagraph {
 
     public parseContent(): void {
         if (this._runs === undefined) {
-            const runs: WordRun[] = [];
+            const runs: Run[] = [];
             const parStyle = this.parStyle;
             if (parStyle !== undefined && parStyle._numStyle !== undefined) {
-                this._numberingRun = new WordRun(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style);
+                this._numberingRun = new Run(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style);
             }
             Xml.getChildrenOfName(this.pNode, "w:r").forEach(node => {
-                runs.push(WordRun.fromRunNode(node, parStyle));
+                runs.push(Run.fromRunNode(node, parStyle));
             });
             this._runs = runs;
         }
     }
 
-    public get runs(): WordRun[] {
+    public get runs(): Run[] {
         this.parseContent();
         return this._runs!;
     }
 
-    public get numberingRun(): WordRun | undefined {
+    public get numberingRun(): Run | undefined {
         this.parseContent();
         return this._numberingRun;
     }

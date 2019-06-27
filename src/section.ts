@@ -2,7 +2,7 @@ import { WordDocument } from "./word-document.js";
 import { Xml } from "./xml.js";
 import { Metrics } from "./metrics.js";
 
-export class WordSection {
+export class Section {
     private sectionNode: ChildNode;
     private _pageHeight: number | undefined;
     private _pageWidth: number | undefined;

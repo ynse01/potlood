@@ -1,16 +1,16 @@
 import { Part } from "./part.js";
 import { Xml } from "./xml.js";
-import { WordParagraph } from "./word-paragraph.js";
-import { WordStyles } from "./word-styles.js";
-import { WordSection } from "./word-section.js";
-import { WordNumberings } from "./word-numberings.js";
+import { Paragraph } from "./paragraph.js";
+import { NamedStyles } from "./named-styles.js";
+import { Section } from "./section.js";
+import { AbstractNumberings } from "./abstract-numberings.js";
 
 export class WordDocument {
     private part: Part;
-    private pars: WordParagraph[] = [];
-    private _section: WordSection | undefined;
-    private _styles: WordStyles | undefined;
-    private _numberings: WordNumberings | undefined;
+    private pars: Paragraph[] = [];
+    private _section: Section | undefined;
+    private _styles: NamedStyles | undefined;
+    private _numberings: AbstractNumberings | undefined;
 
     constructor(part: Part) {
         this.part = part;
@@ -25,10 +25,10 @@ export class WordDocument {
                     body.childNodes.forEach(element => {
                         switch(element.nodeName) {
                             case "w:p":
-                                this.pars.push(new WordParagraph(this, element));
+                                this.pars.push(new Paragraph(this, element));
                                 break;
                             case "w:sectPr":
-                                this._section = new WordSection(this, element);
+                                this._section = new Section(this, element);
                                 break;
                             default:
                                 console.log("Don't know how to parse " + element.nodeName);
@@ -40,27 +40,27 @@ export class WordDocument {
         }
     }
 
-    public get styles(): WordStyles | undefined {
+    public get styles(): NamedStyles | undefined {
         return this._styles;
     }
 
-    public get numberings(): WordNumberings | undefined {
+    public get numberings(): AbstractNumberings | undefined {
         return this._numberings;
     }
 
-    public setNamedStyles(styles: WordStyles): void {
+    public setNamedStyles(styles: NamedStyles): void {
         this._styles = styles;
     }
 
-    public setNumberings(numberings: WordNumberings): void {
+    public setNumberings(numberings: AbstractNumberings): void {
         this._numberings = numberings;
     }
 
-    public get paragraphs(): WordParagraph[] {
+    public get paragraphs(): Paragraph[] {
         return this.pars;
     }
 
-    public get section(): WordSection | undefined {
+    public get section(): Section | undefined {
         return this._section;
     }
 }

@@ -10,12 +10,12 @@ export enum LineInRun {
     OnlyLine = 3
 }
 
-export class WordRun {
+export class Run {
     public text: string;
     public style: Style;
 
-    public static fromRunNode(rNode: ChildNode, parStyle: ParStyle | undefined): WordRun {
-        const run = new WordRun("", new Style());
+    public static fromRunNode(rNode: ChildNode, parStyle: ParStyle | undefined): Run {
+        const run = new Run("", new Style());
         const presentationNode = Xml.getFirstChildOfName(rNode, "w:rPr");
         if (presentationNode !== undefined && presentationNode.hasChildNodes()) {
             run.style.runStyle = RunStyle.fromPresentationNode(presentationNode);

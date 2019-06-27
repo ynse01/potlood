@@ -1,4 +1,4 @@
-import { WordStyles } from "./word-styles.js";
+import { NamedStyles } from "./named-styles.js";
 import { Xml } from "./xml.js";
 import { NumberingLevel } from "./numbering-level.js";
 
@@ -8,7 +8,7 @@ export class Numbering {
     /**
      * Parse a Numbering from a w:abstractNum Node.
      */
-    public static fromAbstractNumNode(styles: WordStyles | undefined, node: ChildNode): Numbering {
+    public static fromAbstractNumNode(styles: NamedStyles | undefined, node: ChildNode): Numbering {
         const numbering = new Numbering();
         Xml.getChildrenOfName(node, "w:lvl").forEach(levelNode => {
             const level = NumberingLevel.fromLevelNode(styles, levelNode);
