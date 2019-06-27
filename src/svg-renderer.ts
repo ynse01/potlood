@@ -25,7 +25,7 @@ export class SvgRenderer {
 
   public renderDocument(doc: WordDocument): number {
     const flow = VirtualFlow.fromSection(doc.section);
-    const pos = new FlowPosition(20);
+    const pos = new FlowPosition(0);
     doc.paragraphs.forEach(parOrTable => {
       if (parOrTable instanceof Paragraph) {
         this.renderParagraph(parOrTable, flow, pos);
@@ -69,7 +69,7 @@ export class SvgRenderer {
         const cellFlow = flow.createCellFlow(pos, cell);
         this.renderCellBorder(cell, table.style, cellFlow, pos, height);
         cell.pars.forEach(par => {
-          this.renderParagraph(par, cellFlow, pos.clone());
+          this.renderParagraph(par, cellFlow, pos.clone().add(table.style.cellMarginTop));
         });
       });
       pos.add(height);
@@ -77,7 +77,8 @@ export class SvgRenderer {
   }
 
   private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, pos: FlowPosition, height: number): void {
-    pos = pos.clone().add(Metrics.getLineSpacing(cell.pars[0].runs[0].style) * 0.5);
+    // TODO: Figure out why this offset is required.
+    pos = pos.clone().add(Metrics.getLineSpacing(cell.pars[0].runs[0].style) * 0.75);
     if (style.borderTop !== undefined) {
       this.renderHorizontalLine(cell.getWidth(), flow, pos, "000000");
     }
@@ -172,6 +173,7 @@ export class SvgRenderer {
 
   private setVerticalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition): void {
     textNode.setAttribute('y', (flow.getY(pos) + style.fontSize / 2).toString());
+    textNode.setAttribute('alignment-baseline', 'top');
   }
 
   private renderUnderline(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition): void {
