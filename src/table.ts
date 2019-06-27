@@ -30,7 +30,7 @@ export class TableRow {
     public getPars(): Paragraph[] {
         const pars: Paragraph[] = [];
         this.cells.forEach(cell => {
-            pars.push(cell.par);
+            pars.push(...cell.pars);
         });
         return pars;
     }
@@ -40,18 +40,14 @@ export class TableCell {
     public id: string | undefined = undefined;
     public columns: TableColumn[];
     public rowSpan: number = 1;
-    public par: Paragraph;
+    public pars: Paragraph[] = [];
 
     public static fromTableCellNode(cellNode: ChildNode, table: Table, colIndex: number): TableCell {
-        const pNode = Xml.getFirstChildOfName(cellNode, "w:p");
-        let par: Paragraph;
-        if (pNode !== undefined) {
-            par = new Paragraph(table.doc, pNode);
-        } else {
-            par = Paragraph.createEmpty(table.doc);
-        }
         const columns: TableColumn[] = [table.columns[colIndex]];
-        const cell = new TableCell(columns, par);
+        const cell = new TableCell(columns);
+        Xml.getChildrenOfName(cellNode, "w:p").forEach(pNode => {
+            cell.pars.push(new Paragraph(table.doc, pNode));
+        });
         const id = (cellNode as Element).getAttribute("w:id");
         if (id !== null) {
             cell.id = id;
@@ -59,9 +55,8 @@ export class TableCell {
         return cell;
     }
 
-    constructor(columns: TableColumn[], par: Paragraph) {
+    constructor(columns: TableColumn[]) {
         this.columns = columns;
-        this.par = par;
     }
 }
 
