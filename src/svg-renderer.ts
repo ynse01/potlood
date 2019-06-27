@@ -69,22 +69,9 @@ export class SvgRenderer {
       const deltaY = Metrics.getLineSpacing(run.style);
       pos.add(deltaY);
     }
-    if (!run.text) {
-      return;
-    }
-    let inRun = (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) ? LineInRun.FirstLine : LineInRun.Normal;
-    run.getFlowLines(flow, pos, inParagraph).forEach((line, index, lines) => {
-      // Check for last line of run.
-      if (lines.length - 1 === index) {
-        if (inRun == LineInRun.FirstLine) {
-          inRun = LineInRun.OnlyLine;
-        } else {
-          inRun = LineInRun.LastLine;
-        }
-      }
-      this.addText(line.text, run.style, flow, line.pos, inRun);
+    run.getFlowLines(flow, pos, inParagraph).forEach((line) => {
+      this.addText(line.text, run.style, flow, line.pos, line.inRun);
       flow.useWidth(line.pos, line.claim);
-      inRun = LineInRun.Normal;
     });
   }
 

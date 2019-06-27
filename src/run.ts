@@ -15,6 +15,13 @@ export enum LineInRun {
     OnlyLine = 3
 }
 
+export interface IPositionedLine {
+    text: string;
+    pos: FlowPosition;
+    claim: number;
+    inRun: LineInRun;
+}
+
 export class Run {
     public text: string;
     public style: Style;
@@ -59,23 +66,31 @@ export class Run {
         return lines;
     }
 
-    public getFlowLines(flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): { text: string, pos: FlowPosition, claim: number}[] {
+    public getFlowLines(flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): IPositionedLine[] {
         let remainder = this.text;
-        let lines: {text: string, pos: FlowPosition, claim: number} [] = [];
+        let lines: IPositionedLine[] = [];
         const yDelta = Metrics.getLineSpacing(this.style);
+        let inRun = (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) ? LineInRun.FirstLine : LineInRun.Normal;
         while(remainder.length > 0) {
             let usedWidth = 0;
             const line = this.fitText(remainder, this.style, flow.getWidth(pos));
             if (remainder.length === line.length) {
+                // Check for last line of run.
+                if (inRun == LineInRun.FirstLine) {
+                    inRun = LineInRun.OnlyLine;
+                } else {
+                    inRun = LineInRun.LastLine;
+                }
                 if (inParagraph !== RunInParagraph.LastRun && inParagraph !== RunInParagraph.OnlyRun) {
                     usedWidth = Metrics.getTextWidth(line, this.style) - this.style.identation;
                 }
             }
-            lines.push({ text: line, pos: pos.clone(), claim: usedWidth});
+            lines.push({ text: line, pos: pos.clone(), claim: usedWidth, inRun: inRun});
             if (usedWidth === 0) {
                 pos.add(yDelta);
             }
             remainder = remainder.substring(line.length);
+            inRun = LineInRun.Normal;
         }
         return lines;
     }
