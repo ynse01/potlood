@@ -130,6 +130,7 @@ export class SvgRenderer {
       text = text.toLocaleUpperCase();
     }
     this.setFont(newText, style);
+    this.setColor(newText, style);
     this.setHorizontalAlignment(newText, style, flow, pos, inRun);
     this.setVerticalAlignment(newText, style, flow, pos);
     const textNode = document.createTextNode(text);
@@ -148,6 +149,10 @@ export class SvgRenderer {
     if (style.italic) {
       textNode.setAttribute('font-style', 'italic');
     }
+  }
+
+  private setColor(textNode: Element, style: Style) {
+    textNode.setAttribute('fill', `#${style.color}`);
   }
 
   private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, inRun: LineInRun): void {
