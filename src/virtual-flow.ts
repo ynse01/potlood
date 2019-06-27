@@ -1,6 +1,7 @@
 import { FlowPosition } from "./flow-position.js";
 import { Metrics } from "./metrics.js";
 import { Section } from "./section.js";
+import { TableCell } from "./table.js";
 
 export class VirtualFlow {
     // private _width: number;
@@ -63,5 +64,11 @@ export class VirtualFlow {
             return this._xMax - this._xMin - used;
         }
         return this._xMax - this._xMin;
+    }
+
+    public createCellFlow(pos: FlowPosition, cell: TableCell) : VirtualFlow {
+        const start = this.getX(pos) + cell.getStart();
+        const width = cell.getWidth();
+        return new VirtualFlow(start, start + width);
     }
 }

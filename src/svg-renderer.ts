@@ -61,15 +61,12 @@ export class SvgRenderer {
     });
   }
 
-  private renderTable(table: Table, _flow: VirtualFlow, pos: FlowPosition): void {
+  private renderTable(table: Table, flow: VirtualFlow, pos: FlowPosition): void {
     table.rows.forEach(row => {
       const height = row.getMaxHeight();
       row.cells.forEach(cell => {
         cell.pars.forEach(par => {
-          const start = cell.getStart();
-          const width = cell.getWidth();
-          const flow = new VirtualFlow(start, start + width);
-          this.renderParagraph(par, flow, pos.clone());
+          this.renderParagraph(par, flow.createCellFlow(pos, cell), pos.clone());
         });
       });
       pos.add(height);
