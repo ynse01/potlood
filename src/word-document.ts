@@ -9,7 +9,6 @@ import { Table } from "./table.js";
 export class WordDocument {
     private part: Part;
     private pars: Paragraph[] = [];
-    private tables: Table[] = [];
     private _section: Section | undefined;
     private _styles: NamedStyles | undefined;
     private _numberings: AbstractNumberings | undefined;
@@ -30,7 +29,8 @@ export class WordDocument {
                                 this.pars.push(new Paragraph(this, element));
                                 break;
                             case "w:tbl":
-                                this.tables.push(Table.fromTableNode(this, element));
+                                const table = Table.fromTableNode(this, element);
+                                this.pars.push(...table.getPars());
                                 break;
                             case "w:sectPr":
                                 this._section = new Section(this, element);

@@ -26,6 +26,14 @@ export class TableRow {
         });
         return row;
     }
+
+    public getPars(): Paragraph[] {
+        const pars: Paragraph[] = [];
+        this.cells.forEach(cell => {
+            pars.push(cell.par);
+        });
+        return pars;
+    }
 }
 
 export class TableCell {
@@ -87,5 +95,13 @@ export class Table {
         this.doc = doc;
         this.columns = [];
         this.rows = [];
+    }
+
+    public getPars(): Paragraph[] {
+        const pars: Paragraph[] = [];
+        this.rows.forEach(row => {
+            pars.push(...row.getPars());
+        });
+        return pars;
     }
 }
