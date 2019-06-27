@@ -67,7 +67,7 @@ export class SvgRenderer {
   private renderRun(run: Run, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
     let width = flow.getWidth(pos);
     let remainder = run.text;
-    const deltaY = run.style.fontSize * 1.08;
+    const deltaY = Metrics.getLineSpacing(run.style);
     if (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) {
       pos.add(deltaY);
     }

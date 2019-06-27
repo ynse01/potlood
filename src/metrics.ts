@@ -26,6 +26,13 @@ export class Metrics {
     return Metrics.convertTwipsToPixels(points * 20);
   }
 
+  /**
+   * Returns the spcing between two consequative lines.
+   */
+  public static getLineSpacing(style: Style): number {
+    return 1.08 * style.fontSize;
+  }
+
   public static getTextWidth(
     text: string,
     style: Style
