@@ -65,57 +65,27 @@ export class SvgRenderer {
   }
 
   private renderRun(run: Run, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
-    let width = flow.getWidth(pos);
-    let remainder = run.text;
-    const deltaY = Metrics.getLineSpacing(run.style);
     if (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) {
+      const deltaY = Metrics.getLineSpacing(run.style);
       pos.add(deltaY);
     }
-    if (width < 0 || !run.text) {
+    if (!run.text) {
       return;
     }
     let inRun = (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) ? LineInRun.FirstLine : LineInRun.Normal;
-    while (remainder.length > 0) {
-      width = flow.getWidth(pos);
-      const line = this.fitText(remainder, run.style, width);
-      let usedWidth = 0;
+    run.getFlowLines(flow, pos, inParagraph).forEach((line, index, lines) => {
       // Check for last line of run.
-      if (line.length === remainder.length) {
+      if (lines.length - 1 === index) {
         if (inRun == LineInRun.FirstLine) {
           inRun = LineInRun.OnlyLine;
         } else {
           inRun = LineInRun.LastLine;
         }
-        if (inParagraph !== RunInParagraph.LastRun && inParagraph !== RunInParagraph.OnlyRun) {
-          usedWidth = Metrics.getTextWidth(line, run.style) - run.style.identation;
-        }
       }
-      this.addText(line, run.style, flow, pos, inRun);
-      if (usedWidth > 0) {
-        flow.useWidth(pos, usedWidth);
-      } else {
-        pos.add(deltaY);
-      }
-      remainder = remainder.substring(line.length);
+      this.addText(line.text, run.style, flow, line.pos, inRun);
+      flow.useWidth(line.pos, line.claim);
       inRun = LineInRun.Normal;
-    }
-  }
-
-  private stripLastWord(text: string): string {
-    const stop = text.lastIndexOf(' ');
-    return text.substring(0, stop);
-  }
-
-  private fitText(
-    text: string,
-    style: Style,
-    width: number
-  ): string {
-    let subText = text;
-    while (Metrics.getTextWidth(subText, style) + style.identation > width) {
-      subText = this.stripLastWord(subText);
-    }
-    return subText;
+    });
   }
 
   private addText(

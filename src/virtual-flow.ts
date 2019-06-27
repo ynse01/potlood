@@ -45,7 +45,9 @@ export class VirtualFlow {
     }
 
     public useWidth(flowPos: FlowPosition, used: number) {
-        this._usedWidth[flowPos.flowPosition] = used;
+        if (used > 0) {
+            this._usedWidth[flowPos.flowPosition] = used;
+        }
     }
 
     public getY(flowPos: FlowPosition): number {

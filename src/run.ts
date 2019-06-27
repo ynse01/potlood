@@ -4,6 +4,9 @@ import { ParStyle } from "./par-style.js";
 import { Style } from "./style.js";
 import { NamedStyles } from "./named-styles.js";
 import { Metrics } from "./metrics.js";
+import { FlowPosition } from "./flow-position.js";
+import { VirtualFlow } from "./virtual-flow.js";
+import { RunInParagraph } from "./paragraph.js";
 
 export enum LineInRun {
     Normal = 0,
@@ -42,18 +45,39 @@ export class Run {
     }
 
     public getTextHeight(width: number): number {
-        return this.getNumberOfLines(width) * Metrics.getLineSpacing(this.style);
+        return this.getLines(width).length * Metrics.getLineSpacing(this.style);
     }
 
-    public getNumberOfLines(width: number): number {
+    public getLines(width: number): string[] {
         let remainder = this.text;
-        let counter = 0;
+        let lines: string[] = [];
         while(remainder.length > 0) {
             const line = this.fitText(remainder, this.style, width);
             remainder = remainder.substring(line.length);
-            counter++;
+            lines.push(line);
         }
-        return counter;
+        return lines;
+    }
+
+    public getFlowLines(flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): { text: string, pos: FlowPosition, claim: number}[] {
+        let remainder = this.text;
+        let lines: {text: string, pos: FlowPosition, claim: number} [] = [];
+        const yDelta = Metrics.getLineSpacing(this.style);
+        while(remainder.length > 0) {
+            let usedWidth = 0;
+            const line = this.fitText(remainder, this.style, flow.getWidth(pos));
+            if (remainder.length === line.length) {
+                if (inParagraph !== RunInParagraph.LastRun && inParagraph !== RunInParagraph.OnlyRun) {
+                    usedWidth = Metrics.getTextWidth(line, this.style) - this.style.identation;
+                }
+            }
+            lines.push({ text: line, pos: pos.clone(), claim: usedWidth});
+            if (usedWidth === 0) {
+                pos.add(yDelta);
+            }
+            remainder = remainder.substring(line.length);
+        }
+        return lines;
     }
 
     private stripLastWord(text: string): string {
