@@ -61,11 +61,18 @@ export class SvgRenderer {
     });
   }
 
-  private renderTable(table: Table, flow: VirtualFlow, pos: FlowPosition): void {
-    table.getPars().forEach(par => {
-      par.runs.forEach((run) => {
-      this.renderRun(run, flow, pos, run.inParagraph);
+  private renderTable(table: Table, _flow: VirtualFlow, pos: FlowPosition): void {
+    table.rows.forEach(row => {
+      const height = row.getMaxHeight();
+      row.cells.forEach(cell => {
+        cell.pars.forEach(par => {
+          const start = cell.getStart();
+          const width = cell.getWidth();
+          const flow = new VirtualFlow(start, start + width);
+          this.renderParagraph(par, flow, pos.clone());
+        });
       });
+      pos.add(height);
     });
   }
 

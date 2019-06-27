@@ -31,7 +31,7 @@ export class TableRow {
     public getMaxHeight(): number {
         let height = 0;
         this.cells.forEach(cell => {
-            Math.max(height, cell.getHeight());
+            height = Math.max(height, cell.getHeight());
         });
         return height;
     }
@@ -84,6 +84,10 @@ export class TableCell {
             height += par.getTextHeight(width);
         });
         return height;
+    }
+
+    public getStart(): number {
+        return this.columns[0].start;
     }
 
     public getWidth(): number {
