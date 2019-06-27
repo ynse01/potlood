@@ -37,7 +37,7 @@ export class Paragraph {
                 this._numberingRun = new Run(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style);
             }
             Xml.getChildrenOfName(this.pNode, "w:r").forEach(node => {
-                runs.push(Run.fromRunNode(node, parStyle));
+                runs.push(Run.fromRunNode(node, parStyle, this.doc.styles));
             });
             this._runs = runs;
         }

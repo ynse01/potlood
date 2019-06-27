@@ -1,6 +1,8 @@
 import { Xml } from "./xml.js";
 import { Fonts } from "./fonts.js";
 import { Metrics } from "./metrics.js";
+import { Style } from "./style.js";
+import { NamedStyles } from "./named-styles.js";
 
 export enum UnderlineMode {
     none = "none",
@@ -24,6 +26,8 @@ export enum UnderlineMode {
 }
 
 export class RunStyle {
+    public _basedOn: Style | undefined;
+    private _basedOnId: string | undefined;
     public _italic: boolean | undefined;
     public _bold: boolean | undefined;
     public _underlineMode: UnderlineMode | undefined;
@@ -38,6 +42,10 @@ export class RunStyle {
 
     public static fromPresentationNode(runPresentationNode: ChildNode): RunStyle {
         const style = new RunStyle();
+        style._basedOnId = Xml.getStringValueFromNode(runPresentationNode, "w:rStyle");
+        if (style._basedOnId) {
+            console.log("Style based on: " + style._basedOnId);
+        }
         style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
         style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
         const underlineMode = Xml.getStringValueFromNode(runPresentationNode, "w:u");
@@ -58,6 +66,16 @@ export class RunStyle {
         style._caps = Xml.getBooleanValueFromNode(runPresentationNode, "w:caps");
         style._smallCaps = Xml.getBooleanValueFromNode(runPresentationNode, "w:smallcaps");
         return style;
+    }
+
+    public applyNamedStyles(namedStyles: NamedStyles | undefined): void {
+        if (this._basedOnId !== undefined && namedStyles !== undefined) {
+            const baseStyle = namedStyles.getNamedStyle(this._basedOnId);
+            if (baseStyle !== undefined) {
+                this._basedOn = baseStyle;
+                console.log("Style applied: " + this._basedOnId);
+            }
+        }
     }
 
     public updateFont(fontFamily: string, fontSize: number): void {

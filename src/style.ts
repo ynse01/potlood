@@ -31,6 +31,9 @@ export class Style {
                 this._basedOn = baseStyle;
             }
         }
+        if (this.runStyle !== undefined) {
+            this.runStyle.applyNamedStyles(namedStyles);
+        }
         if (this.parStyle !== undefined) {
             this.parStyle.applyNamedStyles(namedStyles);
         }
@@ -126,13 +129,19 @@ export class Style {
     private getRecursive<T>(parCb?: (parStyle: ParStyle) => T | undefined, runCb?: (runStyle: RunStyle) => T | undefined): T | undefined {
         let val: T | undefined = undefined;
         // First look at local RUN presentation.
-        if (runCb !== undefined && this.runStyle !== undefined) {
-            const localRun = runCb(this.runStyle);
-            if (localRun !== undefined) {
-                val = localRun;
+        if (this.runStyle !== undefined) {
+            if (runCb !== undefined) {
+                const localRun = runCb(this.runStyle);
+                if (localRun !== undefined) {
+                    val = localRun;
+                }
             }
-        }
-        // Secondly look at local PARAGRAPH presentation.
+            if (val === undefined && this.runStyle._basedOn !== undefined) {
+                // Secondly look at the base styles of the RUN style.
+                val = this.runStyle._basedOn.getRecursive<T>(parCb, runCb);
+            }
+    }
+        // Thirdly look at local PARAGRAPH presentation.
         if (val === undefined) {
             if (this.parStyle !== undefined) {
                 if (parCb !== undefined) {
@@ -142,19 +151,19 @@ export class Style {
                     }
                 }
                 if (val === undefined && this.parStyle._numStyle !== undefined) {
-                    // Thirdly look at the base styles of the PARAGRAPH style.
+                    // Fourthly look at the base styles of the PARAGRAPH style.
                     const numStyle = this.parStyle._numStyle.style;
                     if (numStyle !== undefined) {
                         val = this.parStyle._numStyle.style.getRecursive<T>(parCb, runCb);
                     }
                 }
                 if (val === undefined && this.parStyle._basedOn !== undefined) {
-                    // Fourthly look at the base styles of the PARAGRAPH style.
+                    // Fifthly look at the base styles of the PARAGRAPH style.
                     val = this.parStyle._basedOn.getRecursive<T>(parCb, runCb);
                 }
             }
         }
-        // Fiftly look at the Style where this style is based upon.
+        // Sixthly look at the Style where this style is based upon.
         if (val === undefined) {
             const basedOn = this._basedOn;
             if (basedOn !== undefined) {

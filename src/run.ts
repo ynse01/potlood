@@ -2,6 +2,7 @@ import { Xml } from "./xml.js";
 import { RunStyle } from "./run-style.js";
 import { ParStyle } from "./par-style.js";
 import { Style } from "./style.js";
+import { NamedStyles } from "./named-styles.js";
 
 export enum LineInRun {
     Normal = 0,
@@ -14,7 +15,7 @@ export class Run {
     public text: string;
     public style: Style;
 
-    public static fromRunNode(rNode: ChildNode, parStyle: ParStyle | undefined): Run {
+    public static fromRunNode(rNode: ChildNode, parStyle: ParStyle | undefined, namedStyles: NamedStyles | undefined): Run {
         const run = new Run("", new Style());
         const presentationNode = Xml.getFirstChildOfName(rNode, "w:rPr");
         if (presentationNode !== undefined && presentationNode.hasChildNodes()) {
@@ -30,6 +31,7 @@ export class Run {
                 run.text = text;
             }
         }
+        run.style.applyNamedStyles(namedStyles);
         return run;
     }
 

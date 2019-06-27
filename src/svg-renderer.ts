@@ -186,19 +186,21 @@ export class SvgRenderer {
 
   private renderUnderline(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition): void {
     // TODO: Support all underline modes
-    // TODO: Support strike and dstrike
     if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
       let lineLength = (textNode as any).getComputedTextLength();
       const y = pos.clone().add(style.fontSize / 2);
       switch(style.underlineMode) {
         case UnderlineMode.double:
-            this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
-            this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
-            break;
+          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
+          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
+          break;
+        case UnderlineMode.none:
+          // Nothing to be done
+          break;
         default:
         case UnderlineMode.single:
-            this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
-            break;
+          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color);
+          break;
       }
       if (style.strike) {
         this.renderHorizontalLine(lineLength, flow, y.subtract(style.fontSize / 2), style.color);
