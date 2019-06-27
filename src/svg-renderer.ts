@@ -7,7 +7,8 @@ import { VirtualFlow } from './virtual-flow.js';
 import { Paragraph, RunInParagraph } from './paragraph.js';
 import { FlowPosition } from './flow-position.js';
 import { LineInRun, Run } from './run.js';
-import { Table } from './table.js';
+import { Table, TableCell } from './table.js';
+import { TableStyle } from './table-style.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -65,12 +66,30 @@ export class SvgRenderer {
     table.rows.forEach(row => {
       const height = row.getMaxHeight();
       row.cells.forEach(cell => {
+        const cellFlow = flow.createCellFlow(pos, cell);
+        this.renderCellBorder(cell, table.style, cellFlow, pos, height);
         cell.pars.forEach(par => {
-          this.renderParagraph(par, flow.createCellFlow(pos, cell), pos.clone());
+          this.renderParagraph(par, cellFlow, pos.clone());
         });
       });
       pos.add(height);
     });
+  }
+
+  private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, pos: FlowPosition, height: number): void {
+    pos = pos.clone().add(Metrics.getLineSpacing(cell.pars[0].runs[0].style) * 0.5);
+    if (style.borderTop !== undefined) {
+      this.renderHorizontalLine(cell.getWidth(), flow, pos, "000000");
+    }
+    if (style.borderBottom !== undefined) {
+      this.renderHorizontalLine(cell.getWidth(), flow, pos.clone().add(height), "000000");
+    }
+    if (style.borderStart !== undefined) {
+      this.renderVerticalLine(height, flow, pos, "000000");
+    }
+    if (style.borderEnd !== undefined) {
+      this.renderVerticalLine(height, flow, pos.clone().add(cell.getWidth()), "000000");
+    }
   }
 
   private renderRun(run: Run, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
@@ -185,13 +204,23 @@ export class SvgRenderer {
   }
 
   private renderHorizontalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string) {
-    const line = document.createElementNS(SvgRenderer.svgNS, "line");
     const x = flow.getX(pos);
     const y = flow.getY(pos);
-    line.setAttribute("x1", x.toString());
-    line.setAttribute("y1", y.toString());
-    line.setAttribute("x2", (x + lineLength).toString());
-    line.setAttribute("y2", y.toString());
+    this.renderLine(x, y, x + lineLength, y, color);
+  }
+
+  private renderVerticalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string) {
+    const x = flow.getX(pos);
+    const y = flow.getY(pos);
+    this.renderLine(x, y, x, y + lineLength, color);
+  }
+
+  private renderLine(x1: number, y1: number, x2: number, y2: number, color: string): void {
+    const line = document.createElementNS(SvgRenderer.svgNS, "line");
+    line.setAttribute("x1", x1.toString());
+    line.setAttribute("y1", y1.toString());
+    line.setAttribute("x2", x2.toString());
+    line.setAttribute("y2", y2.toString());
     line.setAttribute("stroke", `#${color}`);
     this.svg.appendChild(line);
   }
