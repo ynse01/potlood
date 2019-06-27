@@ -8,7 +8,7 @@ import { Table } from "./table.js";
 
 export class WordDocument {
     private part: Part;
-    private pars: Paragraph[] = [];
+    private pars: (Paragraph | Table)[] = [];
     private _section: Section | undefined;
     private _styles: NamedStyles | undefined;
     private _numberings: AbstractNumberings | undefined;
@@ -30,7 +30,7 @@ export class WordDocument {
                                 break;
                             case "w:tbl":
                                 const table = Table.fromTableNode(this, node);
-                                this.pars.push(...table.getPars());
+                                this.pars.push(table);
                                 break;
                             case "w:sectPr":
                                 this._section = new Section(this, node);
@@ -61,7 +61,7 @@ export class WordDocument {
         this._numberings = numberings;
     }
 
-    public get paragraphs(): Paragraph[] {
+    public get paragraphs(): (Paragraph | Table)[] {
         return this.pars;
     }
 

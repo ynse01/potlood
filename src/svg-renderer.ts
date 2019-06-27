@@ -7,6 +7,7 @@ import { VirtualFlow } from './virtual-flow.js';
 import { Paragraph, RunInParagraph } from './paragraph.js';
 import { FlowPosition } from './flow-position.js';
 import { LineInRun, Run } from './run.js';
+import { Table } from './table.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -24,8 +25,12 @@ export class SvgRenderer {
   public renderDocument(doc: WordDocument): number {
     const flow = VirtualFlow.fromSection(doc.section);
     const pos = new FlowPosition(20);
-    doc.paragraphs.forEach(par => {
-      this.renderParagraph(par, flow, pos);
+    doc.paragraphs.forEach(parOrTable => {
+      if (parOrTable instanceof Paragraph) {
+        this.renderParagraph(parOrTable, flow, pos);
+      } else {
+        this.renderTable(parOrTable, flow, pos);
+      }
     });
     return flow.getY(pos);
   }
@@ -53,6 +58,14 @@ export class SvgRenderer {
     }
     par.runs.forEach((run) => {
       this.renderRun(run, flow, pos, run.inParagraph);
+    });
+  }
+
+  private renderTable(table: Table, flow: VirtualFlow, pos: FlowPosition): void {
+    table.getPars().forEach(par => {
+      par.runs.forEach((run) => {
+      this.renderRun(run, flow, pos, run.inParagraph);
+      });
     });
   }
 
