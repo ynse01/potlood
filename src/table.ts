@@ -2,6 +2,7 @@ import { Xml } from "./xml.js";
 import { Metrics } from "./metrics.js";
 import { Paragraph } from "./paragraph.js";
 import { WordDocument } from "./word-document.js";
+import { TableStyle } from "./table-style.js";
 
 export class TableColumn {
     public width: number;
@@ -35,7 +36,6 @@ export class TableRow {
         return pars;
     }
 }
-
 export class TableCell {
     public id: string | undefined = undefined;
     public columns: TableColumn[];
@@ -64,6 +64,7 @@ export class Table {
     public columns: TableColumn[];
     public rows: TableRow[];
     public doc: WordDocument;
+    public style: TableStyle;
 
     public static fromTableNode(doc: WordDocument, tableNode: ChildNode): Table {
         const table = new Table(doc);
@@ -83,6 +84,10 @@ export class Table {
             const row = TableRow.fromTableRowNode(rowNode, table);
             table.rows.push(row);
         });
+        const prNode = Xml.getFirstChildOfName(tableNode, "w:tblPr");
+        if (prNode !== undefined) {
+            table.style = TableStyle.fromTablePresentationNode(prNode);
+        }
         return table;
     }
 
@@ -90,6 +95,7 @@ export class Table {
         this.doc = doc;
         this.columns = [];
         this.rows = [];
+        this.style = new TableStyle();
     }
 
     public getPars(): Paragraph[] {

@@ -23,20 +23,20 @@ export class WordDocument {
             if (doc !== undefined) {
                 const body = Xml.getFirstChildOfName(doc, "w:body");
                 if (body !== undefined) {
-                    body.childNodes.forEach(element => {
-                        switch(element.nodeName) {
+                    body.childNodes.forEach(node => {
+                        switch(node.nodeName) {
                             case "w:p":
-                                this.pars.push(new Paragraph(this, element));
+                                this.pars.push(new Paragraph(this, node));
                                 break;
                             case "w:tbl":
-                                const table = Table.fromTableNode(this, element);
+                                const table = Table.fromTableNode(this, node);
                                 this.pars.push(...table.getPars());
                                 break;
                             case "w:sectPr":
-                                this._section = new Section(this, element);
+                                this._section = new Section(this, node);
                                 break;
                             default:
-                                console.log("Don't know how to parse " + element.nodeName);
+                                console.log("Don't know how to parse " + node.nodeName);
                                 break;
                         }
                     });

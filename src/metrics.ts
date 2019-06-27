@@ -8,15 +8,21 @@ export class Metrics {
    */
   public static convertTwipsToPixels(twips: number): number {
     // Normal screen is 28 dots per inch
-    // 1440 twips = 1 inch (567 twips = 1 cm)
+    // 20 twips = 1 point
+    // 72 points = 1 inch
+    // 1440 twips = 1 inch
+    // (567 twips = 1 cm)
+    // (1 point = 1.333333 px)
+    // return twips * 20 * 1.33333333;
     return twips * 52 / 1440;
   }
 
   /**
    * Convert a number of point in Word coordinates to SVG pixels.
-   * @param twips Word point.
+   * @param points Word point.
    */
   public static convertPointToPixels(points: number): number {
+    // 72 points = 1 inch
     return Metrics.convertTwipsToPixels(points * 20);
   }
 
