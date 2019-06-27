@@ -49,6 +49,7 @@ export class TableCell {
     public columns: TableColumn[];
     public rowSpan: number = 1;
     public pars: Paragraph[] = [];
+    public tableStyle: TableStyle;
     public style: TableCellStyle;
 
     public static fromTableCellNode(cellNode: ChildNode, table: Table, colIndex: number): TableCell {
@@ -59,7 +60,7 @@ export class TableCell {
         } else {
             style = new TableCellStyle();
         }
-        const cell = new TableCell(table.columns, style, colIndex);
+        const cell = new TableCell(table.columns, table.style, style, colIndex);
         Xml.getChildrenOfName(cellNode, "w:p").forEach(pNode => {
             const par = new Paragraph(table.doc, pNode);
             par.type = ParagraphType.TableCell;
@@ -72,14 +73,15 @@ export class TableCell {
         return cell;
     }
 
-    constructor(columns: TableColumn[], style: TableCellStyle, startIndex: number) {
+    constructor(columns: TableColumn[], tableStyle: TableStyle, style: TableCellStyle, startIndex: number) {
+        this.tableStyle = tableStyle;
         this.style = style;
         this.columns = this.getColumns(columns, startIndex);
     }
 
     public getHeight(): number {
         const width = this.getWidth();
-        let height = 0;
+        let height = this.tableStyle.cellMarginTop + this.tableStyle.cellMarginBottom;
         this.pars.forEach(par => {
             height += par.getTextHeight(width);
         });
@@ -95,6 +97,12 @@ export class TableCell {
         this.columns.forEach(col => {
             width += col.width;
         });
+        return width;
+    }
+
+    public getTextWidth(): number {
+        const width = this.getWidth();// - this.tableStyle.cellMarginStart - this.tableStyle.cellMarginEnd;
+        console.log("Text width of cell: " + width + " margins " + this.tableStyle.cellMarginStart + "&" + this.tableStyle.cellMarginEnd);
         return width;
     }
 

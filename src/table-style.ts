@@ -78,10 +78,10 @@ export class TableStyle {
     public borderEnd: TableBorder | undefined;
     public borderHorizontal: TableBorder | undefined;
     public borderVertical: TableBorder | undefined;
-    public cellMarginTop: number | undefined;
-    public cellMarginStart: number | undefined;
-    public cellMarginBottom: number | undefined;
-    public cellMarginEnd: number | undefined;
+    public cellMarginTop: number;
+    public cellMarginStart: number;
+    public cellMarginBottom: number;
+    public cellMarginEnd: number;
 
     public static fromTablePresentationNode(tblPrNode: ChildNode): TableStyle {
         const style = new TableStyle();
@@ -144,11 +144,6 @@ export class TableStyle {
     }
 
     private static readCellMargins(cellMarginNode: ChildNode, style: TableStyle): void {
-        const defaultMargin = Metrics.convertTwipsToPixels(115);
-        style.cellMarginBottom = 0;
-        style.cellMarginTop = 0;
-        style.cellMarginStart = defaultMargin;
-        style.cellMarginEnd = defaultMargin;
         cellMarginNode.childNodes.forEach(node => {
             const name = node.nodeName;
             const element = node as Element;
@@ -195,6 +190,14 @@ export class TableStyle {
                     break;
             }
         });
+    }
+
+    constructor() {
+        const defaultMargin = Metrics.convertTwipsToPixels(115);
+        this.cellMarginBottom = 0;
+        this.cellMarginTop = 0;
+        this.cellMarginStart = defaultMargin;
+        this.cellMarginEnd = defaultMargin;
     }
 }
 
