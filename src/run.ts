@@ -25,6 +25,7 @@ export interface IPositionedLine {
 export class Run {
     public text: string;
     public style: Style;
+    public inParagraph: RunInParagraph = RunInParagraph.OnlyRun;
 
     public static fromRunNode(rNode: ChildNode, parStyle: ParStyle | undefined, namedStyles: NamedStyles | undefined): Run {
         const run = new Run("", new Style());
@@ -55,15 +56,10 @@ export class Run {
         return this.getLines(width).length * Metrics.getLineSpacing(this.style);
     }
 
-    public getLines(width: number): string[] {
-        let remainder = this.text;
-        let lines: string[] = [];
-        while(remainder.length > 0) {
-            const line = this.fitText(remainder, this.style, width);
-            remainder = remainder.substring(line.length);
-            lines.push(line);
-        }
-        return lines;
+    public getLines(width: number): IPositionedLine[] {
+        const flow = new VirtualFlow(0, width);
+        const pos = new FlowPosition(0);
+        return this.getFlowLines(flow, pos, RunInParagraph.OnlyRun);
     }
 
     public getFlowLines(flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): IPositionedLine[] {

@@ -1,39 +1,42 @@
-import { WordDocument } from "./word-document.js";
 import { FlowPosition } from "./flow-position.js";
 import { Metrics } from "./metrics.js";
+import { Section } from "./section.js";
 
 export class VirtualFlow {
     // private _width: number;
-    private _pageWidth: number;
     private _xMin: number;
     private _xMax: number;
     // private _pageHeight: number;
     private _usedWidth: { [pos: number]: number} = {};
 
-    constructor(_content: Element, doc: WordDocument) {
+    public static fromSection(section: Section | undefined): VirtualFlow {
+        const flow = new VirtualFlow(40, 700 - 40);
         // this._width = content.clientWidth - 2 * 40;
-        this._pageWidth = 700;
-        this._xMin = 40;
-        this._xMax = 700 - 40;
         // this._pageHeight = 400;
-        if (doc.section !== undefined) {
-            const pageWidth = doc.section.pageWidth;
-            if (pageWidth !== undefined) {
-                this._pageWidth = Metrics.convertPointToPixels(pageWidth) * 2.2;
+        if (section !== undefined) {
+            let pageWidth = 700;
+            if (section.pageWidth !== undefined) {
+                pageWidth = Metrics.convertPointToPixels(section.pageWidth) * 2.2;
             }
-            const pageHeight = doc.section.pageHeight;
+            const pageHeight = section.pageHeight;
             if (pageHeight !== undefined) {
                 // this._pageHeight = Metrics.convertPointsToPixels(pageHeight) * 2.2;
             }
-            const marginLeft = doc.section.marginLeft;
+            const marginLeft = section.marginLeft;
             if (marginLeft !== undefined) {
-                this._xMin = Metrics.convertTwipsToPixels(marginLeft);
+                flow._xMin = Metrics.convertTwipsToPixels(marginLeft);
             }
-            const marginRight = doc.section.marginRight;
+            const marginRight = section.marginRight;
             if (marginRight !== undefined) {
-                this._xMax = this._pageWidth - Metrics.convertTwipsToPixels(marginRight);
+                flow._xMax = pageWidth - Metrics.convertTwipsToPixels(marginRight);
             }
         };
+        return flow;
+    }
+
+    constructor(xMin: number, xMax: number) {
+        this._xMin = xMin;
+        this._xMax = xMax;
     }
 
     public getX(flowPos: FlowPosition): number {

@@ -22,7 +22,7 @@ export class SvgRenderer {
   }
 
   public renderDocument(doc: WordDocument): number {
-    const flow = new VirtualFlow(this.svg.parentElement!, doc);
+    const flow = VirtualFlow.fromSection(doc.section);
     const pos = new FlowPosition(20);
     doc.paragraphs.forEach(par => {
       this.renderParagraph(par, flow, pos);
@@ -51,16 +51,8 @@ export class SvgRenderer {
     if (par.numberingRun !== undefined) {
       this.renderRun(par.numberingRun, flow, pos.clone(), RunInParagraph.FirstRun);
     }
-    par.runs.forEach((run, index, runs) => {
-      let inParagraph = RunInParagraph.Normal;
-      if (runs.length === 1) {
-        inParagraph = RunInParagraph.OnlyRun;
-      } else if (index === 0) {
-        inParagraph = RunInParagraph.FirstRun;
-      } else if (index === runs.length - 1) {
-        inParagraph = RunInParagraph.LastRun;
-      }
-      this.renderRun(run, flow, pos, inParagraph);
+    par.runs.forEach((run) => {
+      this.renderRun(run, flow, pos, run.inParagraph);
     });
   }
 

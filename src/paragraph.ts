@@ -63,8 +63,16 @@ export class Paragraph {
                 this._numberingRun = new Run(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style);
             }
             Xml.getChildrenOfName(this.pNode, "w:r").forEach(node => {
-                runs.push(Run.fromRunNode(node, parStyle, this.doc.styles));
+                const run = Run.fromRunNode(node, parStyle, this.doc.styles);
+                run.inParagraph = RunInParagraph.Normal;
+                runs.push(run);
             });
+            if (runs.length == 1) {
+                runs[0].inParagraph = RunInParagraph.OnlyRun;
+            } else if (runs.length > 0) {
+                runs[0].inParagraph = RunInParagraph.FirstRun;
+                runs[runs.length - 1].inParagraph = RunInParagraph.LastRun;
+            }
             this._runs = runs;
         }
     }
