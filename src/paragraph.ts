@@ -11,7 +11,14 @@ export enum RunInParagraph {
     Numbering = 4
 }
 
+export enum ParagraphType {
+    Text = 0,
+    TableCell = 1,
+    Drawing = 2
+}
+
 export class Paragraph {
+    public type: ParagraphType;
     private pNode: ChildNode;
     private doc: WordDocument;
     private _runs: Run[] | undefined;
@@ -27,9 +34,28 @@ export class Paragraph {
     constructor(doc: WordDocument, pNode: ChildNode) {
         this.pNode = pNode;
         this.doc = doc;
+        this.type = ParagraphType.Text;
     }
 
-    public parseContent(): void {
+    public get runs(): Run[] {
+        this.parseContent();
+        return this._runs!;
+    }
+
+    public get numberingRun(): Run | undefined {
+        this.parseContent();
+        return this._numberingRun;
+    }
+
+    public getTextHeight(width: number): number {
+        let height = 0;
+        this.runs.forEach(run => {
+            height += run.getTextHeight(width);
+        });
+        return height;
+    }
+
+    private parseContent(): void {
         if (this._runs === undefined) {
             const runs: Run[] = [];
             const parStyle = this.parStyle;
@@ -41,16 +67,6 @@ export class Paragraph {
             });
             this._runs = runs;
         }
-    }
-
-    public get runs(): Run[] {
-        this.parseContent();
-        return this._runs!;
-    }
-
-    public get numberingRun(): Run | undefined {
-        this.parseContent();
-        return this._numberingRun;
     }
 
     private get parStyle(): ParStyle | undefined {

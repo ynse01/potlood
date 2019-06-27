@@ -142,6 +142,7 @@ export class TableStyle {
             }
         });
     }
+
     private static readCellMargins(cellMarginNode: ChildNode, style: TableStyle): void {
         const defaultMargin = Metrics.convertTwipsToPixels(115);
         style.cellMarginBottom = 0;
@@ -194,5 +195,26 @@ export class TableStyle {
                     break;
             }
         });
+    }
+}
+
+export class TableCellStyle {
+    public width: number | undefined;
+    public gridSpan: number = 1;
+
+    public static fromTableCellPresentationNode(cellPrNode: ChildNode): TableCellStyle {
+        const style = new TableCellStyle();
+        const tcW = Xml.getFirstChildOfName(cellPrNode, "w:tcW");
+        if (tcW !== undefined) {
+            const w = (tcW as Element).getAttribute("w:w");
+            if (w !== null) {
+                style.width = Metrics.convertTwipsToPixels(parseInt(w));
+            }
+        }
+        const gridSpan = Xml.getStringValueFromNode(cellPrNode, "w:gridSpan");
+        if (gridSpan !== undefined) {
+            style.gridSpan = parseInt(gridSpan);
+        }
+        return style;
     }
 }
