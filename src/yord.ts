@@ -6,7 +6,6 @@ import { AbstractNumberings } from "./abstract-numberings.js";
 
 export class Yord {
     private renderer: SvgRenderer;
-    private doc: WordDocument | undefined;
 
     constructor(element: HTMLElement) {
         this.renderer = new SvgRenderer(element);
@@ -25,18 +24,11 @@ export class Yord {
                         doc.setNamedStyles(styles);
                         doc.setNumberings(numberings);
                         doc.parseContent();
-                        this.doc = doc;
-                        this.writeAllText();
+                        const posY = this.renderer.renderDocument(doc);
+                        this.renderer.ensureHeight(posY);
                     });
                 });
             });
         });
     }
-
-    private writeAllText() {
-        if (this.doc !== undefined) {
-            const posY = this.renderer.renderDocument(this.doc);
-            this.renderer.ensureHeight(posY);
-        }
-    }    
 }
