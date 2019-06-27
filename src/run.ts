@@ -91,8 +91,14 @@ export class Run {
         return lines;
     }
 
-    private stripLastWord(text: string): string {
+    private stripLastWord(text: string): string | undefined {
         const stop = text.lastIndexOf(' ');
+        if (stop < 0) {
+            return undefined;
+        }
+        if (stop === 0) {
+            return this.stripLastWord(text.substring(1));
+        }
         return text.substring(0, stop);
     }
     
@@ -102,8 +108,13 @@ export class Run {
         width: number
     ): string {
         let subText = text;
-        while (Metrics.getTextWidth(subText, style) + style.identation > width) {
-            subText = this.stripLastWord(subText);
+        const identation = style.identation;
+        while (Metrics.getTextWidth(subText, style) + identation > width) {
+            const stripped = this.stripLastWord(subText);
+            if (stripped === undefined) {
+                break;
+            }
+            subText = stripped;
         }
         return subText;
     }    
