@@ -43,9 +43,6 @@ export class RunStyle {
     public static fromPresentationNode(runPresentationNode: ChildNode): RunStyle {
         const style = new RunStyle();
         style._basedOnId = Xml.getStringValueFromNode(runPresentationNode, "w:rStyle");
-        if (style._basedOnId) {
-            console.log("Style based on: " + style._basedOnId);
-        }
         style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
         style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
         const underlineMode = Xml.getStringValueFromNode(runPresentationNode, "w:u");
@@ -73,7 +70,6 @@ export class RunStyle {
             const baseStyle = namedStyles.getNamedStyle(this._basedOnId);
             if (baseStyle !== undefined) {
                 this._basedOn = baseStyle;
-                console.log("Style applied: " + this._basedOnId);
             }
         }
     }
