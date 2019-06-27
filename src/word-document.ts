@@ -4,10 +4,12 @@ import { Paragraph } from "./paragraph.js";
 import { NamedStyles } from "./named-styles.js";
 import { Section } from "./section.js";
 import { AbstractNumberings } from "./abstract-numberings.js";
+import { Table } from "./table.js";
 
 export class WordDocument {
     private part: Part;
     private pars: Paragraph[] = [];
+    private tables: Table[] = [];
     private _section: Section | undefined;
     private _styles: NamedStyles | undefined;
     private _numberings: AbstractNumberings | undefined;
@@ -26,6 +28,9 @@ export class WordDocument {
                         switch(element.nodeName) {
                             case "w:p":
                                 this.pars.push(new Paragraph(this, element));
+                                break;
+                            case "w:tbl":
+                                this.tables.push(Table.fromTableNode(element));
                                 break;
                             case "w:sectPr":
                                 this._section = new Section(this, element);
