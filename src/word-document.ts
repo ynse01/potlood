@@ -30,7 +30,7 @@ export class WordDocument {
                                 this.pars.push(new Paragraph(this, element));
                                 break;
                             case "w:tbl":
-                                this.tables.push(Table.fromTableNode(element));
+                                this.tables.push(Table.fromTableNode(this, element));
                                 break;
                             case "w:sectPr":
                                 this._section = new Section(this, element);

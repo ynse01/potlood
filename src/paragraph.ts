@@ -17,6 +17,13 @@ export class Paragraph {
     private _runs: Run[] | undefined;
     private _numberingRun: Run | undefined;
 
+    public static createEmpty(doc: WordDocument): Paragraph {
+        const par = new Paragraph(doc, undefined!);
+        par._runs = [];
+        par._numberingRun = undefined;
+        return par;
+    }
+
     constructor(doc: WordDocument, pNode: ChildNode) {
         this.pNode = pNode;
         this.doc = doc;
