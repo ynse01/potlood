@@ -13,8 +13,7 @@ export class Metrics {
     // 1440 twips = 1 inch
     // (567 twips = 1 cm)
     // (1 point = 1.333333 px)
-    // return twips * 20 * 1.33333333;
-    return twips * 52 / 1440;
+    return twips * 4 / 60;
   }
 
   /**
@@ -22,8 +21,15 @@ export class Metrics {
    * @param points Word point.
    */
   public static convertPointToPixels(points: number): number {
-    // 72 points = 1 inch
     return Metrics.convertTwipsToPixels(points * 20);
+  }
+
+  /**
+   * Convert a number of point in Word coordinates to SVG font size
+   * @param points Word point.
+   */
+  public static convertPointToFontSize(points: number): number {
+    return points * 20 * 52 / 1440;
   }
 
   /**

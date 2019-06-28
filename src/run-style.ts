@@ -111,6 +111,6 @@ export class RunStyle {
 
     private static getFontSizeFromNode(styleNode: ChildNode): number | undefined {
         const sizeInPoints = Xml.getNumberValueFromNode(styleNode, "w:sz");
-        return (sizeInPoints !== undefined) ? Metrics.convertPointToPixels(sizeInPoints) : undefined;
+        return (sizeInPoints !== undefined) ? Metrics.convertPointToFontSize(sizeInPoints) : undefined;
     }
 }

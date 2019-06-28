@@ -17,11 +17,11 @@ export class VirtualFlow {
         if (section !== undefined) {
             let pageWidth = 700;
             if (section.pageWidth !== undefined) {
-                pageWidth = Metrics.convertPointToPixels(section.pageWidth) * 2.2;
+                pageWidth = Metrics.convertPointToPixels(section.pageWidth);
             }
             const pageHeight = section.pageHeight;
             if (pageHeight !== undefined) {
-                // this._pageHeight = Metrics.convertPointsToPixels(pageHeight) * 2.2;
+                // this._pageHeight = Metrics.convertPointsToPixels(pageHeight);
             }
             const marginLeft = section.marginLeft;
             if (marginLeft !== undefined) {
