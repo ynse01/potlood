@@ -7,6 +7,7 @@ import { Metrics } from "./metrics.js";
 import { FlowPosition } from "./flow-position.js";
 import { VirtualFlow } from "./virtual-flow.js";
 import { RunInParagraph } from "./paragraph.js";
+import { IPositionedTextLine } from "./positioned-text-line.js";
 
 export enum LineInRun {
     Normal = 0,
@@ -15,20 +16,13 @@ export enum LineInRun {
     OnlyLine = 3
 }
 
-export interface IPositionedLine {
-    text: string;
-    pos: FlowPosition;
-    claim: number;
-    inRun: LineInRun;
-}
-
-export class Run {
+export class TextRun {
     public text: string;
     public style: Style;
     public inParagraph: RunInParagraph = RunInParagraph.OnlyRun;
 
-    public static fromRunNode(rNode: ChildNode, parStyle: ParStyle | undefined, namedStyles: NamedStyles | undefined): Run {
-        const run = new Run("", new Style());
+    public static fromRunNode(rNode: ChildNode, parStyle: ParStyle | undefined, namedStyles: NamedStyles | undefined): TextRun {
+        const run = new TextRun("", new Style());
         const presentationNode = Xml.getFirstChildOfName(rNode, "w:rPr");
         if (presentationNode !== undefined && presentationNode.hasChildNodes()) {
             run.style.runStyle = RunStyle.fromPresentationNode(presentationNode);
@@ -56,15 +50,15 @@ export class Run {
         return this.getLines(width).length * Metrics.getLineSpacing(this.style);
     }
 
-    public getLines(width: number): IPositionedLine[] {
+    public getLines(width: number): IPositionedTextLine[] {
         const flow = new VirtualFlow(0, width);
         const pos = new FlowPosition(0);
         return this.getFlowLines(flow, pos, RunInParagraph.OnlyRun);
     }
 
-    public getFlowLines(flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): IPositionedLine[] {
+    public getFlowLines(flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): IPositionedTextLine[] {
         let remainder = this.text;
-        let lines: IPositionedLine[] = [];
+        let lines: IPositionedTextLine[] = [];
         const yDelta = Metrics.getLineSpacing(this.style);
         let inRun = (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) ? LineInRun.FirstLine : LineInRun.Normal;
         while(remainder.length > 0) {

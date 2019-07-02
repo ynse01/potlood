@@ -1,5 +1,5 @@
 import { Xml } from "./xml.js";
-import { Run } from "./run.js";
+import { TextRun } from "./text-run.js";
 import { WordDocument } from "./word-document.js";
 import { ParStyle } from "./par-style.js";
 
@@ -21,8 +21,8 @@ export class Paragraph {
     public type: ParagraphType;
     private pNode: ChildNode;
     private doc: WordDocument;
-    private _runs: Run[] | undefined;
-    private _numberingRun: Run | undefined;
+    private _runs: TextRun[] | undefined;
+    private _numberingRun: TextRun | undefined;
 
     public static createEmpty(doc: WordDocument): Paragraph {
         const par = new Paragraph(doc, undefined!);
@@ -37,12 +37,12 @@ export class Paragraph {
         this.type = ParagraphType.Text;
     }
 
-    public get runs(): Run[] {
+    public get runs(): TextRun[] {
         this.parseContent();
         return this._runs!;
     }
 
-    public get numberingRun(): Run | undefined {
+    public get numberingRun(): TextRun | undefined {
         this.parseContent();
         return this._numberingRun;
     }
@@ -57,13 +57,13 @@ export class Paragraph {
 
     private parseContent(): void {
         if (this._runs === undefined) {
-            const runs: Run[] = [];
+            const runs: TextRun[] = [];
             const parStyle = this.parStyle;
             if (parStyle !== undefined && parStyle._numStyle !== undefined) {
-                this._numberingRun = new Run(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style);
+                this._numberingRun = new TextRun(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style);
             }
             Xml.getChildrenOfName(this.pNode, "w:r").forEach(node => {
-                const run = Run.fromRunNode(node, parStyle, this.doc.styles);
+                const run = TextRun.fromRunNode(node, parStyle, this.doc.styles);
                 run.inParagraph = RunInParagraph.Normal;
                 runs.push(run);
             });

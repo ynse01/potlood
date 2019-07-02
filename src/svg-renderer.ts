@@ -6,7 +6,7 @@ import { WordDocument } from './word-document.js';
 import { VirtualFlow } from './virtual-flow.js';
 import { Paragraph, RunInParagraph } from './paragraph.js';
 import { FlowPosition } from './flow-position.js';
-import { LineInRun, Run } from './run.js';
+import { LineInRun, TextRun } from './run.js';
 import { Table, TableCell } from './table.js';
 import { TableStyle } from './table-style.js';
 
@@ -93,7 +93,7 @@ export class SvgRenderer {
     }
   }
 
-  private renderRun(run: Run, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
+  private renderRun(run: TextRun, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
     if (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) {
       const deltaY = Metrics.getLineSpacing(run.style);
       pos.add(deltaY);
