@@ -6,9 +6,10 @@ import { WordDocument } from './word-document.js';
 import { VirtualFlow } from './virtual-flow.js';
 import { Paragraph, RunInParagraph } from './paragraph.js';
 import { FlowPosition } from './flow-position.js';
-import { LineInRun, TextRun } from './run.js';
+import { LineInRun, TextRun } from './text-run.js';
 import { Table, TableCell } from './table.js';
 import { TableStyle } from './table-style.js';
+import { IPositionedTextLine } from './positioned-text-line.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -98,7 +99,7 @@ export class SvgRenderer {
       const deltaY = Metrics.getLineSpacing(run.style);
       pos.add(deltaY);
     }
-    run.getFlowLines(flow, pos, inParagraph).forEach((line) => {
+    run.getFlowLines(flow, pos, inParagraph).forEach((line: IPositionedTextLine) => {
       this.addText(line.text, run.style, flow, line.pos, line.inRun);
       flow.useWidth(line.pos, line.claim);
     });
