@@ -13,19 +13,21 @@ export class Yord {
 
     public loadDocxFromUrl(url: string) {
         Package.loadFromUrl(url).then((pack) => {
-            pack.loadPart('word/styles.xml').then(stylePart => {
-                const styles = new NamedStyles(stylePart);
-                styles.parseContent();
-                pack.loadPart('word/numbering.xml').then(numPart => {
-                    const numberings = new AbstractNumberings(numPart);
-                    numberings.parseContent(styles);
-                    pack.loadPart('word/document.xml').then(part => {
-                        const doc = new WordDocument(part);
-                        doc.setNamedStyles(styles);
-                        doc.setNumberings(numberings);
-                        doc.parseContent();
-                        const posY = this.renderer.renderDocument(doc);
-                        this.renderer.ensureHeight(posY);
+            pack.loadContentTypes().then(() => {
+                pack.loadPart('word/styles.xml').then(stylePart => {
+                    const styles = new NamedStyles(stylePart);
+                    styles.parseContent();
+                    pack.loadPart('word/numbering.xml').then(numPart => {
+                        const numberings = new AbstractNumberings(numPart);
+                        numberings.parseContent(styles);
+                        pack.loadPart('word/document.xml').then(part => {
+                            const doc = new WordDocument(part);
+                            doc.setNamedStyles(styles);
+                            doc.setNumberings(numberings);
+                            doc.parseContent();
+                            const posY = this.renderer.renderDocument(doc);
+                            this.renderer.ensureHeight(posY);
+                        });
                     });
                 });
             });
