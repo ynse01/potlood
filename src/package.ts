@@ -62,6 +62,29 @@ export class Package {
         });
     }
 
+    public loadImage(name: string): Promise<HTMLImageElement> {
+        return new Promise<HTMLImageElement>((resolve, reject) => {
+            this.package.file(name).async("base64").then((content: string) => {
+                var img = new Image();
+                img.onload = () => {
+                  document.body.appendChild(img);
+                  resolve(img);
+                }
+                img.onerror = (event: Event | string) => {
+                    reject(event);
+                }
+                // TODO: Support other MIME types also
+                const mimeType = 'image.jpeg';
+                if (mimeType === undefined) {
+                    reject(`Invalid MIME type encountered while loading image from: ${name}`);
+                }
+                img.src = `data:${mimeType};base64,${content}`;
+              }).catch((error: any) => {
+                  reject(error);
+              });
+        });
+    }
+
     public getNamesByContentType(key: string): string[] {
         return this.content[key];
     }
