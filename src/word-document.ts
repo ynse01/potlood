@@ -5,6 +5,7 @@ import { NamedStyles } from "./named-styles.js";
 import { Section } from "./section.js";
 import { AbstractNumberings } from "./abstract-numberings.js";
 import { Table } from "./table.js";
+import { Relationships } from "./relationships.js";
 
 export class WordDocument {
     private part: Part;
@@ -12,6 +13,7 @@ export class WordDocument {
     private _section: Section | undefined;
     private _styles: NamedStyles | undefined;
     private _numberings: AbstractNumberings | undefined;
+    private _rels: Relationships | undefined;
 
     constructor(part: Part) {
         this.part = part;
@@ -45,12 +47,20 @@ export class WordDocument {
         }
     }
 
+    public get relationships(): Relationships | undefined {
+        return this._rels;
+    }
+
     public get styles(): NamedStyles | undefined {
         return this._styles;
     }
 
     public get numberings(): AbstractNumberings | undefined {
         return this._numberings;
+    }
+
+    public setRelationships(relationships: Relationships): void {
+        this._rels = relationships;
     }
 
     public setNamedStyles(styles: NamedStyles): void {
