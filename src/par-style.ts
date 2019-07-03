@@ -63,8 +63,8 @@ export class ParStyle {
         let hanging = 0;
         const indNode = Xml.getFirstChildOfName(styleNode, "w:ind") as Element;
         if (indNode !== undefined) {
-            const hangingAttr = indNode.getAttribute("w:hanging");
-            if (hangingAttr !== null) {
+            const hangingAttr = Xml.getAttribute(indNode, "w:hanging");
+            if (hangingAttr !== undefined) {
                 hanging = Metrics.convertTwipsToPixels(-parseInt(hangingAttr, 10));
             }
         }
@@ -75,8 +75,8 @@ export class ParStyle {
         let left = 0;
         const indNode = Xml.getFirstChildOfName(styleNode, "w:ind") as Element;
         if (indNode !== undefined) {
-            const leftAttr = indNode.getAttribute("w:left");
-            if (leftAttr !== null) {
+            const leftAttr = Xml.getAttribute(indNode, "w:left");
+            if (leftAttr !== undefined) {
                 left = Metrics.convertTwipsToPixels(parseInt(leftAttr, 10));
             }
         }

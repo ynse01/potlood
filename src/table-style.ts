@@ -40,21 +40,20 @@ export class TableBorder {
 
     public static fromBorderNode(borderNode: ChildNode): TableBorder {
         const border = new TableBorder();
-        const element = borderNode as Element;
-        const val = element.getAttribute("w:val");
-        if (val !== null) {
+        const val = Xml.getAttribute(borderNode, "w:val");
+        if (val !== undefined) {
             border.type = TableBorderType[val as keyof typeof TableBorderType];
         }
-        const sz = element.getAttribute("w:sz");
-        if (sz !== null) {
+        const sz = Xml.getAttribute(borderNode, "w:sz");
+        if (sz !== undefined) {
             border.size = parseInt(sz, 10);
         }
-        const space = element.getAttribute("w:space");
-        if (space !== null) {
+        const space = Xml.getAttribute(borderNode, "w:space");
+        if (space !== undefined) {
             border.spacing = parseInt(space, 10);
         }
-        const color = element.getAttribute("w:color");
-        if (color !== null) {
+        const color = Xml.getAttribute(borderNode, "w:color");
+        if (color !== undefined) {
             border.color = color;
         }
         return border;
@@ -99,8 +98,8 @@ export class TableStyle {
         }
         const identation = Xml.getFirstChildOfName(tblPrNode, "w:tblInd");
         if (identation !== undefined) {
-            const w = (identation as Element).getAttribute("w:w");
-            if (w !== null) {
+            const w = Xml.getAttribute(identation, "w:w");
+            if (w !== undefined) {
                 style.identation = parseInt(w);
             }
         }
@@ -146,45 +145,44 @@ export class TableStyle {
     private static readCellMargins(cellMarginNode: ChildNode, style: TableStyle): void {
         cellMarginNode.childNodes.forEach(node => {
             const name = node.nodeName;
-            const element = node as Element;
             switch (name) {
                 case "w:left":
                     if (style.cellMarginStart === undefined) {
-                        const txt = element.getAttribute("w:w");
-                        if (txt !== null) {
+                        const txt = Xml.getAttribute(node, "w:w");
+                        if (txt !== undefined) {
                             style.cellMarginStart = Metrics.convertTwipsToPixels(parseInt(txt));
                         }
                     }
                     break;
                 case "w:start":
-                    const start = element.getAttribute("w:w");
-                    if (start !== null) {
+                    const start = Xml.getAttribute(node, "w:w");
+                    if (start !== undefined) {
                         style.cellMarginStart = Metrics.convertTwipsToPixels(parseInt(start));
                     }
                     break;
                 case "w:right":
                     if (style.cellMarginEnd === undefined) {
-                        const txt = element.getAttribute("w:w");
-                        if (txt !== null) {
+                        const txt = Xml.getAttribute(node, "w:w");
+                        if (txt !== undefined) {
                             style.cellMarginEnd = Metrics.convertTwipsToPixels(parseInt(txt));
                         }
                     }
                     break;
                 case "w:end":
-                    const end = element.getAttribute("w:w");
-                    if (end !== null) {
+                    const end = Xml.getAttribute(node, "w:w");
+                    if (end !== undefined) {
                         style.cellMarginEnd = Metrics.convertTwipsToPixels(parseInt(end));
                     }
                     break;
                 case "w:top":
-                    const top = element.getAttribute("w:w");
-                    if (top !== null) {
+                    const top = Xml.getAttribute(node, "w:w");
+                    if (top !== undefined) {
                         style.cellMarginTop = Metrics.convertTwipsToPixels(parseInt(top));
                     }
                     break;
                 case "w:bottom":
-                    const bottom = element.getAttribute("w:w");
-                    if (bottom !== null) {
+                    const bottom = Xml.getAttribute(node, "w:w");
+                    if (bottom !== undefined) {
                         style.cellMarginBottom = Metrics.convertTwipsToPixels(parseInt(bottom));
                     }
                     break;
@@ -209,8 +207,8 @@ export class TableCellStyle {
         const style = new TableCellStyle();
         const tcW = Xml.getFirstChildOfName(cellPrNode, "w:tcW");
         if (tcW !== undefined) {
-            const w = (tcW as Element).getAttribute("w:w");
-            if (w !== null) {
+            const w = Xml.getAttribute(tcW, "w:w");
+            if (w !== undefined) {
                 style.width = Metrics.convertTwipsToPixels(parseInt(w));
             }
         }

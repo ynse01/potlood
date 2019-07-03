@@ -18,16 +18,16 @@ export class AbstractNumberings {
             if (root !== undefined) {
                 const abstractNumberings: Numbering[] = [];
                 Xml.getChildrenOfName(root, "w:abstractNum").forEach(node => {
-                    const abstractNumId = (node as Element).getAttribute("w:abstractNumId");
-                    if (abstractNumId !== null) {
+                    const abstractNumId = Xml.getAttribute(node, "w:abstractNumId");
+                    if (abstractNumId !== undefined) {
                         const numbering = Numbering.fromAbstractNumNode(styles, node);
                         abstractNumberings[parseInt(abstractNumId)] = numbering;
                     }
                 });
                 Xml.getChildrenOfName(root, "w:num").forEach(numNode => {
-                    const numId = (numNode as Element).getAttribute("w:numId");
+                    const numId = Xml.getAttribute(numNode, "w:numId");
                     const abstractNumId = Xml.getNumberValueFromNode(numNode, "w:abstractNumId");
-                    if (numId !== null && abstractNumId !== undefined) {
+                    if (numId !== undefined && abstractNumId !== undefined) {
                         this._numberings[parseInt(numId)] = abstractNumberings[abstractNumId];
                     }
                 });

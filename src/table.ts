@@ -66,8 +66,8 @@ export class TableCell {
             par.type = ParagraphType.TableCell;
             cell.pars.push(par);
         });
-        const id = (cellNode as Element).getAttribute("w:id");
-        if (id !== null) {
+        const id = Xml.getAttribute(cellNode, "w:id");
+        if (id !== undefined) {
             cell.id = id;
         }
         return cell;
@@ -122,8 +122,8 @@ export class Table {
         if (grid !== undefined) {
             let start = 0;
             Xml.getChildrenOfName(grid, "w:gridCol").forEach(col => {
-                const w = (col as Element).getAttribute("w:w");
-                if (w !== null) {
+                const w = Xml.getAttribute(col, "w:w");
+                if (w !== undefined) {
                     const width = Metrics.convertTwipsToPixels(parseInt(w));
                     table.columns.push(new TableColumn(start, width));
                     start += width;

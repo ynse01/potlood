@@ -34,8 +34,8 @@ export class NumberingLevel {
     public text: string | undefined = undefined;
 
     public static fromLevelNode(namedStyles: NamedStyles | undefined, levelNode: ChildNode): NumberingLevel | undefined {
-        const indexAttr = (levelNode as Element).getAttribute("w:ilvl");
-        if (indexAttr === null) {
+        const indexAttr = Xml.getAttribute(levelNode, "w:ilvl");
+        if (indexAttr === undefined) {
             return undefined;
         }
         const index = parseInt(indexAttr, 10);

@@ -10,6 +10,7 @@ import { LineInRun, TextRun } from './text-run.js';
 import { Table, TableCell } from './table.js';
 import { TableStyle } from './table-style.js';
 import { IPositionedTextLine } from './positioned-text-line.js';
+import { Xml } from './xml.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -44,8 +45,8 @@ export class SvgRenderer {
   }
 
   public ensureHeight(newHeight: number): void {
-    const height = this.svg.getAttribute("height");
-    if (height !== null) {
+    const height = Xml.getAttribute(this.svg, "height");
+    if (height !== undefined) {
       const heightNum = parseFloat(height);
       const maxY = Math.max(heightNum, newHeight);
       if (maxY > heightNum) {

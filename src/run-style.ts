@@ -101,8 +101,8 @@ export class RunStyle {
         let fonts: string[] | undefined = undefined;
         const fontNode = Xml.getFirstChildOfName(styleNode, "w:rFonts") as Element;
         if (fontNode !== undefined) {
-            const asciiFont = fontNode.getAttribute("w:ascii");
-            if (asciiFont !== null) {
+            const asciiFont = Xml.getAttribute(fontNode, "w:ascii");
+            if (asciiFont !== undefined) {
                 fonts = asciiFont.split(';');
             }
         }

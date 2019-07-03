@@ -50,31 +50,31 @@ export class Section {
         if (this._pageWidth === undefined) {
             const pageSize = Xml.getFirstChildOfName(this.sectionNode, "w:pgSz") as Element;
             if (pageSize !== undefined) {
-                const width = pageSize.getAttribute("w:w");
-                if (width !== null) {
+                const width = Xml.getAttribute(pageSize, "w:w");
+                if (width !== undefined) {
                     this._pageWidth = Metrics.convertTwipsToPixels(parseInt(width, 10));
                 }
-                const height = pageSize.getAttribute("w:h");
-                if (height !== null) {
+                const height = Xml.getAttribute(pageSize, "w:h");
+                if (height !== undefined) {
                     this._pageHeight = Metrics.convertTwipsToPixels(parseInt(height, 10));
                 }
             }
             const margin = Xml.getFirstChildOfName(this.sectionNode, "w:pgMar") as Element;
             if (margin !== undefined) {
-                const top = margin.getAttribute("w:top");
-                if (top !== null) {
+                const top = Xml.getAttribute(margin, "w:top");
+                if (top !== undefined) {
                     this._marginTop = parseInt(top);
                 }
-                const left = margin.getAttribute("w:left");
-                if (left !== null) {
+                const left = Xml.getAttribute(margin, "w:left");
+                if (left !== undefined) {
                     this._marginLeft = parseInt(left);
                 }
-                const bottom = margin.getAttribute("w:bottom");
-                if (bottom !== null) {
+                const bottom = Xml.getAttribute(margin, "w:bottom");
+                if (bottom !== undefined) {
                     this._marginBottom = parseInt(bottom);
                 }
-                const right = margin.getAttribute("w:right");
-                if (right !== null) {
+                const right = Xml.getAttribute(margin, "w:right");
+                if (right !== undefined) {
                     this._marginRight = parseInt(right);
                 }
             }

@@ -15,11 +15,11 @@ export class NamedStyles {
             const root = Xml.getFirstChildOfName(this.doc, "w:styles");
             if (root !== undefined) {
                 Xml.getChildrenOfName(root, "w:style").forEach(node => {
-                    const styleType = (node as Element).getAttribute("w:type");
-                    if (styleType !== null && styleType !== "numbering") {
+                    const styleType = Xml.getAttribute(node, "w:type");
+                    if (styleType !== undefined && styleType !== "numbering") {
                         const style = Style.fromStyleNode(node);
-                        const styleId = (node as Element).getAttribute("w:styleId");
-                        if (styleId !== null) {
+                        const styleId = Xml.getAttribute(node, "w:styleId");
+                        if (styleId !== undefined) {
                             this.named[styleId] = style;
                         }
                     }

@@ -1,4 +1,20 @@
 export class Xml {
+
+    /**
+     * Get the value of the attribute.
+     * @param node Node to get the attribute from.
+     * @param name Name of the attribute to get from the node.
+     */
+    public static getAttribute(node: Node, name: string): string | undefined {
+        let val: string | undefined = undefined;
+        const element = node as Element;
+        const attrVal = element.getAttribute(name);
+        if (attrVal !== null) {
+            val = attrVal;
+        }
+        return val;
+    }
+
     /**
      * Get first of the direct child nodes which have nodeName equal to name.
      * @param parent The node under which to search for nodes.
@@ -23,8 +39,8 @@ export class Xml {
         let val: string | undefined = undefined;
         const child = Xml.getFirstChildOfName(parent, name) as Element;
         if (child !== undefined) {
-            const attr = child.getAttribute("w:val");
-            if (attr !== null) {
+            const attr = Xml.getAttribute(child, "w:val");
+            if (attr !== undefined) {
                 val = attr;
             }
         }
@@ -38,8 +54,8 @@ export class Xml {
         let val: boolean | undefined = undefined;
         const child = Xml.getFirstChildOfName(parent, name) as Element;
         if (child !== undefined) {
-            const attr = child.getAttribute("w:val");
-            if (attr !== null) {
+            const attr = Xml.getAttribute(child, "w:val");
+            if (attr !== undefined) {
                 val = (attr === 'true');
             } else {
                 // Absence of w:val means true
@@ -54,10 +70,10 @@ export class Xml {
      */
     public static getNumberValueFromNode(parent: ChildNode, name: string): number | undefined {
         let val: number | undefined = undefined;
-        const child = Xml.getFirstChildOfName(parent, name) as Element;
+        const child = Xml.getFirstChildOfName(parent, name);
         if (child !== undefined) {
-            const attr = child.getAttribute("w:val");
-            if (attr !== null) {
+            const attr = Xml.getAttribute(child, "w:val");
+            if (attr !== undefined) {
                 val = parseFloat(attr);
             }
         }
@@ -69,7 +85,7 @@ export class Xml {
      * @param parent The node under which to search for nodes.
      * @param name  The node name to search for.
      */
-    public static getChildrenOfName(parent: ChildNode, name: string): ChildNode[] {
+    public static getChildrenOfName(parent: Node, name: string): ChildNode[] {
         const nodes: ChildNode[] = [];
         parent.childNodes.forEach(child => {
             if (child.nodeName === name) {
