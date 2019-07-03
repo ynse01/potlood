@@ -11,6 +11,18 @@ export class Package {
         this.package = jsZip;
     }
 
+    public static ChartContentType = "officedocument.drawingxml.chart";
+    public static WordDocumentContentType = "officedocument.wordprocessing.document.main";
+    public static WordFontTableContentType = "officedocument.wordprocessing.fontTable";
+    public static WordNumberingContentType = "officedocument.wordprocessing.numbering";
+    public static WordSettingsContentType = "officedocument.wordprocessing.settings";
+    public static WordStylesContentType = "officedocument.wordprocessing.styles";
+    public static ExtendedPropertiesContentType = "officedocument.extended-properties";
+    public static CorePropertiesContentType = "package.core-properties";
+    public static RelationshipsContentType = "package.relationships";
+    public static JpegContentType = "image/jpeg";
+    public static PngContentType = "image/png";
+
     public static loadFromUrl(url: string): Promise<Package> {
         return new Promise<Package>((resolve, reject) => {
             var oReq = new XMLHttpRequest();
@@ -21,7 +33,12 @@ export class Package {
                 var arrayBuffer = oReq.response;
                 if (arrayBuffer) {
                     new JSZip().loadAsync(arrayBuffer).then((unzipped: any) => {
-                        resolve(new Package(unzipped));
+                        const pack = new Package(unzipped);
+                        pack._loadContentTypes().then(() => {
+                            resolve(pack);
+                        }).catch((error: any) => {
+                            reject(error);
+                        });
                     }).catch((error: any) => {
                         reject(error);
                     });
@@ -45,24 +62,11 @@ export class Package {
         });
     }
 
-    public loadPartByContentType(key: string): Promise<Part[]> {
-        return new Promise<Part[]>((resolve, reject) => {
-            const promises: Promise<Part>[] = [];
-            const partNames = this.content[key];
-            if (partNames !== undefined) {
-                partNames.forEach(name => {
-                    promises.push(this.loadPart(name));
-                });
-            }
-            Promise.all(promises).then(parts => {
-                resolve(parts)
-            }).catch(error => {
-                reject(error);
-            });
-        });
+    public getNamesByContentType(key: string): string[] {
+        return this.content[key];
     }
 
-    public loadContentTypes(): Promise<void> {
+    private _loadContentTypes(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.loadPart('[Content_Types].xml').then(contentTypePart => {
                 Xml.getChildrenOfName(contentTypePart.document.getRootNode() as ChildNode, "Override").forEach(content => {
