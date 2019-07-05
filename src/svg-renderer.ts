@@ -11,6 +11,7 @@ import { Table, TableCell } from './table.js';
 import { TableStyle } from './table-style.js';
 import { IPositionedTextLine } from './positioned-text-line.js';
 import { Xml } from './xml.js';
+import { DrawingRun } from './drawing-run.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -57,11 +58,19 @@ export class SvgRenderer {
 
   private renderParagraph(par: Paragraph, flow: VirtualFlow, pos: FlowPosition): void {
     if (par.numberingRun !== undefined) {
-      this.renderRun(par.numberingRun, flow, pos.clone(), RunInParagraph.FirstRun);
+      this.renderTextRun(par.numberingRun, flow, pos.clone(), RunInParagraph.FirstRun);
     }
     par.runs.forEach((run) => {
-      this.renderRun(run, flow, pos, run.inParagraph);
+      if (run instanceof TextRun) {
+        this.renderTextRun(run, flow, pos, run.inParagraph);
+      } else {
+        this.renderDrawing(run, flow, pos);
+      }
     });
+  }
+
+  private renderDrawing(_drawing: DrawingRun, _flow: VirtualFlow, pos: FlowPosition) {
+    console.log(`Drawing to render at position: ${pos.flowPosition}`);
   }
 
   private renderTable(table: Table, flow: VirtualFlow, pos: FlowPosition): void {
@@ -80,7 +89,7 @@ export class SvgRenderer {
 
   private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, pos: FlowPosition, height: number): void {
     // TODO: Figure out why this offset is required.
-    pos = pos.clone().add(Metrics.getLineSpacing(cell.pars[0].runs[0].style) * 0.75);
+    pos = pos.clone().add(Metrics.getLineSpacing((cell.pars[0].runs[0] as TextRun).style) * 0.75);
     if (style.borderTop !== undefined) {
       this.renderHorizontalLine(cell.getWidth(), flow, pos, style.borderTop.color, style.borderTop.size);
     }
@@ -95,7 +104,7 @@ export class SvgRenderer {
     }
   }
 
-  private renderRun(run: TextRun, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
+  private renderTextRun(run: TextRun, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
     if (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) {
       const deltaY = Metrics.getLineSpacing(run.style);
       pos.add(deltaY);

@@ -2,6 +2,7 @@ import { Xml } from "./xml.js";
 import { TextRun } from "./text-run.js";
 import { WordDocument } from "./word-document.js";
 import { ParStyle } from "./par-style.js";
+import { DrawingRun } from "./drawing-run.js";
 
 export enum RunInParagraph {
     Normal = 0,
@@ -21,7 +22,7 @@ export class Paragraph {
     public type: ParagraphType;
     private pNode: ChildNode;
     private doc: WordDocument;
-    private _runs: TextRun[] | undefined;
+    private _runs: (TextRun | DrawingRun)[] | undefined;
     private _numberingRun: TextRun | undefined;
 
     public static createEmpty(doc: WordDocument): Paragraph {
@@ -37,7 +38,7 @@ export class Paragraph {
         this.type = ParagraphType.Text;
     }
 
-    public get runs(): TextRun[] {
+    public get runs(): (TextRun | DrawingRun)[] {
         this.parseContent();
         return this._runs!;
     }
@@ -50,28 +51,40 @@ export class Paragraph {
     public getTextHeight(width: number): number {
         let height = 0;
         this.runs.forEach(run => {
-            height += run.getTextHeight(width);
+            height += run.getHeight(width);
         });
         return height;
     }
 
     private parseContent(): void {
         if (this._runs === undefined) {
-            const runs: TextRun[] = [];
+            const runs: (TextRun | DrawingRun)[] = [];
             const parStyle = this.parStyle;
             if (parStyle !== undefined && parStyle._numStyle !== undefined) {
                 this._numberingRun = new TextRun(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style);
             }
             Xml.getChildrenOfName(this.pNode, "w:r").forEach(node => {
-                const run = TextRun.fromRunNode(node, parStyle, this.doc.styles);
-                run.inParagraph = RunInParagraph.Normal;
-                runs.push(run);
+                const drawingNode = Xml.getFirstChildOfName(node, "w:drawing");
+                if (drawingNode !== undefined) {
+                    const drawing = DrawingRun.fromDrawingNode(drawingNode, this.doc);
+                    runs.push(drawing);
+                } else {
+                    const run = TextRun.fromRunNode(node, parStyle, this.doc.styles);
+                    run.inParagraph = RunInParagraph.Normal;
+                    runs.push(run);
+                }
             });
-            if (runs.length == 1) {
-                runs[0].inParagraph = RunInParagraph.OnlyRun;
+            const firstRun = runs[0]
+            if (runs.length == 1 && firstRun instanceof TextRun) {
+                firstRun.inParagraph = RunInParagraph.OnlyRun;
             } else if (runs.length > 0) {
-                runs[0].inParagraph = RunInParagraph.FirstRun;
-                runs[runs.length - 1].inParagraph = RunInParagraph.LastRun;
+                if (firstRun instanceof TextRun) {
+                    firstRun.inParagraph = RunInParagraph.FirstRun;
+                }
+                const lastRun = runs[runs.length - 1];
+                if (lastRun instanceof TextRun) {
+                    lastRun.inParagraph = RunInParagraph.LastRun;
+                }
             }
             this._runs = runs;
         }

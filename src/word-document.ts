@@ -6,6 +6,7 @@ import { Section } from "./section.js";
 import { AbstractNumberings } from "./abstract-numberings.js";
 import { Table } from "./table.js";
 import { Relationships } from "./relationships.js";
+import { Package } from "./package.js";
 
 export class WordDocument {
     private part: Part;
@@ -15,7 +16,10 @@ export class WordDocument {
     private _numberings: AbstractNumberings | undefined;
     private _rels: Relationships | undefined;
 
-    constructor(part: Part) {
+    public pack: Package;
+
+    constructor(pack: Package, part: Part) {
+        this.pack = pack;
         this.part = part;
     }
 

@@ -46,7 +46,7 @@ export class TextRun {
         this.text = text;
     }
 
-    public getTextHeight(width: number): number {
+    public getHeight(width: number): number {
         return this.getLines(width).length * Metrics.getLineSpacing(this.style);
     }
 

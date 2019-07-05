@@ -25,6 +25,17 @@ export class Metrics {
   }
 
   /**
+   * Convert EMU's (used in DrawingML) to SVG pixels.
+   * @param emu EMU's to convert into pixels.
+   */
+  public static convertEmuToPixels(emu: number): number {
+    // 1 inch = 914400 EMU
+    // 1 inch = 72 points
+    // 1 point = 1270 EMU
+    return Metrics.convertPointToPixels(emu / 1270);
+  }
+
+  /**
    * Convert a number of point in Word coordinates to SVG font size
    * @param points Word point.
    */
@@ -37,6 +48,14 @@ export class Metrics {
    */
   public static getLineSpacing(style: Style): number {
     return 1.08 * style.fontSize;
+  }
+
+  /**
+   * Convert rotation to radians.
+   * @param rot Rotation in 60000th of a degree.
+   */
+  public static convertRotationToRadians(rot: number): number {
+    return (rot * Math.PI) / (180 * 60000);
   }
 
   public static getTextWidth(

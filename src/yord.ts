@@ -23,7 +23,7 @@ export class Yord {
                         const numberings = new AbstractNumberings(numPart);
                         numberings.parseContent(styles);
                         pack.loadPart('word/document.xml').then(part => {
-                            const doc = new WordDocument(part);
+                            const doc = new WordDocument(pack, part);
                             doc.setRelationships(relationships);
                             doc.setNamedStyles(styles);
                             doc.setNumberings(numberings);
