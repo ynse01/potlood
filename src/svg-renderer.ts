@@ -69,8 +69,26 @@ export class SvgRenderer {
     });
   }
 
-  private renderDrawing(_drawing: DrawingRun, _flow: VirtualFlow, pos: FlowPosition) {
-    console.log(`Drawing to render at position: ${pos.flowPosition}`);
+  private renderDrawing(drawing: DrawingRun, flow: VirtualFlow, pos: FlowPosition) {
+    const x = flow.getX(pos);
+    const y = flow.getY(pos);
+    const picture = drawing.picture;
+    if (picture !== undefined) {
+      const rect = document.createElementNS(SvgRenderer.svgNS, "image");
+      rect.setAttribute("x", `${x}`);
+      rect.setAttribute("y", `${y}`);
+      rect.setAttribute("width", `${drawing.bounds.boundSizeX}`);
+      rect.setAttribute("height", `${drawing.bounds.boundSizeY}`);
+      this.svg.appendChild(rect);
+      picture.getImageUrl().then(url => {
+        //rect.setAttribute("fill", `${url}`);
+        rect.setAttribute("xlink:href", `${url}`);
+        rect.setAttribute("href", `${url}`);
+      }).catch(error => {
+        console.log(`ERROR during rendring: ${error}`);
+      })
+    }
+    pos.add(drawing.getHeight(flow.getWidth(pos)));
   }
 
   private renderTable(table: Table, flow: VirtualFlow, pos: FlowPosition): void {
