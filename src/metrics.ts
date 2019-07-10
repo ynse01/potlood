@@ -32,7 +32,7 @@ export class Metrics {
     // 1 inch = 914400 EMU
     // 1 inch = 72 points
     // 1 point = 1270 EMU
-    return Metrics.convertPointToPixels(emu / 1270);
+    return Metrics.convertPointToPixels(emu / 12700);
   }
 
   /**
@@ -58,7 +58,38 @@ export class Metrics {
     return (rot * Math.PI) / (180 * 60000);
   }
 
-  public static getTextWidth(
+  public static getTextWidth(text: string, style: Style) {
+    return this.getTextWidthFromSvg(text, style);
+  }
+
+  public static getTextWidthFromSvg(text: string, style: Style) {
+    if (this.svg === undefined) {
+      this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      this.svg.setAttribute('width', '2048');
+      this.svg.setAttribute('height', '240');
+      this.svg.setAttribute('visibility', 'hidden');
+      document.body.appendChild(this.svg);
+    }
+    var element = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    element.setAttribute('font-family', style.fontFamily);
+    element.setAttribute('font-size', `${style.fontSize}`);
+    if (style.bold) {
+      element.setAttribute('font-weight', 'bold');
+    }
+    if (style.italic) {
+      element.setAttribute('font-style', 'italic');
+    }
+    const node = document.createTextNode(text);
+    element.appendChild(node);
+    this.svg.appendChild(element);
+    // const width = element.getComputedTextLength();
+    const width = element.getBBox().width;
+    // const width = element.getBoundingClientRect().width;
+    this.svg.removeChild(element);
+    return width;
+  }
+
+  public static getTextWidthFromCanvas(
     text: string,
     style: Style
   ): number {
@@ -70,4 +101,5 @@ export class Metrics {
     return metrics.width;
   }
   private static canvas: HTMLCanvasElement | undefined;
+  private static svg: SVGElement | undefined;
 }
