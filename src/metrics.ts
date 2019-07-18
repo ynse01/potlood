@@ -59,7 +59,7 @@ export class Metrics {
   }
 
   public static getTextWidth(text: string, style: Style) {
-    return this.getTextWidthFromSvg(text, style);
+    return this.getTextWidthFromCanvas(text, style);
   }
 
   public static getTextWidthFromSvg(text: string, style: Style) {
@@ -82,8 +82,8 @@ export class Metrics {
     const node = document.createTextNode(text);
     element.appendChild(node);
     this.svg.appendChild(element);
-    // const width = element.getComputedTextLength();
-    const width = element.getBBox().width;
+    const width = element.getComputedTextLength();
+    // const width = element.getBBox().width;
     // const width = element.getBoundingClientRect().width;
     this.svg.removeChild(element);
     return width;
@@ -93,12 +93,16 @@ export class Metrics {
     text: string,
     style: Style
   ): number {
+    let width = 0;
     const canvas =
       this.canvas || (this.canvas = document.createElement('canvas'));
     const context = canvas.getContext('2d');
-    context!.font = style.fontSize.toString() + 'px ' + style.fontFamily;
-    const metrics = context!.measureText(text);
-    return metrics.width;
+    if (context !== null) {
+      context.font = Math.round(style.fontSize) + 'px ' + style.fontFamily;
+      const metrics = context.measureText(text);
+      width = metrics.width;
+    }
+    return width;
   }
   private static canvas: HTMLCanvasElement | undefined;
   private static svg: SVGElement | undefined;
