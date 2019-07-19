@@ -1,12 +1,12 @@
-import { Xml } from "./xml.js";
+import { Xml } from "../xml.js";
 import { RunStyle } from "./run-style.js";
 import { ParStyle } from "./par-style.js";
 import { Style } from "./style.js";
 import { NamedStyles } from "./named-styles.js";
-import { Metrics } from "./metrics.js";
-import { FlowPosition } from "./flow-position.js";
-import { VirtualFlow } from "./virtual-flow.js";
-import { RunInParagraph } from "./paragraph.js";
+import { Metrics } from "../metrics.js";
+import { FlowPosition } from "../flow-position.js";
+import { VirtualFlow } from "../virtual-flow.js";
+import { RunInParagraph } from "../paragraph.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 
 export enum LineInRun {

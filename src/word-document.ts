@@ -1,12 +1,12 @@
-import { Part } from "./part.js";
+import { Part } from "./package/part.js";
 import { Xml } from "./xml.js";
 import { Paragraph } from "./paragraph.js";
-import { NamedStyles } from "./named-styles.js";
+import { NamedStyles } from "./text/named-styles.js";
 import { Section } from "./section.js";
-import { AbstractNumberings } from "./abstract-numberings.js";
-import { Table } from "./table.js";
-import { Relationships } from "./relationships.js";
-import { Package } from "./package.js";
+import { AbstractNumberings } from "./numbering/abstract-numberings.js";
+import { Table } from "./table/table.js";
+import { Relationships } from "./package/relationships.js";
+import { Package } from "./package/package.js";
 
 export class WordDocument {
     private part: Part;

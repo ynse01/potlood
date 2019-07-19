@@ -1,7 +1,7 @@
-import { Part } from "./part.js";
+import { Part } from "../package/part.js";
 import { Numbering } from "./numbering.js";
-import { Xml } from "./xml.js";
-import { NamedStyles } from "./named-styles.js";
+import { Xml } from "../xml.js";
+import { NamedStyles } from "../text/named-styles.js";
 
 export class AbstractNumberings {
 

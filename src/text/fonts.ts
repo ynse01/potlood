@@ -1,4 +1,4 @@
-import { Metrics } from './metrics.js';
+import { Metrics } from '../metrics.js';
 import { Style } from './style.js';
 import { RunStyle } from './run-style.js';
 

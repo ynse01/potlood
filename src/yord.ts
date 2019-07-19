@@ -1,9 +1,9 @@
 import { SvgRenderer } from "./svg-renderer.js";
-import { Package } from "./package.js";
-import { NamedStyles } from "./named-styles.js";
+import { Package } from "./package/package.js";
+import { NamedStyles } from "./text/named-styles.js";
 import { WordDocument } from "./word-document.js";
-import { AbstractNumberings } from "./abstract-numberings.js";
-import { Relationships } from "./relationships.js";
+import { AbstractNumberings } from "./numbering/abstract-numberings.js";
+import { Relationships } from "./package/relationships.js";
 
 export class Yord {
     private renderer: SvgRenderer;

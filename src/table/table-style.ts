@@ -1,6 +1,6 @@
-import { Xml } from "./xml.js";
-import { Metrics } from "./metrics.js";
-import { Justification } from "./par-style.js";
+import { Xml } from "../xml.js";
+import { Metrics } from "../metrics.js";
+import { Justification } from "../text/par-style.js";
 
 export enum TableBorderType {
     none = "none",

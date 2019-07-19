@@ -1,6 +1,6 @@
-import { WordDocument } from "./word-document.js";
-import { Package } from "./package.js";
-import { Xml } from "./xml.js";
+import { WordDocument } from "../word-document.js";
+import { Package } from "../package/package.js";
+import { Xml } from "../xml.js";
 
 export class Picture {
     private _pack: Package;

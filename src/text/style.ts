@@ -1,7 +1,7 @@
 import { NamedStyles } from "./named-styles.js";
 import { ParStyle, Justification } from "./par-style.js";
 import { RunStyle, UnderlineMode } from "./run-style.js";
-import { Xml } from "./xml.js";
+import { Xml } from "../xml.js";
 
 export class Style {
     private _basedOn: Style | undefined;

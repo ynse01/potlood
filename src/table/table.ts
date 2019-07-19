@@ -1,7 +1,7 @@
-import { Xml } from "./xml.js";
-import { Metrics } from "./metrics.js";
-import { Paragraph, ParagraphType } from "./paragraph.js";
-import { WordDocument } from "./word-document.js";
+import { Xml } from "../xml.js";
+import { Metrics } from "../metrics.js";
+import { Paragraph, ParagraphType } from "../paragraph.js";
+import { WordDocument } from "../word-document.js";
 import { TableStyle, TableCellStyle } from "./table-style.js";
 
 export class TableColumn {

@@ -1,5 +1,5 @@
-import { NamedStyles } from "./named-styles.js";
-import { Xml } from "./xml.js";
+import { NamedStyles } from "../text/named-styles.js";
+import { Xml } from "../xml.js";
 import { NumberingLevel } from "./numbering-level.js";
 
 export class Numbering {

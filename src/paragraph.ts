@@ -1,8 +1,8 @@
 import { Xml } from "./xml.js";
-import { TextRun } from "./text-run.js";
+import { TextRun } from "./text/text-run.js";
 import { WordDocument } from "./word-document.js";
-import { ParStyle } from "./par-style.js";
-import { DrawingRun } from "./drawing-run.js";
+import { ParStyle } from "./text/par-style.js";
+import { DrawingRun } from "./drawing/drawing-run.js";
 
 export enum RunInParagraph {
     Normal = 0,

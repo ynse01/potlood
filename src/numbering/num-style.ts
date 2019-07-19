@@ -1,7 +1,7 @@
 import { AbstractNumberings } from "./abstract-numberings.js";
-import { Xml } from "./xml.js";
+import { Xml } from "../xml.js";
 import { NumberingLevel } from "./numbering-level.js";
-import { Style } from "./style.js";
+import { Style } from "../text/style.js";
 
 export class NumberingStyle {
     private index: number;

@@ -1,7 +1,7 @@
 import { ShapeBounds } from "./shape-bounds.js";
 import { Picture } from "./picture.js";
-import { Xml } from "./xml.js";
-import { WordDocument } from "./word-document.js";
+import { Xml } from "../xml.js";
+import { WordDocument } from "../word-document.js";
 
 export class DrawingRun {
     public bounds: ShapeBounds;

@@ -1,7 +1,7 @@
 import { FlowPosition } from "./flow-position.js";
 import { Metrics } from "./metrics.js";
 import { Section } from "./section.js";
-import { TableCell } from "./table.js";
+import { TableCell } from "./table/table.js";
 
 export class VirtualFlow {
     // private _width: number;

@@ -1,6 +1,6 @@
-import { Style } from "./style.js";
-import { NamedStyles } from "./named-styles.js";
-import { Xml } from "./xml.js";
+import { Style } from "../text/style.js";
+import { NamedStyles } from "../text/named-styles.js";
+import { Xml } from "../xml.js";
 
 export enum NumberingFormat {
     none = "none",

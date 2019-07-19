@@ -1,5 +1,5 @@
-import { Xml } from "./xml.js";
-import { Metrics } from "./metrics.js";
+import { Xml } from "../xml.js";
+import { Metrics } from "../metrics.js";
 
 export class ShapeBounds {
     public boundOffsetX: number = 0;
