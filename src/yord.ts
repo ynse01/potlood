@@ -1,4 +1,4 @@
-import { SvgRenderer } from "./svg-renderer.js";
+import { SvgRenderer } from "./painting/svg-renderer.js";
 import { Package } from "./package/package.js";
 import { NamedStyles } from "./text/named-styles.js";
 import { WordDocument } from "./word-document.js";

@@ -1,17 +1,17 @@
-import { Metrics } from './metrics.js';
-import { Style } from './text/style.js';
-import { Justification } from './text/par-style.js';
-import { UnderlineMode } from './text/run-style.js';
-import { WordDocument } from './word-document.js';
-import { VirtualFlow } from './virtual-flow.js';
-import { Paragraph, RunInParagraph } from './paragraph.js';
-import { FlowPosition } from './flow-position.js';
-import { LineInRun, TextRun } from './text/text-run.js';
-import { Table, TableCell } from './table/table.js';
-import { TableStyle } from './table/table-style.js';
-import { IPositionedTextLine } from './text/positioned-text-line.js';
-import { Xml } from './xml.js';
-import { DrawingRun } from './drawing/drawing-run.js';
+import { Metrics } from '../metrics.js';
+import { Style } from '../text/style.js';
+import { Justification } from '../text/par-style.js';
+import { UnderlineMode } from '../text/run-style.js';
+import { WordDocument } from '../word-document.js';
+import { VirtualFlow } from '../virtual-flow.js';
+import { Paragraph, RunInParagraph } from '../paragraph.js';
+import { FlowPosition } from '../flow-position.js';
+import { LineInRun, TextRun } from '../text/text-run.js';
+import { Table, TableCell } from '../table/table.js';
+import { TableStyle } from '../table/table-style.js';
+import { IPositionedTextLine } from '../text/positioned-text-line.js';
+import { Xml } from '../xml.js';
+import { DrawingRun } from '../drawing/drawing-run.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
