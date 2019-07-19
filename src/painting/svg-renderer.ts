@@ -12,10 +12,12 @@ import { TableStyle } from '../table/table-style.js';
 import { IPositionedTextLine } from '../text/positioned-text-line.js';
 import { Xml } from '../xml.js';
 import { DrawingRun } from '../drawing/drawing-run.js';
+import { SvgPainter } from './svg-painter.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
   private svg: SVGElement;
+  private _painter: SvgPainter;
 
   constructor(content: HTMLElement) {
     const svg = document.createElementNS(SvgRenderer.svgNS, 'svg');
@@ -24,6 +26,7 @@ export class SvgRenderer {
     svg.setAttribute('height', '500');
     content.appendChild(svg);
     this.svg = svg;
+    this._painter = new SvgPainter(svg);
   }
 
   public renderDocument(doc: WordDocument): number {
@@ -237,23 +240,12 @@ export class SvgRenderer {
   private renderHorizontalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string, thickness: number) {
     const x = flow.getX(pos);
     const y = flow.getY(pos);
-    this.renderLine(x, y, x + lineLength, y, color, thickness);
+    this._painter.paintLine(x, y, x + lineLength, y, color, thickness);
   }
 
   private renderVerticalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string, thickness: number) {
     const x = flow.getX(pos);
     const y = flow.getY(pos);
-    this.renderLine(x, y, x, y + lineLength, color, thickness);
-  }
-
-  private renderLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void {
-    const line = document.createElementNS(SvgRenderer.svgNS, "line");
-    line.setAttribute("x1", x1.toString());
-    line.setAttribute("y1", y1.toString());
-    line.setAttribute("x2", x2.toString());
-    line.setAttribute("y2", y2.toString());
-    line.setAttribute("stroke", `#${color}`);
-    line.setAttribute("stroke-width", thickness.toString());
-    this.svg.appendChild(line);
+    this._painter.paintLine(x, y, x, y + lineLength, color, thickness);
   }
 }
