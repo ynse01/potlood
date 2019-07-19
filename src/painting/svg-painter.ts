@@ -5,8 +5,17 @@ export class SvgPainter implements IPainter {
     private static readonly svgNS = 'http://www.w3.org/2000/svg';
     private _svg: SVGElement;
 
-    constructor(svg: SVGElement) {
+    constructor(content: HTMLElement) {
+        const svg = document.createElementNS(SvgPainter.svgNS, 'svg');
+        svg.setAttribute('id', 'svg');
+        svg.setAttribute('width', content.clientWidth.toString());
+        svg.setAttribute('height', '500');
+        content.appendChild(svg);
         this._svg = svg;
+    }
+
+    public get svg(): SVGElement {
+        return this._svg;
     }
 
     public paintText(x: number, y: number, width: number, fitWidth: boolean, text: string, color: string, identation: number, justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean) {

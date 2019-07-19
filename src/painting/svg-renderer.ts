@@ -12,20 +12,16 @@ import { IPositionedTextLine } from '../text/positioned-text-line.js';
 import { Xml } from '../xml.js';
 import { DrawingRun } from '../drawing/drawing-run.js';
 import { SvgPainter } from './svg-painter.js';
+import { IPainter } from './i-painter.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
   private svg: SVGElement;
-  private _painter: SvgPainter;
+  private _painter: IPainter;
 
   constructor(content: HTMLElement) {
-    const svg = document.createElementNS(SvgRenderer.svgNS, 'svg');
-    svg.setAttribute('id', 'svg');
-    svg.setAttribute('width', content.clientWidth.toString());
-    svg.setAttribute('height', '500');
-    content.appendChild(svg);
-    this.svg = svg;
-    this._painter = new SvgPainter(svg);
+    this._painter = new SvgPainter(content);
+    this.svg = (this._painter as SvgPainter).svg;
   }
 
   public renderDocument(doc: WordDocument): number {

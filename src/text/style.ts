@@ -96,7 +96,10 @@ export class Style {
     }
 
     public get font(): string {
-        return this.fontSize.toString() + " px "+ this.fontFamily;
+        const italicText = (this.italic) ? "italic ": "";
+        const boldText = (this.bold) ? "bold ": "";
+        const font = italicText + boldText + Math.round(this.fontSize) + 'px ' + this.fontFamily;
+        return font;
     }
 
     public toString(): string {
