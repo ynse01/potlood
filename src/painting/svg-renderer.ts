@@ -1,6 +1,5 @@
 import { Metrics } from '../metrics.js';
 import { Style } from '../text/style.js';
-import { Justification } from '../text/par-style.js';
 import { UnderlineMode } from '../text/run-style.js';
 import { WordDocument } from '../word-document.js';
 import { VirtualFlow } from '../virtual-flow.js';
@@ -143,75 +142,21 @@ export class SvgRenderer {
     pos: FlowPosition,
     inRun: LineInRun
   ): void {
-    const newText = document.createElementNS(SvgRenderer.svgNS, 'text');
     if (style.caps) {
       text = text.toLocaleUpperCase();
     }
-    this.setFont(newText, style);
-    this.setColor(newText, style);
-    this.setHorizontalAlignment(newText, style, flow, pos, inRun);
-    this.setVerticalAlignment(newText, style, flow, pos);
-    const textNode = document.createTextNode(text);
-    newText.appendChild(textNode);
-    this.svg.appendChild(newText);
-    // Render underline after adding text to DOM.
-    this.renderUnderline(newText, style, flow, pos);
-  }
-
-  private setFont(textNode: Element, style: Style): void {
-    textNode.setAttribute('font-family', style.fontFamily);
-    textNode.setAttribute('font-size', style.fontSize.toString());
-    if (style.bold) {
-      textNode.setAttribute('font-weight', 'bold');
-    }
-    if (style.italic) {
-      textNode.setAttribute('font-style', 'italic');
-    }
-  }
-
-  private setColor(textNode: Element, style: Style) {
-    textNode.setAttribute('fill', `#${style.color}`);
-  }
-
-  private setHorizontalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition, inRun: LineInRun): void {
     const xDelta = (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) ? style.hanging : style.identation;
     const x = flow.getX(pos) + xDelta;
+    const fitWidth = (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine);
     const width = flow.getWidth(pos);
-    switch(style.justification) {
-      case Justification.both:
-        textNode.setAttribute('x', x.toString());
-        if (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine) {
-          textNode.setAttribute('textLength', (width - style.identation).toString());
-          textNode.setAttribute('lengthAdjust', 'spacing');
-        }
-        break;
-      case Justification.right:
-        const right = x + width;
-        textNode.setAttribute('x', right.toString());
-        textNode.setAttribute('text-anchor', "end");
-        break;
-      case Justification.center:
-        const center = x + width / 2;
-        textNode.setAttribute('x', center.toString());
-        textNode.setAttribute('text-anchor', "middle");
-        break;
-      case Justification.left:
-      default:
-        textNode.setAttribute('x', x.toString());
-        textNode.setAttribute('text-anchor', "start");
-        break;
-    }
+    this._painter.paintText(x, flow.getY(pos), width, fitWidth, text, style.color, style.identation, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
+    // Render underline after adding text to DOM.
+    this.renderUnderline(style, Metrics.getTextWidth(text, style), flow, pos);
   }
 
-  private setVerticalAlignment(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition): void {
-    textNode.setAttribute('y', (flow.getY(pos) + style.fontSize / 2).toString());
-    textNode.setAttribute('alignment-baseline', 'top');
-  }
-
-  private renderUnderline(textNode: Element, style: Style, flow: VirtualFlow, pos: FlowPosition): void {
+  private renderUnderline(style: Style, lineLength: number, flow: VirtualFlow, pos: FlowPosition): void {
     // TODO: Support all underline modes
     if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
-      let lineLength = (textNode as any).getComputedTextLength();
       const y = pos.clone().add(style.fontSize / 2);
       switch(style.underlineMode) {
         case UnderlineMode.double:
