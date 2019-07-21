@@ -9,7 +9,12 @@
             import('../build/module/yord.js').then(module => {
                 var content = document.getElementById("content");
                 yord = new module.Yord(content);
-                yord.loadDocxFromUrl('./demo.docx');
+                var url = './demo.docx';
+                if (location.search) {
+                    var url = location.search.substring(1);
+                    console.log("Load word document from: " + url);
+                }
+                yord.loadDocxFromUrl(url);
             })
         </script>
     </head>
