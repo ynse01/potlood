@@ -63,13 +63,6 @@ export class Metrics {
   }
 
   public static getTextWidthFromSvg(text: string, style: Style) {
-    if (this.svg === undefined) {
-      this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      this.svg.setAttribute('width', '2048');
-      this.svg.setAttribute('height', '240');
-      this.svg.setAttribute('visibility', 'hidden');
-      document.body.appendChild(this.svg);
-    }
     var element = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     element.setAttribute('font-family', style.fontFamily);
     element.setAttribute('font-size', `${style.fontSize}`);
@@ -93,17 +86,24 @@ export class Metrics {
     text: string,
     style: Style
   ): number {
-    let width = 0;
-    const canvas =
-      this.canvas || (this.canvas = document.createElement('canvas'));
-    const context = canvas.getContext('2d');
-    if (context !== null) {
-      context.font = Math.round(style.fontSize) + 'px ' + style.fontFamily;
-      const metrics = context.measureText(text);
-      width = metrics.width;
-    }
-    return width;
+    this.context.font = Math.round(style.fontSize) + 'px ' + style.fontFamily;
+    const metrics = this.context.measureText(text);
+    return metrics.width;
   }
+
+  public static init(): void {
+    if (this.canvas === undefined) {
+      this.canvas = document.createElement('canvas');
+      this.context = this.canvas.getContext('2d')!;
+      this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      this.svg.setAttribute('width', '2048');
+      this.svg.setAttribute('height', '240');
+      this.svg.setAttribute('visibility', 'hidden');
+      document.body.appendChild(this.svg);
+    }
+  }
+
   private static canvas: HTMLCanvasElement | undefined;
-  private static svg: SVGElement | undefined;
+  private static context: CanvasRenderingContext2D;
+  private static svg: SVGElement;
 }

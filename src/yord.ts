@@ -4,12 +4,14 @@ import { NamedStyles } from "./text/named-styles.js";
 import { WordDocument } from "./word-document.js";
 import { AbstractNumberings } from "./numbering/abstract-numberings.js";
 import { Relationships } from "./package/relationships.js";
+import { Metrics } from "./metrics.js";
 
 export class Yord {
     private renderer: SvgRenderer;
 
     constructor(element: HTMLElement) {
         this.renderer = new SvgRenderer(element);
+        Metrics.init();
     }
 
     public loadDocxFromUrl(url: string) {
