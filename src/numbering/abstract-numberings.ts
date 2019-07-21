@@ -17,18 +17,22 @@ export class AbstractNumberings {
             const root = Xml.getFirstChildOfName(this.doc, "w:numbering");
             if (root !== undefined) {
                 const abstractNumberings: Numbering[] = [];
-                Xml.getChildrenOfName(root, "w:abstractNum").forEach(node => {
-                    const abstractNumId = Xml.getAttribute(node, "w:abstractNumId");
-                    if (abstractNumId !== undefined) {
-                        const numbering = Numbering.fromAbstractNumNode(styles, node);
-                        abstractNumberings[parseInt(abstractNumId)] = numbering;
+                root.childNodes.forEach(node => {
+                    if (node.nodeName == "w:abstractNum") {
+                        const abstractNumId = Xml.getAttribute(node, "w:abstractNumId");
+                        if (abstractNumId !== undefined) {
+                            const numbering = Numbering.fromAbstractNumNode(styles, node);
+                            abstractNumberings[parseInt(abstractNumId)] = numbering;
+                        }
                     }
                 });
-                Xml.getChildrenOfName(root, "w:num").forEach(numNode => {
-                    const numId = Xml.getAttribute(numNode, "w:numId");
-                    const abstractNumId = Xml.getNumberValueFromNode(numNode, "w:abstractNumId");
-                    if (numId !== undefined && abstractNumId !== undefined) {
-                        this._numberings[parseInt(numId)] = abstractNumberings[abstractNumId];
+                root.childNodes.forEach(numNode => {
+                    if (numNode.nodeName == "w:num") {
+                        const numId = Xml.getAttribute(numNode, "w:numId");
+                        const abstractNumId = Xml.getNumberValueFromNode(numNode, "w:abstractNumId");
+                        if (numId !== undefined && abstractNumId !== undefined) {
+                            this._numberings[parseInt(numId)] = abstractNumberings[abstractNumId];
+                        }
                     }
                 });
             }

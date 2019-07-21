@@ -20,10 +20,12 @@ export class TableRow {
     public static fromTableRowNode(rowNode: ChildNode, table: Table): TableRow {
         const row = new TableRow();
         let colIndex = 0;
-        Xml.getChildrenOfName(rowNode, "w:tc").forEach(cellNode => {
-            const cell = TableCell.fromTableCellNode(cellNode, table, colIndex);
-            colIndex += cell.columns.length;
-            row.cells.push(cell);
+        rowNode.childNodes.forEach(cellNode => {
+            if (cellNode.nodeName == "w:tc") {
+                const cell = TableCell.fromTableCellNode(cellNode, table, colIndex);
+                colIndex += cell.columns.length;
+                row.cells.push(cell);
+            }
         });
         return row;
     }
@@ -61,10 +63,12 @@ export class TableCell {
             style = new TableCellStyle();
         }
         const cell = new TableCell(table.columns, table.style, style, colIndex);
-        Xml.getChildrenOfName(cellNode, "w:p").forEach(pNode => {
-            const par = new Paragraph(table.doc, pNode);
-            par.type = ParagraphType.TableCell;
-            cell.pars.push(par);
+        cellNode.childNodes.forEach(pNode => {
+            if (pNode.nodeName == "w:p") {
+                const par = new Paragraph(table.doc, pNode);
+                par.type = ParagraphType.TableCell;
+                cell.pars.push(par);
+            }
         });
         const id = Xml.getAttribute(cellNode, "w:id");
         if (id !== undefined) {
@@ -121,18 +125,22 @@ export class Table {
         const grid = Xml.getFirstChildOfName(tableNode, "w:tblGrid");
         if (grid !== undefined) {
             let start = 0;
-            Xml.getChildrenOfName(grid, "w:gridCol").forEach(col => {
-                const w = Xml.getAttribute(col, "w:w");
-                if (w !== undefined) {
-                    const width = Metrics.convertTwipsToPixels(parseInt(w));
-                    table.columns.push(new TableColumn(start, width));
-                    start += width;
+            grid.childNodes.forEach(col => {
+                if (col.nodeName == "w:gridCol") {
+                    const w = Xml.getAttribute(col, "w:w");
+                    if (w !== undefined) {
+                        const width = Metrics.convertTwipsToPixels(parseInt(w));
+                        table.columns.push(new TableColumn(start, width));
+                        start += width;
+                    }
                 }
             });
         }
-        Xml.getChildrenOfName(tableNode, "w:tr").forEach(rowNode => {
-            const row = TableRow.fromTableRowNode(rowNode, table);
-            table.rows.push(row);
+        tableNode.childNodes.forEach(rowNode => {
+            if (rowNode.nodeName == "w:tr") {
+                const row = TableRow.fromTableRowNode(rowNode, table);
+                table.rows.push(row);
+            }
         });
         const prNode = Xml.getFirstChildOfName(tableNode, "w:tblPr");
         if (prNode !== undefined) {

@@ -63,15 +63,17 @@ export class Paragraph {
             if (parStyle !== undefined && parStyle._numStyle !== undefined) {
                 this._numberingRun = new TextRun(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style);
             }
-            Xml.getChildrenOfName(this.pNode, "w:r").forEach(node => {
-                const drawingNode = Xml.getFirstChildOfName(node, "w:drawing");
-                if (drawingNode !== undefined) {
-                    const drawing = DrawingRun.fromDrawingNode(drawingNode, this.doc);
-                    runs.push(drawing);
-                } else {
-                    const run = TextRun.fromRunNode(node, parStyle, this.doc.styles);
-                    run.inParagraph = RunInParagraph.Normal;
-                    runs.push(run);
+            this.pNode.childNodes.forEach(node => {
+                if (node.nodeName == "w:r") {
+                    const drawingNode = Xml.getFirstChildOfName(node, "w:drawing");
+                    if (drawingNode !== undefined) {
+                        const drawing = DrawingRun.fromDrawingNode(drawingNode, this.doc);
+                        runs.push(drawing);
+                    } else {
+                        const run = TextRun.fromRunNode(node, parStyle, this.doc.styles);
+                        run.inParagraph = RunInParagraph.Normal;
+                        runs.push(run);
+                    }
                 }
             });
             const firstRun = runs[0]

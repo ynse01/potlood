@@ -14,13 +14,15 @@ export class NamedStyles {
         if (this.named["Normal"] === undefined) {
             const root = Xml.getFirstChildOfName(this.doc, "w:styles");
             if (root !== undefined) {
-                Xml.getChildrenOfName(root, "w:style").forEach(node => {
-                    const styleType = Xml.getAttribute(node, "w:type");
-                    if (styleType !== undefined && styleType !== "numbering") {
-                        const style = Style.fromStyleNode(node);
-                        const styleId = Xml.getAttribute(node, "w:styleId");
-                        if (styleId !== undefined) {
-                            this.named[styleId] = style;
+                root.childNodes.forEach(node => {
+                    if (node.nodeName == "w:style") {
+                        const styleType = Xml.getAttribute(node, "w:type");
+                        if (styleType !== undefined && styleType !== "numbering") {
+                            const style = Style.fromStyleNode(node);
+                            const styleId = Xml.getAttribute(node, "w:styleId");
+                            if (styleId !== undefined) {
+                                this.named[styleId] = style;
+                            }
                         }
                     }
                 });

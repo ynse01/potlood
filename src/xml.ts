@@ -79,20 +79,4 @@ export class Xml {
         }
         return val;
     }
-
-    /**
-     * Get child nodes which have nodeName equal to name. Works on full depth of tree.
-     * @param parent The node under which to search for nodes.
-     * @param name  The node name to search for.
-     */
-    public static getChildrenOfName(parent: Node, name: string): ChildNode[] {
-        const nodes: ChildNode[] = [];
-        parent.childNodes.forEach(child => {
-            if (child.nodeName === name) {
-                nodes.push(child);
-            }
-            nodes.push(...Xml.getChildrenOfName(child, name));
-        });
-        return nodes;
-    } 
 }

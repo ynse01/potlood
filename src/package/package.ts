@@ -84,16 +84,18 @@ export class Package {
     private _loadContentTypes(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.loadPart('[Content_Types].xml').then(contentTypePart => {
-                Xml.getChildrenOfName(contentTypePart.document.getRootNode() as ChildNode, "Override").forEach(content => {
-                    const partName = Xml.getAttribute(content, "PartName");
-                    const contentType = Xml.getAttribute(content, "ContentType");
-                    if (partName !== undefined && contentType !== undefined) {
-                        let key = contentType.replace('application/vnd.openxmlformats-', '');
-                        key = key.replace('+xml', '');
-                        if (this.content[key] === undefined) {
-                            this.content[key] = [];
+                contentTypePart.document.getRootNode().childNodes.forEach(content => {
+                    if (content.nodeName == "Override") {
+                        const partName = Xml.getAttribute(content, "PartName");
+                        const contentType = Xml.getAttribute(content, "ContentType");
+                        if (partName !== undefined && contentType !== undefined) {
+                            let key = contentType.replace('application/vnd.openxmlformats-', '');
+                            key = key.replace('+xml', '');
+                            if (this.content[key] === undefined) {
+                                this.content[key] = [];
+                            }
+                            this.content[key].push(partName);
                         }
-                        this.content[key].push(partName);
                     }
                 });
                 resolve();
