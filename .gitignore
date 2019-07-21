@@ -11,4 +11,4 @@ coverage
 yarn.lock
 
 demo/uitgepakt/*
-demo/.~lock.demo.docx#
+*.docx#
