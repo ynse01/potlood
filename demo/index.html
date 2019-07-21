@@ -6,8 +6,10 @@
         <title>Open Office viewer</title>
         <script src="../node_modules/jszip/dist/jszip.min.js"></script>
         <script>
-            import('./demo.js').then(module => {
-                module.init();
+            import('../build/module/yord.js').then(module => {
+                var content = document.getElementById("content");
+                yord = new module.Yord(content);
+                yord.loadDocxFromUrl('./demo.docx');
             })
         </script>
     </head>

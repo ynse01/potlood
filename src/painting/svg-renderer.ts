@@ -79,7 +79,6 @@ export class SvgRenderer {
       rect.setAttribute("height", `${drawing.bounds.boundSizeY}`);
       this.svg.appendChild(rect);
       picture.getImageUrl().then(url => {
-        //rect.setAttribute("fill", `${url}`);
         rect.setAttribute("xlink:href", `${url}`);
         rect.setAttribute("href", `${url}`);
       }).catch(error => {
@@ -146,35 +145,35 @@ export class SvgRenderer {
     const fitWidth = (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine);
     const width = flow.getWidth(pos);
     this._painter.paintText(x, flow.getY(pos), width, fitWidth, text, style.color, style.identation, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
-    // Render underline after adding text to DOM.
-    this.renderUnderline(style, Metrics.getTextWidth(text, style), flow, pos);
+    if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
+      // Render underline after adding text to DOM.
+      this.renderUnderline(style, Metrics.getTextWidth(text, style), flow, pos);
+    }
   }
 
   private renderUnderline(style: Style, lineLength: number, flow: VirtualFlow, pos: FlowPosition): void {
     // TODO: Support all underline modes
-    if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
-      const y = pos.clone().add(style.fontSize / 2);
-      switch(style.underlineMode) {
-        case UnderlineMode.double:
-          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
-          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
-          break;
-        case UnderlineMode.none:
-          // Nothing to be done
-          break;
-        default:
-        case UnderlineMode.single:
-          this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
-          break;
-      }
-      if (style.strike) {
-        this.renderHorizontalLine(lineLength, flow, y.subtract(style.fontSize / 2), style.color, 1);
-      }
-      if (style.doubleStrike) {
-        const middle = y.subtract(style.fontSize / 2);
-        this.renderHorizontalLine(lineLength, flow, middle.subtract(1), style.color, 1);
-        this.renderHorizontalLine(lineLength, flow, middle.add(2), style.color, 1);
-      }
+    const y = pos.clone().add(style.fontSize / 2);
+    switch(style.underlineMode) {
+      case UnderlineMode.double:
+        this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
+        this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
+        break;
+      case UnderlineMode.none:
+        // Nothing to be done
+        break;
+      default:
+      case UnderlineMode.single:
+        this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
+        break;
+    }
+    if (style.strike) {
+      this.renderHorizontalLine(lineLength, flow, y.subtract(style.fontSize / 2), style.color, 1);
+    }
+    if (style.doubleStrike) {
+      const middle = y.subtract(style.fontSize / 2);
+      this.renderHorizontalLine(lineLength, flow, middle.subtract(1), style.color, 1);
+      this.renderHorizontalLine(lineLength, flow, middle.add(2), style.color, 1);
     }
   }
 
