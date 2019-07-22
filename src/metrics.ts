@@ -86,7 +86,9 @@ export class Metrics {
     text: string,
     style: Style
   ): number {
-    this.context.font = Math.round(style.fontSize) + 'px ' + style.fontFamily;
+    const italicText = (style.italic) ? "italic ": "";
+    const boldText = (style.bold) ? "bold ": "";
+    this.context.font = italicText + boldText + Math.round(style.fontSize) + 'px ' + style.fontFamily;
     const metrics = this.context.measureText(text);
     return metrics.width;
   }
