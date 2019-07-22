@@ -1,8 +1,12 @@
-import { IPainter } from "./i-painter.js";
+import { IPainter, IRectangle } from "./i-painter.js";
 import { Justification } from "../text/par-style.js";
 
 export class CanvasPainter implements IPainter {
     private _context: CanvasRenderingContext2D;
+    private _lastText: string = "";
+    private _lastX = 0;
+    private _lastY = 0;
+
     constructor(content: HTMLElement) {
         const canvas = document.createElement('canvas');
         canvas.setAttribute('id', 'canvas');
@@ -21,6 +25,16 @@ export class CanvasPainter implements IPainter {
         this._context.fillText(text, x, y);
     }
     
+    public measureLastText(): IRectangle {
+        const metrics = this._context.measureText(this._lastText);
+        return {
+            x: this._lastX,
+            y: this._lastY,
+            width: metrics.width,
+            height: metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+        }
+    }
+
     paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void {
         this._context.lineWidth = thickness;
         this._context.strokeStyle = `#${color}`;

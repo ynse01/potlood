@@ -1,9 +1,10 @@
-import { IPainter } from "./i-painter.js";
+import { IPainter, IRectangle } from "./i-painter.js";
 import { Justification } from "../text/par-style.js";
 
 export class SvgPainter implements IPainter {
     private static readonly svgNS = 'http://www.w3.org/2000/svg';
     private _svg: SVGElement;
+    private _lastText: SVGTextElement | undefined;
 
     constructor(content: HTMLElement) {
         const svg = document.createElementNS(SvgPainter.svgNS, 'svg');
@@ -27,9 +28,30 @@ export class SvgPainter implements IPainter {
         const textNode = document.createTextNode(text);
         newText.appendChild(textNode);
         this._svg.appendChild(newText);
-    
+        this._lastText = newText;
     }
     
+    public measureLastText(): IRectangle {
+        let rect: IRectangle;
+        if (this._lastText !== undefined) {
+            const box = this._lastText.getBBox();
+            rect = {
+                x: box.x,
+                y: box.y,
+                width: box.width,
+                height: box.height
+            };
+        } else {
+            rect = {
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0
+            };
+        }
+        return rect;
+    }
+
     public paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void {
         const line = document.createElementNS(SvgPainter.svgNS, "line");
         line.setAttribute("x1", x1.toString());
