@@ -12,7 +12,7 @@ import { IPositionedTextLine } from '../text/positioned-text-line.js';
 import { Xml } from '../xml.js';
 import { DrawingRun } from '../drawing/drawing-run.js';
 import { SvgPainter } from './svg-painter.js';
-import { IPainter } from './i-painter.js';
+import { IPainter, IRectangle } from './i-painter.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -106,10 +106,10 @@ export class SvgRenderer {
     // TODO: Figure out why this offset is required.
     pos = pos.clone().add(Metrics.getLineSpacing((cell.pars[0].runs[0] as TextRun).style) * 0.75);
     if (style.borderTop !== undefined) {
-      this.renderHorizontalLine(cell.getWidth(), flow, pos, style.borderTop.color, style.borderTop.size);
+      this.renderHorizontalLine(flow.getX(pos), cell.getWidth(), flow, pos, style.borderTop.color, style.borderTop.size);
     }
     if (style.borderBottom !== undefined) {
-      this.renderHorizontalLine(cell.getWidth(), flow, pos.clone().add(height), style.borderBottom.color, style.borderBottom.size);
+      this.renderHorizontalLine(flow.getX(pos), cell.getWidth(), flow, pos.clone().add(height), style.borderBottom.color, style.borderBottom.size);
     }
     if (style.borderStart !== undefined) {
       this.renderVerticalLine(height, flow, pos, style.borderStart.color, style.borderStart.size);
@@ -147,38 +147,38 @@ export class SvgRenderer {
     this._painter.paintText(x, flow.getY(pos), width, fitWidth, text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
     if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
       // Render underline after adding text to DOM.
-      this.renderUnderline(style, Metrics.getTextWidth(text, style), flow, pos);
+      const lastTextRect = this._painter.measureLastText();
+      this.renderUnderline(style, lastTextRect, flow, pos);
     }
   }
 
-  private renderUnderline(style: Style, lineLength: number, flow: VirtualFlow, pos: FlowPosition): void {
+  private renderUnderline(style: Style, textRect: IRectangle, flow: VirtualFlow, pos: FlowPosition): void {
     // TODO: Support all underline modes
     const y = pos.clone().add(style.fontSize / 2);
     switch(style.underlineMode) {
       case UnderlineMode.double:
-        this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
-        this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
+        this.renderHorizontalLine(textRect.x, textRect.width, flow, y.add(style.fontSize / 10), style.color, 1);
+        this.renderHorizontalLine(textRect.x, textRect.width, flow, y.add(style.fontSize / 10), style.color, 1);
         break;
       case UnderlineMode.none:
         // Nothing to be done
         break;
       default:
       case UnderlineMode.single:
-        this.renderHorizontalLine(lineLength, flow, y.add(style.fontSize / 10), style.color, 1);
+        this.renderHorizontalLine(textRect.x, textRect.width, flow, y.add(style.fontSize / 10), style.color, 1);
         break;
     }
     if (style.strike) {
-      this.renderHorizontalLine(lineLength, flow, y.subtract(style.fontSize / 2), style.color, 1);
+      this.renderHorizontalLine(textRect.x, textRect.width, flow, y.subtract(style.fontSize / 2), style.color, 1);
     }
     if (style.doubleStrike) {
       const middle = y.subtract(style.fontSize / 2);
-      this.renderHorizontalLine(lineLength, flow, middle.subtract(1), style.color, 1);
-      this.renderHorizontalLine(lineLength, flow, middle.add(2), style.color, 1);
+      this.renderHorizontalLine(textRect.x, textRect.width, flow, middle.subtract(1), style.color, 1);
+      this.renderHorizontalLine(textRect.x, textRect.width, flow, middle.add(2), style.color, 1);
     }
   }
 
-  private renderHorizontalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string, thickness: number) {
-    const x = flow.getX(pos);
+  private renderHorizontalLine(x: number, lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string, thickness: number) {
     const y = flow.getY(pos);
     this._painter.paintLine(x, y, x + lineLength, y, color, thickness);
   }
