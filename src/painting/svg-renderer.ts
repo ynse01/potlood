@@ -143,8 +143,8 @@ export class SvgRenderer {
     const xDelta = (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) ? style.hanging : style.identation;
     const x = flow.getX(pos) + xDelta;
     const fitWidth = (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine);
-    const width = flow.getWidth(pos);
-    this._painter.paintText(x, flow.getY(pos), width, fitWidth, text, style.color, style.identation, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
+    const width = flow.getWidth(pos) - xDelta;
+    this._painter.paintText(x, flow.getY(pos), width, fitWidth, text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
     if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
       // Render underline after adding text to DOM.
       this.renderUnderline(style, Metrics.getTextWidth(text, style), flow, pos);

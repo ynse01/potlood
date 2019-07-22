@@ -18,11 +18,11 @@ export class SvgPainter implements IPainter {
         return this._svg;
     }
 
-    public paintText(x: number, y: number, width: number, fitWidth: boolean, text: string, color: string, identation: number, justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean) {
+    public paintText(x: number, y: number, width: number, fitWidth: boolean, text: string, color: string, justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean) {
         const newText = document.createElementNS(SvgPainter.svgNS, 'text');
         this._setFont(newText, fontFamily, fontSize, bold, italic);
         this._setColor(newText, color);
-        this._setHorizontalAlignment(newText, x, width, identation, justification, fitWidth);
+        this._setHorizontalAlignment(newText, x, width, justification, fitWidth);
         this._setVerticalAlignment(newText, y, fontSize);
         const textNode = document.createTextNode(text);
         newText.appendChild(textNode);
@@ -56,12 +56,12 @@ export class SvgPainter implements IPainter {
         textNode.setAttribute('fill', `#${color}`);
       }
     
-      private _setHorizontalAlignment(textNode: Element, x: number, width: number, identation: number, justification: Justification, fitWidth: boolean): void {
+      private _setHorizontalAlignment(textNode: Element, x: number, width: number, justification: Justification, fitWidth: boolean): void {
         switch(justification) {
           case Justification.both:
             textNode.setAttribute('x', x.toString());
             if (fitWidth) {
-              textNode.setAttribute('textLength', (width - identation).toString());
+              textNode.setAttribute('textLength', width.toString());
               textNode.setAttribute('lengthAdjust', 'spacing');
             }
             break;

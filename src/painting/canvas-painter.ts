@@ -12,7 +12,7 @@ export class CanvasPainter implements IPainter {
         this._context = canvas.getContext('2d')!;
     }
     
-    paintText(x: number, y: number, _width: number, _fitWidth: boolean, text: string, color: string, _identation: number, _justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void {
+    paintText(x: number, y: number, _width: number, _fitWidth: boolean, text: string, color: string, _justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void {
         this._context.fillStyle = `#${color}`;
         const italicText = (italic) ? "italic ": "";
         const boldText = (bold) ? "bold ": "";
