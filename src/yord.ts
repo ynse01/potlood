@@ -11,10 +11,10 @@ export class Yord {
 
     constructor(element: HTMLElement) {
         this.renderer = new SvgRenderer(element);
-        Metrics.init();
     }
 
     public loadDocxFromUrl(url: string) {
+        Metrics.init();
         Package.loadFromUrl(url).then((pack) => {
             pack.loadPart('word/_rels/document.xml.rels').then(relPart => {
                 const relationships = Relationships.fromDocument(relPart.document);
