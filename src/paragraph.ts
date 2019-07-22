@@ -64,6 +64,12 @@ export class Paragraph {
                 this._numberingRun = new TextRun(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style);
             }
             this.pNode.childNodes.forEach(node => {
+                if (node.nodeName === "w:hyperlink") {
+                    const firstChild = node.firstChild;
+                    if (firstChild !== null) {
+                        node = firstChild;
+                    }
+                }
                 if (node.nodeName == "w:r") {
                     const drawingNode = Xml.getFirstChildOfName(node, "w:drawing");
                     if (drawingNode !== undefined) {
