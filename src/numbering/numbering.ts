@@ -10,7 +10,7 @@ export class Numbering {
     public static fromAbstractNumNode(styles: NamedStyles | undefined, node: ChildNode): Numbering {
         const numbering = new Numbering();
         node.childNodes.forEach(levelNode => {
-            if (levelNode.nodeName == "w:lvl") {
+            if (levelNode.nodeName === "w:lvl") {
                 const level = NumberingLevel.fromLevelNode(styles, levelNode);
                 if (level !== undefined) {
                     numbering._levels[level.index] = level;

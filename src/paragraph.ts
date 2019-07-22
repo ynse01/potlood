@@ -70,7 +70,7 @@ export class Paragraph {
                         node = firstChild;
                     }
                 }
-                if (node.nodeName == "w:r") {
+                if (node.nodeName === "w:r") {
                     const drawingNode = Xml.getFirstChildOfName(node, "w:drawing");
                     if (drawingNode !== undefined) {
                         const drawing = DrawingRun.fromDrawingNode(drawingNode, this.doc);

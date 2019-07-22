@@ -15,7 +15,7 @@ export class NamedStyles {
             const root = Xml.getFirstChildOfName(this.doc, "w:styles");
             if (root !== undefined) {
                 root.childNodes.forEach(node => {
-                    if (node.nodeName == "w:style") {
+                    if (node.nodeName === "w:style") {
                         const styleType = Xml.getAttribute(node, "w:type");
                         if (styleType !== undefined && styleType !== "numbering") {
                             const style = Style.fromStyleNode(node);

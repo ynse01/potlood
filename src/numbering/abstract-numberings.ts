@@ -18,7 +18,7 @@ export class AbstractNumberings {
             if (root !== undefined) {
                 const abstractNumberings: Numbering[] = [];
                 root.childNodes.forEach(node => {
-                    if (node.nodeName == "w:abstractNum") {
+                    if (node.nodeName === "w:abstractNum") {
                         const abstractNumId = Xml.getAttribute(node, "w:abstractNumId");
                         if (abstractNumId !== undefined) {
                             const numbering = Numbering.fromAbstractNumNode(styles, node);
@@ -27,7 +27,7 @@ export class AbstractNumberings {
                     }
                 });
                 root.childNodes.forEach(numNode => {
-                    if (numNode.nodeName == "w:num") {
+                    if (numNode.nodeName === "w:num") {
                         const numId = Xml.getAttribute(numNode, "w:numId");
                         const abstractNumId = Xml.getNumberValueFromNode(numNode, "w:abstractNumId");
                         if (numId !== undefined && abstractNumId !== undefined) {

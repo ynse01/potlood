@@ -7,7 +7,7 @@ export class Relationships {
         const relationships = new Relationships();
         doc.getRootNode().childNodes.forEach(relsNode => {
             relsNode.childNodes.forEach(relNode => {
-                if (relNode.nodeName == "Relationship") {
+                if (relNode.nodeName === "Relationship") {
                     const id = Xml.getAttribute(relNode, "Id");
                     const target = Xml.getAttribute(relNode, "Target");
                     const type = Xml.getAttribute(relNode, "Type");

@@ -21,7 +21,7 @@ export class TableRow {
         const row = new TableRow();
         let colIndex = 0;
         rowNode.childNodes.forEach(cellNode => {
-            if (cellNode.nodeName == "w:tc") {
+            if (cellNode.nodeName === "w:tc") {
                 const cell = TableCell.fromTableCellNode(cellNode, table, colIndex);
                 colIndex += cell.columns.length;
                 row.cells.push(cell);
@@ -64,7 +64,7 @@ export class TableCell {
         }
         const cell = new TableCell(table.columns, table.style, style, colIndex);
         cellNode.childNodes.forEach(pNode => {
-            if (pNode.nodeName == "w:p") {
+            if (pNode.nodeName === "w:p") {
                 const par = new Paragraph(table.doc, pNode);
                 par.type = ParagraphType.TableCell;
                 cell.pars.push(par);
@@ -126,7 +126,7 @@ export class Table {
         if (grid !== undefined) {
             let start = 0;
             grid.childNodes.forEach(col => {
-                if (col.nodeName == "w:gridCol") {
+                if (col.nodeName === "w:gridCol") {
                     const w = Xml.getAttribute(col, "w:w");
                     if (w !== undefined) {
                         const width = Metrics.convertTwipsToPixels(parseInt(w));
@@ -137,7 +137,7 @@ export class Table {
             });
         }
         tableNode.childNodes.forEach(rowNode => {
-            if (rowNode.nodeName == "w:tr") {
+            if (rowNode.nodeName === "w:tr") {
                 const row = TableRow.fromTableRowNode(rowNode, table);
                 table.rows.push(row);
             }

@@ -85,7 +85,7 @@ export class Package {
         return new Promise<void>((resolve, reject) => {
             this.loadPart('[Content_Types].xml').then(contentTypePart => {
                 contentTypePart.document.getRootNode().childNodes.forEach(content => {
-                    if (content.nodeName == "Override") {
+                    if (content.nodeName === "Override") {
                         const partName = Xml.getAttribute(content, "PartName");
                         const contentType = Xml.getAttribute(content, "ContentType");
                         if (partName !== undefined && contentType !== undefined) {
