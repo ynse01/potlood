@@ -6,7 +6,7 @@ import { AbstractNumberings } from "./numbering/abstract-numberings.js";
 import { Relationships } from "./package/relationships.js";
 import { Metrics } from "./metrics.js";
 
-export class Yord {
+export class Potlood {
     private renderer: SvgRenderer;
 
     constructor(element: HTMLElement) {
