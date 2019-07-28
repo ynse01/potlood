@@ -1,5 +1,5 @@
 import { Metrics } from "../metrics.js";
-import { Xml } from "../xml.js";
+import { Xml } from "../utils/xml.js";
 
 export class TableCellStyle {
     public width: number | undefined;

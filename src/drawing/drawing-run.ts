@@ -1,6 +1,6 @@
 import { ShapeBounds } from "./shape-bounds.js";
 import { Picture } from "./picture.js";
-import { Xml } from "../xml.js";
+import { Xml } from "../utils/xml.js";
 import { WordDocument } from "../word-document.js";
 import { ILayoutable } from "../i-layoutable.js";
 import { FlowPosition } from "../flow-position.js";

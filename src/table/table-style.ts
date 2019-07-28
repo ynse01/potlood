@@ -1,4 +1,4 @@
-import { Xml } from "../xml.js";
+import { Xml } from "../utils/xml.js";
 import { Metrics } from "../metrics.js";
 import { Justification } from "../text/par-style.js";
 import { TableBorder } from "./table-border.js";

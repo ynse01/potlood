@@ -1,5 +1,5 @@
 import { Style } from "./style.js";
-import { Xml } from "../xml.js";
+import { Xml } from "../utils/xml.js";
 import { Part } from "../package/part.js";
 
 export class NamedStyles {

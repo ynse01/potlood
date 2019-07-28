@@ -1,4 +1,4 @@
-import { Xml } from "../xml.js";
+import { Xml } from "../utils/xml.js";
 import { Metrics } from "../metrics.js";
 
 export class ShapeBounds {

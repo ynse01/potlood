@@ -8,7 +8,7 @@ import { FlowPosition } from '../flow-position.js';
 import { Table } from '../table/table.js';
 import { TableStyle } from '../table/table-style.js';
 import { IPositionedTextLine } from '../text/positioned-text-line.js';
-import { Xml } from '../xml.js';
+import { Xml } from '../utils/xml.js';
 import { DrawingRun } from '../drawing/drawing-run.js';
 import { SvgPainter } from './svg-painter.js';
 import { IPainter, IRectangle } from './i-painter.js';

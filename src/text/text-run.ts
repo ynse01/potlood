@@ -1,4 +1,4 @@
-import { Xml } from "../xml.js";
+import { Xml } from "../utils/xml.js";
 import { RunStyle } from "./run-style.js";
 import { ParStyle } from "./par-style.js";
 import { Style } from "./style.js";

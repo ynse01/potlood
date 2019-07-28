@@ -1,4 +1,4 @@
-import { Xml } from "../xml.js";
+import { Xml } from "../utils/xml.js";
 import { Metrics } from "../metrics.js";
 import { Paragraph } from "../paragraph.js";
 import { WordDocument } from "../word-document.js";

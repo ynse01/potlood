@@ -1,4 +1,4 @@
-import { Xml } from "./xml.js";
+import { Xml } from "./utils/xml.js";
 import { TextRun } from "./text/text-run.js";
 import { WordDocument } from "./word-document.js";
 import { ParStyle } from "./text/par-style.js";

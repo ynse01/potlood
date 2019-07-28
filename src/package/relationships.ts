@@ -1,4 +1,4 @@
-import { Xml } from "../xml.js";
+import { Xml } from "../utils/xml.js";
 
 export class Relationships {
     private relations: { [id: string]: {target: string, type: string}} = {};

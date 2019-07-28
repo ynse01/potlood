@@ -3,7 +3,7 @@ import { Paragraph, ParagraphType } from "../paragraph.js";
 import { TableStyle } from "./table-style.js";
 import { Table } from "./table.js";
 import { TableCellStyle } from "./table-cell-style.js";
-import { Xml } from "../xml.js";
+import { Xml } from "../utils/xml.js";
 import { VirtualFlow } from "../virtual-flow.js";
 import { FlowPosition } from "../flow-position.js";
 
