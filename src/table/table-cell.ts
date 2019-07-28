@@ -4,6 +4,8 @@ import { TableStyle } from "./table-style.js";
 import { Table } from "./table.js";
 import { TableCellStyle } from "./table-cell-style.js";
 import { Xml } from "../xml.js";
+import { VirtualFlow } from "../virtual-flow.js";
+import { FlowPosition } from "../flow-position.js";
 
 export class TableCell {
     public id: string | undefined = undefined;
@@ -71,4 +73,11 @@ export class TableCell {
         const colSpan = this.style.gridSpan;
         return columns.slice(startIndex, startIndex + colSpan);
     }
+
+    public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
+        this.pars.forEach(par => {
+            par.performLayout(flow, pos);
+        })
+    }
+
 }

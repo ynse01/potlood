@@ -2,8 +2,11 @@ import { ShapeBounds } from "./shape-bounds.js";
 import { Picture } from "./picture.js";
 import { Xml } from "../xml.js";
 import { WordDocument } from "../word-document.js";
+import { ILayoutable } from "../i-layoutable.js";
+import { FlowPosition } from "../flow-position.js";
+import { VirtualFlow } from "../virtual-flow.js";
 
-export class DrawingRun {
+export class DrawingRun implements ILayoutable {
     public bounds: ShapeBounds;
     public picture: Picture | undefined;
 
@@ -33,5 +36,9 @@ export class DrawingRun {
 
     public getHeight(_width: number): number {
         return this.bounds.boundSizeY;
+    }
+
+    public performLayout(_flow: VirtualFlow, _pos: FlowPosition): void {
+        // Nothing to do for now.
     }
 }

@@ -7,8 +7,11 @@ import { AbstractNumberings } from "./numbering/abstract-numberings.js";
 import { Table } from "./table/table.js";
 import { Relationships } from "./package/relationships.js";
 import { Package } from "./package/package.js";
+import { ILayoutable } from "./i-layoutable.js";
+import { FlowPosition } from "./flow-position.js";
+import { VirtualFlow } from "./virtual-flow.js";
 
-export class WordDocument {
+export class WordDocument implements ILayoutable {
     private part: Part;
     private pars: (Paragraph | Table)[] = [];
     private _section: Section | undefined;
@@ -49,6 +52,13 @@ export class WordDocument {
                 }
             }
         }
+    }
+
+    public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
+        this.parseContent();
+        this.pars.forEach(par => {
+            par.performLayout(flow, pos);
+        })
     }
 
     public get relationships(): Relationships | undefined {

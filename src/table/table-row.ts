@@ -1,6 +1,8 @@
 import { Paragraph } from "../paragraph.js";
 import { TableCell } from "./table-cell.js";
 import { Table } from "./table.js";
+import { VirtualFlow } from "../virtual-flow.js";
+import { FlowPosition } from "../flow-position.js";
 
 export class TableRow {
     public cells: TableCell[] = [];
@@ -32,5 +34,11 @@ export class TableRow {
             pars.push(...cell.pars);
         });
         return pars;
+    }
+
+    public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
+        this.cells.forEach(cell => {
+            cell.performLayout(flow, pos);
+        })
     }
 }

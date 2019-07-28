@@ -3,6 +3,9 @@ import { TextRun } from "./text/text-run.js";
 import { WordDocument } from "./word-document.js";
 import { ParStyle } from "./text/par-style.js";
 import { DrawingRun } from "./drawing/drawing-run.js";
+import { ILayoutable } from "./i-layoutable.js";
+import { VirtualFlow } from "./virtual-flow.js";
+import { FlowPosition } from "./flow-position.js";
 
 export enum RunInParagraph {
     Normal = 0,
@@ -18,7 +21,7 @@ export enum ParagraphType {
     Drawing = 2
 }
 
-export class Paragraph {
+export class Paragraph implements ILayoutable {
     public type: ParagraphType;
     private pNode: ChildNode;
     private doc: WordDocument;
@@ -54,6 +57,13 @@ export class Paragraph {
             height += run.getHeight(width);
         });
         return height;
+    }
+
+    public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
+        this.parseContent();
+        this.runs.forEach(run => {
+            run.performLayout(flow, pos);
+        })
     }
 
     private parseContent(): void {

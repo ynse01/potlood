@@ -5,8 +5,11 @@ import { WordDocument } from "../word-document.js";
 import { TableStyle } from "./table-style.js";
 import { TableColumn } from "./table-column.js";
 import { TableRow } from "./table-row.js";
+import { ILayoutable } from "../i-layoutable.js";
+import { VirtualFlow } from "../virtual-flow.js";
+import { FlowPosition } from "../flow-position.js";
 
-export class Table {
+export class Table implements ILayoutable {
     public columns: TableColumn[];
     public rows: TableRow[];
     public doc: WordDocument;
@@ -63,4 +66,11 @@ export class Table {
         });
         return height;
     }
+
+    public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
+        this.rows.forEach(row => {
+            row.performLayout(flow, pos);
+        })
+    }
+
 }
