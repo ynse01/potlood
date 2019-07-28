@@ -125,7 +125,7 @@ export class SvgRenderer {
       const deltaY = Metrics.getLineSpacing(run.style);
       pos.add(deltaY);
     }
-    run.getFlowLines(flow, pos, inParagraph).forEach((line: IPositionedTextLine) => {
+    run.getFlowLines(flow, pos).forEach((line: IPositionedTextLine) => {
       this.renderText(line, run.style);
     });
   }

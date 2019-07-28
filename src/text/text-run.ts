@@ -8,6 +8,7 @@ import { FlowPosition } from "../flow-position.js";
 import { VirtualFlow } from "../virtual-flow.js";
 import { RunInParagraph } from "../paragraph.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
+import { ILayoutable } from "../i-layoutable.js";
 
 export enum LineInRun {
     Normal = 0,
@@ -16,10 +17,11 @@ export enum LineInRun {
     OnlyLine = 3
 }
 
-export class TextRun {
+export class TextRun implements ILayoutable {
     public text: string;
     public style: Style;
     public inParagraph: RunInParagraph = RunInParagraph.OnlyRun;
+    private _lines: IPositionedTextLine[] | undefined = undefined;
 
     public static fromRunNode(rNode: ChildNode, parStyle: ParStyle | undefined, namedStyles: NamedStyles | undefined): TextRun {
         const run = new TextRun("", new Style());
@@ -53,14 +55,21 @@ export class TextRun {
     public getLines(width: number): IPositionedTextLine[] {
         const flow = new VirtualFlow(0, width);
         const pos = new FlowPosition(0);
-        return this.getFlowLines(flow, pos, RunInParagraph.OnlyRun);
+        return this.getFlowLines(flow, pos);
     }
 
-    public getFlowLines(flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): IPositionedTextLine[] {
+    public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
+        this.getFlowLines(flow, pos);
+    }
+
+    public getFlowLines(flow: VirtualFlow, pos: FlowPosition): IPositionedTextLine[] {
+        if (this._lines !== undefined) {
+            return this._lines;
+        }
         let remainder = this.text;
         let lines: IPositionedTextLine[] = [];
         const yDelta = Metrics.getLineSpacing(this.style);
-        let inRun = (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) ? LineInRun.FirstLine : LineInRun.Normal;
+        let inRun = (this.inParagraph === RunInParagraph.FirstRun || this.inParagraph === RunInParagraph.OnlyRun) ? LineInRun.FirstLine : LineInRun.Normal;
         while(remainder.length > 0) {
             let usedWidth = 0;
             const line = this.fitText(remainder, this.style, flow.getWidth(pos));
@@ -71,7 +80,7 @@ export class TextRun {
                 } else {
                     inRun = LineInRun.LastLine;
                 }
-                if (inParagraph !== RunInParagraph.LastRun && inParagraph !== RunInParagraph.OnlyRun) {
+                if (this.inParagraph !== RunInParagraph.LastRun && this.inParagraph !== RunInParagraph.OnlyRun) {
                     usedWidth = Metrics.getTextWidth(line, this.style) - this.style.identation;
                 }
             }
