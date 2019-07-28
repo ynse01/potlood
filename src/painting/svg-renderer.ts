@@ -5,7 +5,6 @@ import { WordDocument } from '../word-document.js';
 import { VirtualFlow } from '../virtual-flow.js';
 import { Paragraph, RunInParagraph } from '../paragraph.js';
 import { FlowPosition } from '../flow-position.js';
-import { LineInRun, TextRun } from '../text/text-run.js';
 import { Table, TableCell } from '../table/table.js';
 import { TableStyle } from '../table/table-style.js';
 import { IPositionedTextLine } from '../text/positioned-text-line.js';
@@ -13,6 +12,7 @@ import { Xml } from '../xml.js';
 import { DrawingRun } from '../drawing/drawing-run.js';
 import { SvgPainter } from './svg-painter.js';
 import { IPainter, IRectangle } from './i-painter.js';
+import { TextRun } from '../text/text-run.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -125,56 +125,45 @@ export class SvgRenderer {
       pos.add(deltaY);
     }
     run.getFlowLines(flow, pos, inParagraph).forEach((line: IPositionedTextLine) => {
-      this.addText(line.text, run.style, flow, line.pos, line.inRun);
-      flow.useWidth(line.pos, line.claim);
+      this.renderText(line, run.style);
     });
   }
 
-  private addText(
-    text: string,
-    style: Style,
-    flow: VirtualFlow,
-    pos: FlowPosition,
-    inRun: LineInRun
-  ): void {
+  private renderText(line: IPositionedTextLine, style: Style): void {
     if (style.caps) {
-      text = text.toLocaleUpperCase();
+      line.text = line.text.toLocaleUpperCase();
     }
-    const xDelta = (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) ? style.hanging : style.identation;
-    const x = flow.getX(pos) + xDelta;
-    const fitWidth = (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine);
-    const width = flow.getWidth(pos) - xDelta;
-    this._painter.paintText(x, flow.getY(pos), width, fitWidth, text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
+    this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
     if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
       // Render underline after adding text to DOM.
       const lastTextRect = this._painter.measureLastText();
-      this.renderUnderline(style, lastTextRect, flow, pos);
+      this.renderUnderline(style, lastTextRect);
     }
   }
 
-  private renderUnderline(style: Style, textRect: IRectangle, flow: VirtualFlow, pos: FlowPosition): void {
+  private renderUnderline(style: Style, textRect: IRectangle): void {
     // TODO: Support all underline modes
-    const y = pos.clone().add(style.fontSize / 2);
+    const fontSize = style.fontSize;
+    const y = textRect.y + fontSize;
     switch(style.underlineMode) {
       case UnderlineMode.double:
-        this.renderHorizontalLine(textRect.x, textRect.width, flow, y.add(style.fontSize / 10), style.color, 1);
-        this.renderHorizontalLine(textRect.x, textRect.width, flow, y.add(style.fontSize / 10), style.color, 1);
+        this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y + fontSize / 10, style.color, 1);
+        this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y + fontSize / 10, style.color, 1);
         break;
       case UnderlineMode.none:
         // Nothing to be done
         break;
       default:
       case UnderlineMode.single:
-        this.renderHorizontalLine(textRect.x, textRect.width, flow, y.add(style.fontSize / 10), style.color, 1);
+        this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y + fontSize / 10, style.color, 1);
         break;
     }
     if (style.strike) {
-      this.renderHorizontalLine(textRect.x, textRect.width, flow, y.subtract(style.fontSize / 2), style.color, 1);
+      this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y - fontSize / 2, style.color, 1);
     }
     if (style.doubleStrike) {
-      const middle = y.subtract(style.fontSize / 2);
-      this.renderHorizontalLine(textRect.x, textRect.width, flow, middle.subtract(1), style.color, 1);
-      this.renderHorizontalLine(textRect.x, textRect.width, flow, middle.add(2), style.color, 1);
+      this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y - (fontSize / 2) - 1, style.color, 1);
+      this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y - (fontSize / 2) + 2, style.color, 1);
     }
   }
 

@@ -75,7 +75,11 @@ export class TextRun {
                     usedWidth = Metrics.getTextWidth(line, this.style) - this.style.identation;
                 }
             }
-            lines.push({ text: line, pos: pos.clone(), claim: usedWidth, inRun: inRun});
+            const xDelta = (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) ? this.style.hanging : this.style.identation;
+            const x = flow.getX(pos) + xDelta;
+            const fitWidth = (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine);
+            const width = flow.getWidth(pos) - xDelta;
+            lines.push({text: line, x: x, y: flow.getY(pos), width: width, fitWidth: fitWidth, inRun: inRun});
             if (usedWidth === 0) {
                 pos.add(yDelta);
             }
