@@ -5,7 +5,7 @@ import { WordDocument } from '../word-document.js';
 import { VirtualFlow } from '../virtual-flow.js';
 import { Paragraph, RunInParagraph } from '../paragraph.js';
 import { FlowPosition } from '../flow-position.js';
-import { Table, TableCell } from '../table/table.js';
+import { Table } from '../table/table.js';
 import { TableStyle } from '../table/table-style.js';
 import { IPositionedTextLine } from '../text/positioned-text-line.js';
 import { Xml } from '../xml.js';
@@ -13,6 +13,7 @@ import { DrawingRun } from '../drawing/drawing-run.js';
 import { SvgPainter } from './svg-painter.js';
 import { IPainter, IRectangle } from './i-painter.js';
 import { TextRun } from '../text/text-run.js';
+import { TableCell } from '../table/table-cell.js';
 
 export class SvgRenderer {
   private static readonly svgNS = 'http://www.w3.org/2000/svg';
