@@ -1,6 +1,6 @@
-import { Metrics } from '../utils/metrics.js';
-import { Style } from './style.js';
-import { RunStyle } from './run-style.js';
+import { Metrics } from './metrics.js';
+import { Style } from '../text/style.js';
+import { RunStyle } from '../text/run-style.js';
 
 export class Fonts {
   private static _foundFonts: string[] | undefined = undefined;

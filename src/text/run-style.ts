@@ -1,5 +1,5 @@
 import { Xml } from "../utils/xml.js";
-import { Fonts } from "./fonts.js";
+import { Fonts } from "../utils/fonts.js";
 import { Metrics } from "../utils/metrics.js";
 import { Style } from "./style.js";
 import { NamedStyles } from "./named-styles.js";
