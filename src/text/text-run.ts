@@ -21,6 +21,8 @@ export class TextRun implements ILayoutable {
     public text: string;
     public style: Style;
     public inParagraph: RunInParagraph = RunInParagraph.OnlyRun;
+    public previousXPos: number | undefined;
+    public lastXPos: number | undefined;
     private _lines: IPositionedTextLine[] | undefined = undefined;
 
     public static fromRunNode(rNode: ChildNode, parStyle: ParStyle | undefined, namedStyles: NamedStyles | undefined): TextRun {
@@ -69,20 +71,18 @@ export class TextRun implements ILayoutable {
         let remainder = this.text;
         let lines: IPositionedTextLine[] = [];
         const yDelta = Metrics.getLineSpacing(this.style);
-        let inRun = (this.inParagraph === RunInParagraph.FirstRun || this.inParagraph === RunInParagraph.OnlyRun) ? LineInRun.FirstLine : LineInRun.Normal;
+        let inRun = LineInRun.FirstLine;
         while(remainder.length > 0) {
             let usedWidth = 0;
             const line = this.fitText(remainder, this.style, flow.getWidth(pos));
             if (remainder.length === line.length) {
                 // Check for last line of run.
-                if (inRun == LineInRun.FirstLine) {
+                if (inRun === LineInRun.FirstLine) {
                     inRun = LineInRun.OnlyLine;
                 } else {
                     inRun = LineInRun.LastLine;
                 }
-                if (this.inParagraph !== RunInParagraph.LastRun && this.inParagraph !== RunInParagraph.OnlyRun) {
-                    usedWidth = Metrics.getTextWidth(line, this.style) - this.style.identation;
-                }
+                this.lastXPos = Metrics.getTextWidth(line, this.style) + this.style.identation;
             }
             const xDelta = (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) ? this.style.hanging : this.style.identation;
             const x = flow.getX(pos) + xDelta;

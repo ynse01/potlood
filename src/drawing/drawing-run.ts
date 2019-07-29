@@ -9,6 +9,8 @@ import { VirtualFlow } from "../virtual-flow.js";
 export class DrawingRun implements ILayoutable {
     public bounds: ShapeBounds;
     public picture: Picture | undefined;
+    public previousXPos: number | undefined;
+    public lastXPos: number | undefined;
 
     public static fromDrawingNode(drawingNode: ChildNode, doc: WordDocument): DrawingRun {
         let bounds = new ShapeBounds();
@@ -40,5 +42,6 @@ export class DrawingRun implements ILayoutable {
 
     public performLayout(_flow: VirtualFlow, _pos: FlowPosition): void {
         // Nothing to do for now.
+        this.lastXPos = 0;
     }
 }

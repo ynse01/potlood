@@ -61,8 +61,11 @@ export class Paragraph implements ILayoutable {
 
     public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
         this.parseContent();
+        let previousXPos = -1;
         this.runs.forEach(run => {
+            run.previousXPos = previousXPos;
             run.performLayout(flow, pos);
+            previousXPos = run.lastXPos!;
         })
     }
 
