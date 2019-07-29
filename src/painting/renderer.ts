@@ -13,7 +13,7 @@ import { IPainter, IRectangle } from './i-painter.js';
 import { TextRun } from '../text/text-run.js';
 import { TableCell } from '../table/table-cell.js';
 
-export class SvgRenderer {
+export class Renderer {
   private _painter: IPainter;
 
   constructor(content: HTMLElement) {

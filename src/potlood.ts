@@ -1,4 +1,4 @@
-import { SvgRenderer } from "./painting/svg-renderer.js";
+import { Renderer } from "./painting/renderer.js";
 import { Package } from "./package/package.js";
 import { NamedStyles } from "./text/named-styles.js";
 import { WordDocument } from "./word-document.js";
@@ -7,10 +7,10 @@ import { Relationships } from "./package/relationships.js";
 import { Metrics } from "./utils/metrics.js";
 
 export class Potlood {
-    private renderer: SvgRenderer;
+    private renderer: Renderer;
 
     constructor(element: HTMLElement) {
-        this.renderer = new SvgRenderer(element);
+        this.renderer = new Renderer(element);
     }
 
     public loadDocxFromUrl(url: string) {
