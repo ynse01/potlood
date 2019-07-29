@@ -3,8 +3,9 @@ import { Style } from '../text/style.js';
 import { RunStyle } from '../text/run-style.js';
 
 export class Fonts {
-  private static _foundFonts: string[] | undefined = undefined;
-  private static _notFoundFonts: string[] | undefined = undefined;
+  private static _initialized = false;
+  private static _foundFonts: string[] = [];
+  private static _notFoundFonts: string[] = [];
   private static testString = 'mmmmmllnnrr';
   private static testSize = 72;
   private static baseline: number | undefined = undefined;
@@ -13,9 +14,8 @@ export class Fonts {
    * List of available fonts on this device.
    */
   public static availableFonts(): string[] {
-    if (Fonts._foundFonts === undefined) {
-      Fonts._foundFonts = [];
-      Fonts._notFoundFonts = [];
+    if (!Fonts._initialized) {
+      Fonts._initialized = true;
       const families = [
         'Arial',
         'Helvetica',
@@ -70,10 +70,10 @@ export class Fonts {
     style.runStyle.updateFont(family, Fonts.testSize);
     const width = Metrics.getTextWidth(Fonts.testString, style);
     if (width !== Fonts.baseline) {
-      Fonts._foundFonts!.push(family);
+      Fonts._foundFonts.push(family);
       return true;
     } else {
-      Fonts._notFoundFonts!.push(family);
+      Fonts._notFoundFonts.push(family);
       return false;
     }
   }
