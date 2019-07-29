@@ -8,7 +8,6 @@ export class VirtualFlow {
     private _xMin: number;
     private _xMax: number;
     // private _pageHeight: number;
-    private _usedWidth: { [pos: number]: number} = {};
 
     public static fromSection(section: Section | undefined): VirtualFlow {
         const flow = new VirtualFlow(40, 700 - 40);
@@ -40,29 +39,15 @@ export class VirtualFlow {
         this._xMax = xMax;
     }
 
-    public getX(flowPos: FlowPosition): number {
-        const used = this._usedWidth[flowPos.flowPosition];
-        if (used !== undefined) {
-            return this._xMin + used;
-        }
+    public getX(_flowPos: FlowPosition): number {
         return this._xMin;
-    }
-
-    public useWidth(flowPos: FlowPosition, used: number) {
-        if (used > 0) {
-            this._usedWidth[flowPos.flowPosition] = used;
-        }
     }
 
     public getY(flowPos: FlowPosition): number {
         return flowPos.flowPosition;
     }
 
-    public getWidth(flowPos: FlowPosition): number {
-        const used = this._usedWidth[flowPos.flowPosition];
-        if (used !== undefined) {
-            return this._xMax - this._xMin - used;
-        }
+    public getWidth(_flowPos: FlowPosition): number {
         return this._xMax - this._xMin;
     }
 
