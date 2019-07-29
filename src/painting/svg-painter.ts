@@ -81,6 +81,12 @@ export class SvgPainter implements IPainter {
       }      
     }
 
+    public clear(): void {
+      while (this.svg.lastChild) {
+        this.svg.removeChild(this.svg.lastChild);
+      }
+    }
+
     private _setFont(textNode: Element, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void {
         textNode.setAttribute('font-family', fontFamily);
         textNode.setAttribute('font-size', fontSize.toString());

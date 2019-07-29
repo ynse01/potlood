@@ -36,9 +36,7 @@ export class SvgRenderer {
   }
 
   public clear() {
-    while (this.svg.lastChild) {
-        this.svg.removeChild(this.svg.lastChild);
-    }
+    this._painter.clear();
   }
 
   public ensureHeight(newHeight: number): void {

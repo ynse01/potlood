@@ -3,6 +3,7 @@ import { Justification } from "../text/par-style.js";
 import { Picture } from "../drawing/picture.js";
 
 export class CanvasPainter implements IPainter {
+    private _canvas: HTMLCanvasElement;
     private _context: CanvasRenderingContext2D;
     private _lastText: string = "";
     private _lastX = 0;
@@ -15,6 +16,7 @@ export class CanvasPainter implements IPainter {
         canvas.setAttribute('width', content.clientWidth.toString());
         canvas.setAttribute('height', '500');
         content.appendChild(canvas);
+        this._canvas = canvas;
         this._context = canvas.getContext('2d')!;
         this._invisible = document.createElement("div");
         this._invisible.style.visibility = "hidden";
@@ -58,4 +60,7 @@ export class CanvasPainter implements IPainter {
         })
     }
 
+    public clear(): void {
+        this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
+    }
 }
