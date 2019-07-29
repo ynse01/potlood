@@ -1,4 +1,4 @@
-import { Metrics } from "../metrics.js";
+import { Metrics } from "../utils/metrics.js";
 import { Xml } from "../utils/xml.js";
 
 export class TableCellStyle {

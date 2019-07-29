@@ -1,4 +1,4 @@
-import { Style } from "./text/style.js";
+import { Style } from "../text/style.js";
 
 export class Metrics {
 

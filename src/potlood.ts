@@ -4,7 +4,7 @@ import { NamedStyles } from "./text/named-styles.js";
 import { WordDocument } from "./word-document.js";
 import { AbstractNumberings } from "./numbering/abstract-numberings.js";
 import { Relationships } from "./package/relationships.js";
-import { Metrics } from "./metrics.js";
+import { Metrics } from "./utils/metrics.js";
 
 export class Potlood {
     private renderer: SvgRenderer;

@@ -1,5 +1,5 @@
 import { Xml } from "../utils/xml.js";
-import { Metrics } from "../metrics.js";
+import { Metrics } from "../utils/metrics.js";
 import { Paragraph } from "../paragraph.js";
 import { WordDocument } from "../word-document.js";
 import { TableStyle } from "./table-style.js";

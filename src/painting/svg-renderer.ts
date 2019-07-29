@@ -1,4 +1,4 @@
-import { Metrics } from '../metrics.js';
+import { Metrics } from '../utils/metrics.js';
 import { Style } from '../text/style.js';
 import { UnderlineMode } from '../text/run-style.js';
 import { WordDocument } from '../word-document.js';

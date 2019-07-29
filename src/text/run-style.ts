@@ -1,6 +1,6 @@
 import { Xml } from "../utils/xml.js";
 import { Fonts } from "./fonts.js";
-import { Metrics } from "../metrics.js";
+import { Metrics } from "../utils/metrics.js";
 import { Style } from "./style.js";
 import { NamedStyles } from "./named-styles.js";
 

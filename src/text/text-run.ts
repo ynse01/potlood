@@ -3,7 +3,7 @@ import { RunStyle } from "./run-style.js";
 import { ParStyle } from "./par-style.js";
 import { Style } from "./style.js";
 import { NamedStyles } from "./named-styles.js";
-import { Metrics } from "../metrics.js";
+import { Metrics } from "../utils/metrics.js";
 import { VirtualFlow } from "../virtual-flow.js";
 import { RunInParagraph } from "../paragraph.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";

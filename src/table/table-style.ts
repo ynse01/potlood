@@ -1,5 +1,5 @@
 import { Xml } from "../utils/xml.js";
-import { Metrics } from "../metrics.js";
+import { Metrics } from "../utils/metrics.js";
 import { Justification } from "../text/par-style.js";
 import { TableBorder } from "./table-border.js";
 

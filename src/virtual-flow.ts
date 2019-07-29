@@ -1,4 +1,4 @@
-import { Metrics } from "./metrics.js";
+import { Metrics } from "./utils/metrics.js";
 import { Section } from "./section.js";
 import { TableCell } from "./table/table-cell.js";
 
