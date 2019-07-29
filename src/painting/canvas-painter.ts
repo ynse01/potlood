@@ -23,7 +23,7 @@ export class CanvasPainter implements IPainter {
         content.appendChild(this._invisible);
     }
     
-    paintText(x: number, y: number, _width: number, _fitWidth: boolean, text: string, color: string, _justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void {
+    public paintText(x: number, y: number, _width: number, _fitWidth: boolean, text: string, color: string, _justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void {
         this._context.fillStyle = `#${color}`;
         const italicText = (italic) ? "italic ": "";
         const boldText = (bold) ? "bold ": "";
@@ -42,7 +42,7 @@ export class CanvasPainter implements IPainter {
         }
     }
 
-    paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void {
+    public paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void {
         this._context.lineWidth = thickness;
         this._context.strokeStyle = `#${color}`;
         this._context.beginPath();
@@ -51,7 +51,7 @@ export class CanvasPainter implements IPainter {
         this._context.stroke();
     }
 
-    paintPicture(x: number, y: number, _width: number, _height: number, pic: Picture): void {
+    public paintPicture(x: number, y: number, _width: number, _height: number, pic: Picture): void {
         pic.getImageUrl().then(url => {
             const img = document.createElement("img");
             img.src = url;
@@ -62,5 +62,9 @@ export class CanvasPainter implements IPainter {
 
     public clear(): void {
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
+    }
+
+    public ensureHeight(height: number): void {
+        this._canvas.height = height;
     }
 }

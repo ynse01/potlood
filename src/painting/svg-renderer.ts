@@ -7,7 +7,6 @@ import { Paragraph, RunInParagraph } from '../paragraph.js';
 import { Table } from '../table/table.js';
 import { TableStyle } from '../table/table-style.js';
 import { IPositionedTextLine } from '../text/positioned-text-line.js';
-import { Xml } from '../utils/xml.js';
 import { DrawingRun } from '../drawing/drawing-run.js';
 import { SvgPainter } from './svg-painter.js';
 import { IPainter, IRectangle } from './i-painter.js';
@@ -15,12 +14,10 @@ import { TextRun } from '../text/text-run.js';
 import { TableCell } from '../table/table-cell.js';
 
 export class SvgRenderer {
-  private svg: SVGElement;
   private _painter: IPainter;
 
   constructor(content: HTMLElement) {
     this._painter = new SvgPainter(content);
-    this.svg = (this._painter as SvgPainter).svg;
   }
 
   public renderDocument(doc: WordDocument): number {
@@ -40,14 +37,7 @@ export class SvgRenderer {
   }
 
   public ensureHeight(newHeight: number): void {
-    const height = Xml.getAttribute(this.svg, "height");
-    if (height !== undefined) {
-      const heightNum = parseFloat(height);
-      const maxY = Math.max(heightNum, newHeight);
-      if (maxY > heightNum) {
-        this.svg.setAttribute("height", maxY.toString());
-      }
-    }
+    this._painter.ensureHeight(newHeight);
   }
 
   private renderParagraph(par: Paragraph, flow: VirtualFlow): void {

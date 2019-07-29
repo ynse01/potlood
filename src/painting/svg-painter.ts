@@ -1,6 +1,7 @@
 import { IPainter, IRectangle } from "./i-painter.js";
 import { Justification } from "../text/par-style.js";
 import { Picture } from "../drawing/picture.js";
+import { Xml } from "../utils/xml.js";
 
 export class SvgPainter implements IPainter {
     private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -85,6 +86,18 @@ export class SvgPainter implements IPainter {
       while (this.svg.lastChild) {
         this.svg.removeChild(this.svg.lastChild);
       }
+    }
+
+    public ensureHeight(newHeight: number): void {
+      const height = Xml.getAttribute(this.svg, "height");
+      if (height !== undefined) {
+        const heightNum = parseFloat(height);
+        const maxY = Math.max(heightNum, newHeight);
+        if (maxY > heightNum) {
+          this._svg.setAttribute("height", `${maxY}`);
+        }
+      }
+  
     }
 
     private _setFont(textNode: Element, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void {
