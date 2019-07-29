@@ -1,11 +1,13 @@
 import { IPainter, IRectangle } from "./i-painter.js";
 import { Justification } from "../text/par-style.js";
+import { Picture } from "../drawing/picture.js";
 
 export class CanvasPainter implements IPainter {
     private _context: CanvasRenderingContext2D;
     private _lastText: string = "";
     private _lastX = 0;
     private _lastY = 0;
+    private _invisible: HTMLDivElement;
 
     constructor(content: HTMLElement) {
         const canvas = document.createElement('canvas');
@@ -14,6 +16,9 @@ export class CanvasPainter implements IPainter {
         canvas.setAttribute('height', '500');
         content.appendChild(canvas);
         this._context = canvas.getContext('2d')!;
+        this._invisible = document.createElement("div");
+        this._invisible.style.visibility = "hidden";
+        content.appendChild(this._invisible);
     }
     
     paintText(x: number, y: number, _width: number, _fitWidth: boolean, text: string, color: string, _justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void {
@@ -44,5 +49,13 @@ export class CanvasPainter implements IPainter {
         this._context.stroke();
     }
 
+    paintPicture(x: number, y: number, _width: number, _height: number, pic: Picture): void {
+        pic.getImageUrl().then(url => {
+            const img = document.createElement("img");
+            img.src = url;
+            this._invisible.appendChild(img);
+            this._context.drawImage(img, x, y);
+        })
+    }
 
 }

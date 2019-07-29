@@ -1,4 +1,5 @@
 import { Justification } from "../text/par-style.js";
+import { Picture } from "../drawing/picture.js";
 
 export interface IRectangle {
     x: number;
@@ -13,4 +14,6 @@ export interface IPainter {
     measureLastText(): IRectangle;
 
     paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void;
+
+    paintPicture(x: number, y: number, width: number, height: number, pic: Picture): void;
 }

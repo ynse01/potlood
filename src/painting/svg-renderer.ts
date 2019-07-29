@@ -15,7 +15,6 @@ import { TextRun } from '../text/text-run.js';
 import { TableCell } from '../table/table-cell.js';
 
 export class SvgRenderer {
-  private static readonly svgNS = 'http://www.w3.org/2000/svg';
   private svg: SVGElement;
   private _painter: IPainter;
 
@@ -69,20 +68,11 @@ export class SvgRenderer {
   private renderDrawing(drawing: DrawingRun, flow: VirtualFlow) {
     const x = flow.getX();
     const y = flow.getY();
+    const width = drawing.bounds.boundSizeX;
+    const height = drawing.bounds.boundSizeY;
     const picture = drawing.picture;
     if (picture !== undefined) {
-      const rect = document.createElementNS(SvgRenderer.svgNS, "image");
-      rect.setAttribute("x", `${x}`);
-      rect.setAttribute("y", `${y}`);
-      rect.setAttribute("width", `${drawing.bounds.boundSizeX}`);
-      rect.setAttribute("height", `${drawing.bounds.boundSizeY}`);
-      this.svg.appendChild(rect);
-      picture.getImageUrl().then(url => {
-        rect.setAttribute("xlink:href", `${url}`);
-        rect.setAttribute("href", `${url}`);
-      }).catch(error => {
-        console.log(`ERROR during rendring: ${error}`);
-      })
+      this._painter.paintPicture(x, y, width, height, picture);
     }
     flow.advancePosition(drawing.getHeight(flow.getWidth()));
   }

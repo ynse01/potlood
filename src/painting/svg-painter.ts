@@ -1,5 +1,6 @@
 import { IPainter, IRectangle } from "./i-painter.js";
 import { Justification } from "../text/par-style.js";
+import { Picture } from "../drawing/picture.js";
 
 export class SvgPainter implements IPainter {
     private static readonly svgNS = 'http://www.w3.org/2000/svg';
@@ -61,6 +62,23 @@ export class SvgPainter implements IPainter {
         line.setAttribute("stroke", `#${color}`);
         line.setAttribute("stroke-width", thickness.toString());
         this._svg.appendChild(line);
+    }
+
+    public paintPicture(x: number, y: number, width: number, height: number, pic: Picture): void {
+      if (pic !== undefined) {
+        const rect = document.createElementNS(SvgPainter.svgNS, "image");
+        rect.setAttribute("x", `${x}`);
+        rect.setAttribute("y", `${y}`);
+        rect.setAttribute("width", `${width}`);
+        rect.setAttribute("height", `${height}`);
+        this.svg.appendChild(rect);
+        pic.getImageUrl().then(url => {
+          rect.setAttribute("xlink:href", `${url}`);
+          rect.setAttribute("href", `${url}`);
+        }).catch(error => {
+          console.log(`ERROR during rendering: ${error}`);
+        })
+      }      
     }
 
     private _setFont(textNode: Element, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void {
