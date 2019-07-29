@@ -5,7 +5,6 @@ import { Table } from "./table.js";
 import { TableCellStyle } from "./table-cell-style.js";
 import { Xml } from "../utils/xml.js";
 import { VirtualFlow } from "../virtual-flow.js";
-import { FlowPosition } from "../flow-position.js";
 
 export class TableCell {
     public id: string | undefined = undefined;
@@ -74,9 +73,9 @@ export class TableCell {
         return columns.slice(startIndex, startIndex + colSpan);
     }
 
-    public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
+    public performLayout(flow: VirtualFlow): void {
         this.pars.forEach(par => {
-            par.performLayout(flow, pos);
+            par.performLayout(flow);
         })
     }
 

@@ -1,4 +1,3 @@
-import { FlowPosition } from "./flow-position.js";
 import { Metrics } from "./metrics.js";
 import { Section } from "./section.js";
 import { TableCell } from "./table/table-cell.js";
@@ -8,6 +7,7 @@ export class VirtualFlow {
     private _xMin: number;
     private _xMax: number;
     // private _pageHeight: number;
+    private _pos: number;
 
     public static fromSection(section: Section | undefined): VirtualFlow {
         const flow = new VirtualFlow(40, 700 - 40);
@@ -34,26 +34,36 @@ export class VirtualFlow {
         return flow;
     }
 
-    constructor(xMin: number, xMax: number) {
+    constructor(xMin: number, xMax: number, position: number = 0) {
         this._xMin = xMin;
         this._xMax = xMax;
+        this._pos = position;
     }
 
-    public getX(_flowPos: FlowPosition): number {
+    public getX(): number {
         return this._xMin;
     }
 
-    public getY(flowPos: FlowPosition): number {
-        return flowPos.flowPosition;
+    public getY(): number {
+        return this._pos;
     }
 
-    public getWidth(_flowPos: FlowPosition): number {
+    public getWidth(): number {
         return this._xMax - this._xMin;
     }
 
-    public createCellFlow(pos: FlowPosition, cell: TableCell) : VirtualFlow {
-        const start = this.getX(pos) + cell.getStart() + cell.tableStyle.cellMarginStart;
+    public advancePosition(delta: number): VirtualFlow {
+        this._pos += delta;
+        return this;
+    }
+
+    public createCellFlow(cell: TableCell) : VirtualFlow {
+        const start = this.getX() + cell.getStart() + cell.tableStyle.cellMarginStart;
         const width = cell.getWidth();
-        return new VirtualFlow(start, start + width);
+        return new VirtualFlow(start, start + width, this._pos);
+    }
+
+    public clone(): VirtualFlow {
+        return new VirtualFlow(this._xMin, this._xMax, this._pos);
     }
 }

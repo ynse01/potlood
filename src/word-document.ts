@@ -8,7 +8,6 @@ import { Table } from "./table/table.js";
 import { Relationships } from "./package/relationships.js";
 import { Package } from "./package/package.js";
 import { ILayoutable } from "./i-layoutable.js";
-import { FlowPosition } from "./flow-position.js";
 import { VirtualFlow } from "./virtual-flow.js";
 
 export class WordDocument implements ILayoutable {
@@ -54,10 +53,10 @@ export class WordDocument implements ILayoutable {
         }
     }
 
-    public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
+    public performLayout(flow: VirtualFlow): void {
         this.parseContent();
         this.pars.forEach(par => {
-            par.performLayout(flow, pos);
+            par.performLayout(flow);
         })
     }
 

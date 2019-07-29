@@ -5,7 +5,6 @@ import { ParStyle } from "./text/par-style.js";
 import { DrawingRun } from "./drawing/drawing-run.js";
 import { ILayoutable } from "./i-layoutable.js";
 import { VirtualFlow } from "./virtual-flow.js";
-import { FlowPosition } from "./flow-position.js";
 
 export enum RunInParagraph {
     Normal = 0,
@@ -59,12 +58,12 @@ export class Paragraph implements ILayoutable {
         return height;
     }
 
-    public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
+    public performLayout(flow: VirtualFlow): void {
         this.parseContent();
         let previousXPos = -1;
         this.runs.forEach(run => {
             run.previousXPos = previousXPos;
-            run.performLayout(flow, pos);
+            run.performLayout(flow);
             previousXPos = run.lastXPos!;
         })
     }

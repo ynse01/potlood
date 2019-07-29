@@ -4,7 +4,6 @@ import { ParStyle } from "./par-style.js";
 import { Style } from "./style.js";
 import { NamedStyles } from "./named-styles.js";
 import { Metrics } from "../metrics.js";
-import { FlowPosition } from "../flow-position.js";
 import { VirtualFlow } from "../virtual-flow.js";
 import { RunInParagraph } from "../paragraph.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
@@ -55,16 +54,15 @@ export class TextRun implements ILayoutable {
     }
 
     public getLines(width: number): IPositionedTextLine[] {
-        const flow = new VirtualFlow(0, width);
-        const pos = new FlowPosition(0);
-        return this.getFlowLines(flow, pos);
+        const flow = new VirtualFlow(0, width, 0);
+        return this.getFlowLines(flow);
     }
 
-    public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
-        this.getFlowLines(flow, pos);
+    public performLayout(flow: VirtualFlow): void {
+        this.getFlowLines(flow);
     }
 
-    public getFlowLines(flow: VirtualFlow, pos: FlowPosition): IPositionedTextLine[] {
+    public getFlowLines(flow: VirtualFlow): IPositionedTextLine[] {
         if (this._lines !== undefined) {
             return this._lines;
         }
@@ -74,7 +72,7 @@ export class TextRun implements ILayoutable {
         let inRun = LineInRun.FirstLine;
         while(remainder.length > 0) {
             let usedWidth = 0;
-            const line = this.fitText(remainder, this.style, flow.getWidth(pos));
+            const line = this.fitText(remainder, this.style, flow.getWidth());
             if (remainder.length === line.length) {
                 // Check for last line of run.
                 if (inRun === LineInRun.FirstLine) {
@@ -85,12 +83,12 @@ export class TextRun implements ILayoutable {
                 this.lastXPos = Metrics.getTextWidth(line, this.style) + this.style.identation;
             }
             const xDelta = (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) ? this.style.hanging : this.style.identation;
-            const x = flow.getX(pos) + xDelta;
+            const x = flow.getX() + xDelta;
             const fitWidth = (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine);
-            const width = flow.getWidth(pos) - xDelta;
-            lines.push({text: line, x: x, y: flow.getY(pos), width: width, fitWidth: fitWidth, inRun: inRun});
+            const width = flow.getWidth() - xDelta;
+            lines.push({text: line, x: x, y: flow.getY(), width: width, fitWidth: fitWidth, inRun: inRun});
             if (usedWidth === 0) {
-                pos.add(yDelta);
+                flow.advancePosition(yDelta);
             }
             remainder = remainder.substring(line.length);
             inRun = LineInRun.Normal;

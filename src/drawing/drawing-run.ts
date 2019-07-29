@@ -3,7 +3,6 @@ import { Picture } from "./picture.js";
 import { Xml } from "../utils/xml.js";
 import { WordDocument } from "../word-document.js";
 import { ILayoutable } from "../i-layoutable.js";
-import { FlowPosition } from "../flow-position.js";
 import { VirtualFlow } from "../virtual-flow.js";
 
 export class DrawingRun implements ILayoutable {
@@ -40,7 +39,7 @@ export class DrawingRun implements ILayoutable {
         return this.bounds.boundSizeY;
     }
 
-    public performLayout(_flow: VirtualFlow, _pos: FlowPosition): void {
+    public performLayout(_flow: VirtualFlow): void {
         // Nothing to do for now.
         this.lastXPos = 0;
     }

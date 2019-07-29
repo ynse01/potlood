@@ -7,7 +7,6 @@ import { TableColumn } from "./table-column.js";
 import { TableRow } from "./table-row.js";
 import { ILayoutable } from "../i-layoutable.js";
 import { VirtualFlow } from "../virtual-flow.js";
-import { FlowPosition } from "../flow-position.js";
 
 export class Table implements ILayoutable {
     public columns: TableColumn[];
@@ -67,9 +66,9 @@ export class Table implements ILayoutable {
         return height;
     }
 
-    public performLayout(flow: VirtualFlow, pos: FlowPosition): void {
+    public performLayout(flow: VirtualFlow): void {
         this.rows.forEach(row => {
-            row.performLayout(flow, pos);
+            row.performLayout(flow);
         })
     }
 

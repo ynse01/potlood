@@ -4,7 +4,6 @@ import { UnderlineMode } from '../text/run-style.js';
 import { WordDocument } from '../word-document.js';
 import { VirtualFlow } from '../virtual-flow.js';
 import { Paragraph, RunInParagraph } from '../paragraph.js';
-import { FlowPosition } from '../flow-position.js';
 import { Table } from '../table/table.js';
 import { TableStyle } from '../table/table-style.js';
 import { IPositionedTextLine } from '../text/positioned-text-line.js';
@@ -27,15 +26,14 @@ export class SvgRenderer {
 
   public renderDocument(doc: WordDocument): number {
     const flow = VirtualFlow.fromSection(doc.section);
-    const pos = new FlowPosition(0);
     doc.paragraphs.forEach(parOrTable => {
       if (parOrTable instanceof Paragraph) {
-        this.renderParagraph(parOrTable, flow, pos);
+        this.renderParagraph(parOrTable, flow);
       } else {
-        this.renderTable(parOrTable, flow, pos);
+        this.renderTable(parOrTable, flow);
       }
     });
-    return flow.getY(pos);
+    return flow.getY();
   }
 
   public clear() {
@@ -55,22 +53,22 @@ export class SvgRenderer {
     }
   }
 
-  private renderParagraph(par: Paragraph, flow: VirtualFlow, pos: FlowPosition): void {
+  private renderParagraph(par: Paragraph, flow: VirtualFlow): void {
     if (par.numberingRun !== undefined) {
-      this.renderTextRun(par.numberingRun, flow, pos.clone(), RunInParagraph.FirstRun);
+      this.renderTextRun(par.numberingRun, flow.clone(), RunInParagraph.FirstRun);
     }
     par.runs.forEach((run) => {
       if (run instanceof TextRun) {
-        this.renderTextRun(run, flow, pos, run.inParagraph);
+        this.renderTextRun(run, flow, run.inParagraph);
       } else {
-        this.renderDrawing(run, flow, pos);
+        this.renderDrawing(run, flow);
       }
     });
   }
 
-  private renderDrawing(drawing: DrawingRun, flow: VirtualFlow, pos: FlowPosition) {
-    const x = flow.getX(pos);
-    const y = flow.getY(pos);
+  private renderDrawing(drawing: DrawingRun, flow: VirtualFlow) {
+    const x = flow.getX();
+    const y = flow.getY();
     const picture = drawing.picture;
     if (picture !== undefined) {
       const rect = document.createElementNS(SvgRenderer.svgNS, "image");
@@ -86,46 +84,46 @@ export class SvgRenderer {
         console.log(`ERROR during rendring: ${error}`);
       })
     }
-    pos.add(drawing.getHeight(flow.getWidth(pos)));
+    flow.advancePosition(drawing.getHeight(flow.getWidth()));
   }
 
-  private renderTable(table: Table, flow: VirtualFlow, pos: FlowPosition): void {
+  private renderTable(table: Table, flow: VirtualFlow): void {
     table.rows.forEach(row => {
       const height = row.getMaxHeight();
       row.cells.forEach(cell => {
-        const cellFlow = flow.createCellFlow(pos, cell);
-        this.renderCellBorder(cell, table.style, cellFlow, pos, height);
+        const cellFlow = flow.createCellFlow(cell);
+        this.renderCellBorder(cell, table.style, cellFlow, height);
         cell.pars.forEach(par => {
-          this.renderParagraph(par, cellFlow, pos.clone().add(table.style.cellMarginTop));
+          this.renderParagraph(par, cellFlow.clone().advancePosition(table.style.cellMarginTop));
         });
       });
-      pos.add(height);
+      flow.advancePosition(height);
     });
   }
 
-  private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, pos: FlowPosition, height: number): void {
+  private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, height: number): void {
     // TODO: Figure out why this offset is required.
-    pos = pos.clone().add(Metrics.getLineSpacing((cell.pars[0].runs[0] as TextRun).style) * 0.75);
+    flow = flow.clone().advancePosition(Metrics.getLineSpacing((cell.pars[0].runs[0] as TextRun).style) * 0.75);
     if (style.borderTop !== undefined) {
-      this.renderHorizontalLine(flow.getX(pos), cell.getWidth(), flow, pos, style.borderTop.color, style.borderTop.size);
+      this.renderHorizontalLine(flow.getX(), cell.getWidth(), flow, style.borderTop.color, style.borderTop.size);
     }
     if (style.borderBottom !== undefined) {
-      this.renderHorizontalLine(flow.getX(pos), cell.getWidth(), flow, pos.clone().add(height), style.borderBottom.color, style.borderBottom.size);
+      this.renderHorizontalLine(flow.getX(), cell.getWidth(), flow.clone().advancePosition(height), style.borderBottom.color, style.borderBottom.size);
     }
     if (style.borderStart !== undefined) {
-      this.renderVerticalLine(height, flow, pos, style.borderStart.color, style.borderStart.size);
+      this.renderVerticalLine(height, flow, style.borderStart.color, style.borderStart.size);
     }
     if (style.borderEnd !== undefined) {
-      this.renderVerticalLine(height, flow, pos.clone().add(cell.getWidth()), style.borderEnd.color, style.borderEnd.size);
+      this.renderVerticalLine(height, flow.clone().advancePosition(cell.getWidth()), style.borderEnd.color, style.borderEnd.size);
     }
   }
 
-  private renderTextRun(run: TextRun, flow: VirtualFlow, pos: FlowPosition, inParagraph: RunInParagraph): void {
+  private renderTextRun(run: TextRun, flow: VirtualFlow, inParagraph: RunInParagraph): void {
     if (inParagraph === RunInParagraph.FirstRun || inParagraph === RunInParagraph.OnlyRun) {
       const deltaY = Metrics.getLineSpacing(run.style);
-      pos.add(deltaY);
+      flow.advancePosition(deltaY);
     }
-    run.getFlowLines(flow, pos).forEach((line: IPositionedTextLine) => {
+    run.getFlowLines(flow).forEach((line: IPositionedTextLine) => {
       this.renderText(line, run.style);
     });
   }
@@ -168,14 +166,14 @@ export class SvgRenderer {
     }
   }
 
-  private renderHorizontalLine(x: number, lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string, thickness: number) {
-    const y = flow.getY(pos);
+  private renderHorizontalLine(x: number, lineLength: number, flow: VirtualFlow, color: string, thickness: number) {
+    const y = flow.getY();
     this._painter.paintLine(x, y, x + lineLength, y, color, thickness);
   }
 
-  private renderVerticalLine(lineLength: number, flow: VirtualFlow, pos: FlowPosition, color: string, thickness: number) {
-    const x = flow.getX(pos);
-    const y = flow.getY(pos);
+  private renderVerticalLine(lineLength: number, flow: VirtualFlow, color: string, thickness: number) {
+    const x = flow.getX();
+    const y = flow.getY();
     this._painter.paintLine(x, y, x, y + lineLength, color, thickness);
   }
 }
