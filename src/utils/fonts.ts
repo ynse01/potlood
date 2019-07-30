@@ -4,8 +4,8 @@ import { RunStyle } from '../text/run-style.js';
 
 export class Fonts {
   private static _initialized = false;
-  private static _foundFonts: string[] = [];
-  private static _notFoundFonts: string[] = [];
+  private static _foundFonts: { [key: string]: number } = {};
+  private static _notFoundFonts: { [key: string]: number } = {};
   private static testString = 'mmmmmllnnrr';
   private static testSize = 72;
   private static baseline: number | undefined = undefined;
@@ -13,7 +13,7 @@ export class Fonts {
   /**
    * List of available fonts on this device.
    */
-  public static availableFonts(): string[] {
+  public static availableFonts(): { [key: string]: number } {
     if (!Fonts._initialized) {
       Fonts._initialized = true;
       const families = [
@@ -33,7 +33,7 @@ export class Fonts {
       style.runStyle = new RunStyle();
       style.runStyle.updateFont('Times New Roman', Fonts.testSize);
       Fonts.baseline = Metrics.getTextWidth(Fonts.testString, style);
-      Fonts._foundFonts.push('Times New Roman');
+      Fonts._foundFonts['Times New Roman'] = Fonts.baseline;
       families.forEach(family => {
         Fonts.testFont(family);
       });
@@ -42,9 +42,9 @@ export class Fonts {
   }
 
   public static tryAddFont(family: string): boolean {
-    const isAvailable = Fonts.availableFonts().indexOf(family) !== -1;
+    const isAvailable = Fonts.availableFonts()[family] !== undefined;
     if (!isAvailable) {
-      const isNotAvailable = Fonts._notFoundFonts!.indexOf(family) !== -1;
+      const isNotAvailable = Fonts._notFoundFonts[family] !== undefined;
       if (!isNotAvailable) {
         return Fonts.testFont(family);
       } 
@@ -64,16 +64,25 @@ export class Fonts {
     return -1;
   }
 
+  public static fitCharacters(style: Style, width: number): number {
+    const fontSize = style.fontSize;
+    const fontFamily = style.fontFamily;
+    Fonts.tryAddFont(fontFamily);
+    const fontWidth = Fonts._foundFonts[fontFamily];
+    const charWidth = (fontWidth * fontSize / Fonts.testSize) / Fonts.testString.length;
+    return Math.floor(width / charWidth);
+  }
+
   private static testFont(family: string): boolean {
     const style = new Style();
     style.runStyle = new RunStyle();
     style.runStyle.updateFont(family, Fonts.testSize);
     const width = Metrics.getTextWidth(Fonts.testString, style);
     if (width !== Fonts.baseline) {
-      Fonts._foundFonts.push(family);
+      Fonts._foundFonts[family] = width;
       return true;
     } else {
-      Fonts._notFoundFonts.push(family);
+      Fonts._notFoundFonts[family] = width;
       return false;
     }
   }
