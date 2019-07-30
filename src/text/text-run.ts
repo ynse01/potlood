@@ -8,6 +8,7 @@ import { VirtualFlow } from "../virtual-flow.js";
 import { RunInParagraph } from "../paragraph.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { ILayoutable } from "../i-layoutable.js";
+import { TextFitter } from "./text-fitter.js";
 
 export enum LineInRun {
     Normal = 0,
@@ -72,7 +73,7 @@ export class TextRun implements ILayoutable {
         let inRun = LineInRun.FirstLine;
         while(remainder.length > 0) {
             let usedWidth = 0;
-            const line = this.fitText(remainder, this.style, flow.getWidth());
+            const line = TextFitter.fitText(remainder, this.style, flow.getWidth());
             if (remainder.length === line.length) {
                 // Check for last line of run.
                 if (inRun === LineInRun.FirstLine) {
@@ -95,32 +96,4 @@ export class TextRun implements ILayoutable {
         }
         return lines;
     }
-
-    private stripLastWord(text: string): string | undefined {
-        const stop = text.lastIndexOf(' ');
-        if (stop < 0) {
-            return undefined;
-        }
-        if (stop === 0) {
-            return this.stripLastWord(text.substring(1));
-        }
-        return text.substring(0, stop);
-    }
-    
-    private fitText(
-        text: string,
-        style: Style,
-        width: number
-    ): string {
-        let subText = text;
-        const identation = style.identation;
-        while (Metrics.getTextWidth(subText, style) + identation > width) {
-            const stripped = this.stripLastWord(subText);
-            if (stripped === undefined) {
-                break;
-            }
-            subText = stripped;
-        }
-        return subText;
-    }    
 }
