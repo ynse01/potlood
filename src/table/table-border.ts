@@ -1,4 +1,5 @@
 import { Xml } from "../utils/xml.js";
+import { Metrics } from "../utils/metrics.js";
 
 export enum TableBorderType {
     none = "none",
@@ -44,7 +45,8 @@ export class TableBorder {
         }
         const sz = Xml.getAttribute(borderNode, "w:sz");
         if (sz !== undefined) {
-            border.size = parseInt(sz, 10);
+            // Borders are in eights of a point.
+            border.size = Metrics.convertPointToPixels(parseInt(sz, 10) / 8);
         }
         const space = Xml.getAttribute(borderNode, "w:space");
         if (space !== undefined) {
