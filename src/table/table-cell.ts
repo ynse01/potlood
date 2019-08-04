@@ -45,7 +45,7 @@ export class TableCell {
 
     public getHeight(): number {
         const width = this.getTextWidth();
-        let height = this.tableStyle.cellMarginTop + this.tableStyle.cellMarginBottom;
+        let height = this.tableStyle.borders.cellMarginTop + this.tableStyle.borders.cellMarginBottom;
         this.pars.forEach(par => {
             height += par.getTextHeight(width);
         });
@@ -65,7 +65,7 @@ export class TableCell {
     }
 
     public getTextWidth(): number {
-        return this.getWidth() - this.tableStyle.cellMarginStart - this.tableStyle.cellMarginEnd;
+        return this.getWidth() - this.tableStyle.borders.cellMarginStart - this.tableStyle.borders.cellMarginEnd;
     }
 
     private getColumns(columns: TableColumn[], startIndex: number): TableColumn[] {

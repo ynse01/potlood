@@ -72,7 +72,7 @@ export class Renderer {
         const cellFlow = flow.createCellFlow(cell);
         this.renderCellBorder(cell, table.style, cellFlow, height);
         cell.pars.forEach(par => {
-          this.renderParagraph(par, cellFlow.clone().advancePosition(table.style.cellMarginTop));
+          this.renderParagraph(par, cellFlow.clone().advancePosition(table.style.borders.cellMarginTop));
         });
       });
       flow.advancePosition(height);
@@ -82,17 +82,18 @@ export class Renderer {
   private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, height: number): void {
     // TODO: Figure out why this offset is required.
     flow = flow.clone().advancePosition(Metrics.getLineSpacing((cell.pars[0].runs[0] as TextRun).style) * 0.75);
-    if (style.borderTop !== undefined) {
-      this.renderHorizontalLine(flow.getX(), cell.getWidth(), flow, style.borderTop.color, style.borderTop.size);
+    const borders = style.borders;
+    if (borders.borderTop !== undefined) {
+      this.renderHorizontalLine(flow.getX(), cell.getWidth(), flow, borders.borderTop.color, borders.borderTop.size);
     }
-    if (style.borderBottom !== undefined) {
-      this.renderHorizontalLine(flow.getX(), cell.getWidth(), flow.clone().advancePosition(height), style.borderBottom.color, style.borderBottom.size);
+    if (borders.borderBottom !== undefined) {
+      this.renderHorizontalLine(flow.getX(), cell.getWidth(), flow.clone().advancePosition(height), borders.borderBottom.color, borders.borderBottom.size);
     }
-    if (style.borderStart !== undefined) {
-      this.renderVerticalLine(height, flow, style.borderStart.color, style.borderStart.size);
+    if (borders.borderStart !== undefined) {
+      this.renderVerticalLine(height, flow, borders.borderStart.color, borders.borderStart.size);
     }
-    if (style.borderEnd !== undefined) {
-      this.renderVerticalLine(height, flow.clone().advancePosition(cell.getWidth()), style.borderEnd.color, style.borderEnd.size);
+    if (borders.borderEnd !== undefined) {
+      this.renderVerticalLine(height, flow.clone().advancePosition(cell.getWidth()), borders.borderEnd.color, borders.borderEnd.size);
     }
   }
 

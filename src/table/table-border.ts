@@ -50,7 +50,7 @@ export class TableBorder {
         }
         const space = Xml.getAttribute(borderNode, "w:space");
         if (space !== undefined) {
-            border.spacing = parseInt(space, 10);
+            border.spacing = Metrics.convertTwipsToPixels(parseInt(space, 10));
         }
         const color = Xml.getAttribute(borderNode, "w:color");
         if (color !== undefined) {
