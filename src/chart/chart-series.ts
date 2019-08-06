@@ -3,7 +3,8 @@ import { Xml } from "../utils/xml.js";
 
 export class ChartSeries {
     public categories: ChartValue[] = [];
-    public values: ChartValue[][] = [];
+    public values: ChartValue[] = [];
+    public color: string = "";
 
     public static fromNode(seriesNode: Node): ChartSeries {
         const series = new ChartSeries();
@@ -36,24 +37,33 @@ export class ChartSeries {
                 const refName = valNode.firstChild.nodeName;
                 if (refName === "c:strRef") {
                     const stringValues = ChartSeries.readStringReference(valNode.firstChild);
-                    let values: ChartValue[] = [];
                     stringValues.forEach(stringValue => {
                         const val = new ChartValue();
                         val.text = stringValue;
-                        values.push(val);
+                        series.values.push(val);
                     });
-                    series.values.push(values);
                 } else if (refName === "c:numRef") {
                     const numValues = ChartSeries.readNumericReference(valNode.firstChild);
-                    let values: ChartValue[] = [];
                     numValues.forEach(numValue => {
                         const val = new ChartValue();
                         val.numeric = numValue;
-                        values.push(val);
+                        series.values.push(val);
                     });
-                    series.values.push(values);
                 } else {
                     console.log(`Don't know how to parse Chart Value from node: ${refName}`);
+                }
+            }
+        }
+        const chartStyleNode = Xml.getFirstChildOfName(seriesNode, "c:spPr");
+        if (chartStyleNode !== undefined) {
+            const fillNode = Xml.getFirstChildOfName(chartStyleNode, "a:solidFill");
+            if (fillNode !== undefined) {
+                const colorNode = Xml.getFirstChildOfName(fillNode, "a:srgbClr");
+                if (colorNode !== undefined) {
+                    const color = Xml.getAttribute(colorNode, "val");
+                    if (color !== undefined) {
+                        series.color = color;
+                    }
                 }
             }
         }

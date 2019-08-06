@@ -11,7 +11,7 @@ export class ChartSpace {
         space._promises.push(
             new Promise<void>((resolve, reject) => {
                 promise.then(part => {
-                    ChartSpace.fromDocument(part.document);
+                    ChartSpace.fromDocument(part.document, space);
                     resolve();
                 }).catch(err => {
                     reject(err);

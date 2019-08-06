@@ -12,6 +12,7 @@ import { SvgPainter } from './svg-painter.js';
 import { IPainter, IRectangle } from './i-painter.js';
 import { TextRun } from '../text/text-run.js';
 import { TableCell } from '../table/table-cell.js';
+import { BarChart } from '../chart/bar-chart.js';
 
 export class Renderer {
   private _painter: IPainter;
@@ -62,7 +63,38 @@ export class Renderer {
     if (picture !== undefined) {
       this._painter.paintPicture(x, y, width, height, picture);
     }
+    const chart = drawing.chart;
+    if (chart !== undefined) {
+      const chartFlow = flow.clone();
+      chart.ensureLoaded().then(() => {
+        if (chart.barChart !== undefined) {
+          this.renderBarChart(chart.barChart, chartFlow, width, height);
+        }
+      });
+    }
     flow.advancePosition(drawing.getHeight(flow.getWidth()));
+  }
+
+  private renderBarChart(barChart: BarChart, flow: VirtualFlow, width: number, height: number): void {
+    const bounds = barChart.getValueBounds();
+    const seriesSpacing = width / (bounds.numCats * bounds.numSeries);
+    const catSpacing = width / bounds.numSeries;
+    const flowX = flow.getX();
+    const topY = flow.getY();
+    const bottomY = topY + height;
+    const range = barChart.getValueRange();
+    for(let i = 0; i < bounds.numCats; i++) {
+      for(let j = 0; j < bounds.numValues; j++) {
+        for(let k = 0; k < bounds.numSeries; k++) {
+          const val = barChart.getValue(i, k);
+          const normalizedValue = (val.numeric! - range.min) / (range.max - range.min);
+          const color = barChart.getColor(k);
+          const x = flowX + i * catSpacing + k * seriesSpacing;
+          const y = bottomY - (bottomY - topY) * normalizedValue;
+          this._painter.paintLine(x, bottomY, x, y, color, seriesSpacing);
+        }
+      }
+    }
   }
 
   private renderTable(table: Table, flow: VirtualFlow): void {
