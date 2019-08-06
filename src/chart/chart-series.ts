@@ -68,8 +68,8 @@ export class ChartSeries {
                 if (node.nodeName === "c:pt") {
                     const index = Xml.getAttribute(node, "idx");
                     const valueNode = Xml.getFirstChildOfName(node, "c:v");
-                    if (index !== undefined && valueNode !== undefined && valueNode.nodeValue !== null) {
-                        ref[parseInt(index, 10)] = valueNode.nodeValue;
+                    if (index !== undefined && valueNode !== undefined && valueNode.textContent !== null) {
+                        ref[parseInt(index, 10)] = valueNode.textContent;
                     }
                 }
             });
@@ -86,8 +86,8 @@ export class ChartSeries {
                 if (node.nodeName === "c:pt") {
                     const index = Xml.getAttribute(node, "idx");
                     const valueNode = Xml.getFirstChildOfName(node, "c:v");
-                    if (index !== undefined && valueNode !== undefined && valueNode.nodeValue !== null) {
-                        ref[parseInt(index, 10)] = parseFloat(valueNode.nodeValue);
+                    if (index !== undefined && valueNode !== undefined && valueNode.textContent !== null) {
+                        ref[parseInt(index, 10)] = parseFloat(valueNode.textContent);
                     }
                 }
             });

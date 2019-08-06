@@ -11,8 +11,7 @@ export class ChartSpace {
         space._promises.push(
             new Promise<void>((resolve, reject) => {
                 promise.then(part => {
-                    const rootNode = part.document.getRootNode();
-                    ChartSpace.fromNode(rootNode, space);
+                    ChartSpace.fromDocument(part.document);
                     resolve();
                 }).catch(err => {
                     reject(err);
@@ -20,6 +19,16 @@ export class ChartSpace {
             })
         );
         return space;
+    }
+
+    public static fromDocument(doc: XMLDocument, space?: ChartSpace): ChartSpace {
+        const chartSpaceNode = doc.getRootNode().firstChild;
+        if (chartSpaceNode !== null) {
+            return ChartSpace.fromNode(chartSpaceNode, space);
+        } else {
+            console.log('Failed to find chart');
+            return new ChartSpace();
+        }
     }
 
     public static fromNode(chartSpaceNode: Node, space?: ChartSpace): ChartSpace {

@@ -31,10 +31,10 @@ export class DrawingRun implements ILayoutable {
                         drawing.picture = Picture.fromPicNode(childNode, doc);    
                     }
                     if (childNode.nodeName === "c:chart") {
-                        const relationship = Xml.getAttribute(childNode, "r:Id");
+                        const relationship = Xml.getAttribute(childNode, "r:id");
                         if (relationship !== undefined && doc.relationships !== undefined) {
                             const chartTarget = doc.relationships.getTarget(relationship);
-                            drawing.chart = ChartSpace.fromPart(doc.pack.loadPart(chartTarget));
+                            drawing.chart = ChartSpace.fromPart(doc.pack.loadPart(`word/${chartTarget}`));
                         }
                     }
                 })
