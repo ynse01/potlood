@@ -4,10 +4,12 @@ import { Xml } from "../utils/xml.js";
 import { WordDocument } from "../word-document.js";
 import { ILayoutable } from "../i-layoutable.js";
 import { VirtualFlow } from "../virtual-flow.js";
+import { ChartSpace } from "../chart/chart-space.js";
 
 export class DrawingRun implements ILayoutable {
     public bounds: ShapeBounds;
     public picture: Picture | undefined;
+    public chart: ChartSpace | undefined;
     public previousXPos: number | undefined;
     public lastXPos: number | undefined;
 
@@ -16,16 +18,26 @@ export class DrawingRun implements ILayoutable {
         const child = drawingNode.childNodes[0];
         if (child.nodeName === "wp:anchor") {
             bounds = ShapeBounds.fromAnchorNode(child);
+        } else if (child.nodeName === "wp:inline") {
+            bounds = ShapeBounds.fromInlineNode(child);
         }
         const drawing = new DrawingRun(bounds);
         const graphic = Xml.getFirstChildOfName(child, "a:graphic");
         if (graphic !== undefined) {
             const graphicData = Xml.getFirstChildOfName(graphic, "a:graphicData");
             if (graphicData !== undefined) {
-                const picNode = Xml.getFirstChildOfName(graphicData, "pic:pic");
-                if (picNode !== undefined) {
-                    drawing.picture = Picture.fromPicNode(picNode, doc);
-                }
+                graphicData.childNodes.forEach(childNode => {
+                    if (childNode.nodeName === "pic:pic") {
+                        drawing.picture = Picture.fromPicNode(childNode, doc);    
+                    }
+                    if (childNode.nodeName === "c:chart") {
+                        const relationship = Xml.getAttribute(childNode, "r:Id");
+                        if (relationship !== undefined && doc.relationships !== undefined) {
+                            const chartTarget = doc.relationships.getTarget(relationship);
+                            drawing.chart = ChartSpace.fromPart(doc.pack.loadPart(chartTarget));
+                        }
+                    }
+                })
             }
         }
         return drawing;
