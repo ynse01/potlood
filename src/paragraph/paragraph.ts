@@ -3,8 +3,8 @@ import { TextRun } from "../text/text-run.js";
 import { WordDocument } from "../word-document.js";
 import { ParStyle } from "./par-style.js";
 import { DrawingRun } from "../drawing/drawing-run.js";
-import { ILayoutable } from "../i-layoutable.js";
-import { VirtualFlow } from "../virtual-flow.js";
+import { ILayoutable } from "../utils/i-layoutable.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 
 export enum RunInParagraph {
     Normal = 0,

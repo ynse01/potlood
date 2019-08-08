@@ -1,5 +1,5 @@
 import { Table } from "./table.js";
-import { VirtualFlow } from "../virtual-flow.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 import { TableCell } from "./table-cell.js";
 import { TableStyle } from "./table-style.js";
 import { Metrics } from "../utils/metrics.js";

@@ -1,5 +1,5 @@
 import { WordDocument } from '../word-document.js';
-import { VirtualFlow } from '../virtual-flow.js';
+import { VirtualFlow } from '../utils/virtual-flow.js';
 import { Paragraph } from '../paragraph/paragraph.js';
 import { SvgPainter } from './svg-painter.js';
 import { IPainter } from './i-painter.js';

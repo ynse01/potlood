@@ -5,8 +5,8 @@ import { WordDocument } from "../word-document.js";
 import { TableStyle } from "./table-style.js";
 import { TableColumn } from "./table-column.js";
 import { TableRow } from "./table-row.js";
-import { ILayoutable } from "../i-layoutable.js";
-import { VirtualFlow } from "../virtual-flow.js";
+import { ILayoutable } from "../utils/i-layoutable.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 
 export class Table implements ILayoutable {
     public columns: TableColumn[];

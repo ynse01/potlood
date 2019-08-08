@@ -2,8 +2,8 @@ import { ShapeBounds } from "./shape-bounds.js";
 import { Picture } from "./picture.js";
 import { Xml } from "../utils/xml.js";
 import { WordDocument } from "../word-document.js";
-import { ILayoutable } from "../i-layoutable.js";
-import { VirtualFlow } from "../virtual-flow.js";
+import { ILayoutable } from "../utils/i-layoutable.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 import { ChartSpace } from "../chart/chart-space.js";
 
 export class DrawingRun implements ILayoutable {

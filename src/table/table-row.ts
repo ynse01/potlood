@@ -1,7 +1,7 @@
 import { Paragraph } from "../paragraph/paragraph.js";
 import { TableCell } from "./table-cell.js";
 import { Table } from "./table.js";
-import { VirtualFlow } from "../virtual-flow.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 
 export class TableRow {
     public cells: TableCell[] = [];

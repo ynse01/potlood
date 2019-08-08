@@ -4,7 +4,7 @@ import { TableStyle } from "./table-style.js";
 import { Table } from "./table.js";
 import { TableCellStyle } from "./table-cell-style.js";
 import { Xml } from "../utils/xml.js";
-import { VirtualFlow } from "../virtual-flow.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 
 export class TableCell {
     public id: string | undefined = undefined;

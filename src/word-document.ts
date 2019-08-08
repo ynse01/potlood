@@ -7,8 +7,8 @@ import { AbstractNumberings } from "./numbering/abstract-numberings.js";
 import { Table } from "./table/table.js";
 import { Relationships } from "./package/relationships.js";
 import { Package } from "./package/package.js";
-import { ILayoutable } from "./i-layoutable.js";
-import { VirtualFlow } from "./virtual-flow.js";
+import { ILayoutable } from "./utils/i-layoutable.js";
+import { VirtualFlow } from "./utils/virtual-flow.js";
 
 export class WordDocument implements ILayoutable {
     private part: Part;

@@ -1,4 +1,4 @@
-import { VirtualFlow } from "../virtual-flow.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 import { DrawingRun } from "./drawing-run.js";
 import { IPainter } from "../painting/i-painter.js";
 import { ChartRenderer } from "../chart/chart-renderer.js";

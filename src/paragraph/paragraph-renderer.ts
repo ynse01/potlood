@@ -1,5 +1,5 @@
 import { Paragraph, RunInParagraph } from "./paragraph.js";
-import { VirtualFlow } from "../virtual-flow.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 import { TextRenderer } from "../text/text-renderer.js";
 import { DrawingRenderer } from "../drawing/drawing-renderer.js";
 import { IPainter } from "../painting/i-painter.js";

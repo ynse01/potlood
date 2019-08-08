@@ -1,4 +1,4 @@
-import { VirtualFlow } from "../virtual-flow.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 import { TextRun } from "./text-run.js";
 import { RunInParagraph } from "../paragraph/paragraph.js";
 import { Metrics } from "../utils/metrics.js";

@@ -1,5 +1,5 @@
 import { BarChart } from "./bar-chart.js";
-import { VirtualFlow } from "../virtual-flow.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 import { IPainter } from "../painting/i-painter.js";
 
 export class ChartRenderer {
