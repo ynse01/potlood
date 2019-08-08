@@ -1,6 +1,6 @@
 import { Part } from "./package/part.js";
 import { Xml } from "./utils/xml.js";
-import { Paragraph } from "./paragraph.js";
+import { Paragraph } from "./paragraph/paragraph.js";
 import { NamedStyles } from "./text/named-styles.js";
 import { Section } from "./section.js";
 import { AbstractNumberings } from "./numbering/abstract-numberings.js";

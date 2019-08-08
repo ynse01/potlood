@@ -1,11 +1,11 @@
 import { Xml } from "../utils/xml.js";
 import { RunStyle } from "./run-style.js";
-import { ParStyle } from "./par-style.js";
+import { ParStyle } from "../paragraph/par-style.js";
 import { Style } from "./style.js";
 import { NamedStyles } from "./named-styles.js";
 import { Metrics } from "../utils/metrics.js";
 import { VirtualFlow } from "../virtual-flow.js";
-import { RunInParagraph } from "../paragraph.js";
+import { RunInParagraph } from "../paragraph/paragraph.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { ILayoutable } from "../i-layoutable.js";
 import { TextFitter } from "./text-fitter.js";

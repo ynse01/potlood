@@ -1,5 +1,5 @@
 import { TableColumn } from "./table-column.js";
-import { Paragraph, ParagraphType } from "../paragraph.js";
+import { Paragraph, ParagraphType } from "../paragraph/paragraph.js";
 import { TableStyle } from "./table-style.js";
 import { Table } from "./table.js";
 import { TableCellStyle } from "./table-cell-style.js";

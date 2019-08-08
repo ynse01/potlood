@@ -1,6 +1,6 @@
 import { VirtualFlow } from "../virtual-flow.js";
 import { TextRun } from "./text-run.js";
-import { RunInParagraph } from "../paragraph.js";
+import { RunInParagraph } from "../paragraph/paragraph.js";
 import { Metrics } from "../utils/metrics.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { UnderlineMode } from "./run-style.js";

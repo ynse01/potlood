@@ -5,15 +5,15 @@ import { TableStyle } from "./table-style.js";
 import { Metrics } from "../utils/metrics.js";
 import { TextRun } from "../text/text-run.js";
 import { IPainter } from "../painting/i-painter.js";
-import { Renderer } from "../painting/renderer.js";
+import { ParagraphRenderer } from "../paragraph/paragraph-renderer.js";
 
 export class TableRenderer {
-    private _parRenderer: Renderer;
+    private _parRenderer: ParagraphRenderer;
     private _painter: IPainter;
 
-    constructor(painter: IPainter, renderer: Renderer) {
+    constructor(painter: IPainter, paragraphRenderer: ParagraphRenderer) {
         this._painter = painter;
-        this._parRenderer = renderer;
+        this._parRenderer = paragraphRenderer;
     }
 
     public renderTable(table: Table, flow: VirtualFlow): void {

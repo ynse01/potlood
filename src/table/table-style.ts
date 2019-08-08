@@ -1,5 +1,5 @@
 import { Xml } from "../utils/xml.js";
-import { Justification } from "../text/par-style.js";
+import { Justification } from "../paragraph/par-style.js";
 import { BordersAndMargins } from "./borders-and-margins.js";
 
 export class TableStyle {

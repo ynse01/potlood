@@ -1,5 +1,5 @@
 import { IPainter, IRectangle } from "./i-painter.js";
-import { Justification } from "../text/par-style.js";
+import { Justification } from "../paragraph/par-style.js";
 import { Picture } from "../drawing/picture.js";
 import { Xml } from "../utils/xml.js";
 

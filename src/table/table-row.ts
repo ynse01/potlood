@@ -1,4 +1,4 @@
-import { Paragraph } from "../paragraph.js";
+import { Paragraph } from "../paragraph/paragraph.js";
 import { TableCell } from "./table-cell.js";
 import { Table } from "./table.js";
 import { VirtualFlow } from "../virtual-flow.js";

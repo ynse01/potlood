@@ -1,5 +1,5 @@
 import { NamedStyles } from "./named-styles.js";
-import { ParStyle, Justification } from "./par-style.js";
+import { ParStyle, Justification } from "../paragraph/par-style.js";
 import { RunStyle, UnderlineMode } from "./run-style.js";
 import { Xml } from "../utils/xml.js";
 

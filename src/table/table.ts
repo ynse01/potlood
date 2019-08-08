@@ -1,6 +1,6 @@
 import { Xml } from "../utils/xml.js";
 import { Metrics } from "../utils/metrics.js";
-import { Paragraph } from "../paragraph.js";
+import { Paragraph } from "../paragraph/paragraph.js";
 import { WordDocument } from "../word-document.js";
 import { TableStyle } from "./table-style.js";
 import { TableColumn } from "./table-column.js";
