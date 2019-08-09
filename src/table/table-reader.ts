@@ -7,10 +7,11 @@ import { TableRow } from "./table-row.js";
 import { TableStyle } from "./table-style.js";
 import { TableCell } from "./table-cell.js";
 import { TableCellStyle } from "./table-cell-style.js";
-import { Paragraph, ParagraphType } from "../paragraph/paragraph.js";
+import { ParagraphType } from "../paragraph/paragraph.js";
 import { BordersAndMargins } from "./borders-and-margins.js";
 import { TableBorder, TableBorderType } from "./table-border.js";
 import { Justification } from "../paragraph/par-style.js";
+import { ParagraphReader } from "../paragraph/paragraph-reader.js";
 
 export class TableReader {
     public static readTable(doc: WordDocument, tableNode: ChildNode): Table {
@@ -66,7 +67,7 @@ export class TableReader {
         const cell = new TableCell(table.columns, table.style, style, colIndex);
         cellNode.childNodes.forEach(pNode => {
             if (pNode.nodeName === "w:p") {
-                const par = new Paragraph(table.doc, pNode);
+                const par = ParagraphReader.readParagraph(table.doc, pNode);
                 par.type = ParagraphType.TableCell;
                 cell.pars.push(par);
             }

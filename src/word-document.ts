@@ -10,6 +10,7 @@ import { Package } from "./package/package.js";
 import { ILayoutable } from "./utils/i-layoutable.js";
 import { VirtualFlow } from "./utils/virtual-flow.js";
 import { TableReader } from "./table/table-reader.js";
+import { ParagraphReader } from "./paragraph/paragraph-reader.js";
 
 export class WordDocument implements ILayoutable {
     private part: Part;
@@ -35,7 +36,7 @@ export class WordDocument implements ILayoutable {
                     body.childNodes.forEach(node => {
                         switch(node.nodeName) {
                             case "w:p":
-                                this.pars.push(new Paragraph(this, node));
+                                this.pars.push(ParagraphReader.readParagraph(this, node));
                                 break;
                             case "w:tbl":
                                 this.pars.push(TableReader.readTable(this, node));
