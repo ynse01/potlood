@@ -5,6 +5,7 @@ import { TextReader } from "../text/text-reader.js";
 import { DrawingRun } from "../drawing/drawing-run.js";
 import { WordDocument } from "../word-document.js";
 import { ParStyle } from "./par-style.js";
+import { DrawingReader } from "../drawing/drawing-reader.js";
 
 export class ParagraphReader {
     public static readParagraph(doc: WordDocument, pNode: Node): Paragraph {
@@ -24,7 +25,7 @@ export class ParagraphReader {
             if (node.nodeName === "w:r") {
                 const drawingNode = Xml.getFirstChildOfName(node, "w:drawing");
                 if (drawingNode !== undefined) {
-                    const drawing = DrawingRun.fromDrawingNode(drawingNode, doc);
+                    const drawing = DrawingReader.readDrawingRun(drawingNode, doc);
                     runs.push(drawing);
                 } else {
                     const run = TextReader.readTextRun(node, parStyle, doc.styles);
