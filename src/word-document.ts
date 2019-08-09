@@ -9,6 +9,7 @@ import { Relationships } from "./package/relationships.js";
 import { Package } from "./package/package.js";
 import { ILayoutable } from "./utils/i-layoutable.js";
 import { VirtualFlow } from "./utils/virtual-flow.js";
+import { TableReader } from "./table/table-reader.js";
 
 export class WordDocument implements ILayoutable {
     private part: Part;
@@ -37,8 +38,7 @@ export class WordDocument implements ILayoutable {
                                 this.pars.push(new Paragraph(this, node));
                                 break;
                             case "w:tbl":
-                                const table = Table.fromTableNode(this, node);
-                                this.pars.push(table);
+                                this.pars.push(TableReader.readTable(this, node));
                                 break;
                             case "w:sectPr":
                                 this._section = new Section(this, node);

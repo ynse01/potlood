@@ -1,9 +1,7 @@
 import { TableColumn } from "./table-column.js";
-import { Paragraph, ParagraphType } from "../paragraph/paragraph.js";
+import { Paragraph } from "../paragraph/paragraph.js";
 import { TableStyle } from "./table-style.js";
-import { Table } from "./table.js";
 import { TableCellStyle } from "./table-cell-style.js";
-import { Xml } from "../utils/xml.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 
 export class TableCell {
@@ -13,29 +11,6 @@ export class TableCell {
     public pars: Paragraph[] = [];
     public tableStyle: TableStyle;
     public style: TableCellStyle;
-
-    public static fromTableCellNode(cellNode: ChildNode, table: Table, colIndex: number): TableCell {
-        const prNode = Xml.getFirstChildOfName(cellNode, "w:tcPr");
-        let style;
-        if (prNode !== undefined) {
-            style = TableCellStyle.fromTableCellPresentationNode(prNode);
-        } else {
-            style = new TableCellStyle();
-        }
-        const cell = new TableCell(table.columns, table.style, style, colIndex);
-        cellNode.childNodes.forEach(pNode => {
-            if (pNode.nodeName === "w:p") {
-                const par = new Paragraph(table.doc, pNode);
-                par.type = ParagraphType.TableCell;
-                cell.pars.push(par);
-            }
-        });
-        const id = Xml.getAttribute(cellNode, "w:id");
-        if (id !== undefined) {
-            cell.id = id;
-        }
-        return cell;
-    }
 
     constructor(columns: TableColumn[], tableStyle: TableStyle, style: TableCellStyle, startIndex: number) {
         this.tableStyle = tableStyle;

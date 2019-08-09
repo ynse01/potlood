@@ -1,5 +1,3 @@
-import { Xml } from "../utils/xml.js";
-import { Metrics } from "../utils/metrics.js";
 
 export enum TableBorderType {
     none = "none",
@@ -36,28 +34,6 @@ export class TableBorder {
     public size: number;
     public spacing: number;
     public color: string;
-
-    public static fromBorderNode(borderNode: ChildNode): TableBorder {
-        const border = new TableBorder();
-        const val = Xml.getAttribute(borderNode, "w:val");
-        if (val !== undefined) {
-            border.type = TableBorderType[val as keyof typeof TableBorderType];
-        }
-        const sz = Xml.getAttribute(borderNode, "w:sz");
-        if (sz !== undefined) {
-            // Borders are in eights of a point.
-            border.size = Metrics.convertPointToPixels(parseInt(sz, 10) / 8);
-        }
-        const space = Xml.getAttribute(borderNode, "w:space");
-        if (space !== undefined) {
-            border.spacing = Metrics.convertTwipsToPixels(parseInt(space, 10));
-        }
-        const color = Xml.getAttribute(borderNode, "w:color");
-        if (color !== undefined) {
-            border.color = color;
-        }
-        return border;
-    }
 
     constructor() {
         this.type = TableBorderType.none;
