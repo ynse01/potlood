@@ -5,6 +5,7 @@ import { ParStyle } from "./par-style.js";
 import { DrawingRun } from "../drawing/drawing-run.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
+import { TextReader } from "../text/text-reader.js";
 
 export enum RunInParagraph {
     Normal = 0,
@@ -88,7 +89,7 @@ export class Paragraph implements ILayoutable {
                         const drawing = DrawingRun.fromDrawingNode(drawingNode, this.doc);
                         runs.push(drawing);
                     } else {
-                        const run = TextRun.fromRunNode(node, parStyle, this.doc.styles);
+                        const run = TextReader.readTextRun(node, parStyle, this.doc.styles);
                         run.inParagraph = RunInParagraph.Normal;
                         runs.push(run);
                     }
