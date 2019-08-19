@@ -1,9 +1,11 @@
 import { Justification } from "../paragraph/par-style.js";
-import { BordersAndMargins } from "./borders-and-margins.js";
+import { Borders } from "./borders.js";
+import { Margins } from "./margins.js";
 
 export class TableStyle {
     public width: number | undefined;
     public justification: Justification | undefined;
     public identation: number | undefined;
-    public borders: BordersAndMargins = new BordersAndMargins();
+    public borders: Borders = new Borders();
+    public margins: Margins = new Margins();
     }

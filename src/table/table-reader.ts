@@ -8,10 +8,11 @@ import { TableStyle } from "./table-style.js";
 import { TableCell } from "./table-cell.js";
 import { TableCellStyle } from "./table-cell-style.js";
 import { ParagraphType } from "../paragraph/paragraph.js";
-import { BordersAndMargins } from "./borders-and-margins.js";
 import { TableBorder, TableBorderType } from "./table-border.js";
 import { Justification } from "../paragraph/par-style.js";
 import { ParagraphReader } from "../paragraph/paragraph-reader.js";
+import { Borders } from "./borders.js";
+import { Margins } from "./margins.js";
 
 export class TableReader {
     public static readTable(doc: WordDocument, tableNode: ChildNode): Table {
@@ -98,89 +99,89 @@ export class TableReader {
         }
         const tcMargins = Xml.getFirstChildOfName(cellPrNode, "w:tcMar");
         if (tcMargins !== undefined) {
-            this.readCellMargins(tcMargins, style.borders);
+            this.readCellMargins(tcMargins, style.margins);
         }
         return style;
     }
 
-    private static readBorders(bordersNode: ChildNode, bordersAndMargins: BordersAndMargins): void {
+    private static readBorders(bordersNode: ChildNode, borders: Borders): void {
         bordersNode.childNodes.forEach(node => {
             const name = node.nodeName;
             switch (name) {
                 case "w:left":
-                    if (bordersAndMargins.borderStart === undefined) {
-                        bordersAndMargins.borderStart = this.readTableBorder(node);
+                    if (borders.borderStart === undefined) {
+                        borders.borderStart = this.readTableBorder(node);
                     }
                     break;
                 case "w:start":
-                    bordersAndMargins.borderStart = this.readTableBorder(node);
+                    borders.borderStart = this.readTableBorder(node);
                     break;
                 case "w:right":
-                    if (bordersAndMargins.borderEnd === undefined) {
-                        bordersAndMargins.borderEnd = this.readTableBorder(node);
+                    if (borders.borderEnd === undefined) {
+                        borders.borderEnd = this.readTableBorder(node);
                     }
                     break;
                 case "w:end":
-                    bordersAndMargins.borderEnd = this.readTableBorder(node);
+                    borders.borderEnd = this.readTableBorder(node);
                     break;
                 case "w:top":
-                    bordersAndMargins.borderTop = this.readTableBorder(node);
+                    borders.borderTop = this.readTableBorder(node);
                     break;
                 case "w:bottom":
-                    bordersAndMargins.borderBottom = this.readTableBorder(node);
+                    borders.borderBottom = this.readTableBorder(node);
                     break;
                 case "w:insideH":
-                    bordersAndMargins.borderHorizontal = this.readTableBorder(node);
+                    borders.borderHorizontal = this.readTableBorder(node);
                     break;
                 case "w:insideV":
-                    bordersAndMargins.borderVertical = this.readTableBorder(node);
+                    borders.borderVertical = this.readTableBorder(node);
                     break;
             }
         });
     }
 
-    private static readCellMargins(cellMarginNode: ChildNode, bordersAndMargins: BordersAndMargins): void {
+    private static readCellMargins(cellMarginNode: ChildNode, margins: Margins): void {
         cellMarginNode.childNodes.forEach(node => {
             const name = node.nodeName;
             switch (name) {
                 case "w:left":
-                    if (bordersAndMargins.cellMarginStart === undefined) {
+                    if (margins.cellMarginStart === undefined) {
                         const txt = Xml.getAttribute(node, "w:w");
                         if (txt !== undefined) {
-                            bordersAndMargins.cellMarginStart = Metrics.convertTwipsToPixels(parseInt(txt));
+                            margins.cellMarginStart = Metrics.convertTwipsToPixels(parseInt(txt));
                         }
                     }
                     break;
                 case "w:start":
                     const start = Xml.getAttribute(node, "w:w");
                     if (start !== undefined) {
-                        bordersAndMargins.cellMarginStart = Metrics.convertTwipsToPixels(parseInt(start));
+                        margins.cellMarginStart = Metrics.convertTwipsToPixels(parseInt(start));
                     }
                     break;
                 case "w:right":
-                    if (bordersAndMargins.cellMarginEnd === undefined) {
+                    if (margins.cellMarginEnd === undefined) {
                         const txt = Xml.getAttribute(node, "w:w");
                         if (txt !== undefined) {
-                            bordersAndMargins.cellMarginEnd = Metrics.convertTwipsToPixels(parseInt(txt));
+                            margins.cellMarginEnd = Metrics.convertTwipsToPixels(parseInt(txt));
                         }
                     }
                     break;
                 case "w:end":
                     const end = Xml.getAttribute(node, "w:w");
                     if (end !== undefined) {
-                        bordersAndMargins.cellMarginEnd = Metrics.convertTwipsToPixels(parseInt(end));
+                        margins.cellMarginEnd = Metrics.convertTwipsToPixels(parseInt(end));
                     }
                     break;
                 case "w:top":
                     const top = Xml.getAttribute(node, "w:w");
                     if (top !== undefined) {
-                        bordersAndMargins.cellMarginTop = Metrics.convertTwipsToPixels(parseInt(top));
+                        margins.cellMarginTop = Metrics.convertTwipsToPixels(parseInt(top));
                     }
                     break;
                 case "w:bottom":
                     const bottom = Xml.getAttribute(node, "w:w");
                     if (bottom !== undefined) {
-                        bordersAndMargins.cellMarginBottom = Metrics.convertTwipsToPixels(parseInt(bottom));
+                        margins.cellMarginBottom = Metrics.convertTwipsToPixels(parseInt(bottom));
                     }
                     break;
             }
@@ -217,7 +218,7 @@ export class TableReader {
         }
         const cellMargins = Xml.getFirstChildOfName(tblPrNode, "w:tblCellMar");
         if (cellMargins !== undefined) {
-            this.readCellMargins(cellMargins, style.borders);
+            this.readCellMargins(cellMargins, style.margins);
         }
         const justification = Xml.getStringValueFromNode(tblPrNode, "w:jc");
         if (justification !== undefined) {

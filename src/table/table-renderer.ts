@@ -23,7 +23,7 @@ export class TableRenderer {
             const cellFlow = flow.createCellFlow(cell);
             this.renderCellBorder(cell, table.style, cellFlow, height);
             cell.pars.forEach(par => {
-              this._parRenderer.renderParagraph(par, cellFlow.clone().advancePosition(table.style.borders.cellMarginTop));
+              this._parRenderer.renderParagraph(par, cellFlow.clone().advancePosition(table.style.margins.cellMarginTop));
             });
           });
           flow.advancePosition(height);
