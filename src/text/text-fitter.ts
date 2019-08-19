@@ -13,7 +13,7 @@ export class TextFitter {
         let inRun = LineInRun.FirstLine;
         while(remainder.length > 0) {
             let usedWidth = 0;
-            const line = TextFitter.fitText(remainder, style, flow.getWidth());
+            const line = TextFitter.fitText(remainder, style, flow.getWidth(), inRun);
             if (remainder.length === line.length) {
                 // Check for last line of run.
                 if (inRun === LineInRun.FirstLine) {
@@ -21,9 +21,9 @@ export class TextFitter {
                 } else {
                     inRun = LineInRun.LastLine;
                 }
-                lastXPos = Metrics.getTextWidth(line, style) + style.identation;
+                lastXPos = Metrics.getTextWidth(line, style) + style.getIdentation(inRun);
             }
-            const xDelta = (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) ? style.hanging : style.identation;
+            const xDelta = style.getIdentation(inRun);
             const x = flow.getX() + xDelta;
             const fitWidth = (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine);
             const width = flow.getWidth() - xDelta;
@@ -40,10 +40,11 @@ export class TextFitter {
     public static fitText(
         text: string,
         style: Style,
-        width: number
+        width: number,
+        inRun: LineInRun
     ): string {
         let subText = text;
-        const identation = style.identation;
+        const identation = style.getIdentation(inRun);
         while (Metrics.getTextWidth(subText, style) + identation > width) {
             const stripped = this._stripLastWord(subText);
             if (stripped === undefined) {

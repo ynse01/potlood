@@ -2,6 +2,7 @@ import { NamedStyles } from "./named-styles.js";
 import { ParStyle, Justification } from "../paragraph/par-style.js";
 import { RunStyle, UnderlineMode } from "./run-style.js";
 import { Xml } from "../utils/xml.js";
+import { LineInRun } from "./text-run.js";
 
 export class Style {
     private _basedOn: Style | undefined;
@@ -71,12 +72,12 @@ export class Style {
         return this.getValue(0, (parStyle) => parStyle._spacing, (runStyle) => runStyle._spacing);
     }
 
-    public get hanging(): number {
-        return this.getValue(0, (parStyle) => parStyle._hanging, undefined);
-    }
-
-    public get identation(): number {
-        return this.getValue(0, (parStyle) => parStyle._identation, undefined);
+    public getIdentation(inRun: LineInRun): number {
+        if (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) {
+            return this.getValue(0, (parStyle) => parStyle._hanging, undefined);
+        } else {
+            return this.getValue(0, (parStyle) => parStyle._identation, undefined);
+        }
     }
 
     public get caps(): boolean {
@@ -105,7 +106,8 @@ export class Style {
     public toString(): string {
         const base = (this._basedOnId !== undefined) ? `base=${this._basedOnId}` : "";
         const just = `jc=${this.justification.toString()}`;
-        const ind = `ind=${this.identation.toString()}`;
+        const ind = `ind=${this.getIdentation(LineInRun.FirstLine).toString()}`;
+        const hang = `ind=${this.getIdentation(LineInRun.Normal).toString()}`;
         const i = `i=${this.italic}`;
         const b = `b=${this.bold.toString()}`;
         const u = `u=${this.underlineMode.toString()}`;
@@ -117,7 +119,7 @@ export class Style {
         const color = `color=${this.color.toString()}`;
         const caps = `caps=${this.caps.toString()}`;
         const smallcaps = `smallcaps=${this.smallCaps.toString()}`;
-        return `Style: ${base} ${just} ${ind} ${i} ${b} ${u} ${strike} ${font} ${size} ${dstrike} ${spacing} ${color} ${caps} ${smallcaps}`;
+        return `Style: ${base} ${just} ${ind} ${hang} ${i} ${b} ${u} ${strike} ${font} ${size} ${dstrike} ${spacing} ${color} ${caps} ${smallcaps}`;
     }
 
     private getValue<T>(initial: T, parCb?: (parStyle: ParStyle) => T | undefined, runCb?: (runStyle: RunStyle) => T | undefined): T {
