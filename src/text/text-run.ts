@@ -18,7 +18,7 @@ export class TextRun implements ILayoutable {
     public style: Style;
     public inParagraph: RunInParagraph = RunInParagraph.OnlyRun;
     public previousXPos: number | undefined;
-    public lastXPos: number | undefined;
+    public lastXPos = 0;
     private _lines: IPositionedTextLine[] | undefined = undefined;
 
     constructor(text: string, style: Style) {
@@ -36,40 +36,14 @@ export class TextRun implements ILayoutable {
     }
 
     public performLayout(flow: VirtualFlow): void {
-        this.getFlowLines(flow);
+        if (this._lines === undefined) {
+            this._lines = this.getFlowLines(flow);
+        }
     }
 
     public getFlowLines(flow: VirtualFlow): IPositionedTextLine[] {
-        if (this._lines !== undefined) {
-            return this._lines;
-        }
-        let remainder = this.text;
-        let lines: IPositionedTextLine[] = [];
-        const yDelta = Metrics.getLineSpacing(this.style);
-        let inRun = LineInRun.FirstLine;
-        while(remainder.length > 0) {
-            let usedWidth = 0;
-            const line = TextFitter.fitText(remainder, this.style, flow.getWidth());
-            if (remainder.length === line.length) {
-                // Check for last line of run.
-                if (inRun === LineInRun.FirstLine) {
-                    inRun = LineInRun.OnlyLine;
-                } else {
-                    inRun = LineInRun.LastLine;
-                }
-                this.lastXPos = Metrics.getTextWidth(line, this.style) + this.style.identation;
-            }
-            const xDelta = (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) ? this.style.hanging : this.style.identation;
-            const x = flow.getX() + xDelta;
-            const fitWidth = (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine);
-            const width = flow.getWidth() - xDelta;
-            lines.push({text: line, x: x, y: flow.getY(), width: width, fitWidth: fitWidth, inRun: inRun});
-            if (usedWidth === 0) {
-                flow.advancePosition(yDelta);
-            }
-            remainder = remainder.substring(line.length);
-            inRun = LineInRun.Normal;
-        }
-        return lines;
+        const result = TextFitter.getFlowLines(this.text, this.style, this.lastXPos, flow);
+        this.lastXPos = this.lastXPos;
+        return result.lines;
     }
 }
