@@ -1,4 +1,4 @@
-import { WordDocument } from "../word-document.js";
+import { DocumentX } from "../document-x.js";
 import { DrawingRun } from "./drawing-run.js";
 import { ShapeBounds } from "./shape-bounds.js";
 import { Xml } from "../utils/xml.js";
@@ -8,7 +8,7 @@ import { Part } from "../package/part.js";
 import { BarChart } from "../chart/bar-chart.js";
 
 export class DrawingReader {
-    public static readDrawingRun(drawingNode: ChildNode, doc: WordDocument): DrawingRun {
+    public static readDrawingRun(drawingNode: ChildNode, docx: DocumentX): DrawingRun {
         let bounds = new ShapeBounds();
         const child = drawingNode.childNodes[0];
         if (child.nodeName === "wp:anchor") {
@@ -23,13 +23,13 @@ export class DrawingReader {
             if (graphicData !== undefined) {
                 graphicData.childNodes.forEach(childNode => {
                     if (childNode.nodeName === "pic:pic") {
-                        drawing.picture = Picture.fromPicNode(childNode, doc);    
+                        drawing.picture = Picture.fromPicNode(childNode, docx);    
                     }
                     if (childNode.nodeName === "c:chart") {
                         const relationship = Xml.getAttribute(childNode, "r:id");
-                        if (relationship !== undefined && doc.relationships !== undefined) {
-                            const chartTarget = doc.relationships.getTarget(relationship);
-                            drawing.chart = this.readChartFromPart(doc.pack.loadPart(`word/${chartTarget}`));
+                        if (relationship !== undefined && docx.relationships !== undefined) {
+                            const chartTarget = docx.relationships.getTarget(relationship);
+                            drawing.chart = this.readChartFromPart(docx.pack.loadPart(`word/${chartTarget}`));
                         }
                     }
                 })

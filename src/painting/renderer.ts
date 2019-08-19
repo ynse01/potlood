@@ -1,4 +1,4 @@
-import { WordDocument } from '../word-document.js';
+import { DocumentX } from '../document-x.js';
 import { VirtualFlow } from '../utils/virtual-flow.js';
 import { Paragraph } from '../paragraph/paragraph.js';
 import { SvgPainter } from './svg-painter.js';
@@ -17,9 +17,9 @@ export class Renderer {
         this._tableRenderer = new TableRenderer(this._painter, this._paragraphRenderer);
     }
 
-    public renderDocument(doc: WordDocument): number {
-        const flow = VirtualFlow.fromSection(doc.section);
-        doc.paragraphs.forEach(parOrTable => {
+    public renderDocument(docx: DocumentX): number {
+        const flow = VirtualFlow.fromSection(docx.section);
+        docx.paragraphs.forEach(parOrTable => {
             if (parOrTable instanceof Paragraph) {
                 this._paragraphRenderer.renderParagraph(parOrTable, flow);
             } else {

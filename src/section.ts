@@ -1,4 +1,4 @@
-import { WordDocument } from "./word-document.js";
+import { DocumentX } from "./document-x.js";
 import { Xml } from "./utils/xml.js";
 import { Metrics } from "./utils/metrics.js";
 
@@ -12,7 +12,7 @@ export class Section {
     private _marginRight: number | undefined;
     // TODO: SectionType, PageOrientation and PageNumberFormat
 
-    constructor(_doc: WordDocument, sectionNode: ChildNode) {
+    constructor(_doc: DocumentX, sectionNode: ChildNode) {
         this.sectionNode = sectionNode;
     }
 

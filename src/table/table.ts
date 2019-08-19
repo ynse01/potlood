@@ -1,5 +1,5 @@
 import { Paragraph } from "../paragraph/paragraph.js";
-import { WordDocument } from "../word-document.js";
+import { DocumentX } from "../document-x.js";
 import { TableStyle } from "./table-style.js";
 import { TableColumn } from "./table-column.js";
 import { TableRow } from "./table-row.js";
@@ -9,11 +9,11 @@ import { VirtualFlow } from "../utils/virtual-flow.js";
 export class Table implements ILayoutable {
     public columns: TableColumn[];
     public rows: TableRow[];
-    public doc: WordDocument;
+    public docx: DocumentX;
     public style: TableStyle;
 
-    constructor(doc: WordDocument) {
-        this.doc = doc;
+    constructor(docx: DocumentX) {
+        this.docx = docx;
         this.columns = [];
         this.rows = [];
         this.style = new TableStyle();

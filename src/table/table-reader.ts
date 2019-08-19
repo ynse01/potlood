@@ -1,4 +1,4 @@
-import { WordDocument } from "../word-document.js";
+import { DocumentX } from "../document-x.js";
 import { Table } from "./table.js";
 import { Xml } from "../utils/xml.js";
 import { Metrics } from "../utils/metrics.js";
@@ -15,8 +15,8 @@ import { Borders } from "./borders.js";
 import { Margins } from "./margins.js";
 
 export class TableReader {
-    public static readTable(doc: WordDocument, tableNode: ChildNode): Table {
-        const table = new Table(doc);
+    public static readTable(docx: DocumentX, tableNode: ChildNode): Table {
+        const table = new Table(docx);
         const grid = Xml.getFirstChildOfName(tableNode, "w:tblGrid");
         if (grid !== undefined) {
             let start = 0;
@@ -68,7 +68,7 @@ export class TableReader {
         const cell = new TableCell(table.columns, table.style, style, colIndex);
         cellNode.childNodes.forEach(pNode => {
             if (pNode.nodeName === "w:p") {
-                const par = ParagraphReader.readParagraph(table.doc, pNode);
+                const par = ParagraphReader.readParagraph(table.docx, pNode);
                 par.type = ParagraphType.TableCell;
                 cell.pars.push(par);
             }

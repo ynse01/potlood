@@ -1,7 +1,7 @@
 import { Renderer } from "./painting/renderer.js";
 import { Package } from "./package/package.js";
 import { NamedStyles } from "./text/named-styles.js";
-import { WordDocument } from "./word-document.js";
+import { DocumentX } from "./document-x.js";
 import { AbstractNumberings } from "./numbering/abstract-numberings.js";
 import { Relationships } from "./package/relationships.js";
 import { Metrics } from "./utils/metrics.js";
@@ -25,12 +25,12 @@ export class Potlood {
                         const numberings = new AbstractNumberings(numPart);
                         numberings.parseContent(styles);
                         pack.loadPart('word/document.xml').then(part => {
-                            const doc = new WordDocument(pack, part);
-                            doc.setRelationships(relationships);
-                            doc.setNamedStyles(styles);
-                            doc.setNumberings(numberings);
-                            doc.parseContent();
-                            const posY = this.renderer.renderDocument(doc);
+                            const docx = new DocumentX(pack, part);
+                            docx.setRelationships(relationships);
+                            docx.setNamedStyles(styles);
+                            docx.setNumberings(numberings);
+                            docx.parseContent();
+                            const posY = this.renderer.renderDocument(docx);
                             this.renderer.ensureHeight(posY);
                         });
                     });

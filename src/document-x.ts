@@ -12,7 +12,7 @@ import { VirtualFlow } from "./utils/virtual-flow.js";
 import { TableReader } from "./table/table-reader.js";
 import { ParagraphReader } from "./paragraph/paragraph-reader.js";
 
-export class WordDocument implements ILayoutable {
+export class DocumentX implements ILayoutable {
     private part: Part;
     private pars: (Paragraph | Table)[] = [];
     private _section: Section | undefined;

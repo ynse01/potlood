@@ -1,4 +1,4 @@
-import { WordDocument } from "../word-document.js";
+import { DocumentX } from "../document-x.js";
 import { Package } from "../package/package.js";
 import { Xml } from "../utils/xml.js";
 
@@ -7,7 +7,7 @@ export class Picture {
     private _name: string;
     private _imageUrl: string | undefined;
 
-    public static fromPicNode(picNode: ChildNode, doc: WordDocument): Picture | undefined {
+    public static fromPicNode(picNode: ChildNode, docx: DocumentX): Picture | undefined {
         let run: Picture | undefined = undefined;
         const blipFill = Xml.getFirstChildOfName(picNode, "pic:blipFill");
         if (blipFill !== undefined) {
@@ -15,9 +15,9 @@ export class Picture {
             if (blip !== undefined) {
                 const relId = Xml.getAttribute(blip, "r:embed");
                 let target: string | undefined = undefined;
-                if (doc.relationships !== undefined && relId !== undefined) {
-                    target = doc.relationships.getTarget(relId);
-                    run = new Picture(doc.pack, `word/${target}`);
+                if (docx.relationships !== undefined && relId !== undefined) {
+                    target = docx.relationships.getTarget(relId);
+                    run = new Picture(docx.pack, `word/${target}`);
                 }
             }
         }
