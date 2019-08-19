@@ -13,26 +13,39 @@ export class Potlood {
         this.renderer = new Renderer(element);
     }
 
-    public loadDocxFromUrl(url: string) {
+    public loadDocxFromUrl(url: string): void {
         Metrics.init();
+        this.renderer.clear();
         Package.loadFromUrl(url).then((pack) => {
-            pack.loadPart('word/_rels/document.xml.rels').then(relPart => {
-                const relationships = Relationships.fromDocument(relPart.document);
-                pack.loadPart('word/styles.xml').then(stylePart => {
-                    const styles = new NamedStyles(stylePart);
-                    styles.parseContent();
-                    pack.loadPart('word/numbering.xml').then(numPart => {
-                        const numberings = new AbstractNumberings(numPart);
-                        numberings.parseContent(styles);
-                        pack.loadPart('word/document.xml').then(part => {
-                            const docx = new DocumentX(pack, part);
-                            docx.setRelationships(relationships);
-                            docx.setNamedStyles(styles);
-                            docx.setNumberings(numberings);
-                            docx.parseContent();
-                            const posY = this.renderer.renderDocument(docx);
-                            this.renderer.ensureHeight(posY);
-                        });
+            this._loadFromPackage(pack);
+        });
+    }
+
+    public loadDocxFromFiles(files: FileList): void {
+        Metrics.init();
+        this.renderer.clear();
+        Package.loadFromFile(files).then((pack) => {
+            this._loadFromPackage(pack);
+        });
+    }
+
+    private _loadFromPackage(pack: Package): void {
+        pack.loadPart('word/_rels/document.xml.rels').then(relPart => {
+            const relationships = Relationships.fromDocument(relPart.document);
+            pack.loadPart('word/styles.xml').then(stylePart => {
+                const styles = new NamedStyles(stylePart);
+                styles.parseContent();
+                pack.loadPart('word/numbering.xml').then(numPart => {
+                    const numberings = new AbstractNumberings(numPart);
+                    numberings.parseContent(styles);
+                    pack.loadPart('word/document.xml').then(part => {
+                        const docx = new DocumentX(pack, part);
+                        docx.setRelationships(relationships);
+                        docx.setNamedStyles(styles);
+                        docx.setNumberings(numberings);
+                        docx.parseContent();
+                        const posY = this.renderer.renderDocument(docx);
+                        this.renderer.ensureHeight(posY);
                     });
                 });
             });

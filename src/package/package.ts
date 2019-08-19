@@ -31,23 +31,51 @@ export class Package {
             
             oReq.onload = (_oEvent) => {
                 var arrayBuffer = oReq.response;
-                if (arrayBuffer) {
-                    new JSZip().loadAsync(arrayBuffer).then((unzipped: any) => {
-                        const pack = new Package(unzipped);
-                        pack._loadContentTypes().then(() => {
-                            resolve(pack);
-                        }).catch((error: any) => {
-                            reject(error);
-                        });
-                    }).catch((error: any) => {
-                        reject(error);
-                    });
-                }
+                Package._loadFromArrayBuffer(arrayBuffer)
+                    .then((pack) => resolve(pack))
+                    .catch((err) => reject(err));
             };
             oReq.onerror = (evt) => {
                 reject(evt);
             }
             oReq.send(null);
+        });
+    }
+
+    public static loadFromFile(files: FileList): Promise<Package> {
+        return new Promise<Package>((resolve, reject) => {
+            for (var i=0, file; file=files[i]; i++) {
+                if (file.name.endsWith('.docx')) {
+                    var reader = new FileReader();
+        
+                    reader.onload = (e2) => {
+                        // finished reading file data.
+                        Package._loadFromArrayBuffer((e2.target as any).result).then(pack => resolve(pack)).catch(err => reject(err));
+                    }
+        
+                    reader.readAsArrayBuffer(file); // start reading the file data.
+                    break;
+                }
+            }
+        });
+    }
+
+    private static _loadFromArrayBuffer(arrayBuffer: ArrayBuffer): Promise<Package> {
+        return new Promise<Package>((resolve, reject) => {
+            if (arrayBuffer) {
+                new JSZip().loadAsync(arrayBuffer).then((unzipped: any) => {
+                    const pack = new Package(unzipped);
+                    pack._loadContentTypes().then(() => {
+                        resolve(pack);
+                    }).catch((error: any) => {
+                        reject(error);
+                    });
+                }).catch((error: any) => {
+                    reject(error);
+                });
+            } else {
+                reject("No data received.");
+            }
         });
     }
 
