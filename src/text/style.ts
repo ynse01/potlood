@@ -73,11 +73,14 @@ export class Style {
     }
 
     public getIdentation(inRun: LineInRun): number {
+        let identation: number | undefined = undefined;
         if (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) {
-            return this.getValue(0, (parStyle) => parStyle._hanging, undefined);
-        } else {
-            return this.getValue(0, (parStyle) => parStyle._identation, undefined);
+            identation = this.getValue(undefined, (parStyle) => parStyle._hanging, undefined);
         }
+        if (identation === undefined) {
+            identation = this.getValue(0, (parStyle) => parStyle._identation, undefined);
+        }
+        return identation!;
     }
 
     public get caps(): boolean {
