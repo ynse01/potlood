@@ -42,7 +42,7 @@ export class TextRun implements ILayoutable {
     }
 
     public getFlowLines(flow: VirtualFlow): IPositionedTextLine[] {
-        const result = TextFitter.getFlowLines(this.text, this.style, this.lastXPos, flow);
+        const result = TextFitter.getFlowLines(this.text, this.style, this.inParagraph, this.lastXPos, flow);
         this.lastXPos = this.lastXPos;
         return result.lines;
     }

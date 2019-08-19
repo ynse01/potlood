@@ -3,17 +3,24 @@ import { Metrics } from "../utils/metrics.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { LineInRun } from "./text-run.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
+import { RunInParagraph } from "../paragraph/paragraph.js";
 
 export class TextFitter {
 
-    public static getFlowLines(text: string, style: Style, lastXPos: number, flow: VirtualFlow): { lines: IPositionedTextLine[], lastXPos: number } {
+    public static getFlowLines(
+        text: string,
+        style: Style,
+        inParagraph: RunInParagraph,
+        lastXPos: number,
+        flow: VirtualFlow
+    ): { lines: IPositionedTextLine[], lastXPos: number } {
         let remainder = text;
         const lines: IPositionedTextLine[] = [];
         const yDelta = Metrics.getLineSpacing(style);
         let inRun = LineInRun.FirstLine;
         while(remainder.length > 0) {
             let usedWidth = 0;
-            const line = TextFitter.fitText(remainder, style, flow.getWidth(), inRun);
+            const line = TextFitter.fitText(remainder, style, flow.getWidth(), inRun, inParagraph);
             if (remainder.length === line.length) {
                 // Check for last line of run.
                 if (inRun === LineInRun.FirstLine) {
@@ -21,9 +28,9 @@ export class TextFitter {
                 } else {
                     inRun = LineInRun.LastLine;
                 }
-                lastXPos = Metrics.getTextWidth(line, style) + style.getIndentation(inRun);
+                lastXPos = Metrics.getTextWidth(line, style) + style.getIndentation(inRun, inParagraph);
             }
-            const xDelta = style.getIndentation(inRun);
+            const xDelta = style.getIndentation(inRun, inParagraph);
             const x = flow.getX() + xDelta;
             const fitWidth = (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine);
             const width = flow.getWidth() - xDelta;
@@ -41,10 +48,11 @@ export class TextFitter {
         text: string,
         style: Style,
         width: number,
-        inRun: LineInRun
+        inRun: LineInRun,
+        inParagraph: RunInParagraph
     ): string {
         let subText = text;
-        const identation = style.getIndentation(inRun);
+        const identation = style.getIndentation(inRun, inParagraph);
         while (Metrics.getTextWidth(subText, style) + identation > width) {
             const stripped = this._stripLastWord(subText);
             if (stripped === undefined) {
