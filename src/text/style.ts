@@ -72,13 +72,13 @@ export class Style {
         return this.getValue(0, (parStyle) => parStyle._spacing, (runStyle) => runStyle._spacing);
     }
 
-    public getIdentation(inRun: LineInRun): number {
+    public getIndentation(inRun: LineInRun): number {
         let identation: number | undefined = undefined;
         if (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine) {
             identation = this.getValue(undefined, (parStyle) => parStyle._hanging, undefined);
         }
         if (identation === undefined) {
-            identation = this.getValue(0, (parStyle) => parStyle._identation, undefined);
+            identation = this.getValue(0, (parStyle) => parStyle._indentation, undefined);
         }
         return identation!;
     }
@@ -109,8 +109,8 @@ export class Style {
     public toString(): string {
         const base = (this._basedOnId !== undefined) ? `base=${this._basedOnId}` : "";
         const just = `jc=${this.justification.toString()}`;
-        const ind = `ind=${this.getIdentation(LineInRun.FirstLine).toString()}`;
-        const hang = `ind=${this.getIdentation(LineInRun.Normal).toString()}`;
+        const ind = `ind=${this.getIndentation(LineInRun.FirstLine).toString()}`;
+        const hang = `ind=${this.getIndentation(LineInRun.Normal).toString()}`;
         const i = `i=${this.italic}`;
         const b = `b=${this.bold.toString()}`;
         const u = `u=${this.underlineMode.toString()}`;

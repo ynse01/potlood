@@ -21,9 +21,9 @@ export class TextFitter {
                 } else {
                     inRun = LineInRun.LastLine;
                 }
-                lastXPos = Metrics.getTextWidth(line, style) + style.getIdentation(inRun);
+                lastXPos = Metrics.getTextWidth(line, style) + style.getIndentation(inRun);
             }
-            const xDelta = style.getIdentation(inRun);
+            const xDelta = style.getIndentation(inRun);
             const x = flow.getX() + xDelta;
             const fitWidth = (inRun !== LineInRun.LastLine && inRun !== LineInRun.OnlyLine);
             const width = flow.getWidth() - xDelta;
@@ -44,7 +44,7 @@ export class TextFitter {
         inRun: LineInRun
     ): string {
         let subText = text;
-        const identation = style.getIdentation(inRun);
+        const identation = style.getIndentation(inRun);
         while (Metrics.getTextWidth(subText, style) + identation > width) {
             const stripped = this._stripLastWord(subText);
             if (stripped === undefined) {

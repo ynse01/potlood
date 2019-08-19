@@ -16,7 +16,7 @@ export class ParStyle {
     public _basedOn: Style | undefined;
     private _basedOnId: string | undefined;
     public _justification: Justification | undefined = undefined;
-    public _identation: number | undefined;
+    public _indentation: number | undefined;
     public _hanging: number | undefined;
     public _spacing: number | undefined;
     public _numStyle: NumberingStyle | undefined;
@@ -29,7 +29,7 @@ export class ParStyle {
             parStyle._justification = Justification[justification as keyof typeof Justification];
         }
         parStyle._hanging = ParStyle.getHangingFromNode(parPresentationNode);
-        parStyle._identation = ParStyle.getIdentationFromNode(parPresentationNode);
+        parStyle._indentation = ParStyle.getIdentationFromNode(parPresentationNode);
         const numPrNode = Xml.getFirstChildOfName(parPresentationNode, "w:numPr");
         if (numPrNode !== undefined) {
             parStyle._numStyle = NumberingStyle.fromNumPresentationNode(numPrNode);
@@ -55,7 +55,7 @@ export class ParStyle {
     public toString(): string {
         const baseText = (this._basedOnId !== undefined) ? `base=${this._basedOnId}` : "";
         const justText = (this._justification !== undefined) ? `jc=${this._justification.toString()}` : "";
-        const indText = (this._identation !== undefined) ? `ind=${this._identation.toString()}` : "";
+        const indText = (this._indentation !== undefined) ? `ind=${this._indentation.toString()}` : "";
         return `ParStyle: ${baseText} ${justText} ${indText}`;
     }
 
