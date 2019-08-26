@@ -1,11 +1,12 @@
 import { Xml } from "../utils/xml.js";
-import { Paragraph, RunInParagraph } from "./paragraph.js";
+import { Paragraph } from "./paragraph.js";
 import { TextRun } from "../text/text-run.js";
 import { TextReader } from "../text/text-reader.js";
 import { DrawingRun } from "../drawing/drawing-run.js";
 import { DocumentX } from "../document-x.js";
 import { ParStyle } from "./par-style.js";
 import { DrawingReader } from "../drawing/drawing-reader.js";
+import { InSequence } from "./in-sequence.js";
 
 export class ParagraphReader {
     public static readParagraph(docx: DocumentX, pNode: Node): Paragraph {
@@ -29,21 +30,21 @@ export class ParagraphReader {
                     runs.push(drawing);
                 } else {
                     const run = TextReader.readTextRun(node, parStyle, docx.styles);
-                    run.inParagraph = RunInParagraph.Normal;
+                    run.inParagraph = InSequence.Middle;
                     runs.push(run);
                 }
             }
         });
         const firstRun = runs[0];
         if (runs.length == 1 && firstRun instanceof TextRun) {
-            firstRun.inParagraph = RunInParagraph.OnlyRun;
+            firstRun.inParagraph = InSequence.Only;
         } else if (runs.length > 0) {
             if (firstRun instanceof TextRun) {
-                firstRun.inParagraph = RunInParagraph.FirstRun;
+                firstRun.inParagraph = InSequence.First;
             }
             const lastRun = runs[runs.length - 1];
             if (lastRun instanceof TextRun) {
-                lastRun.inParagraph = RunInParagraph.LastRun;
+                lastRun.inParagraph = InSequence.Last;
             }
         }
         return new Paragraph(runs, numberingRun);

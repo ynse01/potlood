@@ -1,4 +1,5 @@
-import { LineInRun } from "./text-run.js";
+import { InSequence } from "../paragraph/in-sequence.js";
+
 
 export interface IPositionedTextLine {
     text: string;
@@ -6,5 +7,5 @@ export interface IPositionedTextLine {
     y: number;
     width: number;
     fitWidth: boolean;
-    inRun: LineInRun;
+    inRun: InSequence;
 }

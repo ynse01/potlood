@@ -1,22 +1,15 @@
 import { Style } from "./style.js";
 import { Metrics } from "../utils/metrics.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
-import { RunInParagraph } from "../paragraph/paragraph.js";
+import { InSequence } from "../paragraph/in-sequence.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { TextFitter } from "./text-fitter.js";
 
-export enum LineInRun {
-    Normal = 0,
-    FirstLine = 1,
-    LastLine = 2,
-    OnlyLine = 3
-}
-
 export class TextRun implements ILayoutable {
     public text: string;
     public style: Style;
-    public inParagraph: RunInParagraph = RunInParagraph.OnlyRun;
+    public inParagraph: InSequence = InSequence.Only;
     public previousXPos: number | undefined;
     public lastXPos = 0;
     private _lines: IPositionedTextLine[] | undefined = undefined;

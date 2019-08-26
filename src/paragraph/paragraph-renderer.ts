@@ -1,9 +1,10 @@
-import { Paragraph, RunInParagraph } from "./paragraph.js";
+import { Paragraph } from "./paragraph.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { TextRenderer } from "../text/text-renderer.js";
 import { DrawingRenderer } from "../drawing/drawing-renderer.js";
 import { IPainter } from "../painting/i-painter.js";
 import { TextRun } from "../text/text-run.js";
+import { InSequence } from "./in-sequence.js";
 
 export class ParagraphRenderer {
     private _textRenderer: TextRenderer;
@@ -16,7 +17,7 @@ export class ParagraphRenderer {
 
     public renderParagraph(par: Paragraph, flow: VirtualFlow): void {
         if (par.numberingRun !== undefined) {
-          this._textRenderer.renderTextRun(par.numberingRun, flow.clone(), RunInParagraph.FirstRun);
+          this._textRenderer.renderTextRun(par.numberingRun, flow.clone(), InSequence.First);
         }
         par.runs.forEach((run) => {
             if (run instanceof TextRun) {

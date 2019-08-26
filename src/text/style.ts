@@ -2,8 +2,7 @@ import { NamedStyles } from "./named-styles.js";
 import { ParStyle, Justification } from "../paragraph/par-style.js";
 import { RunStyle, UnderlineMode } from "./run-style.js";
 import { Xml } from "../utils/xml.js";
-import { LineInRun } from "./text-run.js";
-import { RunInParagraph } from "../paragraph/paragraph.js";
+import { InSequence } from "../paragraph/in-sequence.js";
 
 export class Style {
     private _basedOn: Style | undefined;
@@ -73,11 +72,11 @@ export class Style {
         return this.getValue(0, (parStyle) => parStyle._spacing, (runStyle) => runStyle._spacing);
     }
 
-    public getIndentation(inRun: LineInRun, inParagaph: RunInParagraph): number {
+    public getIndentation(inRun: InSequence, inParagaph: InSequence): number {
         let identation: number | undefined = undefined;
         if (
-            (inParagaph === RunInParagraph.FirstRun || inParagaph === RunInParagraph.OnlyRun) &&
-            (inRun === LineInRun.FirstLine || inRun === LineInRun.OnlyLine)
+            (inParagaph === InSequence.First || inParagaph === InSequence.Only) &&
+            (inRun === InSequence.First || inRun === InSequence.Only)
         ) {
             identation = this.getValue(undefined, (parStyle) => parStyle._hanging, undefined);
         }
@@ -113,8 +112,8 @@ export class Style {
     public toString(): string {
         const base = (this._basedOnId !== undefined) ? `base=${this._basedOnId}` : "";
         const just = `jc=${this.justification.toString()}`;
-        const ind = `ind=${this.getIndentation(LineInRun.FirstLine, RunInParagraph.FirstRun).toString()}`;
-        const hang = `ind=${this.getIndentation(LineInRun.Normal, RunInParagraph.Normal).toString()}`;
+        const ind = `ind=${this.getIndentation(InSequence.First, InSequence.First).toString()}`;
+        const hang = `ind=${this.getIndentation(InSequence.Middle, InSequence.Middle).toString()}`;
         const i = `i=${this.italic}`;
         const b = `b=${this.bold.toString()}`;
         const u = `u=${this.underlineMode.toString()}`;

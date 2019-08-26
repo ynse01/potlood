@@ -3,14 +3,6 @@ import { DrawingRun } from "../drawing/drawing-run.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 
-export enum RunInParagraph {
-    Normal = 0,
-    FirstRun = 1,
-    LastRun = 2,
-    OnlyRun = 3,
-    Numbering = 4
-}
-
 export enum ParagraphType {
     Text = 0,
     TableCell = 1,

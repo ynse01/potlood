@@ -3,7 +3,7 @@ import { Style } from "../text/style.js";
 export class Metrics {
 
   /**
-   * Convert twentieths of a point in Word coordinates to SVG pixels.
+   * Convert twentieths of a point in DocX coordinates to SVG pixels.
    * @param twips Twentieths of a point.
    */
   public static convertTwipsToPixels(twips: number): number {
@@ -17,8 +17,8 @@ export class Metrics {
   }
 
   /**
-   * Convert a number of point in Word coordinates to SVG pixels.
-   * @param points Word point.
+   * Convert a number of point in DocX coordinates to SVG pixels.
+   * @param points DocX point.
    */
   public static convertPointToPixels(points: number): number {
     return Metrics.convertTwipsToPixels(points * 20);
