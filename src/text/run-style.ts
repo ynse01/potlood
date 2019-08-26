@@ -58,7 +58,10 @@ export class RunStyle {
             style._fontFamily = undefined;
         }
         style._fontSize = RunStyle.getFontSizeFromNode(runPresentationNode);
-        style._spacing = Xml.getNumberValueFromNode(runPresentationNode, "w:spacing");
+        const spacingTwips =  Xml.getNumberValueFromNode(runPresentationNode, "w:spacing");
+        if (spacingTwips !== undefined) {
+            style._spacing = Metrics.convertTwipsToPixels(spacingTwips);
+        }
         style._color = Xml.getStringValueFromNode(runPresentationNode, "w:color");
         style._caps = Xml.getBooleanValueFromNode(runPresentationNode, "w:caps");
         style._smallCaps = Xml.getBooleanValueFromNode(runPresentationNode, "w:smallcaps");
