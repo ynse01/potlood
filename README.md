@@ -6,7 +6,6 @@ Potlood is Dutch for Pencil.
 
 - Paragraph of multiple runs
 - Borders of table and cell
-- Line spacing from style
 - Inline anchoring of Drawing
 - Axes under Chart
 - Legend of Chart
