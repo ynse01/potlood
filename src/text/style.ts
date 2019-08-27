@@ -72,6 +72,10 @@ export class Style {
         return this.getValue(0, undefined, (runStyle) => runStyle._charSpacing);
     }
 
+    public get charStretch(): number {
+        return this.getValue(1, undefined, (runStyle) => runStyle._charStretch);
+    }
+
     public get lineSpacing(): number {
         return this.getValue(16, (parStyle) => parStyle._lineSpacing, undefined);
     }
