@@ -85,8 +85,8 @@ export class ParStyle {
         return left;
     }
 
-    private static getLineSpacingFromNode(styleNode: ChildNode): number {
-        let lineSpacing = Metrics.convertTwipsToPixels(240);
+    private static getLineSpacingFromNode(styleNode: ChildNode): number | undefined {
+        let lineSpacing: number | undefined = undefined;
         const spacingNode = Xml.getFirstChildOfName(styleNode, "w:spacing") as Element;
         if (spacingNode !== undefined) {
             const lineAttr = Xml.getAttribute(spacingNode, "w:line");

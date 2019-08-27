@@ -69,11 +69,11 @@ export class Style {
     }
 
     public get charSpacing(): number {
-        return this.getValue(0, undefined, (runStyle) => runStyle._spacing);
+        return this.getValue(0, undefined, (runStyle) => runStyle._charSpacing);
     }
 
     public get lineSpacing(): number {
-        return this.getValue(0, (parStyle) => parStyle._lineSpacing, undefined);
+        return this.getValue(16, (parStyle) => parStyle._lineSpacing, undefined);
     }
 
     public getIndentation(inRun: InSequence, inParagaph: InSequence): number {

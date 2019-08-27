@@ -35,7 +35,8 @@ export class RunStyle {
     public _dstrike: boolean | undefined;
     public _fontFamily: string | undefined;
     public _fontSize: number | undefined;
-    public _spacing: number | undefined;
+    public _charSpacing: number | undefined;
+    public _charStretch: number | undefined;
     public _color: string | undefined;
     public _caps: boolean | undefined;
     public _smallCaps: boolean | undefined;
@@ -58,9 +59,13 @@ export class RunStyle {
             style._fontFamily = undefined;
         }
         style._fontSize = RunStyle.getFontSizeFromNode(runPresentationNode);
-        const spacingTwips =  Xml.getNumberValueFromNode(runPresentationNode, "w:spacing");
+        const spacingTwips = Xml.getNumberValueFromNode(runPresentationNode, "w:spacing");
         if (spacingTwips !== undefined) {
-            style._spacing = Metrics.convertTwipsToPixels(spacingTwips);
+            style._charSpacing = Metrics.convertTwipsToPixels(spacingTwips);
+        }
+        const stretchPercent =  Xml.getNumberValueFromNode(runPresentationNode, "w:w");
+        if (stretchPercent !== undefined) {
+            style._charStretch = stretchPercent / 100;
         }
         style._color = Xml.getStringValueFromNode(runPresentationNode, "w:color");
         style._caps = Xml.getBooleanValueFromNode(runPresentationNode, "w:caps");
@@ -90,11 +95,12 @@ export class RunStyle {
         const font = (this._fontFamily !== undefined) ? `font=${this._fontFamily.toString()}` : "";
         const size = (this._fontSize !== undefined) ? `size=${this._fontSize.toString()}` : "";
         const dstrike = (this._dstrike !== undefined) ? `dstrike=${this._dstrike.toString()}` : "";
-        const spacing = (this._spacing !== undefined) ? `spacing=${this._spacing.toString()}` : "";
+        const charSpacing = (this._charSpacing !== undefined) ? `char_spacing=${this._charSpacing.toString()}` : "";
+        const charStretch = (this._charStretch !== undefined) ? `char_stretch=${this._charStretch.toString()}` : "";
         const color = (this._color !== undefined) ? `color=${this._color.toString()}` : "";
         const caps = (this._caps !== undefined) ? `caps=${this._caps.toString()}` : "";
         const smallcaps = (this._smallCaps !== undefined) ? `smallcaps=${this._smallCaps.toString()}` : "";
-        return `RunStyle: ${i} ${b} ${u} ${strike} ${font} ${size} ${dstrike} ${spacing} ${color} ${caps} ${smallcaps}`;
+        return `RunStyle: ${i} ${b} ${u} ${strike} ${font} ${size} ${dstrike} ${charSpacing} ${charStretch} ${color} ${caps} ${smallcaps}`;
     }
 
     /**
