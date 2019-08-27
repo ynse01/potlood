@@ -18,7 +18,7 @@ export class ParStyle {
     public _justification: Justification | undefined = undefined;
     public _indentation: number | undefined;
     public _hanging: number | undefined;
-    public _spacing: number | undefined;
+    public _lineSpacing: number | undefined;
     public _numStyle: NumberingStyle | undefined;
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
@@ -34,6 +34,7 @@ export class ParStyle {
         if (numPrNode !== undefined) {
             parStyle._numStyle = NumberingStyle.fromNumPresentationNode(numPrNode);
         }
+        parStyle._lineSpacing = ParStyle.getLineSpacingFromNode(parPresentationNode);
         return parStyle;
     }
 
@@ -56,7 +57,8 @@ export class ParStyle {
         const baseText = (this._basedOnId !== undefined) ? `base=${this._basedOnId}` : "";
         const justText = (this._justification !== undefined) ? `jc=${this._justification.toString()}` : "";
         const indText = (this._indentation !== undefined) ? `ind=${this._indentation.toString()}` : "";
-        return `ParStyle: ${baseText} ${justText} ${indText}`;
+        const lineText = (this._lineSpacing !== undefined) ? `line=${this._lineSpacing.toString()}` : "";
+        return `ParStyle: ${baseText} ${justText} ${indText} ${lineText}`;
     }
 
     private static getHangingFromNode(styleNode: ChildNode): number {
@@ -81,5 +83,17 @@ export class ParStyle {
             }
         }
         return left;
+    }
+
+    private static getLineSpacingFromNode(styleNode: ChildNode): number {
+        let lineSpacing = Metrics.convertTwipsToPixels(240);
+        const spacingNode = Xml.getFirstChildOfName(styleNode, "w:spacing") as Element;
+        if (spacingNode !== undefined) {
+            const lineAttr = Xml.getAttribute(spacingNode, "w:line");
+            if (lineAttr !== undefined) {
+                lineSpacing = Metrics.convertTwipsToPixels(parseInt(lineAttr, 10));
+            }
+        }
+        return lineSpacing;
     }
 }

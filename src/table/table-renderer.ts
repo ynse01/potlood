@@ -2,7 +2,6 @@ import { Table } from "./table.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { TableCell } from "./table-cell.js";
 import { TableStyle } from "./table-style.js";
-import { Metrics } from "../utils/metrics.js";
 import { TextRun } from "../text/text-run.js";
 import { IPainter } from "../painting/i-painter.js";
 import { ParagraphRenderer } from "../paragraph/paragraph-renderer.js";
@@ -32,7 +31,7 @@ export class TableRenderer {
     
       private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, height: number): void {
         // TODO: Figure out why this offset is required.
-        flow = flow.clone().advancePosition(Metrics.getLineSpacing((cell.pars[0].runs[0] as TextRun).style) * 0.75);
+        flow = flow.clone().advancePosition((cell.pars[0].runs[0] as TextRun).style.lineSpacing * 0.75);
         const borders = style.borders;
         const x = flow.getX();
         const y = flow.getY();

@@ -1,5 +1,4 @@
 import { Style } from "./style.js";
-import { Metrics } from "../utils/metrics.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { InSequence } from "../paragraph/in-sequence.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
@@ -20,7 +19,7 @@ export class TextRun implements ILayoutable {
     }
 
     public getHeight(width: number): number {
-        return this.getLines(width).length * Metrics.getLineSpacing(this.style);
+        return this.getLines(width).length * this.style.lineSpacing;
     }
 
     public getLines(width: number): IPositionedTextLine[] {

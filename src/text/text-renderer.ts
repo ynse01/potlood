@@ -1,7 +1,6 @@
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { TextRun } from "./text-run.js";
 import { InSequence } from "../paragraph/in-sequence.js";
-import { Metrics } from "../utils/metrics.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { UnderlineMode } from "./run-style.js";
 import { IPainter, IRectangle } from "../painting/i-painter.js";
@@ -16,7 +15,7 @@ export class TextRenderer {
 
     public renderTextRun(run: TextRun, flow: VirtualFlow, inParagraph: InSequence): void {
         if (inParagraph === InSequence.First || inParagraph === InSequence.Only) {
-            const deltaY = Metrics.getLineSpacing(run.style);
+            const deltaY = run.style.lineSpacing;
             flow.advancePosition(deltaY);
         }
         run.getFlowLines(flow).forEach((line: IPositionedTextLine) => {

@@ -68,8 +68,12 @@ export class Style {
         return this.getValue(12, undefined, (runStyle) => runStyle._fontSize);
     }
 
-    public get spacing(): number {
-        return this.getValue(0, (parStyle) => parStyle._spacing, (runStyle) => runStyle._spacing);
+    public get charSpacing(): number {
+        return this.getValue(0, undefined, (runStyle) => runStyle._spacing);
+    }
+
+    public get lineSpacing(): number {
+        return this.getValue(0, (parStyle) => parStyle._lineSpacing, undefined);
     }
 
     public getIndentation(inRun: InSequence, inParagaph: InSequence): number {
@@ -121,11 +125,12 @@ export class Style {
         const font = `font=${this.fontFamily.toString()}`;
         const size = `size=${this.fontSize.toString()}`;
         const dstrike = `dstrike=${this.doubleStrike.toString()}`;
-        const spacing = `spacing=${this.spacing.toString()}`;
+        const charSpacing = `char_spacing=${this.charSpacing.toString()}`;
+        const lineSpacing = `line_spacing=${this.lineSpacing.toString()}`;
         const color = `color=${this.color.toString()}`;
         const caps = `caps=${this.caps.toString()}`;
         const smallcaps = `smallcaps=${this.smallCaps.toString()}`;
-        return `Style: ${base} ${just} ${ind} ${hang} ${i} ${b} ${u} ${strike} ${font} ${size} ${dstrike} ${spacing} ${color} ${caps} ${smallcaps}`;
+        return `Style: ${base} ${just} ${ind} ${hang} ${i} ${b} ${u} ${strike} ${font} ${size} ${dstrike} ${charSpacing} ${lineSpacing} ${color} ${caps} ${smallcaps}`;
     }
 
     private getValue<T>(initial: T, parCb?: (parStyle: ParStyle) => T | undefined, runCb?: (runStyle: RunStyle) => T | undefined): T {

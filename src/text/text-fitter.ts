@@ -15,7 +15,7 @@ export class TextFitter {
     ): { lines: IPositionedTextLine[], lastXPos: number } {
         let remainder = text;
         const lines: IPositionedTextLine[] = [];
-        const yDelta = Metrics.getLineSpacing(style);
+        const yDelta = style.lineSpacing;
         let inRun = InSequence.First;
         while(remainder.length > 0) {
             let usedWidth = 0;

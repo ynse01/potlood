@@ -44,13 +44,6 @@ export class Metrics {
   }
 
   /**
-   * Returns the spcing between two consequative lines.
-   */
-  public static getLineSpacing(style: Style): number {
-    return 1.08 * style.fontSize;
-  }
-
-  /**
    * Convert rotation to radians.
    * @param rot Rotation in 60000th of a degree.
    */
