@@ -18,6 +18,8 @@ export class Potlood {
         this.renderer.clear();
         Package.loadFromUrl(url).then((pack) => {
             this._loadFromPackage(pack);
+        }).catch((err) => {
+            console.log(`Failed to load ${url}: ${err}`);
         });
     }
 

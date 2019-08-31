@@ -30,10 +30,14 @@ export class Package {
             oReq.responseType = "arraybuffer";
             
             oReq.onload = (_oEvent) => {
-                var arrayBuffer = oReq.response;
-                Package._loadFromArrayBuffer(arrayBuffer)
-                    .then((pack) => resolve(pack))
-                    .catch((err) => reject(err));
+                if (oReq.status === 200) {
+                    var arrayBuffer = oReq.response;
+                    Package._loadFromArrayBuffer(arrayBuffer)
+                        .then((pack) => resolve(pack))
+                        .catch((err) => reject(err));
+                } else {
+                    reject(`File not found: ${url}`);
+                }
             };
             oReq.onerror = (evt) => {
                 reject(evt);
@@ -62,7 +66,7 @@ export class Package {
 
     private static _loadFromArrayBuffer(arrayBuffer: ArrayBuffer): Promise<Package> {
         return new Promise<Package>((resolve, reject) => {
-            if (arrayBuffer) {
+            if (arrayBuffer && arrayBuffer.byteLength > 0) {
                 new JSZip().loadAsync(arrayBuffer).then((unzipped: any) => {
                     const pack = new Package(unzipped);
                     pack._loadContentTypes().then(() => {
