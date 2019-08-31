@@ -103,6 +103,10 @@ export class Style {
         );
     }
 
+    public get shadingColor(): string {
+        return this.getValue("000000", (parStyle) => parStyle._shadingColor, undefined);
+    }
+
     public getIndentation(inRun: InSequence, inParagaph: InSequence): number {
         let identation: number | undefined = undefined;
         if (

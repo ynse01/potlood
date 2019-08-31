@@ -27,6 +27,7 @@ export class ParStyle {
     public _lineSpacing: number | undefined;
     public _lineRule: LineRule | undefined;
     public _numStyle: NumberingStyle | undefined;
+    public _shadingColor: string | undefined; 
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
         const parStyle = new ParStyle();
@@ -42,6 +43,7 @@ export class ParStyle {
             parStyle._numStyle = NumberingStyle.fromNumPresentationNode(numPrNode);
         }
         parStyle.setLineSpacingFromNode(parPresentationNode);
+        parStyle.setShadingFromNode(parPresentationNode);
         return parStyle;
     }
 
@@ -103,6 +105,17 @@ export class ParStyle {
             const ruleAttr = Xml.getAttribute(spacingNode, "w:lineRule");
             if (ruleAttr !== undefined) {
                 this._lineRule = LineRule[ruleAttr as keyof typeof LineRule];
+            }
+        }
+    }
+
+    private setShadingFromNode(styleNode: ChildNode): void {
+        const shadingNode = Xml.getFirstChildOfName(styleNode, "w:shd") as Element;
+        if (shadingNode !== undefined) {
+            // TODO: Parse patterns also.
+            const fillAttr = Xml.getAttribute(shadingNode, "w:fill");
+            if (fillAttr !== undefined) {
+                this._shadingColor = fillAttr;
             }
         }
     }
