@@ -1,8 +1,9 @@
 import { NamedStyles } from "./named-styles.js";
-import { ParStyle, Justification } from "../paragraph/par-style.js";
+import { ParStyle, Justification, LineRule } from "../paragraph/par-style.js";
 import { RunStyle, UnderlineMode } from "./run-style.js";
 import { Xml } from "../utils/xml.js";
 import { InSequence } from "../paragraph/in-sequence.js";
+import { Metrics } from "../utils/metrics.js";
 
 export class Style {
     private _basedOn: Style | undefined;
@@ -77,7 +78,30 @@ export class Style {
     }
 
     public get lineSpacing(): number {
-        return this.getValue(16, (parStyle) => parStyle._lineSpacing, undefined);
+        const style = this;
+        return this.getValue(
+            16,
+            (parStyle) => {
+                let spacing = parStyle._lineSpacing;
+                if (spacing !== undefined) {
+                    const lineRule = parStyle._lineRule;
+                    switch(lineRule) {
+                        case LineRule.auto:
+                            // Line Spacing is interpreted as 1/240th of a line.
+                            const lineSize = style.fontSize * 1.08;
+                            console.log(`Line spacing ${spacing}, rule ${lineRule}`);
+                            spacing = lineSize * spacing / 240; 
+                        break;
+                        default:
+                            // Line spacing is interpreted as 1/20th of a point.
+                            spacing = Metrics.convertTwipsToPixels(spacing);
+                            break
+                    }
+                }
+                return spacing;
+            },
+            undefined
+        );
     }
 
     public getIndentation(inRun: InSequence, inParagaph: InSequence): number {

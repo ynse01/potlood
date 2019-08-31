@@ -12,6 +12,12 @@ export enum Justification {
     right = "right"
 }
 
+export enum LineRule {
+    exactly = "exactly",
+    atLeast = "atLeast",
+    auto = "auto"
+}
+
 export class ParStyle {
     public _basedOn: Style | undefined;
     private _basedOnId: string | undefined;
@@ -19,6 +25,7 @@ export class ParStyle {
     public _indentation: number | undefined;
     public _hanging: number | undefined;
     public _lineSpacing: number | undefined;
+    public _lineRule: LineRule | undefined;
     public _numStyle: NumberingStyle | undefined;
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
@@ -34,7 +41,7 @@ export class ParStyle {
         if (numPrNode !== undefined) {
             parStyle._numStyle = NumberingStyle.fromNumPresentationNode(numPrNode);
         }
-        parStyle._lineSpacing = ParStyle.getLineSpacingFromNode(parPresentationNode);
+        parStyle.setLineSpacingFromNode(parPresentationNode);
         return parStyle;
     }
 
@@ -85,15 +92,18 @@ export class ParStyle {
         return left;
     }
 
-    private static getLineSpacingFromNode(styleNode: ChildNode): number | undefined {
-        let lineSpacing: number | undefined = undefined;
+    private setLineSpacingFromNode(styleNode: ChildNode): void {
         const spacingNode = Xml.getFirstChildOfName(styleNode, "w:spacing") as Element;
         if (spacingNode !== undefined) {
             const lineAttr = Xml.getAttribute(spacingNode, "w:line");
             if (lineAttr !== undefined) {
-                lineSpacing = Metrics.convertTwipsToPixels(parseInt(lineAttr, 10));
+                this._lineSpacing = parseInt(lineAttr, 10);
+                this._lineRule = LineRule.exactly;
+            }
+            const ruleAttr = Xml.getAttribute(spacingNode, "w:lineRule");
+            if (ruleAttr !== undefined) {
+                this._lineRule = LineRule[ruleAttr as keyof typeof LineRule];
             }
         }
-        return lineSpacing;
     }
 }
