@@ -89,7 +89,6 @@ export class Style {
                         case LineRule.auto:
                             // Line Spacing is interpreted as 1/240th of a line.
                             const lineSize = style.fontSize * 1.08;
-                            console.log(`Line spacing ${spacing}, rule ${lineRule}`);
                             spacing = lineSize * spacing / 240; 
                         break;
                         default:
