@@ -95,6 +95,7 @@ export class TableReader {
         }
         const tcBorders = Xml.getFirstChildOfName(cellPrNode, "w:tcBorders");
         if (tcBorders !== undefined) {
+            style.borders = new Borders();
             this.readBorders(tcBorders, style.borders);
         }
         const tcMargins = Xml.getFirstChildOfName(cellPrNode, "w:tcMar");

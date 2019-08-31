@@ -5,6 +5,7 @@ import { TableStyle } from "./table-style.js";
 import { TextRun } from "../text/text-run.js";
 import { IPainter } from "../painting/i-painter.js";
 import { ParagraphRenderer } from "../paragraph/paragraph-renderer.js";
+import { Borders } from "./borders.js";
 
 export class TableRenderer {
     private _parRenderer: ParagraphRenderer;
@@ -27,28 +28,56 @@ export class TableRenderer {
           });
           flow.advancePosition(height);
         });
-      }
+    }
     
-      private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, height: number): void {
+    private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, height: number): void {
         // TODO: Figure out why this offset is required.
         flow = flow.clone().advancePosition((cell.pars[0].runs[0] as TextRun).style.lineSpacing * 0.75);
-        const borders = style.borders;
-        const x = flow.getX();
-        const y = flow.getY();
-        if (borders.borderTop !== undefined) {
-            this._painter.paintLine(x, y, x+ cell.getWidth(), y, borders.borderTop.color, borders.borderTop.size);
+        let outerBorders: Borders | undefined = style.borders;
+        const innerBorders = cell.style.borders;
+        // Resolve border conflicts
+        if (cell.style.margins.isZero() && innerBorders !== undefined) {
+            outerBorders = undefined;
         }
-        if (borders.borderBottom !== undefined) {
-            const bottom = y + height;
-            this._painter.paintLine(x, bottom, x + cell.getWidth(), bottom, borders.borderBottom.color, borders.borderBottom.size);
+        let x = flow.getX();
+        let y = flow.getY();
+        let cellWidth = cell.getWidth();
+        if (outerBorders !== undefined) {
+            if (outerBorders.borderTop !== undefined) {
+              this._painter.paintLine(x, y, x + cellWidth, y, outerBorders.borderTop.color, outerBorders.borderTop.size);
+            }
+            if (outerBorders.borderBottom !== undefined) {
+                const bottom = y + height;
+                this._painter.paintLine(x, bottom, x + cellWidth, bottom, outerBorders.borderBottom.color, outerBorders.borderBottom.size);
+            }
+            if (outerBorders.borderStart !== undefined) {
+                this._painter.paintLine(x, y, x, y + height, outerBorders.borderStart.color, outerBorders.borderStart.size);
+            }
+            if (outerBorders.borderEnd !== undefined) {
+                const end = x + cellWidth;
+                this._painter.paintLine(end, y, end, y + height, outerBorders.borderEnd.color, outerBorders.borderEnd.size);
+            }
         }
-        if (borders.borderStart !== undefined) {
-            this._painter.paintLine(x, y, x, y + height, borders.borderStart.color, borders.borderStart.size);
+        if (innerBorders !== undefined) {
+            const cellMargin = cell.style.margins;
+            x += cellMargin.cellMarginStart;
+            y += cellMargin.cellMarginTop;
+            cellWidth -= cellMargin.cellMarginStart + cellMargin.cellMarginEnd;
+            if (innerBorders.borderTop !== undefined) {
+                this._painter.paintLine(x, y, x + cellWidth, y, innerBorders.borderTop.color, innerBorders.borderTop.size);
+            }
+            if (innerBorders.borderBottom !== undefined) {
+                const bottom = y + height;
+                this._painter.paintLine(x, bottom, x + cellWidth, bottom, innerBorders.borderBottom.color, innerBorders.borderBottom.size);
+            }
+            if (innerBorders.borderStart !== undefined) {
+                this._painter.paintLine(x, y, x, y + height, innerBorders.borderStart.color, innerBorders.borderStart.size);
+            }
+            if (innerBorders.borderEnd !== undefined) {
+                const end = x + cellWidth;
+                this._painter.paintLine(end, y, end, y + height, innerBorders.borderEnd.color, innerBorders.borderEnd.size);
+            }
         }
-        if (borders.borderEnd !== undefined) {
-            const end = x + cell.getWidth();
-            this._painter.paintLine(end, y, end, y + height, borders.borderEnd.color, borders.borderEnd.size);
-        }
-      }
-    
+    }
+      
 }

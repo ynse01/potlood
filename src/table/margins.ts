@@ -13,4 +13,8 @@ export class Margins {
         this.cellMarginStart = defaultMargin;
         this.cellMarginEnd = defaultMargin;
     }
+
+    public isZero(): boolean {
+        return this.cellMarginBottom === 0 && this.cellMarginTop === 0;
+    }
 }
