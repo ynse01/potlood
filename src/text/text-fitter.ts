@@ -3,6 +3,7 @@ import { Metrics } from "../utils/metrics.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { InSequence } from "../paragraph/in-sequence.js";
+import { Fonts } from "../utils/fonts.js";
 
 export class TextFitter {
 
@@ -50,26 +51,23 @@ export class TextFitter {
         inRun: InSequence,
         inParagraph: InSequence
     ): string {
-        let subText = text;
+        let fittingText = text;
         const identation = style.getIndentation(inRun, inParagraph);
-        while (Metrics.getTextWidth(subText, style) + identation > width) {
-            const stripped = this._stripLastWord(subText);
-            if (stripped === undefined) {
-                break;
-            }
-            subText = stripped;
+        const numChars = Fonts.fitCharacters(style, width - identation) * 1.2;
+        const stopChar = TextFitter._findNextWordEnd(text, numChars);
+        if (stopChar < text.length) {
+            const subText = text.substr(0, stopChar);
+            fittingText = subText;
         }
-        return subText;
+        return fittingText;
     }
 
-    private static _stripLastWord(text: string): string | undefined {
-        const stop = text.lastIndexOf(' ');
-        if (stop < 0) {
-            return undefined;
+    private static _findNextWordEnd(text: string, stop: number): number {
+        const index = text.indexOf(' ', stop);
+        if (index < 0) {
+            return text.length;
+        } else {
+            return index;
         }
-        if (stop === 0) {
-            return this._stripLastWord(text.substring(1));
-        }
-        return text.substring(0, stop);
     }
 }
