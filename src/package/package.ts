@@ -83,6 +83,10 @@ export class Package {
         });
     }
 
+    public hasPart(name: string): boolean {
+        return this.package.file(name) !== null;
+    }
+
     public loadPart(name: string): Promise<Part> {
         return new Promise<Part>((resolve, reject) => {
             this.package.file(name).async("text").then((partContent: string) => {

@@ -37,20 +37,35 @@ export class Potlood {
             pack.loadPart('word/styles.xml').then(stylePart => {
                 const styles = new NamedStyles(stylePart);
                 styles.parseContent();
-                pack.loadPart('word/numbering.xml').then(numPart => {
-                    const numberings = new AbstractNumberings(numPart);
-                    numberings.parseContent(styles);
-                    pack.loadPart('word/document.xml').then(part => {
-                        const docx = new DocumentX(pack, part);
-                        docx.setRelationships(relationships);
-                        docx.setNamedStyles(styles);
-                        docx.setNumberings(numberings);
-                        docx.parseContent();
-                        const posY = this.renderer.renderDocument(docx);
-                        this.renderer.ensureHeight(posY);
+                if (pack.hasPart('word/numbering.xml')) {
+                    pack.loadPart('word/numbering.xml').then(numPart => {
+                        const numberings = new AbstractNumberings(numPart);
+                        numberings.parseContent(styles);
+                        this._loadDocument(pack, relationships, styles, numberings);
                     });
-                });
+                } else {
+                    this._loadDocument(pack, relationships, styles, undefined);
+                }
             });
+        });
+    }
+
+    private _loadDocument(
+        pack: Package,
+        relationships: Relationships,
+        styles: NamedStyles,
+        numberings: AbstractNumberings | undefined
+    ) {
+        pack.loadPart('word/document.xml').then(part => {
+            const docx = new DocumentX(pack, part);
+            docx.setRelationships(relationships);
+            docx.setNamedStyles(styles);
+            if (numberings !== undefined) {
+                docx.setNumberings(numberings);
+            }
+            docx.parseContent();
+            const posY = this.renderer.renderDocument(docx);
+            this.renderer.ensureHeight(posY);
         });
     }
 }
