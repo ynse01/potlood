@@ -18,18 +18,20 @@ export class TextFitter {
         let currentLength = 0;
         let numChars = Fonts.fitCharacters(flow.getWidth(), style);
         let inRun = InSequence.First;
+        let lastLine = false;
         const lines: IPositionedTextLine[] = [];
         const lineHeight = style.lineSpacing;
         for(let i = 0; i < words.length; i++) {
             currentLength += words[i].length + 1;
-            if (currentLength >= numChars || i === words.length - 1) {
+            lastLine = (i === words.length - 1);
+            if (currentLength >= numChars || lastLine) {
                 lines.push({
                     text: text.substr(previousEnd, currentLength),
                     x: flow.getX() + style.getIndentation(inRun, inParagraph),
                     y: flow.getY(),
                     width: flow.getWidth(),
-                    fitWidth: (i !== words.length - 1),
-                    inRun: inRun
+                    fitWidth: !lastLine,
+                    inRun: (lastLine) ? InSequence.Last : inRun
                 });
                 flow.advancePosition(lineHeight);
                 numChars = Fonts.fitCharacters(flow.getWidth(), style);
@@ -37,6 +39,9 @@ export class TextFitter {
                 previousEnd += currentLength;
                 currentLength = 0;
             }
+        }
+        if (lines.length === 1) {
+            lines[0].inRun = InSequence.Only;
         }
         return { lines: lines, lastXPos: 0 };
     }
