@@ -64,13 +64,14 @@ export class Fonts {
     return -1;
   }
 
-  public static fitCharacters(style: Style, width: number): number {
+  public static fitCharacters(width: number, style: Style): number {
     const fontSize = style.fontSize;
     const fontFamily = style.fontFamily;
     Fonts.tryAddFont(fontFamily);
     const fontWidth = Fonts._foundFonts[fontFamily];
     const charWidth = (fontWidth * fontSize / Fonts.testSize) / Fonts.testString.length;
-    return Math.floor(width / charWidth);
+    // Adding 20% extra seems to give better results on actual text.
+    return Math.floor(width / charWidth) * 1.2;
   }
 
   private static testFont(family: string): boolean {
