@@ -37,12 +37,12 @@ export class Paragraph implements ILayoutable {
     }
 
     public performLayout(flow: VirtualFlow): void {
-        let previousXPos = -1;
+        let previousXPos: number | undefined = -1;
         this.runs.forEach(run => {
             run.previousXPos = previousXPos;
             run.performLayout(flow);
-            previousXPos = run.lastXPos!;
-        })
+            previousXPos = run.lastXPos;
+        });
     }
 
 }

@@ -23,8 +23,14 @@ export class TextRun implements ILayoutable {
     }
 
     public getLines(width: number): IPositionedTextLine[] {
-        const flow = new VirtualFlow(0, width, 0);
-        return this.getFlowLines(flow);
+        let lines: IPositionedTextLine[];
+        if (this._lines !== undefined) {
+            lines = this._lines;
+        } else {
+            const flow = new VirtualFlow(0, width, 0);
+            lines = this.getFlowLines(flow);
+        }
+        return lines;
     }
 
     public performLayout(flow: VirtualFlow): void {
@@ -34,7 +40,7 @@ export class TextRun implements ILayoutable {
     }
 
     public getFlowLines(flow: VirtualFlow): IPositionedTextLine[] {
-        const result = TextFitter.getFlowLines(this.text, this.style, this.inParagraph, this.lastXPos, flow);
+        const result = TextFitter.getFlowLines(this.text, this.style, this.inParagraph, this.previousXPos, flow);
         this.lastXPos = result.lastXPos;
         return result.lines;
     }

@@ -11,10 +11,11 @@ export class TextFitter {
         text: string,
         style: Style,
         inParagraph: InSequence,
-        lastXPos: number,
+        lastXPos: number | undefined,
         flow: VirtualFlow
     ): { lines: IPositionedTextLine[], lastXPos: number } {
-        let currentXPadding = (inParagraph !== InSequence.First && inParagraph !== InSequence.Only) ? lastXPos : 0;
+        const isStartingRun = (inParagraph === InSequence.First || inParagraph === InSequence.Only);
+        let currentXPadding = (lastXPos !== undefined && !isStartingRun) ? lastXPos : 0;
         const words = text.split(' ');
         let previousEnd = 0;
         let currentLength = 0;
@@ -31,7 +32,7 @@ export class TextFitter {
                     text: text.substr(previousEnd, currentLength),
                     x: flow.getX() + style.getIndentation(inRun, inParagraph) + currentXPadding,
                     y: flow.getY(),
-                    width: flow.getWidth(),
+                    width: flow.getWidth() - currentXPadding,
                     fitWidth: !lastLine,
                     inRun: (lastLine) ? InSequence.Last : inRun
                 });

@@ -32,7 +32,7 @@ export class Fonts {
       const style = new Style();
       style.runStyle = new RunStyle();
       style.runStyle.updateFont('Times New Roman', Fonts.testSize);
-      Fonts.baseline = Metrics.getTextWidth(Fonts.testString, style);
+      Fonts.baseline = Metrics.getTextWidth(Fonts.testString, style) / Fonts.testString.length;
       Fonts._foundFonts['Times New Roman'] = Fonts.baseline;
       families.forEach(family => {
         Fonts.testFont(family);
@@ -69,7 +69,7 @@ export class Fonts {
     const fontFamily = style.fontFamily;
     Fonts.tryAddFont(fontFamily);
     const fontWidth = Fonts._foundFonts[fontFamily];
-    const charWidth = (fontWidth * fontSize / Fonts.testSize) / Fonts.testString.length;
+    const charWidth = fontWidth * fontSize / Fonts.testSize;
     // Adding 20% extra seems to give better results on actual text.
     return Math.floor(width / charWidth) * 1.2;
   }
@@ -78,12 +78,13 @@ export class Fonts {
     const style = new Style();
     style.runStyle = new RunStyle();
     style.runStyle.updateFont(family, Fonts.testSize);
-    const width = Metrics.getTextWidth(Fonts.testString, style);
-    if (width !== Fonts.baseline) {
-      Fonts._foundFonts[family] = width;
+    const widthOfString = Metrics.getTextWidth(Fonts.testString, style);
+    const widthOfChar = widthOfString / Fonts.testString.length;
+    if (widthOfChar !== Fonts.baseline) {
+      Fonts._foundFonts[family] = widthOfChar;
       return true;
     } else {
-      Fonts._notFoundFonts[family] = width;
+      Fonts._notFoundFonts[family] = widthOfChar;
       return false;
     }
   }
