@@ -3,6 +3,7 @@ import { IPositionedTextLine } from "./positioned-text-line.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { InSequence } from "../paragraph/in-sequence.js";
 import { Fonts } from "../utils/fonts.js";
+import { Metrics } from "../utils/metrics.js";
 
 export class TextFitter {
 
@@ -10,14 +11,15 @@ export class TextFitter {
         text: string,
         style: Style,
         inParagraph: InSequence,
-        _lastXPos: number,
+        lastXPos: number,
         flow: VirtualFlow
     ): { lines: IPositionedTextLine[], lastXPos: number } {
+        let currentXPadding = (inParagraph !== InSequence.First && inParagraph !== InSequence.Only) ? lastXPos : 0;
         const words = text.split(' ');
         let previousEnd = 0;
         let currentLength = 0;
-        let numChars = Fonts.fitCharacters(flow.getWidth(), style);
         let inRun = InSequence.First;
+        let numChars = Fonts.fitCharacters(flow.getWidth() - currentXPadding, style);
         let lastLine = false;
         const lines: IPositionedTextLine[] = [];
         const lineHeight = style.lineSpacing;
@@ -27,14 +29,15 @@ export class TextFitter {
             if (currentLength >= numChars || lastLine) {
                 lines.push({
                     text: text.substr(previousEnd, currentLength),
-                    x: flow.getX() + style.getIndentation(inRun, inParagraph),
+                    x: flow.getX() + style.getIndentation(inRun, inParagraph) + currentXPadding,
                     y: flow.getY(),
                     width: flow.getWidth(),
                     fitWidth: !lastLine,
                     inRun: (lastLine) ? InSequence.Last : inRun
                 });
+                currentXPadding = 0;
                 flow.advancePosition(lineHeight);
-                numChars = Fonts.fitCharacters(flow.getWidth(), style);
+                numChars = Fonts.fitCharacters(flow.getWidth() - currentXPadding, style);
                 inRun = InSequence.Middle;
                 previousEnd += currentLength;
                 currentLength = 0;
@@ -43,7 +46,7 @@ export class TextFitter {
         if (lines.length === 1) {
             lines[0].inRun = InSequence.Only;
         }
-        return { lines: lines, lastXPos: 0 };
+        return { lines: lines, lastXPos: Metrics.getTextWidth(lines[lines.length - 1].text, style) };
     }
 
     public static fitText(
