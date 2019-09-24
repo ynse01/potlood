@@ -15,7 +15,7 @@ export class TextFitter {
         flow: VirtualFlow
     ): { lines: IPositionedTextLine[], lastXPos: number } {
         const isStartingRun = (inParagraph === InSequence.First || inParagraph === InSequence.Only);
-        let currentXPadding = (lastXPos !== undefined && !isStartingRun) ? lastXPos : 0;
+        let currentXPadding = (lastXPos !== undefined && !isStartingRun) ? (lastXPos + Fonts.averageCharWidth(style)) : 0;
         const words = text.split(' ');
         let previousEnd = 0;
         let currentLength = 0;

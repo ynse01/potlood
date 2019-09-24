@@ -65,13 +65,18 @@ export class Fonts {
   }
 
   public static fitCharacters(width: number, style: Style): number {
+    const charWidth = Fonts.averageCharWidth(style);
+    return Math.floor(width / charWidth);
+  }
+
+  public static averageCharWidth(style: Style): number {
     const fontSize = style.fontSize;
     const fontFamily = style.fontFamily;
     Fonts.tryAddFont(fontFamily);
     const fontWidth = Fonts._foundFonts[fontFamily];
     const charWidth = fontWidth * fontSize / Fonts.testSize;
-    // Adding 20% extra seems to give better results on actual text.
-    return Math.floor(width / charWidth) * 1.2;
+    // Reduce 20% seems to give better results on actual text.
+    return charWidth / 1.2;
   }
 
   private static testFont(family: string): boolean {
