@@ -52,40 +52,4 @@ export class TextFitter {
         }
         return { lines: lines, lastXPos: Metrics.getTextWidth(lines[lines.length - 1].text, style) };
     }
-
-    public static fitText(
-        text: string,
-        style: Style,
-        width: number,
-        inRun: InSequence,
-        inParagraph: InSequence
-    ): string {
-        let fittingText = text;
-        const identation = style.getIndentation(inRun, inParagraph);
-        const numChars = Fonts.fitCharacters(width - identation, style);
-        const stopChar = TextFitter._findNextWordEnd(text, numChars);
-        if (stopChar < text.length) {
-            const subText = text.substr(0, stopChar);
-            fittingText = subText;
-        }
-        return fittingText;
-    }
-/*
-    private static _findPreviousWordEnd(text: string, stop: number): number {
-        const index = text.lastIndexOf(' ', stop);
-        if (index < 0) {
-            return stop;
-        } else {
-            return index;
-        }
-    }
-*/
-    private static _findNextWordEnd(text: string, stop: number): number {
-        const index = text.indexOf(' ', stop);
-        if (index < 0) {
-            return text.length;
-        } else {
-            return index;
-        }
-    }
 }
