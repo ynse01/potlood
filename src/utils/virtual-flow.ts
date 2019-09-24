@@ -1,6 +1,7 @@
 import { Metrics } from "./metrics.js";
 import { Section } from "../section.js";
 import { TableCell } from "../table/table-cell.js";
+import { Table } from "../table/table.js";
 
 export class VirtualFlow {
     // private _width: number;
@@ -57,10 +58,11 @@ export class VirtualFlow {
         return this;
     }
 
-    public createCellFlow(cell: TableCell) : VirtualFlow {
+    public createCellFlow(cell: TableCell, table: Table) : VirtualFlow {
         const start = this.getX() + cell.getStart() + cell.tableStyle.margins.cellMarginStart;
         const width = cell.getWidth();
-        return new VirtualFlow(start, start + width, this._pos);
+        const y = this._pos + table.style.cellSpacing;
+        return new VirtualFlow(start, start + width, y);
     }
 
     public clone(): VirtualFlow {

@@ -17,17 +17,17 @@ export class TableRenderer {
 
     public renderTable(table: Table, flow: VirtualFlow): void {
         table.rows.forEach(row => {
-          const height = row.getMaxHeight();
-          row.cells.forEach(cell => {
-            const cellFlow = flow.createCellFlow(cell);
-            cellFlow.advancePosition(table.style.cellSpacing);
-            this.renderCellShading(cell, cellFlow, height);
-            this.renderCellBorder(cell, table.style, cellFlow, height);
-            cell.pars.forEach(par => {
-              this._parRenderer.renderParagraph(par, cellFlow.clone().advancePosition(table.style.margins.cellMarginTop));
+            const height = row.getMaxHeight();
+            row.cells.forEach(cell => {
+                const cellFlow = flow.createCellFlow(cell, table);
+                this.renderCellShading(cell, cellFlow, height);
+                this.renderCellBorder(cell, table.style, cellFlow, height);
+                cellFlow.advancePosition(table.style.margins.cellMarginTop);
+                cell.pars.forEach(par => {
+                    this._parRenderer.renderParagraph(par, cellFlow);
+                });
             });
-          });
-          flow.advancePosition(height);
+            flow.advancePosition(height);
         });
     }
     
@@ -52,7 +52,7 @@ export class TableRenderer {
         let cellWidth = cell.getWidth();
         if (outerBorders !== undefined) {
             if (outerBorders.borderTop !== undefined) {
-              this._painter.paintLine(x, y, x + cellWidth, y, outerBorders.borderTop.color, outerBorders.borderTop.size);
+                this._painter.paintLine(x, y, x + cellWidth, y, outerBorders.borderTop.color, outerBorders.borderTop.size);
             }
             if (outerBorders.borderBottom !== undefined) {
                 const bottom = y + height;
