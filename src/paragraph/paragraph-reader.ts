@@ -6,7 +6,7 @@ import { DrawingRun } from "../drawing/drawing-run.js";
 import { DocumentX } from "../document-x.js";
 import { ParStyle } from "./par-style.js";
 import { DrawingReader } from "../drawing/drawing-reader.js";
-import { InSequence } from "./in-sequence.js";
+import { InSequence } from "../utils/in-sequence.js";
 
 export class ParagraphReader {
     public static readParagraph(docx: DocumentX, pNode: Node): Paragraph {

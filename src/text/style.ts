@@ -2,7 +2,7 @@ import { NamedStyles } from "./named-styles.js";
 import { ParStyle, Justification, LineRule } from "../paragraph/par-style.js";
 import { RunStyle, UnderlineMode } from "./run-style.js";
 import { Xml } from "../utils/xml.js";
-import { InSequence } from "../paragraph/in-sequence.js";
+import { InSequence } from "../utils/in-sequence.js";
 import { Metrics } from "../utils/metrics.js";
 
 export class Style {

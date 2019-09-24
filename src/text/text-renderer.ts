@@ -1,6 +1,6 @@
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { TextRun } from "./text-run.js";
-import { InSequence } from "../paragraph/in-sequence.js";
+import { InSequence } from "../utils/in-sequence.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { UnderlineMode } from "./run-style.js";
 import { IPainter, IRectangle } from "../painting/i-painter.js";

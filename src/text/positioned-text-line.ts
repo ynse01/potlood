@@ -1,4 +1,4 @@
-import { InSequence } from "../paragraph/in-sequence.js";
+import { InSequence } from "../utils/in-sequence.js";
 
 
 export interface IPositionedTextLine {

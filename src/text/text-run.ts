@@ -1,6 +1,6 @@
 import { Style } from "./style.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
-import { InSequence } from "../paragraph/in-sequence.js";
+import { InSequence } from "../utils/in-sequence.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { TextFitter } from "./text-fitter.js";

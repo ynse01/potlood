@@ -4,7 +4,7 @@ import { TextRenderer } from "../text/text-renderer.js";
 import { DrawingRenderer } from "../drawing/drawing-renderer.js";
 import { IPainter } from "../painting/i-painter.js";
 import { TextRun } from "../text/text-run.js";
-import { InSequence } from "./in-sequence.js";
+import { InSequence } from "../utils/in-sequence.js";
 
 export class ParagraphRenderer {
     private _textRenderer: TextRenderer;

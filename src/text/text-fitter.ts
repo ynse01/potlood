@@ -1,7 +1,7 @@
 import { Style } from "./style.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
-import { InSequence } from "../paragraph/in-sequence.js";
+import { InSequence } from "../utils/in-sequence.js";
 import { Fonts } from "../utils/fonts.js";
 import { Metrics } from "../utils/metrics.js";
 
