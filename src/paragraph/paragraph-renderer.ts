@@ -16,7 +16,9 @@ export class ParagraphRenderer {
 
     public renderParagraph(par: Paragraph, flow: VirtualFlow): void {
         const parStyle = par.style;
-        if (parStyle !== undefined && parStyle._parSpacingBefore !== undefined) {
+        if (parStyle !== undefined && parStyle._parLinesBefore !== undefined && parStyle._lineSpacing !== undefined) {
+            flow.advancePosition(parStyle._parLinesBefore * parStyle._lineSpacing);
+        } else if (parStyle !== undefined && parStyle._parSpacingBefore !== undefined) {
             flow.advancePosition(parStyle._parSpacingBefore);
         }
         let previousXPos: number | undefined = 0;
@@ -33,7 +35,9 @@ export class ParagraphRenderer {
             }
             previousXPos = run.lastXPos;
         });
-        if (parStyle !== undefined && parStyle._parSpacingAfter !== undefined) {
+        if (parStyle !== undefined && parStyle._parLinesAfter !== undefined && parStyle._lineSpacing !== undefined) {
+            flow.advancePosition(parStyle._parLinesAfter * parStyle._lineSpacing);
+        } else if (parStyle !== undefined && parStyle._parSpacingAfter !== undefined) {
             flow.advancePosition(parStyle._parSpacingAfter);
         }
     }

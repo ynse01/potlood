@@ -30,6 +30,8 @@ export class ParStyle {
     public _shadingColor: string | undefined;
     public _parSpacingBefore: number | undefined;
     public _parSpacingAfter: number | undefined;
+    public _parLinesBefore: number | undefined;
+    public _parLinesAfter: number | undefined;
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
         const parStyle = new ParStyle();
@@ -119,9 +121,17 @@ export class ParStyle {
             if (beforeAttr !== undefined) {
                 this._parSpacingBefore = Metrics.convertTwipsToPixels(parseInt(beforeAttr, 10));
             }
+            const beforeLinesAttr = Xml.getAttribute(spacingNode, "w:beforeLines");
+            if (beforeLinesAttr !== undefined) {
+                this._parLinesBefore = parseInt(beforeLinesAttr, 10) / 100;
+            }
             const afterAttr = Xml.getAttribute(spacingNode, "w:after");
             if (afterAttr !== undefined) {
                 this._parSpacingAfter = Metrics.convertTwipsToPixels(parseInt(afterAttr, 10));
+            }
+            const afterLinesAttr = Xml.getAttribute(spacingNode, "w:afterLines");
+            if (afterLinesAttr !== undefined) {
+                this._parLinesAfter = parseInt(afterLinesAttr, 10) / 100;
             }
         }
     }
