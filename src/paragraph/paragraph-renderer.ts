@@ -19,10 +19,11 @@ export class ParagraphRenderer {
         if (parStyle !== undefined && parStyle._parSpacingBefore !== undefined) {
             flow.advancePosition(parStyle._parSpacingBefore);
         }
+        let previousXPos: number | undefined = 0;
         if (par.numberingRun !== undefined) {
           this._textRenderer.renderTextRun(par.numberingRun, flow.clone());
+          previousXPos = par.numberingRun.lastXPos;
         }
-        let previousXPos: number | undefined = 0;
         par.runs.forEach((run) => {
             run.previousXPos = previousXPos;    
             if (run instanceof TextRun) {

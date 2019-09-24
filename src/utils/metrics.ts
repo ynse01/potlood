@@ -13,7 +13,7 @@ export class Metrics {
     // 1440 twips = 1 inch
     // (567 twips = 1 cm)
     // (1 point = 1.333333 px)
-    return twips * 4 / 60;
+    return twips / 15;
   }
 
   /**
@@ -40,7 +40,7 @@ export class Metrics {
    * @param points Word point.
    */
   public static convertPointToFontSize(points: number): number {
-    return points * 20 * 52 / 1440;
+    return points * 52 / 72;
   }
 
   /**
