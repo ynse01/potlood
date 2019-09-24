@@ -8,4 +8,5 @@ export class TableStyle {
     public identation: number | undefined;
     public borders: Borders = new Borders();
     public margins: Margins = new Margins();
-    }
+    public cellSpacing: number = 0;
+}

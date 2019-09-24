@@ -20,6 +20,7 @@ export class TableRenderer {
           const height = row.getMaxHeight();
           row.cells.forEach(cell => {
             const cellFlow = flow.createCellFlow(cell);
+            cellFlow.advancePosition(table.style.cellSpacing);
             this.renderCellShading(cell, cellFlow, height);
             this.renderCellBorder(cell, table.style, cellFlow, height);
             cell.pars.forEach(par => {
@@ -66,10 +67,10 @@ export class TableRenderer {
             }
         }
         if (innerBorders !== undefined) {
-            const cellMargin = cell.style.margins;
-            x += cellMargin.cellMarginStart;
-            y += cellMargin.cellMarginTop;
-            cellWidth -= cellMargin.cellMarginStart + cellMargin.cellMarginEnd;
+            const cellSpacing = style.cellSpacing;
+            x += cellSpacing;
+            y += cellSpacing;
+            cellWidth -= 2 * cellSpacing;
             if (innerBorders.borderTop !== undefined) {
                 this._painter.paintLine(x, y, x + cellWidth, y, innerBorders.borderTop.color, innerBorders.borderTop.size);
             }

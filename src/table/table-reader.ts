@@ -233,7 +233,14 @@ export class TableReader {
         if (identation !== undefined) {
             const w = Xml.getAttribute(identation, "w:w");
             if (w !== undefined) {
-                style.identation = parseInt(w);
+                style.identation = Metrics.convertTwipsToPixels(parseInt(w, 10));
+            }
+        }
+        const cellSpacing = Xml.getFirstChildOfName(tblPrNode, "w:tblCellSpacing");
+        if (cellSpacing !== undefined) {
+            const spacing = Xml.getAttribute(cellSpacing, "w:w");
+            if (spacing !== undefined) {
+                style.cellSpacing = Metrics.convertTwipsToPixels(parseInt(spacing, 10));
             }
         }
         return style;
