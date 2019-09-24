@@ -27,7 +27,9 @@ export class ParStyle {
     public _lineSpacing: number | undefined;
     public _lineRule: LineRule | undefined;
     public _numStyle: NumberingStyle | undefined;
-    public _shadingColor: string | undefined; 
+    public _shadingColor: string | undefined;
+    public _parSpacingBefore: number | undefined;
+    public _parSpacingAfter: number | undefined;
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
         const parStyle = new ParStyle();
@@ -43,6 +45,7 @@ export class ParStyle {
             parStyle._numStyle = NumberingStyle.fromNumPresentationNode(numPrNode);
         }
         parStyle.setLineSpacingFromNode(parPresentationNode);
+        parStyle.setParSpacingFromNode(parPresentationNode);
         parStyle.setShadingFromNode(parPresentationNode);
         return parStyle;
     }
@@ -105,6 +108,20 @@ export class ParStyle {
             const ruleAttr = Xml.getAttribute(spacingNode, "w:lineRule");
             if (ruleAttr !== undefined) {
                 this._lineRule = LineRule[ruleAttr as keyof typeof LineRule];
+            }
+        }
+    }
+
+    private setParSpacingFromNode(styleNode: ChildNode): void {
+        const spacingNode = Xml.getFirstChildOfName(styleNode, "w:spacing") as Element;
+        if (spacingNode !== undefined) {
+            const beforeAttr = Xml.getAttribute(spacingNode, "w:before");
+            if (beforeAttr !== undefined) {
+                this._parSpacingBefore = Metrics.convertTwipsToPixels(parseInt(beforeAttr, 10));
+            }
+            const afterAttr = Xml.getAttribute(spacingNode, "w:after");
+            if (afterAttr !== undefined) {
+                this._parSpacingAfter = Metrics.convertTwipsToPixels(parseInt(afterAttr, 10));
             }
         }
     }

@@ -4,7 +4,6 @@ import { TextRenderer } from "../text/text-renderer.js";
 import { DrawingRenderer } from "../drawing/drawing-renderer.js";
 import { IPainter } from "../painting/i-painter.js";
 import { TextRun } from "../text/text-run.js";
-import { InSequence } from "../utils/in-sequence.js";
 
 export class ParagraphRenderer {
     private _textRenderer: TextRenderer;
@@ -16,18 +15,20 @@ export class ParagraphRenderer {
     }
 
     public renderParagraph(par: Paragraph, flow: VirtualFlow): void {
+        flow.advancePosition(par.style._parSpacingBefore || 0);
         if (par.numberingRun !== undefined) {
-          this._textRenderer.renderTextRun(par.numberingRun, flow.clone(), InSequence.First);
+          this._textRenderer.renderTextRun(par.numberingRun, flow.clone());
         }
         let previousXPos: number | undefined = 0;
         par.runs.forEach((run) => {
             run.previousXPos = previousXPos;    
             if (run instanceof TextRun) {
-                this._textRenderer.renderTextRun(run, flow, run.inParagraph);
+                this._textRenderer.renderTextRun(run, flow);
             } else {
                 this._drawingRenderer.renderDrawing(run, flow);
             }
             previousXPos = run.lastXPos;
         });
+        flow.advancePosition(par.style._parSpacingAfter || 0);
     }
 }

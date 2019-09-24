@@ -103,6 +103,14 @@ export class Style {
         );
     }
 
+    public get parSpacingBefore(): number {
+        return this.getValue(0, (parStyle) => parStyle._parSpacingBefore);
+    }
+
+    public get parSpacingAfter(): number {
+        return this.getValue(0, (parStyle) => parStyle._parSpacingAfter);
+    }
+
     public get shadingColor(): string {
         return this.getValue("000000", (parStyle) => parStyle._shadingColor, undefined);
     }

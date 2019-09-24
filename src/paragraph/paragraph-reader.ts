@@ -47,7 +47,7 @@ export class ParagraphReader {
                 lastRun.inParagraph = InSequence.Last;
             }
         }
-        return new Paragraph(runs, numberingRun);
+        return new Paragraph(runs, numberingRun, parStyle);
     }
 
     private static readStyle(docx: DocumentX, pNode: Node): ParStyle {

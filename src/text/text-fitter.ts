@@ -15,6 +15,7 @@ export class TextFitter {
         flow: VirtualFlow
     ): { lines: IPositionedTextLine[], lastXPos: number } {
         const isStartingRun = (inParagraph === InSequence.First || inParagraph === InSequence.Only);
+        const isLastRun = (inParagraph === InSequence.Last || inParagraph === InSequence.Only);
         let currentXPadding = (lastXPos !== undefined && !isStartingRun) ? (lastXPos + Fonts.averageCharWidth(style)) : 0;
         const words = text.split(' ');
         let previousEnd = 0;
@@ -37,7 +38,9 @@ export class TextFitter {
                     inRun: (lastLine) ? InSequence.Last : inRun
                 });
                 currentXPadding = 0;
-                flow.advancePosition(lineHeight);
+                if (isLastRun || !lastLine) {
+                    flow.advancePosition(lineHeight);
+                }
                 numChars = Fonts.fitCharacters(flow.getWidth() - currentXPadding, style);
                 inRun = InSequence.Middle;
                 previousEnd += currentLength;
