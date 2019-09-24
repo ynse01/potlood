@@ -32,6 +32,8 @@ export class ParStyle {
     public _parSpacingAfter: number | undefined;
     public _parLinesBefore: number | undefined;
     public _parLinesAfter: number | undefined;
+    public _parAutoSpacingBefore: boolean | undefined;
+    public _parAutoSpacingAfter: boolean | undefined;
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
         const parStyle = new ParStyle();
@@ -125,6 +127,10 @@ export class ParStyle {
             if (beforeLinesAttr !== undefined) {
                 this._parLinesBefore = parseInt(beforeLinesAttr, 10) / 100;
             }
+            const beforeAutoAttr = Xml.getAttribute(spacingNode, "w:beforeAutospacing");
+            if (beforeAutoAttr !== undefined) {
+                this._parAutoSpacingBefore = beforeAutoAttr === 'true';
+            }
             const afterAttr = Xml.getAttribute(spacingNode, "w:after");
             if (afterAttr !== undefined) {
                 this._parSpacingAfter = Metrics.convertTwipsToPixels(parseInt(afterAttr, 10));
@@ -132,6 +138,10 @@ export class ParStyle {
             const afterLinesAttr = Xml.getAttribute(spacingNode, "w:afterLines");
             if (afterLinesAttr !== undefined) {
                 this._parLinesAfter = parseInt(afterLinesAttr, 10) / 100;
+            }
+            const afterAutoAttr = Xml.getAttribute(spacingNode, "w:afterAutospacing");
+            if (afterAutoAttr !== undefined) {
+                this._parAutoSpacingAfter = afterAutoAttr === 'true';
             }
         }
     }
