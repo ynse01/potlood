@@ -116,15 +116,15 @@ export class Style {
     }
 
     public getIndentation(inRun: InSequence, inParagaph: InSequence): number {
-        let identation: number | undefined = undefined;
+        let identation = this.getValue(0, (parStyle) => parStyle._indentation, undefined);
         if (
             (inParagaph === InSequence.First || inParagaph === InSequence.Only) &&
             (inRun === InSequence.First || inRun === InSequence.Only)
         ) {
-            identation = this.getValue(undefined, (parStyle) => parStyle._hanging, undefined);
-        }
-        if (identation === undefined) {
-            identation = this.getValue(0, (parStyle) => parStyle._indentation, undefined);
+            const hanging = this.getValue(undefined, (parStyle) => parStyle._hanging, undefined);
+            if (hanging !== undefined) {
+                identation -= hanging;
+            }
         }
         return identation!;
     }

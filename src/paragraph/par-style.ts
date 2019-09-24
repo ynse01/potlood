@@ -79,7 +79,7 @@ export class ParStyle {
         if (indNode !== undefined) {
             const hangingAttr = Xml.getAttribute(indNode, "w:hanging");
             if (hangingAttr !== undefined) {
-                hanging = Metrics.convertTwipsToPixels(-parseInt(hangingAttr, 10));
+                hanging = Metrics.convertTwipsToPixels(parseInt(hangingAttr, 10));
             }
         }
         return hanging;
