@@ -19,9 +19,6 @@ export class TextRenderer {
     }
     
     private renderText(line: IPositionedTextLine, style: Style): void {
-        if (style.caps) {
-            line.text = line.text.toLocaleUpperCase();
-        }
         if (style.shadingColor !== "000000") {
             this._painter.paintLine(line.x, line.y, line.x + line.width, line.y, style.shadingColor, style.lineSpacing);
         }

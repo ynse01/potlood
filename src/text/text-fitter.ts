@@ -17,7 +17,11 @@ export class TextFitter {
         const isStartingRun = (inParagraph === InSequence.First || inParagraph === InSequence.Only);
         const isLastRun = (inParagraph === InSequence.Last || inParagraph === InSequence.Only);
         let currentXPadding = (lastXPos !== undefined && !isStartingRun) ? (lastXPos + Fonts.averageCharWidth(style)) : 0;
-        const words = text.split(' ');
+        let txt = text;
+        if (style.caps || style.smallCaps) {
+            txt = text.toLocaleUpperCase();
+        }
+        const words = txt.split(' ');
         let previousEnd = 0;
         let currentLength = 0;
         let inRun = InSequence.First;
