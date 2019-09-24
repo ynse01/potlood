@@ -44,7 +44,7 @@ export class TableRenderer {
         let outerBorders: Borders | undefined = style.borders;
         const innerBorders = cell.style.borders;
         // Resolve border conflicts
-        if (cell.style.margins.isZero() && innerBorders !== undefined) {
+        if (style.cellSpacing === 0 && innerBorders !== undefined) {
             outerBorders = undefined;
         }
         let x = flow.getX();
