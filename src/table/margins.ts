@@ -1,4 +1,3 @@
-import { Metrics } from "../utils/metrics.js";
 
 export class Margins {
     public cellMarginTop: number;
@@ -7,11 +6,10 @@ export class Margins {
     public cellMarginEnd: number;
 
     constructor() {
-        const defaultMargin = Metrics.convertTwipsToPixels(115);
         this.cellMarginBottom = 0;
         this.cellMarginTop = 0;
-        this.cellMarginStart = defaultMargin;
-        this.cellMarginEnd = defaultMargin;
+        this.cellMarginStart = 0;
+        this.cellMarginEnd = 0;
     }
 
     public isZero(): boolean {
