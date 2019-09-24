@@ -13,18 +13,22 @@ export enum ParagraphType {
 export class Paragraph implements ILayoutable {
     public type: ParagraphType;
     private _runs: (TextRun | DrawingRun)[];
-    private _style: ParStyle;
     private _numberingRun: TextRun | undefined;
 
-    constructor(runs: (TextRun | DrawingRun)[], numberingRun: TextRun | undefined, style: ParStyle) {
+    constructor(runs: (TextRun | DrawingRun)[], numberingRun: TextRun | undefined) {
         this.type = ParagraphType.Text;
         this._runs = runs;
-        this._style = style;
         this._numberingRun = numberingRun;
     }
 
-    public get style(): ParStyle {
-        return this._style;
+    public get style(): ParStyle | undefined {
+        let parStyle: ParStyle | undefined = undefined;
+        const firstRun = this._runs[0];
+        if (firstRun !== undefined && firstRun instanceof TextRun) {
+            const firstTextRun = firstRun as TextRun;
+            parStyle = firstTextRun.style.parStyle;
+        }
+        return parStyle;
     }
 
     public get runs(): (TextRun | DrawingRun)[] {

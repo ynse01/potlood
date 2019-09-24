@@ -15,7 +15,10 @@ export class ParagraphRenderer {
     }
 
     public renderParagraph(par: Paragraph, flow: VirtualFlow): void {
-        flow.advancePosition(par.style._parSpacingBefore || 0);
+        const parStyle = par.style;
+        if (parStyle !== undefined && parStyle._parSpacingBefore !== undefined) {
+            flow.advancePosition(parStyle._parSpacingBefore);
+        }
         if (par.numberingRun !== undefined) {
           this._textRenderer.renderTextRun(par.numberingRun, flow.clone());
         }
@@ -29,6 +32,8 @@ export class ParagraphRenderer {
             }
             previousXPos = run.lastXPos;
         });
-        flow.advancePosition(par.style._parSpacingAfter || 0);
+        if (parStyle !== undefined && parStyle._parSpacingAfter !== undefined) {
+            flow.advancePosition(parStyle._parSpacingAfter);
+        }
     }
 }
