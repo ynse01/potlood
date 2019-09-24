@@ -79,8 +79,8 @@ export class Style {
 
     public get lineSpacing(): number {
         const style = this;
-        return this.getValue(
-            16,
+        let complexSpacing = this.getValue(
+            undefined,
             (parStyle) => {
                 let spacing = parStyle._lineSpacing;
                 if (spacing !== undefined) {
@@ -101,6 +101,10 @@ export class Style {
             },
             undefined
         );
+        if (complexSpacing === undefined) {
+            complexSpacing = this.fontSize * 1.08;
+        }
+        return complexSpacing;
     }
 
     public get parSpacingBefore(): number {
