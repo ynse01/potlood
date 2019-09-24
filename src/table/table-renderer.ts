@@ -20,6 +20,7 @@ export class TableRenderer {
           const height = row.getMaxHeight();
           row.cells.forEach(cell => {
             const cellFlow = flow.createCellFlow(cell);
+            this.renderCellShading(cell, cellFlow, height);
             this.renderCellBorder(cell, table.style, cellFlow, height);
             cell.pars.forEach(par => {
               this._parRenderer.renderParagraph(par, cellFlow.clone().advancePosition(table.style.margins.cellMarginTop));
@@ -29,6 +30,15 @@ export class TableRenderer {
         });
     }
     
+    private renderCellShading(cell: TableCell, flow: VirtualFlow, height: number): void {
+        if (cell.style.shading !== undefined) {
+            let x = flow.getX();
+            let y = flow.getY();
+            let width = cell.getWidth();
+            this._painter.paintLine(x, y, x + width, y, cell.style.shading, height);
+        }
+    }
+
     private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, height: number): void {
         let outerBorders: Borders | undefined = style.borders;
         const innerBorders = cell.style.borders;

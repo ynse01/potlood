@@ -6,4 +6,5 @@ export class TableCellStyle {
     public gridSpan: number = 1;
     public borders: Borders | undefined = undefined;
     public margins: Margins = new Margins();
+    public shading: string | undefined = undefined;
 }

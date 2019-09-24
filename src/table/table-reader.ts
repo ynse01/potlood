@@ -102,6 +102,10 @@ export class TableReader {
         if (tcMargins !== undefined) {
             this.readCellMargins(tcMargins, style.margins);
         }
+        const tcShading = Xml.getFirstChildOfName(cellPrNode, "w:shd");
+        if (tcShading !== undefined) {
+            style.shading = Xml.getAttribute(tcShading, "fill");
+        }
         return style;
     }
 
