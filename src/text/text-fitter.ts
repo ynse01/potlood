@@ -32,7 +32,8 @@ export class TextFitter {
         for(let i = 0; i < words.length; i++) {
             currentLength += words[i].length + 1;
             lastLine = (i === words.length - 1);
-            if (currentLength >= numChars || lastLine) {
+            const isNewLine = words[i] === '\n';
+            if (currentLength >= numChars || lastLine || isNewLine) {
                 lines.push({
                     text: txt.substr(previousEnd, currentLength),
                     x: flow.getX() + style.getIndentation(inRun, inParagraph) + currentXPadding,
