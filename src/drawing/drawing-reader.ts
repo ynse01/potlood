@@ -4,7 +4,7 @@ import { ShapeBounds } from "./shape-bounds.js";
 import { Xml } from "../utils/xml.js";
 import { Picture } from "./picture.js";
 import { ChartSpace } from "../chart/chart-space.js";
-import { Part } from "../package/part.js";
+import { XmlPart } from "../package/xml-part.js";
 import { BarChart } from "../chart/bar-chart.js";
 
 export class DrawingReader {
@@ -29,7 +29,7 @@ export class DrawingReader {
                         const relationship = Xml.getAttribute(childNode, "r:id");
                         if (relationship !== undefined && docx.relationships !== undefined) {
                             const chartTarget = docx.relationships.getTarget(relationship);
-                            drawing.chart = this.readChartFromPart(docx.pack.loadPart(`word/${chartTarget}`));
+                            drawing.chart = this.readChartFromPart(docx.pack.loadPartAsXml(`word/${chartTarget}`));
                         }
                     }
                 })
@@ -38,7 +38,7 @@ export class DrawingReader {
         return drawing;
     }
 
-    private static readChartFromPart(promise: Promise<Part>): ChartSpace {
+    private static readChartFromPart(promise: Promise<XmlPart>): ChartSpace {
         const space = new ChartSpace();
         const readingPromise =
             new Promise<void>((resolve, reject) => {

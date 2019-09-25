@@ -1,12 +1,12 @@
 import { Style } from "./style.js";
 import { Xml } from "../utils/xml.js";
-import { Part } from "../package/part.js";
+import { XmlPart } from "../package/xml-part.js";
 
 export class NamedStyles {
     private doc: Document;
     private named: { [name: string]: Style} = {};
 
-    constructor(part: Part) {
+    constructor(part: XmlPart) {
         this.doc = part.document;
     }
 

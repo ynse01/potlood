@@ -1,4 +1,4 @@
-import { Part } from './part.js';
+import { XmlPart } from './xml-part.js';
 import { Xml } from '../utils/xml.js';
 
 declare var JSZip: any;
@@ -87,18 +87,18 @@ export class Package {
         return this.package.file(name) !== null;
     }
 
-    public loadPart(name: string): Promise<Part> {
-        return new Promise<Part>((resolve, reject) => {
+    public loadPartAsXml(name: string): Promise<XmlPart> {
+        return new Promise<XmlPart>((resolve, reject) => {
             this.package.file(name).async("text").then((partContent: string) => {
                 const partXml = new DOMParser().parseFromString(partContent, "application/xml");
-                resolve(new Part(partXml));
+                resolve(new XmlPart(partXml));
             }).catch((error: any) => {
                 reject(error);
             });
         });
     }
 
-    public loadPartBase64(name: string): Promise<string> {
+    public loadPartAsBase64(name: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             this.package.file(name).async("base64").then((content: string) => {
                 resolve(content);
@@ -108,7 +108,7 @@ export class Package {
         });
     }
 
-    public loadPartBinary(name: string): Promise<ArrayBuffer> {
+    public loadPartAsBinary(name: string): Promise<ArrayBuffer> {
         return new Promise<ArrayBuffer>((resolve, reject) => {
             this.package.file(name).async("arraybuffer").then((content: ArrayBuffer) => {
                 resolve(content);
@@ -124,7 +124,7 @@ export class Package {
 
     private _loadContentTypes(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.loadPart('[Content_Types].xml').then(contentTypePart => {
+            this.loadPartAsXml('[Content_Types].xml').then(contentTypePart => {
                 contentTypePart.document.getRootNode().childNodes.forEach(content => {
                     if (content.nodeName === "Override") {
                         const partName = Xml.getAttribute(content, "PartName");

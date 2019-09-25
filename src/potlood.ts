@@ -32,13 +32,13 @@ export class Potlood {
     }
 
     private _loadFromPackage(pack: Package): void {
-        pack.loadPart('word/_rels/document.xml.rels').then(relPart => {
+        pack.loadPartAsXml('word/_rels/document.xml.rels').then(relPart => {
             const relationships = Relationships.fromDocument(relPart.document);
-            pack.loadPart('word/styles.xml').then(stylePart => {
+            pack.loadPartAsXml('word/styles.xml').then(stylePart => {
                 const styles = new NamedStyles(stylePart);
                 styles.parseContent();
                 if (pack.hasPart('word/numbering.xml')) {
-                    pack.loadPart('word/numbering.xml').then(numPart => {
+                    pack.loadPartAsXml('word/numbering.xml').then(numPart => {
                         const numberings = new AbstractNumberings(numPart);
                         numberings.parseContent(styles);
                         this._loadDocument(pack, relationships, styles, numberings);
@@ -56,7 +56,7 @@ export class Potlood {
         styles: NamedStyles,
         numberings: AbstractNumberings | undefined
     ) {
-        pack.loadPart('word/document.xml').then(part => {
+        pack.loadPartAsXml('word/document.xml').then(part => {
             const docx = new DocumentX(pack, part);
             docx.setRelationships(relationships);
             docx.setNamedStyles(styles);

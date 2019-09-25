@@ -75,7 +75,7 @@ export class Picture {
 
     private _getImageUrlForJpeg(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this._pack.loadPartBase64(this._name).then(content => {
+            this._pack.loadPartAsBase64(this._name).then(content => {
                 const mimeType = 'image/jpeg';
                 this._imageUrl = `data:${mimeType};base64,${content}`;
                 resolve();
@@ -87,7 +87,7 @@ export class Picture {
 
     private _getImageUrlForPng(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this._pack.loadPartBase64(this._name).then(content => {
+            this._pack.loadPartAsBase64(this._name).then(content => {
                 const mimeType = 'image/png';
                 this._imageUrl = `data:${mimeType};base64,${content}`;
                 resolve();
@@ -99,7 +99,7 @@ export class Picture {
 
     private _getImageUrlForTiff(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this._pack.loadPartBinary(this._name).then(buff => {
+            this._pack.loadPartAsBinary(this._name).then(buff => {
                 const ifds = UTIF.decode(buff);
                 let vsns = ifds;
                 let ma = 0;

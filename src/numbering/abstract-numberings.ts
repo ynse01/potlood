@@ -1,4 +1,4 @@
-import { Part } from "../package/part.js";
+import { XmlPart } from "../package/xml-part.js";
 import { Numbering } from "./numbering.js";
 import { Xml } from "../utils/xml.js";
 import { NamedStyles } from "../text/named-styles.js";
@@ -8,7 +8,7 @@ export class AbstractNumberings {
     private doc: Document;
     private _numberings: Numbering[] = [];
 
-    constructor(part: Part) {
+    constructor(part: XmlPart) {
         this.doc = part.document;
     }
 

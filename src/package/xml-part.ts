@@ -1,4 +1,4 @@
-export class Part {
+export class XmlPart {
     private doc: Document;
 
     constructor(doc: Document) {

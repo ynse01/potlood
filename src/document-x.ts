@@ -1,4 +1,4 @@
-import { Part } from "./package/part.js";
+import { XmlPart } from "./package/xml-part.js";
 import { Xml } from "./utils/xml.js";
 import { Paragraph } from "./paragraph/paragraph.js";
 import { NamedStyles } from "./text/named-styles.js";
@@ -13,7 +13,7 @@ import { TableReader } from "./table/table-reader.js";
 import { ParagraphReader } from "./paragraph/paragraph-reader.js";
 
 export class DocumentX implements ILayoutable {
-    private part: Part;
+    private part: XmlPart;
     private pars: (Paragraph | Table)[] = [];
     private _section: Section | undefined;
     private _styles: NamedStyles | undefined;
@@ -22,7 +22,7 @@ export class DocumentX implements ILayoutable {
 
     public pack: Package;
 
-    constructor(pack: Package, part: Part) {
+    constructor(pack: Package, part: XmlPart) {
         this.pack = pack;
         this.part = part;
     }
