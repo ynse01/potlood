@@ -41,19 +41,21 @@ export class TextFitter {
                     fitWidth: !lastLine,
                     inRun: (lastLine) ? InSequence.Last : inRun
                 });
-                currentXPadding = 0;
                 if (isLastRun || !lastLine) {
                     flow.advancePosition(lineHeight);
                 }
-                numChars = Fonts.fitCharacters(flow.getWidth() - currentXPadding, style);
-                inRun = InSequence.Middle;
-                previousEnd += currentLength;
-                currentLength = 0;
+                if (!lastLine) {
+                    currentXPadding = 0;
+                    numChars = Fonts.fitCharacters(flow.getWidth() - currentXPadding, style);
+                    inRun = InSequence.Middle;
+                    previousEnd += currentLength;
+                    currentLength = 0;
+                }
             }
         }
         if (lines.length === 1) {
             lines[0].inRun = InSequence.Only;
         }
-        return { lines: lines, lastXPos: Metrics.getTextWidth(lines[lines.length - 1].text, style) };
+        return { lines: lines, lastXPos: currentXPadding + Metrics.getTextWidth(lines[lines.length - 1].text, style) };
     }
 }

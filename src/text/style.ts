@@ -199,7 +199,7 @@ export class Style {
                 // Secondly look at the base styles of the RUN style.
                 val = this.runStyle._basedOn.getRecursive<T>(parCb, runCb);
             }
-    }
+        }
         // Thirdly look at local PARAGRAPH presentation.
         if (val === undefined) {
             if (this.parStyle !== undefined) {
@@ -210,7 +210,7 @@ export class Style {
                     }
                 }
                 if (val === undefined && this.parStyle._numStyle !== undefined) {
-                    // Fourthly look at the base styles of the PARAGRAPH style.
+                    // Fourthly look at the numbering style.
                     const numStyle = this.parStyle._numStyle.style;
                     if (numStyle !== undefined) {
                         val = this.parStyle._numStyle.style.getRecursive<T>(parCb, runCb);
