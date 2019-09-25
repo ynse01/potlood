@@ -104,10 +104,10 @@ export class Picture {
                 let vsns = ifds;
                 let ma = 0;
                 let page = vsns[0];
-                if(ifds[0].subIFD) {
+                if (ifds[0].subIFD) {
                     vsns = vsns.concat(ifds[0].subIFD);
                 }
-                for(let i = 0; i < vsns.length; i++) {
+                for (let i = 0; i < vsns.length; i++) {
                     const img = vsns[i];
                     if (img["t258"] === null || img["t258"].length < 3) {
                         continue;
@@ -123,17 +123,17 @@ export class Picture {
                 const width = page.width
                 const height = page.height;
                 const ind = 0; // TODO: Should we check for index??
-                UTIF._xhrs.splice(ind,1);
+                UTIF._xhrs.splice(ind, 1);
                 var canvas = document.createElement("canvas");
                 canvas.width = width;
                 canvas.height = height;
                 const context = canvas.getContext("2d");
                 if (context !== null) {
                     const imgd = context.createImageData(width, height);
-                    for(let i = 0; i < rgba.length; i++) {
+                    for (let i = 0; i < rgba.length; i++) {
                         imgd.data[i] = rgba[i];
                     }
-                    context.putImageData(imgd,0,0);
+                    context.putImageData(imgd, 0, 0);
                     this._imageUrl = canvas.toDataURL();
                     resolve();
                 } else {
