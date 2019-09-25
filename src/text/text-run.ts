@@ -6,16 +6,16 @@ import { ILayoutable } from "../utils/i-layoutable.js";
 import { TextFitter } from "./text-fitter.js";
 
 export class TextRun implements ILayoutable {
-    public text: string;
+    public texts: string[];
     public style: Style;
     public inParagraph: InSequence = InSequence.Only;
     public previousXPos: number | undefined;
     public lastXPos = 0;
     private _lines: IPositionedTextLine[] | undefined = undefined;
 
-    constructor(text: string, style: Style) {
+    constructor(texts: string[], style: Style) {
         this.style = style;
-        this.text = text;
+        this.texts = texts;
     }
 
     public getHeight(width: number): number {
@@ -40,7 +40,7 @@ export class TextRun implements ILayoutable {
     }
 
     public getFlowLines(flow: VirtualFlow): IPositionedTextLine[] {
-        const result = TextFitter.getFlowLines(this.text, this.style, this.inParagraph, this.previousXPos, flow);
+        const result = TextFitter.getFlowLines(this.texts, this.style, this.inParagraph, this.previousXPos, flow);
         this.lastXPos = result.lastXPos;
         return result.lines;
     }

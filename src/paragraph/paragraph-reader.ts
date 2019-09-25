@@ -14,7 +14,7 @@ export class ParagraphReader {
         const runs: (TextRun | DrawingRun)[] = [];
         const parStyle = this.readStyle(docx, pNode);
         if (parStyle !== undefined && parStyle._numStyle !== undefined) {
-            numberingRun = new TextRun(parStyle._numStyle.getPrefixText(), parStyle._numStyle.style);
+            numberingRun = new TextRun([parStyle._numStyle.getPrefixText()], parStyle._numStyle.style);
         }
         pNode.childNodes.forEach(node => {
             if (node.nodeName === "w:hyperlink") {

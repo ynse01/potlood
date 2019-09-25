@@ -7,7 +7,7 @@ import { NamedStyles } from "./named-styles.js";
 
 export class TextReader {
     public static readTextRun(runNode: ChildNode, parStyle: ParStyle | undefined, namedStyles: NamedStyles | undefined): TextRun {
-        const run = new TextRun("", new Style());
+        const run = new TextRun([], new Style());
         const presentationNode = Xml.getFirstChildOfName(runNode, "w:rPr");
         if (presentationNode !== undefined && presentationNode.hasChildNodes()) {
             run.style.runStyle = RunStyle.fromPresentationNode(presentationNode);
@@ -15,14 +15,31 @@ export class TextReader {
         if (parStyle !== undefined) {
             run.style.parStyle = parStyle;
         }
-        const textNode = Xml.getFirstChildOfName(runNode, "w:t");
-        if (textNode !== undefined) {
-            const text = textNode.textContent;
-            if (text !== null) {
-                run.text = text;
-            }
-        }
+        run.texts = TextReader._getTexts(runNode);
         run.style.applyNamedStyles(namedStyles);
         return run;
+    }
+
+    private static _getTexts(runNode: ChildNode): string[] {
+        const texts: string[] = [];
+        if (runNode.hasChildNodes) {
+            runNode.childNodes.forEach((node) => {
+                switch(node.nodeName) {
+                    case "w:t":
+                        const content = node.textContent;
+                        if (content !== null) {
+                            texts.push(content);
+                        }
+                        break;
+                    case "w:br":
+                        texts.push(" \n ");
+                        break;
+                    default:
+                        // Ignore all other nodes
+                        break;
+                }
+            });
+        }
+        return texts;
     }
 }

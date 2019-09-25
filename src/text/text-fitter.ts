@@ -8,7 +8,7 @@ import { Metrics } from "../utils/metrics.js";
 export class TextFitter {
 
     public static getFlowLines(
-        text: string,
+        texts: string[],
         style: Style,
         inParagraph: InSequence,
         lastXPos: number | undefined,
@@ -17,9 +17,9 @@ export class TextFitter {
         const isStartingRun = (inParagraph === InSequence.First || inParagraph === InSequence.Only);
         const isLastRun = (inParagraph === InSequence.Last || inParagraph === InSequence.Only);
         let currentXPadding = (lastXPos !== undefined && !isStartingRun) ? (lastXPos + Fonts.averageCharWidth(style)) : 0;
-        let txt = text;
+        let txt = texts.join(' ');
         if (style.caps || style.smallCaps) {
-            txt = text.toLocaleUpperCase();
+            txt = txt.toLocaleUpperCase();
         }
         const words = txt.split(' ');
         let previousEnd = 0;
@@ -34,7 +34,7 @@ export class TextFitter {
             lastLine = (i === words.length - 1);
             if (currentLength >= numChars || lastLine) {
                 lines.push({
-                    text: text.substr(previousEnd, currentLength),
+                    text: txt.substr(previousEnd, currentLength),
                     x: flow.getX() + style.getIndentation(inRun, inParagraph) + currentXPadding,
                     y: flow.getY(),
                     width: flow.getWidth() - currentXPadding,
