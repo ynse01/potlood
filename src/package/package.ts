@@ -98,15 +98,20 @@ export class Package {
         });
     }
 
-    public loadImageUrl(name: string): Promise<string> {
+    public loadPartBase64(name: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             this.package.file(name).async("base64").then((content: string) => {
-                // TODO: Support other MIME types also
-                const mimeType = 'image/jpeg';
-                if (mimeType === undefined) {
-                    reject(`Invalid MIME type encountered while loading image from: ${name}`);
-                }
-                resolve(`data:${mimeType};base64,${content}`);
+                resolve(content);
+              }).catch((error: any) => {
+                  reject(error);
+              });
+        });
+    }
+
+    public loadPartBinary(name: string): Promise<ArrayBuffer> {
+        return new Promise<ArrayBuffer>((resolve, reject) => {
+            this.package.file(name).async("arraybuffer").then((content: ArrayBuffer) => {
+                resolve(content);
               }).catch((error: any) => {
                   reject(error);
               });
