@@ -56,7 +56,7 @@ export class Xml {
         if (child !== undefined) {
             const attr = Xml.getAttribute(child, "w:val");
             if (attr !== undefined) {
-                val = (attr === 'true');
+                val = Xml.attributeAsBoolean(attr);
             } else {
                 // Absence of w:val means true
                 val = true;
@@ -78,5 +78,12 @@ export class Xml {
             }
         }
         return val;
+    }
+
+    /**
+     * Interprets the attribute value as boolean.
+     */
+    public static attributeAsBoolean(attr: string): boolean {
+        return (attr === 'true') || (attr === '1');
     }
 }

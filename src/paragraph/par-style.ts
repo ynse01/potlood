@@ -141,7 +141,7 @@ export class ParStyle {
             }
             const afterAutoAttr = Xml.getAttribute(spacingNode, "w:afterAutospacing");
             if (afterAutoAttr !== undefined) {
-                this._parAutoSpacingAfter = afterAutoAttr === 'true';
+                this._parAutoSpacingAfter = Xml.attributeAsBoolean(afterAutoAttr);
             }
         }
     }
