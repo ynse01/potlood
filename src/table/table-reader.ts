@@ -6,7 +6,6 @@ import { TableColumn } from "./table-column.js";
 import { TableRow } from "./table-row.js";
 import { TableStyle } from "./table-style.js";
 import { TableCell } from "./table-cell.js";
-import { TableCellStyle } from "./table-cell-style.js";
 import { ParagraphType } from "../paragraph/paragraph.js";
 import { TableBorder, TableBorderType } from "./table-border.js";
 import { Justification } from "../paragraph/par-style.js";
@@ -63,7 +62,7 @@ export class TableReader {
         if (prNode !== undefined) {
             style = this.readTableCellPresentation(prNode);
         } else {
-            style = new TableCellStyle();
+            style = new TableStyle();
         }
         const cell = new TableCell(table.columns, table.style, style, colIndex);
         cellNode.childNodes.forEach(pNode => {
@@ -80,8 +79,8 @@ export class TableReader {
         return cell;
     }
 
-    private static readTableCellPresentation(cellPrNode: ChildNode): TableCellStyle {
-        const style = new TableCellStyle();
+    private static readTableCellPresentation(cellPrNode: ChildNode): TableStyle {
+        const style = new TableStyle();
         const tcW = Xml.getFirstChildOfName(cellPrNode, "w:tcW");
         if (tcW !== undefined) {
             const w = Xml.getAttribute(tcW, "w:w");

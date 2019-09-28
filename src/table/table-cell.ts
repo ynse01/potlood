@@ -1,7 +1,6 @@
 import { TableColumn } from "./table-column.js";
 import { Paragraph } from "../paragraph/paragraph.js";
 import { TableStyle } from "./table-style.js";
-import { TableCellStyle } from "./table-cell-style.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 
 export class TableCell {
@@ -10,9 +9,9 @@ export class TableCell {
     public rowSpan: number = 1;
     public pars: Paragraph[] = [];
     public tableStyle: TableStyle;
-    public style: TableCellStyle;
+    public style: TableStyle;
 
-    constructor(columns: TableColumn[], tableStyle: TableStyle, style: TableCellStyle, startIndex: number) {
+    constructor(columns: TableColumn[], tableStyle: TableStyle, style: TableStyle, startIndex: number) {
         this.tableStyle = tableStyle;
         this.style = style;
         this.columns = this.getColumns(columns, startIndex);

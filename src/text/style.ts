@@ -4,6 +4,7 @@ import { RunStyle, UnderlineMode } from "./run-style.js";
 import { Xml } from "../utils/xml.js";
 import { InSequence } from "../utils/in-sequence.js";
 import { Metrics } from "../utils/metrics.js";
+import { TableStyle } from "../table/table-style.js";
 
 export class Style {
     private _basedOn: Style | undefined;
@@ -11,6 +12,7 @@ export class Style {
 
     public runStyle: RunStyle | undefined;
     public parStyle: ParStyle | undefined;
+    public tableStyle: TableStyle | undefined;
 
     public static fromStyleNode(styleNode: ChildNode): Style {
         const style = new Style();
@@ -185,14 +187,18 @@ export class Style {
         return val;
     }
 
-    private getRecursive<T>(parCb?: (parStyle: ParStyle) => T | undefined, runCb?: (runStyle: RunStyle) => T | undefined): T | undefined {
+    private getRecursive<T>(
+        parCb?: (parStyle: ParStyle) => T | undefined,
+        runCb?: (runStyle: RunStyle) => T | undefined,
+        tableCb?: (runStyle: TableStyle) => T | undefined
+    ): T | undefined {
         // Style hierarchy:
         // 1 Document defaults
         // 2 Table styles
         // 3 Numbering styles
         // 4 Paragraph styles
-        // 5 Base run styles
-        // 6 Local Run Style
+        // 5 Run styles
+        // 6 Local Styles
         // We inspect the hierarchy backward, for performance reasons
         let val: T | undefined = undefined;
         // First look at local RUN presentation.
@@ -230,7 +236,18 @@ export class Style {
                 }
             }
         }
-        // Sixthly look at the Style where this style is based upon.
+        // Sixthly look at the Table Style.
+        if (val === undefined) {
+            if (this.tableStyle !== undefined) {
+                if (tableCb !== undefined) {
+                    const table = tableCb(this.tableStyle);
+                    if (table !== undefined) {
+                        val = table;
+                    }
+                }
+            }
+        }
+        // Sevently look at the Style where this style is based upon.
         if (val === undefined) {
             const basedOn = this._basedOn;
             if (basedOn !== undefined) {
