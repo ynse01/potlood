@@ -164,6 +164,10 @@ export class Style {
         return this.getValue(Justification.left, (parStyle) => parStyle._justification, undefined);
     }
 
+    public get visible(): boolean {
+        return this.getValue(true, undefined, (runStyle) => runStyle._visible);
+    }
+
     public get font(): string {
         const italicText = (this.italic) ? "italic ": "";
         const boldText = (this.bold) ? "bold ": "";

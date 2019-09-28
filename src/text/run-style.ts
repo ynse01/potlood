@@ -41,6 +41,7 @@ export class RunStyle {
     public _caps: boolean | undefined;
     public _smallCaps: boolean | undefined;
     public _shadingColor: string | undefined;
+    public _visible: boolean | undefined;
 
     public static fromPresentationNode(runPresentationNode: ChildNode): RunStyle {
         // TODO: Handle themeShade, themeTint, em, emboss, fitText, imprint, outline, position, shadow, vanish, vertAlign
@@ -73,6 +74,10 @@ export class RunStyle {
         style._color = Xml.getStringValueFromNode(runPresentationNode, "w:color");
         style._caps = Xml.getBooleanValueFromNode(runPresentationNode, "w:caps");
         style._smallCaps = Xml.getBooleanValueFromNode(runPresentationNode, "w:smallcaps");
+        const vanish = Xml.getFirstChildOfName(runPresentationNode, "w:vanish");
+        if (vanish !== undefined) {
+            style._visible = true;
+        }
         return style;
     }
 
