@@ -40,13 +40,15 @@ export class RunStyle {
     public _color: string | undefined;
     public _caps: boolean | undefined;
     public _smallCaps: boolean | undefined;
+    public _shadingColor: string | undefined;
 
     public static fromPresentationNode(runPresentationNode: ChildNode): RunStyle {
-        // TODO: Handle themeShade, themeTint, em, emboss, fitText, imprint, outline, position, shadow, shd, vanish, vertAlign
+        // TODO: Handle themeShade, themeTint, em, emboss, fitText, imprint, outline, position, shadow, vanish, vertAlign
         const style = new RunStyle();
         style._basedOnId = Xml.getStringValueFromNode(runPresentationNode, "w:rStyle");
         style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
         style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
+        style._shadingColor = Style.getShadingFromNode(runPresentationNode);
         const underlineMode = Xml.getStringValueFromNode(runPresentationNode, "w:u");
         if (underlineMode !== undefined) {
             style._underlineMode = UnderlineMode[underlineMode as keyof typeof UnderlineMode];

@@ -28,6 +28,19 @@ export class Style {
         return style;
     }
 
+    public static getShadingFromNode(styleNode: ChildNode): string | undefined {
+        let shadingColor: string | undefined = undefined;
+        const shadingNode = Xml.getFirstChildOfName(styleNode, "w:shd") as Element;
+        if (shadingNode !== undefined) {
+            // TODO: Parse patterns also.
+            const fillAttr = Xml.getAttribute(shadingNode, "w:fill");
+            if (fillAttr !== undefined) {
+                shadingColor = fillAttr;
+            }
+        }
+        return shadingColor;
+    }
+
     public applyNamedStyles(namedStyles: NamedStyles | undefined): void {
         if (this._basedOnId !== undefined && namedStyles !== undefined) {
             const baseStyle = namedStyles.getNamedStyle(this._basedOnId);
@@ -118,7 +131,7 @@ export class Style {
     }
 
     public get shadingColor(): string {
-        return this.getValue("000000", (parStyle) => parStyle._shadingColor, undefined);
+        return this.getValue("000000", (parStyle) => parStyle._shadingColor, (runStyle) => runStyle._shadingColor);
     }
 
     public getIndentation(inRun: InSequence, inParagaph: InSequence): number {

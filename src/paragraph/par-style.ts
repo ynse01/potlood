@@ -50,7 +50,7 @@ export class ParStyle {
         }
         parStyle.setLineSpacingFromNode(parPresentationNode);
         parStyle.setParSpacingFromNode(parPresentationNode);
-        parStyle.setShadingFromNode(parPresentationNode);
+        parStyle._shadingColor = Style.getShadingFromNode(parPresentationNode);
         return parStyle;
     }
 
@@ -142,17 +142,6 @@ export class ParStyle {
             const afterAutoAttr = Xml.getAttribute(spacingNode, "w:afterAutospacing");
             if (afterAutoAttr !== undefined) {
                 this._parAutoSpacingAfter = Xml.attributeAsBoolean(afterAutoAttr);
-            }
-        }
-    }
-
-    private setShadingFromNode(styleNode: ChildNode): void {
-        const shadingNode = Xml.getFirstChildOfName(styleNode, "w:shd") as Element;
-        if (shadingNode !== undefined) {
-            // TODO: Parse patterns also.
-            const fillAttr = Xml.getAttribute(shadingNode, "w:fill");
-            if (fillAttr !== undefined) {
-                this._shadingColor = fillAttr;
             }
         }
     }
