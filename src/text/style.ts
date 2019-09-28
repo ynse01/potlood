@@ -164,8 +164,8 @@ export class Style {
         return this.getValue(Justification.left, (parStyle) => parStyle._justification, undefined);
     }
 
-    public get visible(): boolean {
-        return this.getValue(true, undefined, (runStyle) => runStyle._visible);
+    public get invisible(): boolean {
+        return this.getValue(false, undefined, (runStyle) => runStyle._invisible);
     }
 
     public get font(): string {

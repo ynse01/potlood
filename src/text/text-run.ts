@@ -41,7 +41,7 @@ export class TextRun implements ILayoutable {
 
     public getFlowLines(flow: VirtualFlow): IPositionedTextLine[] {
         let lines: IPositionedTextLine[] = [];
-        if (this.style.visible) {
+        if (!this.style.invisible) {
             const result = TextFitter.getFlowLines(this.texts, this.style, this.inParagraph, this.previousXPos, flow);
             this.lastXPos = result.lastXPos;
             lines = result.lines;
