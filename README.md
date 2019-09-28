@@ -19,3 +19,6 @@ Potlood is Dutch for Pencil.
 - Pie Chart
 - Scatter plot
 - Multiple columns
+- Tab stops
+- Theme colors
+- Patterns

@@ -186,6 +186,14 @@ export class Style {
     }
 
     private getRecursive<T>(parCb?: (parStyle: ParStyle) => T | undefined, runCb?: (runStyle: RunStyle) => T | undefined): T | undefined {
+        // Style hierarchy:
+        // 1 Document defaults
+        // 2 Table styles
+        // 3 Numbering styles
+        // 4 Paragraph styles
+        // 5 Base run styles
+        // 6 Local Run Style
+        // We inspect the hierarchy backward, for performance reasons
         let val: T | undefined = undefined;
         // First look at local RUN presentation.
         if (this.runStyle !== undefined) {

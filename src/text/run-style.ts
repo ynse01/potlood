@@ -42,6 +42,7 @@ export class RunStyle {
     public _smallCaps: boolean | undefined;
 
     public static fromPresentationNode(runPresentationNode: ChildNode): RunStyle {
+        // TODO: Handle themeShade, themeTint, em, emboss, fitText, imprint, outline, position, shadow, shd, vanish, vertAlign
         const style = new RunStyle();
         style._basedOnId = Xml.getStringValueFromNode(runPresentationNode, "w:rStyle");
         style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");

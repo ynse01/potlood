@@ -32,6 +32,7 @@ export class TextReader {
                         }
                         break;
                     case "w:br":
+                    case "w:cr":
                         texts.push(" \n ");
                         break;
                     default:

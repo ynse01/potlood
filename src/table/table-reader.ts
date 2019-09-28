@@ -194,6 +194,7 @@ export class TableReader {
     }
 
     private static readTableBorder(borderNode: ChildNode): TableBorder {
+        // TODO: Handle frame, shadow
         const border = new TableBorder();
         const val = Xml.getAttribute(borderNode, "w:val");
         if (val !== undefined) {
@@ -201,7 +202,7 @@ export class TableReader {
         }
         const sz = Xml.getAttribute(borderNode, "w:sz");
         if (sz !== undefined) {
-            // Borders are in eights of a point.
+            // Border size is in eights of a point.
             border.size = Metrics.convertPointToPixels(parseInt(sz, 10) / 8);
         }
         const space = Xml.getAttribute(borderNode, "w:space");
