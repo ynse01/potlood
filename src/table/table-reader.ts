@@ -210,8 +210,8 @@ export class TableReader {
         }
         const sz = Xml.getAttribute(borderNode, "w:sz");
         if (sz !== undefined) {
-            // Border size is in eights of a point.
-            border.size = Metrics.convertPointToPixels(parseInt(sz, 10) / 8);
+            // Border size is in quarter points.
+            border.size = Metrics.convertPointToPixels(parseInt(sz, 10) / 4);
         }
         const space = Xml.getAttribute(borderNode, "w:space");
         if (space !== undefined) {
