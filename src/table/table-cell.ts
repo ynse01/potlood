@@ -8,18 +8,16 @@ export class TableCell {
     public columns: TableColumn[];
     public rowSpan: number = 1;
     public pars: Paragraph[] = [];
-    public tableStyle: TableStyle;
     public style: TableStyle;
 
-    constructor(columns: TableColumn[], tableStyle: TableStyle, style: TableStyle, startIndex: number) {
-        this.tableStyle = tableStyle;
+    constructor(columns: TableColumn[], style: TableStyle, startIndex: number) {
         this.style = style;
         this.columns = this.getColumns(columns, startIndex);
     }
 
     public getHeight(): number {
         const width = this.getTextWidth();
-        let height = this.tableStyle.margins.cellMarginTop + this.tableStyle.margins.cellMarginBottom;
+        let height = this.style.margins.cellMarginTop + this.style.margins.cellMarginBottom;
         this.pars.forEach(par => {
             height += par.getTextHeight(width);
         });
@@ -39,7 +37,7 @@ export class TableCell {
     }
 
     public getTextWidth(): number {
-        return this.getWidth() - this.tableStyle.margins.cellMarginStart - this.tableStyle.margins.cellMarginEnd;
+        return this.getWidth() - this.style.margins.cellMarginStart - this.style.margins.cellMarginEnd;
     }
 
     private getColumns(columns: TableColumn[], startIndex: number): TableColumn[] {

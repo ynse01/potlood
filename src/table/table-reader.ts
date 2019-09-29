@@ -30,25 +30,27 @@ export class TableReader {
                 }
             });
         }
+        const prNode = Xml.getFirstChildOfName(tableNode, "w:tblPr");
+        if (prNode !== undefined) {
+            table.style = this.readTableStyle(prNode);
+        }
         tableNode.childNodes.forEach(rowNode => {
             if (rowNode.nodeName === "w:tr") {
                 const row = this.readTableRow(rowNode, table);
                 table.rows.push(row);
             }
         });
-        const prNode = Xml.getFirstChildOfName(tableNode, "w:tblPr");
-        if (prNode !== undefined) {
-            table.style = this.readTableStyle(prNode);
-        }
         return table;
     }
 
     private static readTableRow(rowNode: ChildNode, table: Table): TableRow {
         const row = new TableRow();
+        const rowStyle = new TableStyle();
+        rowStyle.higherStyle = table.style;
         let colIndex = 0;
         rowNode.childNodes.forEach(cellNode => {
             if (cellNode.nodeName === "w:tc") {
-                const cell = this.readTableCell(cellNode, table, colIndex);
+                const cell = this.readTableCell(cellNode, table, rowStyle, colIndex);
                 colIndex += cell.columns.length;
                 row.cells.push(cell);
             }
@@ -56,15 +58,15 @@ export class TableReader {
         return row;
     }
 
-    private static readTableCell(cellNode: ChildNode, table: Table, colIndex: number): TableCell {
+    private static readTableCell(cellNode: ChildNode, table: Table, rowStyle: TableStyle, colIndex: number): TableCell {
         const prNode = Xml.getFirstChildOfName(cellNode, "w:tcPr");
         let style;
         if (prNode !== undefined) {
-            style = this.readTableCellPresentation(prNode);
+            style = this.readTableCellPresentation(prNode, rowStyle);
         } else {
             style = new TableStyle();
         }
-        const cell = new TableCell(table.columns, table.style, style, colIndex);
+        const cell = new TableCell(table.columns, style, colIndex);
         cellNode.childNodes.forEach(pNode => {
             if (pNode.nodeName === "w:p") {
                 const par = ParagraphReader.readParagraph(table.docx, pNode);
@@ -79,8 +81,9 @@ export class TableReader {
         return cell;
     }
 
-    private static readTableCellPresentation(cellPrNode: ChildNode): TableStyle {
+    private static readTableCellPresentation(cellPrNode: ChildNode, rowStyle: TableStyle): TableStyle {
         const style = new TableStyle();
+        style.higherStyle = rowStyle;
         const tcW = Xml.getFirstChildOfName(cellPrNode, "w:tcW");
         if (tcW !== undefined) {
             const w = Xml.getAttribute(tcW, "w:w");

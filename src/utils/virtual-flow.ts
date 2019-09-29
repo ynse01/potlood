@@ -59,7 +59,7 @@ export class VirtualFlow {
     }
 
     public createCellFlow(cell: TableCell, table: Table) : VirtualFlow {
-        const start = this.getX() + cell.getStart() + cell.tableStyle.margins.cellMarginStart;
+        const start = this.getX() + cell.getStart() + cell.style.margins.cellMarginStart;
         const width = cell.getWidth();
         const y = this._pos + table.style.cellSpacing;
         return new VirtualFlow(start, start + width, y);

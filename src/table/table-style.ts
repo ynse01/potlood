@@ -3,6 +3,7 @@ import { Borders } from "./borders.js";
 import { Margins } from "./margins.js";
 
 export class TableStyle {
+    public higherStyle: TableStyle | undefined;
     public width: number | undefined;
     public justification: Justification | undefined;
     public identation: number | undefined;
