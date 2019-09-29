@@ -32,7 +32,7 @@ export class TableRenderer {
     }
     
     private renderCellShading(cell: TableCell, flow: VirtualFlow, height: number): void {
-        if (cell.style.shading !== undefined) {
+        if (cell.style.shading !== "") {
             let x = flow.getX();
             let y = flow.getY();
             let width = cell.getWidth();
@@ -44,7 +44,7 @@ export class TableRenderer {
         let outerBorders: Borders | undefined = style.borders;
         const innerBorders = cell.style.borders;
         // Resolve border conflicts
-        if (style.cellSpacing === 0 && innerBorders !== undefined) {
+        if (style.cellSpacing === 0 && cell.style.hasBordersDefined) {
             outerBorders = undefined;
         }
         let x = flow.getX();

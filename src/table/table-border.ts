@@ -36,8 +36,8 @@ export class TableBorder {
     public color: string;
 
     constructor() {
-        this.type = TableBorderType.none;
-        this.size = 0;
+        this.type = TableBorderType.single;
+        this.size = 1;
         this.spacing = 0;
         this.color = "000000";
     }

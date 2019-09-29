@@ -97,21 +97,24 @@ export class TableReader {
         }
         const tcBorders = Xml.getFirstChildOfName(cellPrNode, "w:tcBorders");
         if (tcBorders !== undefined) {
-            style.borders = new Borders();
-            this.readBorders(tcBorders, style.borders);
+            style.borders = this.readBorders(tcBorders);
         }
         const tcMargins = Xml.getFirstChildOfName(cellPrNode, "w:tcMar");
         if (tcMargins !== undefined) {
-            this.readCellMargins(tcMargins, style.margins);
+            style.margins = this.readCellMargins(tcMargins);
         }
         const tcShading = Xml.getFirstChildOfName(cellPrNode, "w:shd");
         if (tcShading !== undefined) {
-            style.shading = Xml.getAttribute(tcShading, "fill");
+            const shading = Xml.getAttribute(tcShading, "fill");
+            if (shading !== undefined) {
+                style.shading = shading;
+            }
         }
         return style;
     }
 
-    private static readBorders(bordersNode: ChildNode, borders: Borders): void {
+    private static readBorders(bordersNode: ChildNode): Borders {
+        const borders = new Borders();
         bordersNode.childNodes.forEach(node => {
             const name = node.nodeName;
             switch (name) {
@@ -145,9 +148,11 @@ export class TableReader {
                     break;
             }
         });
+        return borders;
     }
 
-    private static readCellMargins(cellMarginNode: ChildNode, margins: Margins): void {
+    private static readCellMargins(cellMarginNode: ChildNode): Margins {
+        const margins = new Margins();
         cellMarginNode.childNodes.forEach(node => {
             const name = node.nodeName;
             switch (name) {
@@ -193,6 +198,7 @@ export class TableReader {
                     break;
             }
         });
+        return margins;
     }
 
     private static readTableBorder(borderNode: ChildNode): TableBorder {
@@ -220,13 +226,13 @@ export class TableReader {
 
     private static readTableStyle(tblPrNode: ChildNode): TableStyle {
         const style = new TableStyle();
-        const borders = Xml.getFirstChildOfName(tblPrNode, "w:tblBorders");
-        if (borders !== undefined) {
-            this.readBorders(borders, style.borders);
+        const tableBorders = Xml.getFirstChildOfName(tblPrNode, "w:tblBorders");
+        if (tableBorders !== undefined) {
+            style.borders = this.readBorders(tableBorders);
         }
         const cellMargins = Xml.getFirstChildOfName(tblPrNode, "w:tblCellMar");
         if (cellMargins !== undefined) {
-            this.readCellMargins(cellMargins, style.margins);
+            style.margins = this.readCellMargins(cellMargins);
         }
         const justification = Xml.getStringValueFromNode(tblPrNode, "w:jc");
         if (justification !== undefined) {
