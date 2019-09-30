@@ -157,11 +157,9 @@ export class TableReader {
             const name = node.nodeName;
             switch (name) {
                 case "w:left":
-                    if (margins.cellMarginStart === undefined) {
-                        const txt = Xml.getAttribute(node, "w:w");
-                        if (txt !== undefined) {
-                            margins.cellMarginStart = Metrics.convertTwipsToPixels(parseInt(txt));
-                        }
+                    const left = Xml.getAttribute(node, "w:w");
+                    if (left !== undefined) {
+                        margins.cellMarginStart = Metrics.convertTwipsToPixels(parseInt(left));
                     }
                     break;
                 case "w:start":
@@ -171,11 +169,9 @@ export class TableReader {
                     }
                     break;
                 case "w:right":
-                    if (margins.cellMarginEnd === undefined) {
-                        const txt = Xml.getAttribute(node, "w:w");
-                        if (txt !== undefined) {
-                            margins.cellMarginEnd = Metrics.convertTwipsToPixels(parseInt(txt));
-                        }
+                    const right = Xml.getAttribute(node, "w:w");
+                    if (right !== undefined) {
+                        margins.cellMarginEnd = Metrics.convertTwipsToPixels(parseInt(right));
                     }
                     break;
                 case "w:end":

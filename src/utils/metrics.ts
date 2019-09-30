@@ -40,7 +40,7 @@ export class Metrics {
    * @param points Word point.
    */
   public static convertPointToFontSize(points: number): number {
-    return points * 52 / 72;
+    return points * 46 / 72;
   }
 
   /**
