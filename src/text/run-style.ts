@@ -90,8 +90,9 @@ export class RunStyle {
         }
     }
 
-    public updateFont(fontFamily: string, fontSize: number): void {
+    public updateFont(fontFamily: string, bold: boolean, fontSize: number): void {
         this._fontFamily = fontFamily;
+        this._bold = bold;
         this._fontSize = fontSize;
     }
 
