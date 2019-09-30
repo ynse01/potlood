@@ -16,7 +16,7 @@ export class TextFitter {
     ): { lines: IPositionedTextLine[], lastXPos: number } {
         const isStartingRun = (inParagraph === InSequence.First || inParagraph === InSequence.Only);
         const isLastRun = (inParagraph === InSequence.Last || inParagraph === InSequence.Only);
-        let currentXPadding = (lastXPos !== undefined && !isStartingRun) ? (lastXPos + Fonts.averageCharWidth(style)) : 0;
+        let currentXPadding = (lastXPos !== undefined && !isStartingRun) ? lastXPos : 0;
         let txt = texts.join(' ');
         if (style.caps || style.smallCaps) {
             txt = txt.toLocaleUpperCase();
