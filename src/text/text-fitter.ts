@@ -37,7 +37,7 @@ export class TextFitter {
                 lines.push({
                     text: txt.substr(previousEnd, currentLength),
                     x: flow.getX() + style.getIndentation(inRun, inParagraph) + currentXPadding,
-                    y: flow.getY(),
+                    y: flow.getY() + style.fontSize / 2,
                     width: flow.getWidth() - currentXPadding,
                     fitWidth: !lastLine,
                     inRun: (lastLine) ? InSequence.Last : inRun
