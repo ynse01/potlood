@@ -1,5 +1,5 @@
 import { Justification } from "../paragraph/par-style.js";
-import { Borders } from "./borders.js";
+import { TableBorderSet } from "./table-border-set.js";
 import { Margins } from "./margins.js";
 
 export class TableStyle {
@@ -7,7 +7,7 @@ export class TableStyle {
     public width: number | undefined;
     private _justification: Justification | undefined;
     private _identation: number | undefined;
-    private _borders: Borders | undefined;
+    private _borders: TableBorderSet | undefined;
     private _margins: Margins | undefined;
     private _cellSpacing: number | undefined;
     private _gridSpan: number | undefined;
@@ -29,11 +29,11 @@ export class TableStyle {
         this._identation = indentation;
     }
 
-    public get borders(): Borders {
-        return this._getValue(new Borders(), (style) => style._borders);
+    public get borders(): TableBorderSet {
+        return this._getValue(new TableBorderSet(), (style) => style._borders);
     }
 
-    public set borders(borders: Borders) {
+    public set borders(borders: TableBorderSet) {
         this._borders = borders;
     }
 

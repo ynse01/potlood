@@ -4,7 +4,7 @@ import { TableCell } from "./table-cell.js";
 import { TableStyle } from "./table-style.js";
 import { IPainter } from "../painting/i-painter.js";
 import { ParagraphRenderer } from "../paragraph/paragraph-renderer.js";
-import { Borders } from "./borders.js";
+import { TableBorderSet } from "./table-border-set.js";
 
 export class TableRenderer {
     private _parRenderer: ParagraphRenderer;
@@ -41,7 +41,7 @@ export class TableRenderer {
     }
 
     private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, height: number): void {
-        let outerBorders: Borders | undefined = style.borders;
+        let outerBorders: TableBorderSet | undefined = style.borders;
         const innerBorders = cell.style.borders;
         // Resolve border conflicts
         if (style.cellSpacing === 0 && cell.style.hasBordersDefined) {

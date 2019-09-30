@@ -10,7 +10,7 @@ import { ParagraphType } from "../paragraph/paragraph.js";
 import { TableBorder, TableBorderType } from "./table-border.js";
 import { Justification } from "../paragraph/par-style.js";
 import { ParagraphReader } from "../paragraph/paragraph-reader.js";
-import { Borders } from "./borders.js";
+import { TableBorderSet } from "./table-border-set.js";
 import { Margins } from "./margins.js";
 
 export class TableReader {
@@ -113,8 +113,8 @@ export class TableReader {
         return style;
     }
 
-    private static readBorders(bordersNode: ChildNode): Borders {
-        const borders = new Borders();
+    private static readBorders(bordersNode: ChildNode): TableBorderSet {
+        const borders = new TableBorderSet();
         bordersNode.childNodes.forEach(node => {
             const name = node.nodeName;
             switch (name) {
