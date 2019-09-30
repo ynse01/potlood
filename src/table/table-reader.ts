@@ -11,7 +11,7 @@ import { TableBorder, TableBorderType } from "./table-border.js";
 import { Justification } from "../paragraph/par-style.js";
 import { ParagraphReader } from "../paragraph/paragraph-reader.js";
 import { TableBorderSet } from "./table-border-set.js";
-import { Margins } from "./margins.js";
+import { TableMarginSet } from "./table-margin-set.js";
 
 export class TableReader {
     public static readTable(docx: DocumentX, tableNode: ChildNode): Table {
@@ -151,8 +151,8 @@ export class TableReader {
         return borders;
     }
 
-    private static readCellMargins(cellMarginNode: ChildNode): Margins {
-        const margins = new Margins();
+    private static readCellMargins(cellMarginNode: ChildNode): TableMarginSet {
+        const margins = new TableMarginSet();
         cellMarginNode.childNodes.forEach(node => {
             const name = node.nodeName;
             switch (name) {

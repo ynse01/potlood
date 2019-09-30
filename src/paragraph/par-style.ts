@@ -54,6 +54,30 @@ export class ParStyle {
         return parStyle;
     }
 
+    public get spacingBefore(): number {
+        let spacing: number = 0;
+        if (this._parLinesBefore !== undefined && this._lineSpacing !== undefined) {
+            spacing = this._parLinesBefore * this._lineSpacing;
+        } else if (this._parSpacingBefore !== undefined) {
+            spacing = this._parSpacingBefore;
+        } else if (this._parAutoSpacingBefore === true && this._lineSpacing !== undefined) {
+            spacing = 1.08 * this._lineSpacing;
+        }
+        return spacing;
+    }
+
+    public get spacingAfter(): number {
+        let spacing: number = 0;
+        if (this._parLinesAfter !== undefined && this._lineSpacing !== undefined) {
+            spacing = this._parLinesAfter * this._lineSpacing;
+        } else if (this._parSpacingAfter !== undefined) {
+            spacing = this._parSpacingAfter;
+        } else if (this._parAutoSpacingAfter === true && this._lineSpacing !== undefined) {
+            spacing = 1.08 * this._lineSpacing;
+        }
+        return spacing;
+    }
+
     public applyNamedStyles(namedStyles: NamedStyles | undefined): void {
         if (this._basedOnId !== undefined && namedStyles !== undefined) {
             const baseStyle = namedStyles.getNamedStyle(this._basedOnId);

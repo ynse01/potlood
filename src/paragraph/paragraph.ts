@@ -39,8 +39,9 @@ export class Paragraph implements ILayoutable {
         return this._numberingRun;
     }
 
-    public getTextHeight(width: number): number {
-        let height = 0;
+    public getHeight(width: number): number {
+        const style = this.style;
+        let height = (style !== undefined) ? style.spacingAfter + style.spacingBefore : 0;
         this.runs.forEach(run => {
             height += run.getHeight(width);
         });
@@ -49,11 +50,13 @@ export class Paragraph implements ILayoutable {
 
     public performLayout(flow: VirtualFlow): void {
         let previousXPos: number | undefined = -1;
+        flow.advancePosition(this.style!.spacingBefore);
         this.runs.forEach(run => {
             run.previousXPos = previousXPos;
             run.performLayout(flow);
             previousXPos = run.lastXPos;
         });
+        flow.advancePosition(this.style!.spacingAfter);
     }
 
 }

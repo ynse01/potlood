@@ -19,7 +19,7 @@ export class TableCell {
         const width = this.getTextWidth();
         let height = this.style.margins.cellMarginTop + this.style.margins.cellMarginBottom;
         this.pars.forEach(par => {
-            height += par.getTextHeight(width);
+            height += par.getHeight(width);
         });
         return height;
     }

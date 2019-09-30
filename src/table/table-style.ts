@@ -1,6 +1,6 @@
 import { Justification } from "../paragraph/par-style.js";
 import { TableBorderSet } from "./table-border-set.js";
-import { Margins } from "./margins.js";
+import { TableMarginSet } from "./table-margin-set.js";
 
 export class TableStyle {
     public higherStyle: TableStyle | undefined;
@@ -8,7 +8,7 @@ export class TableStyle {
     private _justification: Justification | undefined;
     private _identation: number | undefined;
     private _borders: TableBorderSet | undefined;
-    private _margins: Margins | undefined;
+    private _margins: TableMarginSet | undefined;
     private _cellSpacing: number | undefined;
     private _gridSpan: number | undefined;
     private _shading: string | undefined;
@@ -41,11 +41,11 @@ export class TableStyle {
         return this._borders !== undefined;
     }
 
-    public get margins(): Margins {
-        return this._getValue(new Margins(), (style) => style._margins);
+    public get margins(): TableMarginSet {
+        return this._getValue(new TableMarginSet(), (style) => style._margins);
     }
 
-    public set margins(margins: Margins) {
+    public set margins(margins: TableMarginSet) {
         this._margins = margins;
     }
 

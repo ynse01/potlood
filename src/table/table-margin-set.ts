@@ -1,6 +1,6 @@
 import { Metrics } from "../utils/metrics.js";
 
-export class Margins {
+export class TableMarginSet {
     public cellMarginTop: number;
     public cellMarginStart: number;
     public cellMarginBottom: number;
@@ -12,9 +12,5 @@ export class Margins {
         this.cellMarginTop = 0;
         this.cellMarginStart = defaultHorPadding;
         this.cellMarginEnd = defaultHorPadding;
-    }
-
-    public isZero(): boolean {
-        return this.cellMarginBottom === 0 && this.cellMarginTop === 0;
     }
 }
