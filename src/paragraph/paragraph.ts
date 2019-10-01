@@ -21,12 +21,14 @@ export class Paragraph implements ILayoutable {
         this._numberingRun = numberingRun;
     }
 
-    public get style(): ParStyle | undefined {
-        let parStyle: ParStyle | undefined = undefined;
+    public get style(): ParStyle {
+        let parStyle: ParStyle;
         const firstRun = this._runs[0];
-        if (firstRun !== undefined && firstRun instanceof TextRun) {
+        if (firstRun instanceof TextRun) {
             const firstTextRun = firstRun as TextRun;
             parStyle = firstTextRun.style.parStyle;
+        } else {
+            parStyle = new ParStyle();
         }
         return parStyle;
     }
@@ -39,6 +41,20 @@ export class Paragraph implements ILayoutable {
         return this._numberingRun;
     }
 
+    public getUsedWidth(availableWidth: number): number {
+        let usedWidth = 0;
+        const runs = this.runs;
+        for(let i = 0; i < runs.length; i++) {
+            const runsWidth = runs[i].getUsedWidth(availableWidth);
+            if (runsWidth >= availableWidth) {
+                usedWidth = availableWidth;
+                break;
+            }
+            usedWidth += runsWidth;
+        }
+        return Math.min(usedWidth, availableWidth);
+    }
+
     public getHeight(width: number): number {
         const style = this.style;
         let height = (style !== undefined) ? style.spacingAfter + style.spacingBefore : 0;
@@ -49,7 +65,7 @@ export class Paragraph implements ILayoutable {
     }
 
     public performLayout(flow: VirtualFlow): void {
-        let previousXPos: number | undefined = -1;
+        let previousXPos: number | undefined = 0;
         flow.advancePosition(this.style!.spacingBefore);
         this.runs.forEach(run => {
             run.previousXPos = previousXPos;

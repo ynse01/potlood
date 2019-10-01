@@ -10,21 +10,23 @@ export class Style {
     private _basedOn: Style | undefined;
     private _basedOnId: string | undefined;
 
-    public runStyle: RunStyle | undefined;
-    public parStyle: ParStyle | undefined;
+    public runStyle: RunStyle;
+    public parStyle: ParStyle;
     public tableStyle: TableStyle | undefined;
 
     public static fromStyleNode(styleNode: ChildNode): Style {
-        const style = new Style();
-        style._basedOnId = Xml.getStringValueFromNode(styleNode, "w:basedOn");
+        let parStyle: ParStyle | undefined = undefined;
+        let runStyle: RunStyle | undefined = undefined;
         const parNode = Xml.getFirstChildOfName(styleNode, "w:pPr");
         if (parNode !== undefined) {
-            style.parStyle = ParStyle.fromParPresentationNode(parNode);
+            parStyle = ParStyle.fromParPresentationNode(parNode);
         }
         const runNode = Xml.getFirstChildOfName(styleNode, "w:rPr");
         if (runNode !== undefined) {
-            style.runStyle = RunStyle.fromPresentationNode(runNode);
+            runStyle = RunStyle.fromPresentationNode(runNode);
         }
+        const style = new Style(parStyle, runStyle);
+        style._basedOnId = Xml.getStringValueFromNode(styleNode, "w:basedOn");
         return style;
     }
 
@@ -39,6 +41,11 @@ export class Style {
             }
         }
         return shadingColor;
+    }
+
+    constructor(parStyle?: ParStyle, runStyle?: RunStyle) {
+        this.parStyle = (parStyle !== undefined) ? parStyle : new ParStyle();
+        this.runStyle = (runStyle !== undefined) ? runStyle : new RunStyle();
     }
 
     public applyNamedStyles(namedStyles: NamedStyles | undefined): void {

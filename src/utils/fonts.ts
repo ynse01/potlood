@@ -1,6 +1,5 @@
 import { Metrics } from './metrics.js';
 import { Style } from '../text/style.js';
-import { RunStyle } from '../text/run-style.js';
 
 export class Fonts {
   private static _initialized = false;
@@ -30,7 +29,6 @@ export class Fonts {
         'Impact'
       ];
       const style = new Style();
-      style.runStyle = new RunStyle();
       style.runStyle.updateFont('Times New Roman', false, Fonts.testSize);
       Fonts.baseline = Metrics.getTextWidth(Fonts.testString, style) / Fonts.testString.length;
       Fonts._foundFonts['Times New Roman'] = Fonts.baseline;
@@ -80,7 +78,6 @@ export class Fonts {
 
   private static testFont(family: string, bold: boolean): boolean {
     const style = new Style();
-    style.runStyle = new RunStyle();
     style.runStyle.updateFont(family, bold, Fonts.testSize);
     const name = Fonts._getName(family, bold);
     const widthOfString = Metrics.getTextWidth(Fonts.testString, style);
