@@ -1,54 +1,59 @@
-import { Style } from "./style.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { InSequence } from "../utils/in-sequence.js";
 import { Fonts } from "../utils/fonts.js";
+import { TextRun } from "./text-run.js";
 import { Metrics } from "../utils/metrics.js";
 
 export class TextFitter {
 
-    public static getFlowLines(
-        texts: string[],
-        style: Style,
-        inParagraph: InSequence,
-        lastXPos: number | undefined,
-        flow: VirtualFlow
-    ): { lines: IPositionedTextLine[], lastXPos: number } {
-        const isStartingRun = (inParagraph === InSequence.First || inParagraph === InSequence.Only);
-        const isLastRun = (inParagraph === InSequence.Last || inParagraph === InSequence.Only);
-        let currentXPadding = (lastXPos !== undefined && !isStartingRun) ? lastXPos : 0;
-        let txt = texts.join(' ');
-        if (style.caps || style.smallCaps) {
+    public static getFlowLines(run: TextRun, flow: VirtualFlow): { lines: IPositionedTextLine[], lastXPos: number } {
+        const isStartingRun = (run.inParagraph === InSequence.First || run.inParagraph === InSequence.Only);
+        const isLastRun = (run.inParagraph === InSequence.Last || run.inParagraph === InSequence.Only);
+        let inRun = InSequence.First;
+        let currentXPadding: number = 0;
+        let isFollowing = false;
+        if (run.previousXPos !== undefined && !isStartingRun) {
+            currentXPadding = run.previousXPos;
+            isFollowing = true;
+        } else {
+            currentXPadding = run.style.getIndentation(inRun, run.inParagraph);
+            // Text is on baseline, flow is at the top, correcting here.
+            flow.advancePosition(run.style.fontSize / 2);
+        }
+        let txt = run.texts.join(' ');
+        if (run.style.caps || run.style.smallCaps) {
             txt = txt.toLocaleUpperCase();
         }
         const words = txt.split(' ');
         let previousEnd = 0;
         let currentLength = 0;
-        let inRun = InSequence.First;
-        let numChars = Fonts.fitCharacters(flow.getWidth() - currentXPadding, style);
-        let lastLine = false;
+        let numChars = Fonts.fitCharacters(flow.getWidth() - currentXPadding, run.style);
+        let isLastLine = false;
         const lines: IPositionedTextLine[] = [];
-        const lineHeight = style.lineSpacing;
+        const lineHeight = run.style.lineSpacing;
         for(let i = 0; i < words.length; i++) {
             currentLength += words[i].length + 1;
-            lastLine = (i === words.length - 1);
+            isLastLine = (i === words.length - 1);
             const isNewLine = words[i] === '\n';
-            if (currentLength >= numChars || lastLine || isNewLine) {
+            if (currentLength >= numChars || isLastLine || isNewLine) {
                 lines.push({
                     text: txt.substr(previousEnd, currentLength),
-                    x: flow.getX() + style.getIndentation(inRun, inParagraph) + currentXPadding,
-                    y: flow.getY() + style.fontSize / 2,
+                    x: flow.getX() + currentXPadding,
+                    y: flow.getY(),
                     width: flow.getWidth() - currentXPadding,
-                    fitWidth: !lastLine,
-                    inRun: (lastLine) ? InSequence.Last : inRun
+                    fitWidth: !isLastLine,
+                    following: isFollowing,
+                    inRun: (isLastLine) ? InSequence.Last : inRun
                 });
-                if (isLastRun || !lastLine) {
+                if (isLastRun || !isLastLine) {
                     flow.advancePosition(lineHeight);
                 }
-                if (!lastLine) {
-                    currentXPadding = 0;
-                    numChars = Fonts.fitCharacters(flow.getWidth() - currentXPadding, style);
+                if (!isLastLine) {
+                    isFollowing = false;
                     inRun = InSequence.Middle;
+                    currentXPadding = run.style.getIndentation(inRun, run.inParagraph);
+                    numChars = Fonts.fitCharacters(flow.getWidth() - currentXPadding, run.style);
                     previousEnd += currentLength;
                     currentLength = 0;
                 }
@@ -57,6 +62,6 @@ export class TextFitter {
         if (lines.length === 1) {
             lines[0].inRun = InSequence.Only;
         }
-        return { lines: lines, lastXPos: currentXPadding + Metrics.getTextWidth(lines[lines.length - 1].text, style) };
+        return { lines: lines, lastXPos: currentXPadding + Metrics.getTextWidth(lines[lines.length - 1].text, run.style) };
     }
 }

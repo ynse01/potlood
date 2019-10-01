@@ -7,5 +7,6 @@ export interface IPositionedTextLine {
     y: number;
     width: number;
     fitWidth: boolean;
+    following: boolean;
     inRun: InSequence;
 }

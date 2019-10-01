@@ -19,10 +19,15 @@ export class TextRenderer {
     }
     
     private renderText(line: IPositionedTextLine, style: Style): void {
-        if (style.shadingColor !== "000000") {
-            this._painter.paintLine(line.x, line.y, line.x + line.width, line.y, style.shadingColor, style.lineSpacing);
+        let x = line.x;
+        if (line.following) {
+            const rect = this._painter.measureLastText();
+            x = rect.x + rect.width;
         }
-        this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
+        if (style.shadingColor !== "000000") {
+            this._painter.paintLine(x, line.y, x + line.width, line.y, style.shadingColor, style.lineSpacing);
+        }
+        this._painter.paintText(x, line.y, line.width, line.fitWidth, line.text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
         if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
             // Render underline after adding text to DOM.
             const lastTextRect = this._painter.measureLastText();
