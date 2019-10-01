@@ -35,7 +35,7 @@ export class ParagraphReader {
                 }
             }
         });
-        const firstRun = runs[0];
+        const firstRun = numberingRun || runs[0];
         if (runs.length == 1 && firstRun instanceof TextRun) {
             firstRun.inParagraph = InSequence.Only;
         } else if (runs.length > 0) {
