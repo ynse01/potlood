@@ -19,7 +19,7 @@ export class TextFitter {
         } else {
             currentXPadding = run.style.getIndentation(inRun, run.inParagraph);
             // Text is on baseline, flow is at the top, correcting here.
-            flow.advancePosition(run.style.fontSize / 2);
+            flow.advancePosition(FontMetrics.getTopToBaseline(run.style));
         }
         let txt = run.texts.join(' ');
         if (run.style.caps || run.style.smallCaps) {
@@ -61,6 +61,9 @@ export class TextFitter {
         }
         if (lines.length === 1) {
             lines[0].inRun = InSequence.Only;
+        }
+        if (isLastRun) {
+            flow.advancePosition(FontMetrics.getBaselineToBottom(run.style));
         }
         return { lines: lines, lastXPos: currentXPadding + Metrics.getTextWidth(lines[lines.length - 1].text, run.style) };
     }

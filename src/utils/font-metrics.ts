@@ -22,6 +22,24 @@ export class FontMetrics {
         return charWidth;
     }
  
+    public static getTotalHeight(style: Style): number {
+        const metric = this.getFontMetrics(style);
+        const testHeight = metric.fontBoundingBoxAscent + metric.fontBoundingBoxDescent;
+        return testHeight * style.fontSize / this._testSize;
+    }
+
+    public static getTopToBaseline(style: Style): number {
+        const metric = this.getFontMetrics(style);
+        const testHeight = metric.fontBoundingBoxAscent || this._testSize / 2;
+        return testHeight * style.fontSize / this._testSize;
+    }
+
+    public static getBaselineToBottom(style: Style): number {
+        const metric = this.getFontMetrics(style);
+        const testHeight = metric.fontBoundingBoxDescent || this._testSize / 2;
+        return testHeight * style.fontSize / this._testSize;
+    }
+
     private static getFontMetrics(style: Style) {
         const id = style.fontFamily + (style.bold) ? "-bold" : "";
         let metrics = FontMetrics._fonts[id];
