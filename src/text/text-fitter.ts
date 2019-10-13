@@ -1,9 +1,9 @@
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { InSequence } from "../utils/in-sequence.js";
-import { Fonts } from "../utils/fonts.js";
 import { TextRun } from "./text-run.js";
 import { Metrics } from "../utils/metrics.js";
+import { FontMetrics } from "../utils/font-metrics.js";
 
 export class TextFitter {
 
@@ -28,7 +28,7 @@ export class TextFitter {
         const words = txt.split(' ');
         let previousEnd = 0;
         let currentLength = 0;
-        let numChars = Fonts.fitCharacters(flow.getWidth() - currentXPadding, run.style);
+        let numChars = FontMetrics.fitCharacters(flow.getWidth() - currentXPadding, run.style);
         let isLastLine = false;
         const lines: IPositionedTextLine[] = [];
         const lineHeight = run.style.lineSpacing;
@@ -53,7 +53,7 @@ export class TextFitter {
                     isFollowing = false;
                     inRun = InSequence.Middle;
                     currentXPadding = run.style.getIndentation(inRun, run.inParagraph);
-                    numChars = Fonts.fitCharacters(flow.getWidth() - currentXPadding, run.style);
+                    numChars = FontMetrics.fitCharacters(flow.getWidth() - currentXPadding, run.style);
                     previousEnd += currentLength;
                     currentLength = 0;
                 }

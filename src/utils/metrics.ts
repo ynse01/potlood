@@ -79,11 +79,16 @@ export class Metrics {
     text: string,
     style: Style
   ): number {
+    const metrics = this.getTextMetrics(text, style);
+    return metrics.width;
+  }
+
+  public static getTextMetrics(text: string, style: Style) {
     const italicText = (style.italic) ? "italic ": "";
     const boldText = (style.bold) ? "bold ": "";
     this.context.font = italicText + boldText + Math.round(style.fontSize) + 'px ' + style.fontFamily;
     const metrics = this.context.measureText(text);
-    return metrics.width;
+    return metrics;
   }
 
   public static init(): void {

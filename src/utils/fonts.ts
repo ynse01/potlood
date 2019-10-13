@@ -60,22 +60,7 @@ export class Fonts {
     }
     return true;
   }
-
-  public static fitCharacters(width: number, style: Style): number {
-    const charWidth = Fonts.averageCharWidth(style);
-    return Math.floor(width / charWidth);
-  }
-
-  public static averageCharWidth(style: Style): number {
-    const fontSize = style.fontSize;
-    const fontFamily = style.fontFamily;
-    Fonts.tryAddFont(fontFamily, style.bold);
-    const fontWidth = Fonts._foundFonts[fontFamily];
-    const charWidth = fontWidth * fontSize / Fonts.testSize;
-    // Reduce 20% seems to give better results on actual text.
-    return charWidth / 1.2;
-  }
-
+  
   private static testFont(family: string, bold: boolean): boolean {
     const style = new Style();
     style.runStyle.updateFont(family, bold, Fonts.testSize);
