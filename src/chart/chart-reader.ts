@@ -4,13 +4,17 @@ import { BarChart } from "./bar-chart.js";
 import { ChartSeries } from "./chart-series.js";
 import { ChartValue } from "./chart-value.js";
 import { ChartAxis, ChartAxisPosition, ChartAxisTickMode, ChartAxisLabelAlignment, ChartAxisCrossMode } from "./chart-axis.js";
-import { ChartSpaceStyle } from "./chart-space-style.js";
+import { ChartStyle } from "./chart-style.js";
 import { Metrics } from "../utils/metrics.js";
 
 export class ChartReader {
     public static readChartFromNode(chartSpaceNode: Node, space: ChartSpace): ChartSpace {
         const chartNode = Xml.getFirstChildOfName(chartSpaceNode, "c:chart");
         if (chartNode !== undefined) {
+            const spaceStyleNode = Xml.getFirstChildOfName(chartSpaceNode, "c:spPr");
+            if (spaceStyleNode !== undefined) {
+                space.style = this._readStyle(spaceStyleNode);
+            }
             const plotAreaNode = Xml.getFirstChildOfName(chartNode, "c:plotArea");
             if (plotAreaNode !== undefined) {
                 plotAreaNode.childNodes.forEach(child => {
@@ -19,13 +23,13 @@ export class ChartReader {
                             space.setBarChart(this._readBarChart(child, space));
                             break;
                         case "c:catAx":
-                            space.categoryAxis = this._readChartAxis(child);
+                            space.plotArea.categoryAxis = this._readChartAxis(child);
                             break;
                         case "c:valAx":
-                            space.valueAxis = this._readChartAxis(child);
+                            space.plotArea.valueAxis = this._readChartAxis(child);
                             break;
                         case "c:spPr":
-                            space.style = this._readSpaceStyle(child);
+                            space.plotArea.style = this._readStyle(child);
                     }
                 });
             }
@@ -44,9 +48,9 @@ export class ChartReader {
         return chart;
     }
 
-    private static _readSpaceStyle(spaceStyleNode: Node): ChartSpaceStyle {
-        const style = new ChartSpaceStyle();
-        spaceStyleNode.childNodes.forEach(child => {
+    private static _readStyle(styleNode: Node): ChartStyle {
+        const style = new ChartStyle();
+        styleNode.childNodes.forEach(child => {
             switch (child.nodeName) {
                 case "a:noFill":
                     style.fillColor = undefined;

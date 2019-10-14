@@ -1,13 +1,12 @@
 import { BarChart } from "./bar-chart.js";
-import { ChartAxis } from "./chart-axis.js";
-import { ChartSpaceStyle } from "./chart-space-style.js";
+import { ChartStyle } from "./chart-style.js";
+import { ChartPlotArea } from "./chart-plot-area.js";
 
 export class ChartSpace {
     private _promise: Promise<void> | undefined = undefined;
     private _barChart: BarChart | undefined = undefined;
-    public style: ChartSpaceStyle = new ChartSpaceStyle();
-    public valueAxis: ChartAxis | undefined;
-    public categoryAxis: ChartAxis | undefined;
+    public style: ChartStyle = new ChartStyle();
+    public plotArea: ChartPlotArea = new ChartPlotArea();
 
     public async ensureLoaded(): Promise<void> {
         if (this._promise !== undefined) {

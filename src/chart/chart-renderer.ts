@@ -18,7 +18,7 @@ export class ChartRenderer {
         const topY = flow.getY();
         const bottomY = topY + height;
         const range = barChart.getValueRange();
-        const valueAxis = barChart.space.valueAxis;
+        const valueAxis = barChart.space.plotArea.valueAxis;
         if (valueAxis !== undefined && valueAxis.crossMode === ChartAxisCrossMode.AutoZero) {
             range.min = 0;
         }
