@@ -1,9 +1,11 @@
 import { BarChart } from "./bar-chart.js";
 import { ChartAxis } from "./chart-axis.js";
+import { ChartSpaceStyle } from "./chart-space-style.js";
 
 export class ChartSpace {
     private _promise: Promise<void> | undefined = undefined;
     private _barChart: BarChart | undefined = undefined;
+    public style: ChartSpaceStyle = new ChartSpaceStyle();
     public valueAxis: ChartAxis | undefined;
     public categoryAxis: ChartAxis | undefined;
 

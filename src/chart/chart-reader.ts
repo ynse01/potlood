@@ -4,6 +4,7 @@ import { BarChart } from "./bar-chart.js";
 import { ChartSeries } from "./chart-series.js";
 import { ChartValue } from "./chart-value.js";
 import { ChartAxis, ChartAxisPosition, ChartAxisTickMode, ChartAxisLabelAlignment } from "./chart-axis.js";
+import { ChartSpaceStyle } from "./chart-space-style.js";
 
 export class ChartReader {
     public static readChartFromNode(chartSpaceNode: Node, space: ChartSpace): ChartSpace {
@@ -23,7 +24,7 @@ export class ChartReader {
                             space.valueAxis = this._readChartAxis(child);
                             break;
                         case "c:spPr":
-                            //space.style = this._readSpaceStyle(child);
+                            space.style = this._readSpaceStyle(child);
                     }
                 });
             }
@@ -40,6 +41,10 @@ export class ChartReader {
             }
         });
         return chart;
+    }
+
+    private static _readSpaceStyle(_spaceStyleNode: Node): ChartSpaceStyle {
+        return new ChartSpaceStyle();
     }
 
     private static _readChartAxis(_axisNode: Node): ChartAxis {
