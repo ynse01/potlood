@@ -1,8 +1,14 @@
 import { ChartSeries } from "./chart-series.js";
 import { ChartValue } from "./chart-value.js";
+import { ChartSpace } from "./chart-space.js";
 
 export class BarChart {
     public series: ChartSeries[] = [];
+    public space: ChartSpace;
+
+    constructor(space: ChartSpace) {
+        this.space = space;
+    }
 
     public getValueBounds(): {numCats: number, numValues: number, numSeries: number} {
         return {
@@ -17,7 +23,18 @@ export class BarChart {
     }
 
     public getValueRange(): { max: number, min: number } {
-        return { max: 10, min: 0};
+        let max = Number.MIN_VALUE;
+        let min = Number.MAX_VALUE;
+        this.series.forEach(series => {
+            series.values.forEach(val => {
+                const num = val.numeric;
+                if (num !== undefined) {
+                    max = Math.max(max, num);
+                    min = Math.min(min, num);
+                }
+            });
+        });
+        return { max: max, min: min};
     }
 
     public getColor(seriesIndex: number): string {

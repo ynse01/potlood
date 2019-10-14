@@ -3,6 +3,7 @@ import { ChartSpace } from "./chart-space.js";
 import { BarChart } from "./bar-chart.js";
 import { ChartSeries } from "./chart-series.js";
 import { ChartValue } from "./chart-value.js";
+import { ChartAxis, ChartAxisPosition, ChartAxisTickMode, ChartAxisLabelAlignment } from "./chart-axis.js";
 
 export class ChartReader {
     public static readChartFromNode(chartSpaceNode: Node, space: ChartSpace): ChartSpace {
@@ -10,17 +11,28 @@ export class ChartReader {
         if (chartNode !== undefined) {
             const plotAreaNode = Xml.getFirstChildOfName(chartNode, "c:plotArea");
             if (plotAreaNode !== undefined) {
-                const barChartNode = Xml.getFirstChildOfName(plotAreaNode, "c:barChart");
-                if (barChartNode !== undefined) {
-                    space.setBarChart(this._readBarChart(barChartNode));
-                }
+                plotAreaNode.childNodes.forEach(child => {
+                    switch(child.nodeName) {
+                        case "c:barChart":
+                            space.setBarChart(this._readBarChart(child, space));
+                            break;
+                        case "c:catAx":
+                            space.categoryAxis = this._readChartAxis(child);
+                            break;
+                        case "c:valAx":
+                            space.valueAxis = this._readChartAxis(child);
+                            break;
+                        case "c:spPr":
+                            //space.style = this._readSpaceStyle(child);
+                    }
+                });
             }
         }
         return space;
     }
 
-    private static _readBarChart(barChartNode: Node): BarChart {
-        const chart = new BarChart();
+    private static _readBarChart(barChartNode: Node, space: ChartSpace): BarChart {
+        const chart = new BarChart(space);
         barChartNode.childNodes.forEach(child => {
             if (child.nodeName === "c:ser") {
                 const series = this._readChartSeries(child);
@@ -28,6 +40,15 @@ export class ChartReader {
             }
         });
         return chart;
+    }
+
+    private static _readChartAxis(_axisNode: Node): ChartAxis {
+        let pos: ChartAxisPosition = ChartAxisPosition.Bottom;
+        let majorTickMode: ChartAxisTickMode = ChartAxisTickMode.None;
+        let minorTickMode: ChartAxisTickMode = ChartAxisTickMode.None;
+        let labelAlignment: ChartAxisLabelAlignment = ChartAxisLabelAlignment.Center;
+        let labelOffset = 0;
+        return new ChartAxis(pos, majorTickMode, minorTickMode, labelAlignment, labelOffset);
     }
 
     private static _readChartSeries(seriesNode: Node): ChartSeries {
