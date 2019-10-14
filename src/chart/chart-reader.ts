@@ -3,7 +3,7 @@ import { ChartSpace } from "./chart-space.js";
 import { BarChart } from "./bar-chart.js";
 import { ChartSeries } from "./chart-series.js";
 import { ChartValue } from "./chart-value.js";
-import { ChartAxis, ChartAxisPosition, ChartAxisTickMode, ChartAxisLabelAlignment } from "./chart-axis.js";
+import { ChartAxis, ChartAxisPosition, ChartAxisTickMode } from "./chart-axis.js";
 import { ChartSpaceStyle } from "./chart-space-style.js";
 
 export class ChartReader {
@@ -51,9 +51,8 @@ export class ChartReader {
         let pos: ChartAxisPosition = ChartAxisPosition.Bottom;
         let majorTickMode: ChartAxisTickMode = ChartAxisTickMode.None;
         let minorTickMode: ChartAxisTickMode = ChartAxisTickMode.None;
-        let labelAlignment: ChartAxisLabelAlignment = ChartAxisLabelAlignment.Center;
         let labelOffset = 0;
-        return new ChartAxis(pos, majorTickMode, minorTickMode, labelAlignment, labelOffset);
+        return new ChartAxis(pos, majorTickMode, minorTickMode, labelOffset);
     }
 
     private static _readChartSeries(seriesNode: Node): ChartSeries {
