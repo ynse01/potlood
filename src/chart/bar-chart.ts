@@ -4,17 +4,6 @@ import { ChartValue } from "./chart-value.js";
 export class BarChart {
     public series: ChartSeries[] = [];
 
-    public static fromNode(barChartNode: Node): BarChart {
-        const chart = new BarChart();
-        barChartNode.childNodes.forEach(child => {
-            if (child.nodeName === "c:ser") {
-                const series = ChartSeries.fromNode(child);
-                chart.series.push(series);
-            }
-        });
-        return chart;
-    }
-
     public getValueBounds(): {numCats: number, numValues: number, numSeries: number} {
         return {
             numCats: this.series[0].categories.length,

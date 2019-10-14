@@ -5,7 +5,7 @@ import { Xml } from "../utils/xml.js";
 import { Picture } from "./picture.js";
 import { ChartSpace } from "../chart/chart-space.js";
 import { XmlPart } from "../package/xml-part.js";
-import { BarChart } from "../chart/bar-chart.js";
+import { ChartReader } from "../chart/chart-reader.js";
 
 export class DrawingReader {
     public static readDrawingRun(drawingNode: ChildNode, docx: DocumentX): DrawingRun {
@@ -56,24 +56,10 @@ export class DrawingReader {
     private static readChartFromDocument(doc: XMLDocument, space: ChartSpace): ChartSpace {
         const chartSpaceNode = doc.getRootNode().firstChild;
         if (chartSpaceNode !== null) {
-            return this.readChartFromNode(chartSpaceNode, space);
+            return ChartReader.readChartFromNode(chartSpaceNode, space);
         } else {
             console.log('Failed to find chart');
             return new ChartSpace();
         }
-    }
-
-    private static readChartFromNode(chartSpaceNode: Node, space: ChartSpace): ChartSpace {
-        const chartNode = Xml.getFirstChildOfName(chartSpaceNode, "c:chart");
-        if (chartNode !== undefined) {
-            const plotAreaNode = Xml.getFirstChildOfName(chartNode, "c:plotArea");
-            if (plotAreaNode !== undefined) {
-                const barChartNode = Xml.getFirstChildOfName(plotAreaNode, "c:barChart");
-                if (barChartNode !== undefined) {
-                    space.setBarChart(BarChart.fromNode(barChartNode));
-                }
-            }
-        }
-        return space;
     }
 }
