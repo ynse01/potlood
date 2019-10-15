@@ -6,35 +6,70 @@ import { ChartValue } from "./chart-value.js";
 import { ChartAxis, ChartAxisPosition, ChartAxisTickMode, ChartAxisLabelAlignment, ChartAxisCrossMode } from "./chart-axis.js";
 import { ChartStyle } from "./chart-style.js";
 import { Metrics } from "../utils/metrics.js";
+import { ChartLegend } from "./chart-legend.js";
 
 export class ChartReader {
     public static readChartFromNode(chartSpaceNode: Node, space: ChartSpace): ChartSpace {
         const chartNode = Xml.getFirstChildOfName(chartSpaceNode, "c:chart");
         if (chartNode !== undefined) {
-            const spaceStyleNode = Xml.getFirstChildOfName(chartSpaceNode, "c:spPr");
-            if (spaceStyleNode !== undefined) {
-                space.style = this._readStyle(spaceStyleNode);
-            }
-            const plotAreaNode = Xml.getFirstChildOfName(chartNode, "c:plotArea");
-            if (plotAreaNode !== undefined) {
-                plotAreaNode.childNodes.forEach(child => {
-                    switch(child.nodeName) {
-                        case "c:barChart":
-                            space.setBarChart(this._readBarChart(child, space));
-                            break;
-                        case "c:catAx":
-                            space.plotArea.categoryAxis = this._readChartAxis(child);
-                            break;
-                        case "c:valAx":
-                            space.plotArea.valueAxis = this._readChartAxis(child);
-                            break;
-                        case "c:spPr":
-                            space.plotArea.style = this._readStyle(child);
-                    }
-                });
-            }
+            chartNode.childNodes.forEach(child => {
+                switch (child.nodeName) {
+                    case "c:spPr":
+                        space.style = this._readStyle(child);
+                        break;
+                    case "c:plotArea":
+                        this._readPlotArea(child, space);
+                        break;
+                    case "c:legend":
+                        this._readLegend(child, space);
+                        break;
+                }                
+            });
         }
         return space;
+    }
+
+    private static _readPlotArea(plotAreaNode: Node, space: ChartSpace): void {
+        plotAreaNode.childNodes.forEach(child => {
+            switch(child.nodeName) {
+                case "c:barChart":
+                    space.setBarChart(this._readBarChart(child, space));
+                    break;
+                case "c:catAx":
+                    space.plotArea.categoryAxis = this._readChartAxis(child);
+                    break;
+                case "c:valAx":
+                    space.plotArea.valueAxis = this._readChartAxis(child);
+                    break;
+                case "c:spPr":
+                    space.plotArea.style = this._readStyle(child);
+                    break;
+            }
+        });
+    }
+
+    private static _readLegend(legendNode: Node, space: ChartSpace): void {
+        const legend = new ChartLegend();
+        legendNode.childNodes.forEach((child: ChildNode) => {
+            switch (child.nodeName) {
+                case "c:spPr":
+                    legend.style = this._readStyle(child);
+                    break;
+                case "c:legendPos":
+                    const posAttr = Xml.getAttribute(child, "var");
+                    if (posAttr !== undefined) {
+                        legend.position = this._parsePosition(posAttr);
+                    }
+                    break;
+                case "c:overlay":
+                    const overlay = Xml.getBooleanValueFromNode(child, "var");
+                    if (overlay !== undefined) {
+                        legend.overlayOnPlot = overlay;
+                    }
+                    break;
+            }
+        });
+        space.legend = legend;
     }
 
     private static _readBarChart(barChartNode: Node, space: ChartSpace): BarChart {
