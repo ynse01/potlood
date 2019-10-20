@@ -30,13 +30,13 @@ export class FontMetrics {
 
     public static getTopToBaseline(style: Style): number {
         const metric = this.getFontMetrics(style);
-        const testHeight = metric.fontBoundingBoxAscent || this._testSize / 2;
+        const testHeight = metric.fontBoundingBoxAscent || this._testSize * 0.75;
         return testHeight * style.fontSize / this._testSize;
     }
 
     public static getBaselineToBottom(style: Style): number {
         const metric = this.getFontMetrics(style);
-        const testHeight = metric.fontBoundingBoxDescent || this._testSize / 2;
+        const testHeight = metric.fontBoundingBoxDescent || this._testSize / 4;
         return testHeight * style.fontSize / this._testSize;
     }
 

@@ -4,6 +4,7 @@ import { IPositionedTextLine } from "./positioned-text-line.js";
 import { UnderlineMode } from "./run-style.js";
 import { IPainter } from "../painting/i-painter.js";
 import { Style } from "./style.js";
+import { FontMetrics } from "../utils/font-metrics.js";
 
 export class TextRenderer {
     private _painter: IPainter;
@@ -21,7 +22,9 @@ export class TextRenderer {
     private _renderText(line: IPositionedTextLine, style: Style): void {
         const x = this._getX(line);
         if (style.shadingColor !== "000000") {
-            this._painter.paintLine(x, line.y, x + line.width, line.y, style.shadingColor, style.lineSpacing);
+            const lineSpacing = style.lineSpacing;
+            const y = line.y - FontMetrics.getTopToBaseline(style) + lineSpacing / 2;
+            this._painter.paintLine(x, y, x + line.width, y, style.shadingColor, lineSpacing);
         }
         this._painter.paintText(x, line.y, line.width, line.fitWidth, line.text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
         if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {

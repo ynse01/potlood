@@ -142,9 +142,8 @@ export class SvgPainter implements IPainter {
         }
       }
     
-      private _setVerticalAlignment(textNode: Element, y: number, fontSize: number): void {
-        textNode.setAttribute('y', (y + fontSize / 2).toString());
-        textNode.setAttribute('alignment-baseline', 'top');
+      private _setVerticalAlignment(textNode: Element, y: number, _fontSize: number): void {
+        textNode.setAttribute('y', y.toString());
       }
     
     
