@@ -9,13 +9,13 @@
         <script>
             import('../build/module/potlood.js').then(module => {
                 var content = document.getElementById("content");
-                yord = new module.Potlood(content);
+                var potlood = new module.Potlood(content);
                 var url = './demo.docx';
                 if (location.search) {
                     var url = location.search.substring(1);
                     console.log("Load docx file from: " + url);
                 }
-                yord.loadDocxFromUrl(url);
+                potlood.loadDocxFromUrl(url);
             })
         </script>
     </head>
