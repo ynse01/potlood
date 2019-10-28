@@ -5,19 +5,20 @@ import { Xml } from "../utils/xml.js";
 
 export class SvgPainter implements IPainter {
     private static readonly svgNS = 'http://www.w3.org/2000/svg';
-    private _svg: SVGElement;
+    private _svg: Element;
     private _lastText: SVGTextElement | undefined;
 
     constructor(content: HTMLElement) {
-        const svg = document.createElementNS(SvgPainter.svgNS, 'svg');
-        svg.setAttribute('id', 'svg');
-        svg.setAttribute('width', content.clientWidth.toString());
-        svg.setAttribute('height', '500');
-        content.appendChild(svg);
-        this._svg = svg;
+        const root = document.createElementNS(SvgPainter.svgNS, 'svg');
+        const width = content.clientWidth.toString();
+        root.setAttribute('id', 'svg');
+        root.setAttribute('width', width);
+        root.setAttribute('height', '500');
+        content.appendChild(root);
+        this._svg = root;
     }
 
-    public get svg(): SVGElement {
+    public get svg(): Element {
         return this._svg;
     }
 
@@ -95,6 +96,10 @@ export class SvgPainter implements IPainter {
         const maxY = Math.max(heightNum, newHeight);
         if (maxY > heightNum) {
           this._svg.setAttribute("height", `${maxY}`);
+          const root = this._svg.parentElement;
+          if (root !== null) {
+            root.setAttribute("height", `${maxY}`);
+          }
         }
       }
   
