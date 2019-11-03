@@ -22,7 +22,12 @@ export class TableRenderer {
                 const cellFlow = flow.createCellFlow(cell, table);
                 this.renderCellShading(cell, cellFlow, height);
                 this.renderCellBorder(cell, table.style, cellFlow, height);
-                cellFlow.advancePosition(table.style.margins.cellMarginTop);
+                let topPadding = table.style.margins.cellMarginTop;
+                const topBorder = cell.style.borders.borderTop;
+                if (topBorder !== undefined) {
+                    topPadding += topBorder.size;
+                }
+                cellFlow.advancePosition(topPadding);
                 cell.pars.forEach(par => {
                     this._parRenderer.renderParagraph(par, cellFlow);
                 });

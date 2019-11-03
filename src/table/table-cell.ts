@@ -18,6 +18,14 @@ export class TableCell {
     public getHeight(): number {
         const width = this.getTextWidth();
         let height = this.style.margins.cellMarginTop + this.style.margins.cellMarginBottom;
+        const topBorder = this.style.borders.borderTop;
+        if (topBorder !== undefined) {
+            height += topBorder.size;
+        }
+        const bottomBorder = this.style.borders.borderBottom;
+        if (bottomBorder !== undefined) {
+            height += bottomBorder.size;
+        }
         this.pars.forEach(par => {
             height += par.getHeight(width);
         });
