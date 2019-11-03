@@ -9,7 +9,7 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "describe": "npm-scripts-info",
+    "info": "npm-scripts-info",
     "build": "run-s clean && run-p build:*",
     "build:main": "tsc -p tsconfig.json",
     "build:module": "tsc -p tsconfig.module.json",
@@ -18,7 +18,7 @@
     "clean": "trash build test"
   },
   "scripts-info": {
-    "info": "Display information about the package scripts",
+    "info": "Displays usage information of the package scripts",
     "build": "Clean and rebuild the project",
     "doc": "Generate HTML demo in docs folder",
     "reset": "Delete all untracked files and reset the repo to the last commit",
