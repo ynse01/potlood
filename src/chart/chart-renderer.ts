@@ -2,6 +2,8 @@ import { BarChart } from "./bar-chart.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { IPainter } from "../painting/i-painter.js";
 import { ChartAxisCrossMode } from "./chart-axis.js";
+import { ChartSpace } from "./chart-space.js";
+import { ShapeBounds } from "../drawing/shape-bounds.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -10,12 +12,18 @@ export class ChartRenderer {
         this._painter = painter;
     }
 
-    public renderBarChart(barChart: BarChart, flow: VirtualFlow, width: number, height: number): void {
+    public renderChartSpace(space: ChartSpace, flow: VirtualFlow, bounds: ShapeBounds) {
+        if (space.barChart !== undefined) {
+            this._renderBarChart(space.barChart, flow, bounds.boundOffsetX, bounds.boundOffsetY, bounds.boundSizeX, bounds.boundSizeY);
+        }
+    }
+
+    private _renderBarChart(barChart: BarChart, flow: VirtualFlow, xDelta: number, yDelta: number, width: number, height: number): void {
         const bounds = barChart.getValueBounds();
         const seriesSpacing = width / (bounds.numCats * bounds.numSeries);
         const catSpacing = width / bounds.numSeries;
-        const flowX = flow.getX();
-        const topY = flow.getY();
+        const flowX = flow.getX() + xDelta;
+        const topY = flow.getY() + yDelta;
         const bottomY = topY + height;
         const range = barChart.getValueRange();
         const valueAxis = barChart.space.plotArea.valueAxis;

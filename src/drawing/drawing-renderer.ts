@@ -25,12 +25,12 @@ export class DrawingRenderer {
         if (chart !== undefined) {
             const chartFlow = flow.clone();
             chart.ensureLoaded().then(() => {
-            if (chart.barChart !== undefined) {
-                this._chartRenderer.renderBarChart(chart.barChart, chartFlow, width, height);
-            }
-          });
+                this._chartRenderer.renderChartSpace(chart, chartFlow, drawing.bounds);
+            });
         }
-        flow.advancePosition(drawing.getHeight(flow.getWidth()));
+        if (drawing.bounds.anchor === "anchor") {
+            flow.advancePosition(drawing.getHeight(flow.getWidth()));
+        }
     }
     
 }
