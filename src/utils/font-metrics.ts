@@ -6,6 +6,7 @@ export class FontMetrics {
     private static _fonts: { [key: string]: TextMetrics } = {};
     private static _testString = "The quick brown fox jumped over the fence";
     private static _testSize = 72;
+    private static _topToBaseFactor = 13 / 16;
   
     public static fitCharacters(width: number, style: Style): number {
         const charWidth = FontMetrics.averageCharWidth(style);
@@ -30,13 +31,14 @@ export class FontMetrics {
 
     public static getTopToBaseline(style: Style): number {
         const metric = this.getFontMetrics(style);
-        const testHeight = metric.fontBoundingBoxAscent || this._testSize * 0.75;
+        const testHeight = metric.fontBoundingBoxAscent || this._testSize * FontMetrics._topToBaseFactor;
         return testHeight * style.fontSize / this._testSize;
     }
 
     public static getBaselineToBottom(style: Style): number {
         const metric = this.getFontMetrics(style);
-        const testHeight = metric.fontBoundingBoxDescent || this._testSize / 4;
+        const baseToBottomFactor = 1 - FontMetrics._topToBaseFactor;
+        const testHeight = metric.fontBoundingBoxDescent || this._testSize * baseToBottomFactor;
         return testHeight * style.fontSize / this._testSize;
     }
 
