@@ -96,7 +96,7 @@ export class Metrics {
       this.canvas = document.createElement('canvas');
       this.context = this.canvas.getContext('2d')!;
       this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      this.svg.setAttribute('width', '2048');
+      this.svg.setAttribute('width', '1000');
       this.svg.setAttribute('height', '240');
       this.svg.setAttribute('visibility', 'hidden');
       document.body.appendChild(this.svg);
