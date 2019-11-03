@@ -13,7 +13,7 @@
     "build": "run-s clean && run-p build:*",
     "build:main": "tsc -p tsconfig.json",
     "build:module": "tsc -p tsconfig.module.json",
-    "doc": "cpx \"build/module/**.js\" docs/lib",
+    "doc": "cpx \"build/module/**/*.js\" ../potlood.github.io/lib -p",
     "reset": "git clean -dfx && git reset --hard && npm i",
     "clean": "trash build test"
   },
