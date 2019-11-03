@@ -50,7 +50,7 @@ export class ChartRenderer {
         const bounds = barChart.getValueBounds();
         const seriesSpacing = width / ((bounds.numCats + 1) * (bounds.numSeries + 1));
         const catSpacing = width / (bounds.numSeries + 1);
-        const flowX = x + (seriesSpacing / 2);
+        const flowX = x + seriesSpacing;
         const topY = y;
         const bottomY = topY + height;
         const range = barChart.getValueRange();
