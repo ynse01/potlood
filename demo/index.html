@@ -3,10 +3,10 @@
     <head>
         <meta charset="utf-8"/>
         <title>Potlood - Open Office viewer</title>
-        <script src="./lib/jszip/dist/jszip.min.js"></script>
-        <script src="./lib/utif/UTIF.js"></script>
+        <script src="../node_modules/jszip/dist/jszip.min.js"></script>
+        <script src="../node_modules/utif/UTIF.js"></script>
         <script>
-            import('./lib/potlood.js').then(module => {
+            import('../build/module/potlood.js').then(module => {
                 var content = document.getElementById("content");
                 var potlood = new module.Potlood(content);
                 var url = '';
