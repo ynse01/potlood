@@ -47,19 +47,19 @@ export class TextRenderer {
         const y = textRect.y + fontSize;
         switch(style.underlineMode) {
             case UnderlineMode.double:
-                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y + fontSize / 10, style.color, 1);
-                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y + fontSize / 10, style.color, 1);
+                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, style.color, 1);
+                this._painter.paintLine(textRect.x, y + fontSize / 10, textRect.x + textRect.width, y + fontSize / 10, style.color, 1);
                 break;
             case UnderlineMode.none:
                 // Nothing to be done
                 break;
             default:
             case UnderlineMode.single:
-                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y + fontSize / 10, style.color, 1);
+                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, style.color, 1);
                 break;
         }
         if (style.strike) {
-            this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y - fontSize / 2, style.color, 1);
+            this._painter.paintLine(textRect.x, y - fontSize / 2, textRect.x + textRect.width, y - fontSize / 2, style.color, 1);
         }
         if (style.doubleStrike) {
             this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y - (fontSize / 2) - 1, style.color, 1);
