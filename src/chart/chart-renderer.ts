@@ -1,7 +1,6 @@
 import { BarChart } from "./bar-chart.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { IPainter } from "../painting/i-painter.js";
-import { ChartAxisCrossMode } from "./chart-axis.js";
 import { ChartSpace } from "./chart-space.js";
 import { ShapeBounds } from "../drawing/shape-bounds.js";
 import { ChartStyle } from "./chart-style.js";
@@ -54,10 +53,6 @@ export class ChartRenderer {
         const topY = bounds.y;
         const bottomY = topY + bounds.height;
         const range = barChart.getValueRange();
-        const valueAxis = barChart.space.plotArea.valueAxis;
-        if (valueAxis !== undefined && valueAxis.crossMode === ChartAxisCrossMode.AutoZero) {
-            range.min = 0;
-        }
         for(let i = 0; i < counts.numCats; i++) {
             for(let j = 0; j < counts.numValues; j++) {
                 for(let k = 0; k < counts.numSeries; k++) {

@@ -1,6 +1,7 @@
 import { ChartSeries } from "./chart-series.js";
 import { ChartValue } from "./chart-value.js";
 import { ChartSpace } from "./chart-space.js";
+import { ChartAxisCrossMode } from "./chart-axis.js";
 
 export class BarChart {
     public series: ChartSeries[] = [];
@@ -34,6 +35,10 @@ export class BarChart {
                 }
             });
         });
+        const valueAxis = this.space.plotArea.valueAxis;
+        if (valueAxis !== undefined && valueAxis.crossMode === ChartAxisCrossMode.AutoZero) {
+            min = 0;
+        }
         return { max: max, min: min};
     }
 
