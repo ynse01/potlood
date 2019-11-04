@@ -67,4 +67,10 @@ export class CanvasPainter implements IPainter {
     public ensureHeight(height: number): void {
         this._canvas.height = height;
     }
+
+    public startLink(_url: string): void {
+    }
+
+    public endLink(): void {
+    }
 }

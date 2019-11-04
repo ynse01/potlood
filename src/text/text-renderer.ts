@@ -14,9 +14,16 @@ export class TextRenderer {
     }
 
     public renderTextRun(run: TextRun, flow: VirtualFlow): void {
+        const linkTarget = run.linkTarget;
+        if (linkTarget !== undefined) {
+            this._painter.startLink(linkTarget);
+        }
         run.getFlowLines(flow).forEach((line: IPositionedTextLine) => {
             this._renderText(line, run.style);
         });
+        if (linkTarget !== undefined) {
+            this._painter.endLink();
+        }
     }
     
     private _renderText(line: IPositionedTextLine, style: Style): void {

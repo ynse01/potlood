@@ -6,6 +6,7 @@ import { Xml } from "../utils/xml.js";
 export class SvgPainter implements IPainter {
     private static readonly svgNS = 'http://www.w3.org/2000/svg';
     private _svg: Element;
+    private _root: Element;
     private _lastText: SVGTextElement | undefined;
 
     constructor(content: HTMLElement) {
@@ -16,6 +17,7 @@ export class SvgPainter implements IPainter {
         root.setAttribute('height', '500');
         content.appendChild(root);
         this._svg = root;
+        this._root = root;
     }
 
     public get svg(): Element {
@@ -67,89 +69,100 @@ export class SvgPainter implements IPainter {
     }
 
     public paintPicture(x: number, y: number, width: number, height: number, pic: Picture): void {
-      if (pic !== undefined) {
-        const rect = document.createElementNS(SvgPainter.svgNS, "image");
-        rect.setAttribute("x", `${x}`);
-        rect.setAttribute("y", `${y}`);
-        rect.setAttribute("width", `${width}`);
-        rect.setAttribute("height", `${height}`);
-        this.svg.appendChild(rect);
-        pic.getImageUrl().then(url => {
-          rect.setAttribute("xlink:href", `${url}`);
-          rect.setAttribute("href", `${url}`);
-        }).catch(error => {
-          console.log(`ERROR during rendering: ${error}`);
-        })
-      }      
+        if (pic !== undefined) {
+            const rect = document.createElementNS(SvgPainter.svgNS, "image");
+            rect.setAttribute("x", `${x}`);
+            rect.setAttribute("y", `${y}`);
+            rect.setAttribute("width", `${width}`);
+            rect.setAttribute("height", `${height}`);
+            this.svg.appendChild(rect);
+            pic.getImageUrl().then(url => {
+                rect.setAttribute("xlink:href", `${url}`);
+                rect.setAttribute("href", `${url}`);
+            }).catch(error => {
+                console.log(`ERROR during rendering: ${error}`);
+            })
+        }      
     }
 
     public clear(): void {
-      while (this.svg.lastChild) {
-        this.svg.removeChild(this.svg.lastChild);
-      }
+        while (this.svg.lastChild) {
+          this.svg.removeChild(this.svg.lastChild);
+        }
     }
 
     public ensureHeight(newHeight: number): void {
-      const height = Xml.getAttribute(this.svg, "height");
-      if (height !== undefined) {
-        const heightNum = parseFloat(height);
-        const maxY = Math.max(heightNum, newHeight);
-        if (maxY > heightNum) {
-          this._svg.setAttribute("height", `${maxY}`);
-          const root = this._svg.parentElement;
-          if (root !== null) {
-            root.setAttribute("height", `${maxY}`);
-          }
+        const height = Xml.getAttribute(this.svg, "height");
+        if (height !== undefined) {
+            const heightNum = parseFloat(height);
+            const maxY = Math.max(heightNum, newHeight);
+            if (maxY > heightNum) {
+                this._svg.setAttribute("height", `${maxY}`);
+                const root = this._svg.parentElement;
+                if (root !== null) {
+                    root.setAttribute("height", `${maxY}`);
+                }
+            }
         }
-      }
   
+    }
+
+    public startLink(url: string): void {
+        const a = document.createElementNS(SvgPainter.svgNS, "a");
+        a.setAttribute("href", url);
+        this._svg = a;
+        this._root.appendChild(this._svg);
+    }
+
+    public endLink(): void {
+        if (this._svg !== this._root) {
+            this._svg = this._root;
+        }
     }
 
     private _setFont(textNode: Element, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void {
         textNode.setAttribute('font-family', fontFamily);
         textNode.setAttribute('font-size', fontSize.toString());
         if (bold) {
-          textNode.setAttribute('font-weight', 'bold');
+            textNode.setAttribute('font-weight', 'bold');
         }
         if (italic) {
-          textNode.setAttribute('font-style', 'italic');
+            textNode.setAttribute('font-style', 'italic');
         }
-      }
+    }
     
-      private _setColor(textNode: Element, color: string) {
+    private _setColor(textNode: Element, color: string) {
         textNode.setAttribute('fill', `#${color}`);
-      }
+    }
     
-      private _setHorizontalAlignment(textNode: Element, x: number, width: number, justification: Justification, fitWidth: boolean): void {
+    private _setHorizontalAlignment(textNode: Element, x: number, width: number, justification: Justification, fitWidth: boolean): void {
         switch(justification) {
-          case Justification.both:
-            textNode.setAttribute('x', x.toString());
-            if (fitWidth) {
-              textNode.setAttribute('textLength', width.toString());
-              textNode.setAttribute('lengthAdjust', 'spacing');
-            }
-            break;
-          case Justification.right:
-            const right = x + width;
-            textNode.setAttribute('x', right.toString());
-            textNode.setAttribute('text-anchor', "end");
-            break;
-          case Justification.center:
-            const center = x + width / 2;
-            textNode.setAttribute('x', center.toString());
-            textNode.setAttribute('text-anchor', "middle");
-            break;
-          case Justification.left:
-          default:
-            textNode.setAttribute('x', x.toString());
-            textNode.setAttribute('text-anchor', "start");
-            break;
+            case Justification.both:
+                textNode.setAttribute('x', x.toString());
+                if (fitWidth) {
+                    textNode.setAttribute('textLength', width.toString());
+                    textNode.setAttribute('lengthAdjust', 'spacing');
+                }
+                break;
+            case Justification.right:
+                const right = x + width;
+                textNode.setAttribute('x', right.toString());
+                textNode.setAttribute('text-anchor', "end");
+                break;
+            case Justification.center:
+                const center = x + width / 2;
+                textNode.setAttribute('x', center.toString());
+                textNode.setAttribute('text-anchor', "middle");
+                break;
+            case Justification.left:
+            default:
+                textNode.setAttribute('x', x.toString());
+                textNode.setAttribute('text-anchor', "start");
+                break;
         }
-      }
-    
-      private _setVerticalAlignment(textNode: Element, y: number, _fontSize: number): void {
+    }
+  
+    private _setVerticalAlignment(textNode: Element, y: number, _fontSize: number): void {
         textNode.setAttribute('y', y.toString());
-      }
-    
-    
+    }
 }

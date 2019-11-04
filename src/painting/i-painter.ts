@@ -20,4 +20,8 @@ export interface IPainter {
     paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void;
 
     paintPicture(x: number, y: number, width: number, height: number, pic: Picture): void;
+
+    startLink(url: string): void;
+    
+    endLink(): void;
 }
