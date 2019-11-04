@@ -10,7 +10,7 @@ export class BarChart {
         this.space = space;
     }
 
-    public getValueBounds(): {numCats: number, numValues: number, numSeries: number} {
+    public getCounts(): {numCats: number, numValues: number, numSeries: number} {
         return {
             numCats: this.series[0].categories.length,
             numValues: this.series[0].values.length,

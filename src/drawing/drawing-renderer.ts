@@ -13,13 +13,10 @@ export class DrawingRenderer {
     }
 
     public renderDrawing(drawing: DrawingRun, flow: VirtualFlow) {
-        const x = flow.getX();
-        const y = flow.getY();
-        const width = drawing.bounds.boundSizeX;
-        const height = drawing.bounds.boundSizeY;
+        const bounds = drawing.bounds.rectangle.translate(flow.getX(), flow.getY());
         const picture = drawing.picture;
         if (picture !== undefined) {
-            this._painter.paintPicture(x, y, width, height, picture);
+            this._painter.paintPicture(bounds.x, bounds.y, bounds.width, bounds.height, picture);
         }
         const chart = drawing.chart;
         if (chart !== undefined) {

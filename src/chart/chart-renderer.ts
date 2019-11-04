@@ -47,7 +47,7 @@ export class ChartRenderer {
     }
 
     private _renderBarChart(barChart: BarChart, bounds: Rectangle): void {
-        const counts = barChart.getValueBounds();
+        const counts = barChart.getCounts();
         const seriesSpacing = bounds.width / ((counts.numCats + 1) * (counts.numSeries + 1));
         const catSpacing = bounds.width / (counts.numSeries + 1);
         const flowX = bounds.x + seriesSpacing;
