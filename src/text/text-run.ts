@@ -10,6 +10,7 @@ export class TextRun implements ILayoutable {
     public texts: string[];
     public style: Style;
     public inParagraph: InSequence = InSequence.Only;
+    public isLink = false;
     public previousXPos: number | undefined;
     public lastXPos = 0;
     private _lines: IPositionedTextLine[] | undefined = undefined;

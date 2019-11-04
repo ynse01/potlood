@@ -11,13 +11,16 @@ import { InSequence } from "../utils/in-sequence.js";
 export class ParagraphReader {
     public static readParagraph(docx: DocumentX, pNode: Node): Paragraph {
         let numberingRun: TextRun | undefined;
+        let isLink: boolean = false;
         const runs: (TextRun | DrawingRun)[] = [];
         const parStyle = this.readStyle(docx, pNode);
         if (parStyle !== undefined && parStyle._numStyle !== undefined) {
             numberingRun = new TextRun([parStyle._numStyle.getPrefixText()], parStyle._numStyle.style);
         }
         pNode.childNodes.forEach(node => {
+            isLink = false;
             if (node.nodeName === "w:hyperlink") {
+                isLink = true;
                 const firstChild = node.firstChild;
                 if (firstChild !== null) {
                     node = firstChild;
@@ -31,6 +34,7 @@ export class ParagraphReader {
                 } else {
                     const run = TextReader.readTextRun(node, parStyle, docx.styles);
                     run.inParagraph = InSequence.Middle;
+                    run.isLink = isLink;
                     runs.push(run);
                 }
             }
