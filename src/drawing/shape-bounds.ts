@@ -1,5 +1,6 @@
 import { Xml } from "../utils/xml.js";
 import { Metrics } from "../utils/metrics.js";
+import { Rectangle } from "../utils/rectangle.js";
 
 export class ShapeBounds {
     public boundOffsetX: number = 0;
@@ -57,6 +58,10 @@ export class ShapeBounds {
         bounds.anchor = "anchor";
         ShapeBounds.setExtent(anchorNode, "wp:extent", bounds);
         return bounds;
+    }
+
+    public get rectangle(): Rectangle {
+        return new Rectangle(this.boundOffsetX, this.boundOffsetY, this.boundSizeX, this.boundSizeY);
     }
 
     private static setExtent(parent: ChildNode, nodeName: string, bounds: ShapeBounds): void {

@@ -5,6 +5,7 @@ import { ChartAxisCrossMode } from "./chart-axis.js";
 import { ChartSpace } from "./chart-space.js";
 import { ShapeBounds } from "../drawing/shape-bounds.js";
 import { ChartStyle } from "./chart-style.js";
+import { Rectangle } from "../utils/rectangle.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -14,53 +15,52 @@ export class ChartRenderer {
     }
 
     public renderChartSpace(space: ChartSpace, flow: VirtualFlow, bounds: ShapeBounds) {
-        const spacePosX = flow.getX() + bounds.boundOffsetX;
-        const spacePosY = flow.getY() + bounds.boundOffsetY;
-        const spaceWidth = bounds.boundSizeX;
-        const spaceHeight = bounds.boundSizeY;
-        this._renderBorderAndShading(space.style, spacePosX, spacePosY, spaceWidth, spaceHeight);
-        const spacing = this._renderBorderAndShading(space.plotArea.style, spacePosX, spacePosY, spaceWidth, spaceHeight);
+        const spaceBounds = bounds.rectangle.translate(flow.getX(), flow.getY());
+        this._renderBorderAndShading(space.style, spaceBounds);
+        const plotBounds = this._renderBorderAndShading(space.plotArea.style, spaceBounds);
         if (space.barChart !== undefined) {
-            this._renderBarChart(space.barChart, spacePosX + spacing, spacePosY + spacing, bounds.boundSizeX - 2 * spacing, bounds.boundSizeY - 2 * spacing);
+            this._renderBarChart(space.barChart, plotBounds);
         }
     }
 
-    private _renderBorderAndShading(style: ChartStyle, x: number, y: number, width: number, height: number): number {
-        let retValue = 0;
-        const xMax = x + width;
-        const yMax = y + height;
+    private _renderBorderAndShading(style: ChartStyle, bounds: Rectangle): Rectangle {
+        let spacing = 0;
+        const x = bounds.left;
+        const y = bounds.top;
+        const xMax = bounds.right;
+        const yMax = bounds.bottom;
         const lineColor = style.lineColor;
         if (lineColor !== undefined) {
             const thickness = style.lineThickness;
             this._painter.paintLine(x, y, xMax, y, lineColor, thickness);
             this._painter.paintLine(xMax, y, xMax, yMax, lineColor, thickness);
-            this._painter.paintLine(x, yMax, x + width, yMax, lineColor, thickness);
+            this._painter.paintLine(x, yMax, xMax, yMax, lineColor, thickness);
             this._painter.paintLine(x, y, x, yMax, lineColor, thickness);
-            retValue = thickness;
+            spacing = thickness;
         }
         const shading = style.fillColor;
         if (shading !== undefined) {
-            const yMid = y + (height / 2);
-            this._painter.paintLine(x, yMid, xMax, yMid, shading, height);
+            const yMid = y + (bounds.height / 2);
+            this._painter.paintLine(x, yMid, xMax, yMid, shading, bounds.height);
         }
-        return retValue;
+        return bounds.clone().subtractSpacing(spacing);
     }
 
-    private _renderBarChart(barChart: BarChart, x: number, y: number, width: number, height: number): void {
-        const bounds = barChart.getValueBounds();
-        const seriesSpacing = width / ((bounds.numCats + 1) * (bounds.numSeries + 1));
-        const catSpacing = width / (bounds.numSeries + 1);
-        const flowX = x + seriesSpacing;
-        const topY = y;
-        const bottomY = topY + height;
+    private _renderBarChart(barChart: BarChart, bounds: Rectangle): void {
+        const counts = barChart.getValueBounds();
+        const seriesSpacing = bounds.width / ((counts.numCats + 1) * (counts.numSeries + 1));
+        const catSpacing = bounds.width / (counts.numSeries + 1);
+        const flowX = bounds.x + seriesSpacing;
+        const topY = bounds.y;
+        const bottomY = topY + bounds.height;
         const range = barChart.getValueRange();
         const valueAxis = barChart.space.plotArea.valueAxis;
         if (valueAxis !== undefined && valueAxis.crossMode === ChartAxisCrossMode.AutoZero) {
             range.min = 0;
         }
-        for(let i = 0; i < bounds.numCats; i++) {
-            for(let j = 0; j < bounds.numValues; j++) {
-                for(let k = 0; k < bounds.numSeries; k++) {
+        for(let i = 0; i < counts.numCats; i++) {
+            for(let j = 0; j < counts.numValues; j++) {
+                for(let k = 0; k < counts.numSeries; k++) {
                     const val = barChart.getValue(i, k);
                     const normalizedValue = (val.numeric! - range.min) / (range.max - range.min);
                     const color = barChart.getColor(k);
