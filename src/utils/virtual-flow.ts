@@ -1,7 +1,5 @@
 import { Metrics } from "./metrics.js";
 import { Section } from "../section.js";
-import { TableCell } from "../table/table-cell.js";
-import { Table } from "../table/table.js";
 
 export class VirtualFlow {
     // private _width: number;
@@ -56,30 +54,6 @@ export class VirtualFlow {
     public advancePosition(delta: number): VirtualFlow {
         this._pos += delta;
         return this;
-    }
-
-    public createCellFlow(cell: TableCell, table: Table) : VirtualFlow {
-        const cellSpacing = table.style.cellSpacing;
-        let start = this.getX() + cell.getStart();
-        start += cellSpacing;
-        start += cell.style.margins.cellMarginStart;
-        let width = cell.getWidth();
-        width -= cell.style.margins.cellMarginStart
-        width -= cell.style.margins.cellMarginEnd;
-        width -= 2 * cellSpacing;
-        const leftBorder = cell.style.borders.borderStart;
-        if (leftBorder !== undefined) {
-            const leftBorderSize = leftBorder.size + leftBorder.spacing;
-            start += leftBorderSize;
-            width -= leftBorderSize;
-        }
-        const rightBorder = cell.style.borders.borderEnd;
-        if (rightBorder !== undefined) {
-            const rightBorderSize = rightBorder.size + rightBorder.spacing;
-            width -= rightBorderSize;
-        }
-        const y = this._pos + cellSpacing;
-        return new VirtualFlow(start, start + width, y);
     }
 
     public clone(): VirtualFlow {

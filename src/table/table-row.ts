@@ -12,14 +12,6 @@ export class TableRow {
         this.table = table;
     }
 
-    public getMaxHeight(): number {
-        let height = 0;
-        this.cells.forEach(cell => {
-            height = Math.max(height, cell.getHeight());
-        });
-        return height;
-    }
-
     public getPars(): Paragraph[] {
         const pars: Paragraph[] = [];
         this.cells.forEach(cell => {
@@ -32,11 +24,16 @@ export class TableRow {
         const startY = flow.getY();
         let maxY = 0;
         this.cells.forEach(cell => {
-            const cellFlow = flow.createCellFlow(cell, this.table);
+            const cellFlow = cell.getCellFlow(flow);
             cell.performLayout(cellFlow);
             maxY = Math.max(cellFlow.getY(), maxY);
         });
-        this.maxHeight = maxY - startY;
-        flow.advancePosition(this.maxHeight);
+        const maxHeight = maxY - startY;
+        // Set the max height as height for all cells.
+        this.cells.forEach(cell => {
+            cell.bounds!.height = maxHeight;
+        });
+        this.maxHeight = maxHeight;
+        flow.advancePosition(maxHeight);
     }
 }

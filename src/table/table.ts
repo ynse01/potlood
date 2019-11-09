@@ -30,7 +30,7 @@ export class Table implements ILayoutable {
     public getHeight(): number {
         let height = 0;
         this.rows.forEach(row => {
-            height += row.getMaxHeight();
+            height += row.maxHeight || 0;
         });
         return height;
     }

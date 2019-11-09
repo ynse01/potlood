@@ -15,11 +15,11 @@ export class DrawingRun implements ILayoutable {
         this.bounds = bounds;
     }
 
-    public getUsedWidth(_availableWidth: number): number {
+    public getUsedWidth(): number {
         return this.bounds.boundSizeX;
     }
 
-    public getHeight(_width: number): number {
+    public getHeight(): number {
         return this.bounds.boundSizeY;
     }
 

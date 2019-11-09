@@ -1,5 +1,4 @@
 import { Paragraph } from "./paragraph.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
 import { TextRenderer } from "../text/text-renderer.js";
 import { DrawingRenderer } from "../drawing/drawing-renderer.js";
 import { IPainter } from "../painting/i-painter.js";
@@ -14,11 +13,7 @@ export class ParagraphRenderer {
         this._drawingRenderer = new DrawingRenderer(painter);
     }
 
-    public renderParagraph(par: Paragraph, flow: VirtualFlow): void {
-        const parStyle = par.style;
-        if (parStyle !== undefined) {
-            flow.advancePosition(parStyle.spacingBefore);
-        }
+    public renderParagraph(par: Paragraph): void {
         let previousXPos: number | undefined = 0;
         if (par.numberingRun !== undefined) {
           this._textRenderer.renderTextRun(par.numberingRun);
@@ -33,8 +28,5 @@ export class ParagraphRenderer {
             }
             previousXPos = run.lastXPos;
         });
-        if (parStyle !== undefined) {
-            flow.advancePosition(parStyle.spacingAfter);
-        }
     }
 }

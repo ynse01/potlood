@@ -45,7 +45,7 @@ export class Paragraph implements ILayoutable {
         let usedWidth = 0;
         const runs = this.runs;
         for(let i = 0; i < runs.length; i++) {
-            const runsWidth = runs[i].getUsedWidth(availableWidth);
+            const runsWidth = runs[i].getUsedWidth();
             if (runsWidth >= availableWidth) {
                 usedWidth = availableWidth;
                 break;
@@ -55,18 +55,20 @@ export class Paragraph implements ILayoutable {
         return Math.min(usedWidth, availableWidth);
     }
 
-    public getHeight(width: number): number {
+    public getHeight(): number {
         const style = this.style;
         let height = (style !== undefined) ? style.spacingAfter + style.spacingBefore : 0;
         this.runs.forEach(run => {
-            height += run.getHeight(width);
+            height += run.getHeight();
         });
         return height;
     }
 
     public performLayout(flow: VirtualFlow): void {
         let previousXPos: number | undefined = 0;
-        flow.advancePosition(this.style!.spacingBefore);
+        if (this.style !== undefined) {
+            flow.advancePosition(this.style.spacingBefore);
+        }
         if (this._numberingRun !== undefined) {
             this._numberingRun.performLayout(flow.clone());
             previousXPos = this._numberingRun.lastXPos;
@@ -76,7 +78,9 @@ export class Paragraph implements ILayoutable {
             run.performLayout(flow);
             previousXPos = run.lastXPos;
         });
-        flow.advancePosition(this.style!.spacingAfter);
+        if (this.style !== undefined) {
+            flow.advancePosition(this.style.spacingAfter);
+        }
     }
 
 }

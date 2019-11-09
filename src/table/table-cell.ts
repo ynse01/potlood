@@ -2,6 +2,7 @@ import { TableColumn } from "./table-column.js";
 import { Paragraph } from "../paragraph/paragraph.js";
 import { TableStyle } from "./table-style.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
+import { Rectangle } from "../utils/rectangle.js";
 
 export class TableCell {
     public id: string | undefined = undefined;
@@ -9,14 +10,14 @@ export class TableCell {
     public rowSpan: number = 1;
     public pars: Paragraph[] = [];
     public style: TableStyle;
+    public bounds: Rectangle | undefined;
 
     constructor(columns: TableColumn[], style: TableStyle, startIndex: number) {
         this.style = style;
         this.columns = this.getColumns(columns, startIndex);
     }
 
-    public getHeight(): number {
-        const width = this.getTextWidth();
+    private getHeight(): number {
         let height = this.style.margins.cellMarginTop + this.style.margins.cellMarginBottom;
         const topBorder = this.style.borders.borderTop;
         if (topBorder !== undefined) {
@@ -27,16 +28,16 @@ export class TableCell {
             height += bottomBorder.size;
         }
         this.pars.forEach(par => {
-            height += par.getHeight(width);
+            height += par.getHeight();
         });
         return height;
     }
 
-    public getStart(): number {
+    private getStart(): number {
         return this.columns[0].start;
     }
 
-    public getWidth(): number {
+    private getWidth(): number {
         let width = 0;
         this.columns.forEach(col => {
             width += col.width;
@@ -54,9 +55,16 @@ export class TableCell {
     }
 
     public performLayout(flow: VirtualFlow): void {
+        const x = flow.getX();
+        const y = flow.getY();
         this.pars.forEach(par => {
             par.performLayout(flow);
-        })
+        });
+        this.bounds = new Rectangle(x, y, this.getWidth(), this.getHeight());
     }
 
+    public getCellFlow(flow: VirtualFlow): VirtualFlow {
+        const x = flow.getX() + this.getStart();
+        return new VirtualFlow(x, x + this.getWidth(), flow.getY());
+    }
 }

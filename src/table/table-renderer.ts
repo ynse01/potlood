@@ -1,5 +1,4 @@
 import { Table } from "./table.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
 import { TableCell } from "./table-cell.js";
 import { TableStyle } from "./table-style.js";
 import { IPainter } from "../painting/i-painter.js";
@@ -15,37 +14,32 @@ export class TableRenderer {
         this._parRenderer = paragraphRenderer;
     }
 
-    public renderTable(table: Table, flow: VirtualFlow): void {
+    public renderTable(table: Table): void {
         table.rows.forEach(row => {
-            const height = row.getMaxHeight();
             row.cells.forEach(cell => {
-                const cellFlow = flow.createCellFlow(cell, table);
-                this.renderCellShading(cell, cellFlow, height);
-                this.renderCellBorder(cell, table.style, cellFlow, height);
-                let topPadding = table.style.margins.cellMarginTop;
-                const topBorder = cell.style.borders.borderTop;
-                if (topBorder !== undefined) {
-                    topPadding += topBorder.size;
-                }
-                cellFlow.advancePosition(topPadding);
+                this.renderCellShading(cell);
+                this.renderCellBorder(cell, table.style);
+                // let topPadding = table.style.margins.cellMarginTop;
+                // const topBorder = cell.style.borders.borderTop;
+                // if (topBorder !== undefined) {
+                //    topPadding += topBorder.size;
+                // }
+                // cellFlow.advancePosition(topPadding);
                 cell.pars.forEach(par => {
-                    this._parRenderer.renderParagraph(par, cellFlow);
+                    this._parRenderer.renderParagraph(par);
                 });
             });
-            flow.advancePosition(height);
         });
     }
     
-    private renderCellShading(cell: TableCell, flow: VirtualFlow, height: number): void {
-        if (cell.style.shading !== "") {
-            let x = flow.getX();
-            let y = flow.getY();
-            let width = cell.getWidth();
-            this._painter.paintLine(x, y, x + width, y, cell.style.shading, height);
+    private renderCellShading(cell: TableCell): void {
+        const bounds = cell.bounds;
+        if (cell.style.shading !== "" && bounds !== undefined) {
+            this._painter.paintLine(bounds.left, bounds.y, bounds.right, bounds.y, cell.style.shading, bounds.height);
         }
     }
 
-    private renderCellBorder(cell: TableCell, style: TableStyle, flow: VirtualFlow, height: number): void {
+    private renderCellBorder(cell: TableCell, style: TableStyle): void {
         let outerBorders: TableBorderSet | undefined = style.borders;
         const innerBorders = cell.style.borders;
         // Resolve border conflicts
@@ -53,43 +47,37 @@ export class TableRenderer {
             // Disable cell borders defined at table level.
             outerBorders = undefined;
         }
-        let x = flow.getX();
-        let y = flow.getY();
-        let cellWidth = cell.getWidth();
+        let bounds = cell.bounds;
+        if (bounds === undefined) {
+            return;
+        }
         if (outerBorders !== undefined) {
             if (outerBorders.borderTop !== undefined) {
-                this._painter.paintLine(x, y, x + cellWidth, y, outerBorders.borderTop.color, outerBorders.borderTop.size);
+                this._painter.paintLine(bounds.left, bounds.top, bounds.right, bounds.top, outerBorders.borderTop.color, outerBorders.borderTop.size);
             }
             if (outerBorders.borderBottom !== undefined) {
-                const bottom = y + height;
-                this._painter.paintLine(x, bottom, x + cellWidth, bottom, outerBorders.borderBottom.color, outerBorders.borderBottom.size);
+                this._painter.paintLine(bounds.left, bounds.bottom, bounds.right, bounds.bottom, outerBorders.borderBottom.color, outerBorders.borderBottom.size);
             }
             if (outerBorders.borderStart !== undefined) {
-                this._painter.paintLine(x, y, x, y + height, outerBorders.borderStart.color, outerBorders.borderStart.size);
+                this._painter.paintLine(bounds.x, bounds.top, bounds.x, bounds.bottom, outerBorders.borderStart.color, outerBorders.borderStart.size);
             }
             if (outerBorders.borderEnd !== undefined) {
-                const end = x + cellWidth;
-                this._painter.paintLine(end, y, end, y + height, outerBorders.borderEnd.color, outerBorders.borderEnd.size);
+                this._painter.paintLine(bounds.right, bounds.top, bounds.right, bounds.bottom, outerBorders.borderEnd.color, outerBorders.borderEnd.size);
             }
         }
         if (innerBorders !== undefined) {
-            const cellSpacing = style.cellSpacing;
-            x += cellSpacing;
-            y += cellSpacing;
-            cellWidth -= 2 * cellSpacing;
+            bounds.subtractSpacing(style.cellSpacing);
             if (innerBorders.borderTop !== undefined) {
-                this._painter.paintLine(x, y, x + cellWidth, y, innerBorders.borderTop.color, innerBorders.borderTop.size);
+                this._painter.paintLine(bounds.left, bounds.top, bounds.right, bounds.top, innerBorders.borderTop.color, innerBorders.borderTop.size);
             }
             if (innerBorders.borderBottom !== undefined) {
-                const bottom = y + height;
-                this._painter.paintLine(x, bottom, x + cellWidth, bottom, innerBorders.borderBottom.color, innerBorders.borderBottom.size);
+                this._painter.paintLine(bounds.left, bounds.bottom, bounds.right, bounds.bottom, innerBorders.borderBottom.color, innerBorders.borderBottom.size);
             }
             if (innerBorders.borderStart !== undefined) {
-                this._painter.paintLine(x, y, x, y + height, innerBorders.borderStart.color, innerBorders.borderStart.size);
+                this._painter.paintLine(bounds.x, bounds.top, bounds.x, bounds.bottom, innerBorders.borderStart.color, innerBorders.borderStart.size);
             }
             if (innerBorders.borderEnd !== undefined) {
-                const end = x + cellWidth;
-                this._painter.paintLine(end, y, end, y + height, innerBorders.borderEnd.color, innerBorders.borderEnd.size);
+                this._painter.paintLine(bounds.right, bounds.top, bounds.right, bounds.bottom, innerBorders.borderEnd.color, innerBorders.borderEnd.size);
             }
         }
     }
