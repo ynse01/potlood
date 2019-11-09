@@ -20,33 +20,26 @@ export class TextRun implements ILayoutable {
         this.texts = texts;
     }
 
-    public getUsedWidth(availableWidth: number): number {
-        let usedWidth = 0;
-        const lines = this.getLines(availableWidth);
-        if (lines.length > 1) {
-            usedWidth = availableWidth;
-        } else {
-            usedWidth = lines[0].width;
-        }
-        return usedWidth;
+    public getUsedWidth(): number {
+        const lines = this.getLines();
+        return lines[0].width;
     }
 
-    public getWidthOfLastLine(availableWidth: number): number {
-        const lines = this.getLines(availableWidth);
+    public getWidthOfLastLine(): number {
+        const lines = this.getLines();
         return Metrics.getTextWidth(lines[lines.length - 1].text, this.style);
     }
 
-    public getHeight(width: number): number {
-        return this.getLines(width).length * this.style.lineSpacing;
+    public getHeight(): number {
+        return this.getLines().length * this.style.lineSpacing;
     }
 
-    public getLines(width: number): IPositionedTextLine[] {
+    public getLines(): IPositionedTextLine[] {
         let lines: IPositionedTextLine[];
         if (this._lines !== undefined) {
             lines = this._lines;
         } else {
-            const flow = new VirtualFlow(0, width, 0);
-            lines = this.getFlowLines(flow);
+            throw new Error("Rendering text which hasn't been included in layout");
         }
         return lines;
     }
