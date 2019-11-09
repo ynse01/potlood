@@ -1,9 +1,16 @@
 import { Paragraph } from "../paragraph/paragraph.js";
 import { TableCell } from "./table-cell.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
+import { Table } from "./table.js";
 
 export class TableRow {
+    public table: Table;
     public cells: TableCell[] = [];
+    public maxHeight: number | undefined;
+
+    constructor(table: Table) {
+        this.table = table;
+    }
 
     public getMaxHeight(): number {
         let height = 0;
@@ -22,8 +29,14 @@ export class TableRow {
     }
 
     public performLayout(flow: VirtualFlow): void {
+        const startY = flow.getY();
+        let maxY = 0;
         this.cells.forEach(cell => {
-            cell.performLayout(flow);
-        })
+            const cellFlow = flow.createCellFlow(cell, this.table);
+            cell.performLayout(cellFlow);
+            maxY = Math.max(cellFlow.getY(), maxY);
+        });
+        this.maxHeight = maxY - startY;
+        flow.advancePosition(this.maxHeight);
     }
 }

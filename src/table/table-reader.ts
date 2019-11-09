@@ -44,7 +44,7 @@ export class TableReader {
     }
 
     private static readTableRow(rowNode: ChildNode, table: Table): TableRow {
-        const row = new TableRow();
+        const row = new TableRow(table);
         const rowStyle = new TableStyle();
         rowStyle.higherStyle = table.style;
         let colIndex = 0;
