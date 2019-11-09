@@ -20,9 +20,8 @@ export class DrawingRenderer {
         }
         const chart = drawing.chart;
         if (chart !== undefined) {
-            const chartFlow = flow.clone();
             chart.ensureLoaded().then(() => {
-                this._chartRenderer.renderChartSpace(chart, chartFlow, drawing.bounds);
+                this._chartRenderer.renderChartSpace(chart);
             });
         }
         if (drawing.bounds.anchor === "anchor") {

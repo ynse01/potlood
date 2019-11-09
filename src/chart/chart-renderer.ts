@@ -1,8 +1,6 @@
 import { BarChart } from "./bar-chart.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
 import { IPainter } from "../painting/i-painter.js";
 import { ChartSpace } from "./chart-space.js";
-import { ShapeBounds } from "../drawing/shape-bounds.js";
 import { ChartStyle } from "./chart-style.js";
 import { Rectangle } from "../utils/rectangle.js";
 
@@ -13,12 +11,14 @@ export class ChartRenderer {
         this._painter = painter;
     }
 
-    public renderChartSpace(space: ChartSpace, flow: VirtualFlow, bounds: ShapeBounds) {
-        const spaceBounds = bounds.rectangle.translate(flow.getX(), flow.getY());
-        this._renderBorderAndShading(space.style, spaceBounds);
-        const plotBounds = this._renderBorderAndShading(space.plotArea.style, spaceBounds);
-        if (space.barChart !== undefined) {
-            this._renderBarChart(space.barChart, plotBounds);
+    public renderChartSpace(space: ChartSpace) {
+        const spaceBounds = space.bounds;
+        if (spaceBounds !== undefined) {
+            this._renderBorderAndShading(space.style, spaceBounds);
+            const plotBounds = this._renderBorderAndShading(space.plotArea.style, spaceBounds);
+            if (space.barChart !== undefined) {
+                this._renderBarChart(space.barChart, plotBounds);
+            }
         }
     }
 
