@@ -14,30 +14,44 @@ export class TableCell {
 
     constructor(columns: TableColumn[], style: TableStyle, startIndex: number) {
         this.style = style;
-        this.columns = this.getColumns(columns, startIndex);
+        this.columns = this._getColumns(columns, startIndex);
     }
 
-    private getHeight(): number {
-        let height = this.style.margins.cellMarginTop + this.style.margins.cellMarginBottom;
-        const topBorder = this.style.borders.borderTop;
+    public performLayout(flow: VirtualFlow): void {
+        const x = flow.getX();
+        const y = flow.getY();
+        const margins = this.style.margins;
+        const borders = this.style.borders;
+        flow.advancePosition(margins.cellMarginTop);
+        const topBorder = borders.borderTop;
         if (topBorder !== undefined) {
-            height += topBorder.size;
+            flow.advancePosition(topBorder.size);
         }
-        const bottomBorder = this.style.borders.borderBottom;
-        if (bottomBorder !== undefined) {
-            height += bottomBorder.size;
+        flow.advanceX(margins.cellMarginStart, margins.cellMarginEnd);
+        const startBorder = borders.borderStart;
+        const endBorder = borders.borderEnd;
+        // TODO: Handle horizontal border also
+        if (startBorder !== undefined && endBorder !== undefined) {
+            flow.advanceX(startBorder.size, endBorder.size);
         }
         this.pars.forEach(par => {
-            height += par.getHeight();
+            par.performLayout(flow);
         });
-        return height;
+        flow.advancePosition(margins.cellMarginBottom);
+        const bottomBorder = borders.borderBottom;
+        if (bottomBorder !== undefined) {
+            flow.advancePosition(bottomBorder.size);
+        }
+        let height = flow.getY() - y;
+        this.bounds = new Rectangle(x, y, this._getWidth(), height);
     }
 
-    private getStart(): number {
-        return this.columns[0].start;
+    public getCellFlow(flow: VirtualFlow): VirtualFlow {
+        const x = flow.getX() + this.columns[0].start;
+        return new VirtualFlow(x, x + this._getWidth(), flow.getY());
     }
 
-    private getWidth(): number {
+    private _getWidth(): number {
         let width = 0;
         this.columns.forEach(col => {
             width += col.width;
@@ -45,26 +59,8 @@ export class TableCell {
         return width;
     }
 
-    public getTextWidth(): number {
-        return this.getWidth() - this.style.margins.cellMarginStart - this.style.margins.cellMarginEnd;
-    }
-
-    private getColumns(columns: TableColumn[], startIndex: number): TableColumn[] {
+    private _getColumns(columns: TableColumn[], startIndex: number): TableColumn[] {
         const colSpan = this.style.gridSpan;
         return columns.slice(startIndex, startIndex + colSpan);
-    }
-
-    public performLayout(flow: VirtualFlow): void {
-        const x = flow.getX();
-        const y = flow.getY();
-        this.pars.forEach(par => {
-            par.performLayout(flow);
-        });
-        this.bounds = new Rectangle(x, y, this.getWidth(), this.getHeight());
-    }
-
-    public getCellFlow(flow: VirtualFlow): VirtualFlow {
-        const x = flow.getX() + this.getStart();
-        return new VirtualFlow(x, x + this.getWidth(), flow.getY());
     }
 }

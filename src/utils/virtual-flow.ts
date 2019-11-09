@@ -51,6 +51,12 @@ export class VirtualFlow {
         return this._xMax - this._xMin;
     }
 
+    public advanceX(startDelta: number, endDelta: number): VirtualFlow {
+        this._xMin += startDelta;
+        this._xMax -= startDelta - endDelta;
+        return this;
+    }
+
     public advancePosition(delta: number): VirtualFlow {
         this._pos += delta;
         return this;
