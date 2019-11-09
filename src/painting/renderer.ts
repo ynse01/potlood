@@ -22,8 +22,6 @@ export class Renderer {
         docx.paragraphs.forEach(parOrTable => {
             parOrTable.performLayout(flow);
         });
-        const height = flow.getY();
-        flow.advancePosition(height);
         docx.paragraphs.forEach(parOrTable => {
             if (parOrTable instanceof Paragraph) {
                 this._paragraphRenderer.renderParagraph(parOrTable);
@@ -31,7 +29,7 @@ export class Renderer {
                 this._tableRenderer.renderTable(parOrTable);
             }
         });
-        return height;
+        return flow.getY();
     }
 
     public clear() {
