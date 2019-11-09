@@ -23,8 +23,16 @@ export class DrawingRun implements ILayoutable {
         return this.bounds.boundSizeY;
     }
 
-    public performLayout(_flow: VirtualFlow): void {
-        // Nothing to do for now.
+    public performLayout(flow: VirtualFlow): void {
+        const bounds = this.bounds.rectangle.translate(flow.getX(), flow.getY());
+        if (this.picture !== undefined) {
+            this.picture.bounds = bounds;
+            this.picture.performLayout(flow);
+        }
+        if (this.chart !== undefined) {
+            this.chart.bounds = bounds;
+            this.chart.performLayout(flow);
+        }
         this.lastXPos = 0;
     }
 }

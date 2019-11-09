@@ -1,13 +1,17 @@
 import { DocumentX } from "../document-x.js";
 import { Package } from "../package/package.js";
 import { Xml } from "../utils/xml.js";
+import { Rectangle } from "../utils/rectangle.js";
+import { ILayoutable } from "../utils/i-layoutable.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 
 declare var UTIF: any;
 
-export class Picture {
+export class Picture implements ILayoutable {
     private _pack: Package;
     private _name: string;
     private _imageUrl: string | undefined;
+    public bounds: Rectangle | undefined;
 
     public static fromPicNode(picNode: ChildNode, docx: DocumentX): Picture | undefined {
         let run: Picture | undefined = undefined;
@@ -71,6 +75,9 @@ export class Picture {
 
     public get isTiff(): boolean {
         return this._name.endsWith('.tif') || this._name.endsWith('.tiff');
+    }
+
+    public performLayout(_flow: VirtualFlow): void {
     }
 
     private _getImageUrlForJpeg(): Promise<void> {

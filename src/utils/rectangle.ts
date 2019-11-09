@@ -48,4 +48,8 @@ export class Rectangle {
     public clone(): Rectangle {
         return new Rectangle(this.x, this.y, this.width, this.height);
     }
+
+    public toString(): string {
+        return `{${this.x}, ${this.y}, ${this.width}, ${this.height}}`;
+    }
 }

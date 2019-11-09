@@ -20,6 +20,10 @@ export class Renderer {
     public renderDocument(docx: DocumentX): number {
         const flow = VirtualFlow.fromSection(docx.section);
         docx.paragraphs.forEach(parOrTable => {
+            parOrTable.performLayout(flow);
+        });
+        flow.advancePosition(-flow.getY());
+        docx.paragraphs.forEach(parOrTable => {
             if (parOrTable instanceof Paragraph) {
                 this._paragraphRenderer.renderParagraph(parOrTable, flow);
             } else {
