@@ -1,4 +1,3 @@
-import { VirtualFlow } from "../utils/virtual-flow.js";
 import { DrawingRun } from "./drawing-run.js";
 import { IPainter } from "../painting/i-painter.js";
 import { ChartRenderer } from "../chart/chart-renderer.js";
@@ -12,7 +11,7 @@ export class DrawingRenderer {
         this._chartRenderer = new ChartRenderer(this._painter);
     }
 
-    public renderDrawing(drawing: DrawingRun, flow: VirtualFlow) {
+    public renderDrawing(drawing: DrawingRun) {
         const picture = drawing.picture;
         if (picture !== undefined && picture.bounds !== undefined) {
             const picBounds = picture.bounds;
@@ -23,9 +22,6 @@ export class DrawingRenderer {
             chart.ensureLoaded().then(() => {
                 this._chartRenderer.renderChartSpace(chart);
             });
-        }
-        if (drawing.bounds.anchor === "anchor") {
-            flow.advancePosition(drawing.getHeight(flow.getWidth()));
         }
     }
     

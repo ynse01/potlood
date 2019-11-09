@@ -1,4 +1,3 @@
-import { VirtualFlow } from "../utils/virtual-flow.js";
 import { TextRun } from "./text-run.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
 import { UnderlineMode } from "./run-style.js";
@@ -13,12 +12,12 @@ export class TextRenderer {
         this._painter = painter;
     }
 
-    public renderTextRun(run: TextRun, flow: VirtualFlow): void {
+    public renderTextRun(run: TextRun): void {
         const linkTarget = run.linkTarget;
         if (linkTarget !== undefined) {
             this._painter.startLink(linkTarget);
         }
-        run.getFlowLines(flow).forEach((line: IPositionedTextLine) => {
+        run.getLines().forEach((line: IPositionedTextLine) => {
             this._renderText(line, run.style);
         });
         if (linkTarget !== undefined) {

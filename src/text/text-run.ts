@@ -46,11 +46,11 @@ export class TextRun implements ILayoutable {
 
     public performLayout(flow: VirtualFlow): void {
         if (this._lines === undefined) {
-            this._lines = this.getFlowLines(flow);
+            this._lines = this._getFlowLines(flow);
         }
     }
 
-    public getFlowLines(flow: VirtualFlow): IPositionedTextLine[] {
+    private _getFlowLines(flow: VirtualFlow): IPositionedTextLine[] {
         let lines: IPositionedTextLine[] = [];
         if (!this.style.invisible) {
             const result = TextFitter.getFlowLines(this, flow);

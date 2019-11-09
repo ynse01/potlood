@@ -34,5 +34,8 @@ export class DrawingRun implements ILayoutable {
             this.chart.performLayout(flow);
         }
         this.lastXPos = 0;
+        if (this.bounds.anchor === "anchor") {
+            flow.advancePosition(this.bounds.boundSizeY);
+        }
     }
 }

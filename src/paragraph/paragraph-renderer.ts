@@ -21,15 +21,15 @@ export class ParagraphRenderer {
         }
         let previousXPos: number | undefined = 0;
         if (par.numberingRun !== undefined) {
-          this._textRenderer.renderTextRun(par.numberingRun, flow.clone());
+          this._textRenderer.renderTextRun(par.numberingRun);
           previousXPos = par.numberingRun.lastXPos;
         }
         par.runs.forEach((run) => {
-            run.previousXPos = previousXPos;    
+            run.previousXPos = previousXPos;
             if (run instanceof TextRun) {
-                this._textRenderer.renderTextRun(run, flow);
+                this._textRenderer.renderTextRun(run);
             } else {
-                this._drawingRenderer.renderDrawing(run, flow);
+                this._drawingRenderer.renderDrawing(run);
             }
             previousXPos = run.lastXPos;
         });
