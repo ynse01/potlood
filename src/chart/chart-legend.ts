@@ -14,6 +14,7 @@ export class ChartLegend {
     public bounds: Rectangle = new Rectangle(0, 0, 0, 0);
     private static _widgetSize = 10;
     private static _widgetSpacing = 5;
+    public static spacing = 5;
 
     constructor(space: ChartSpace) {
         this.space = space;
@@ -47,13 +48,9 @@ export class ChartLegend {
         return lines;
     }
 
-    public getColors(): string[] {
-        return this.space.barChart!.series.map((series) => series.color);
-    }
-
     public performLayout(): void {
         const size = this._getSize();
-        const spaceBounds = this.space.bounds!;
+        const spaceBounds = this.space.bounds;
         let xPos = InSequence.Last;
         let yPos = InSequence.Middle;
         switch(this.position) {
@@ -74,7 +71,11 @@ export class ChartLegend {
                 yPos = InSequence.Last;
                 break;
         }
-        this.bounds = spaceBounds.placeInRectangle(size.width, size.height, xPos, yPos);
+        this.bounds = spaceBounds.subtractSpacing(ChartLegend.spacing).placeInRectangle(size.width, size.height, xPos, yPos);
+    }
+
+    public getColors(): string[] {
+        return this.space.barChart!.series.map((series) => series.color);
     }
 
     private _getNames(): string[] {

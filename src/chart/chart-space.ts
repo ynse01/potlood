@@ -6,6 +6,7 @@ import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { Rectangle } from "../utils/rectangle.js";
 import { Style } from "../text/style.js";
+import { ChartAxisPosition } from "./chart-axis.js";
 
 export class ChartSpace implements ILayoutable {
     private _promise: Promise<void> | undefined = undefined;
@@ -55,7 +56,27 @@ export class ChartSpace implements ILayoutable {
         let plotBounds = this.bounds.subtractSpacing(10);
         if (this.legend !== undefined) {
             this.legend.performLayout();
-            plotBounds = plotBounds.subtractBorder(0, 0, this.legend.bounds.width, 0);
+            if (!this.legend.overlayOnPlot) {
+                let left = 0;
+                let right = 0;
+                let top = 0;
+                let bottom = 0;
+                switch (this.legend.position) {
+                    case ChartAxisPosition.Left:
+                        left += this.legend.bounds.width + ChartLegend.spacing;
+                        break;
+                    case ChartAxisPosition.Right:
+                        right += this.legend.bounds.width + ChartLegend.spacing;
+                        break;
+                    case ChartAxisPosition.Top:
+                        top += this.legend.bounds.height + ChartLegend.spacing;
+                        break;
+                    case ChartAxisPosition.Bottom:
+                        bottom += this.legend.bounds.height + ChartLegend.spacing;
+                        break;
+                }
+                plotBounds = plotBounds.subtractBorder(left, top, right, bottom);
+            }
         }
         this.plotArea.bounds = plotBounds;
         this.plotArea.performLayout();
