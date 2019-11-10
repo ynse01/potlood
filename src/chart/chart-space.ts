@@ -53,10 +53,10 @@ export class ChartSpace implements ILayoutable {
 
     private _performLayout(): void {
         if (this.bounds !== undefined) {
-            const plotBounds = this.bounds.clone().subtractSpacing(10);
+            let plotBounds = this.bounds.subtractSpacing(10);
             if (this.legend !== undefined) {
                 this.legend.performLayout();
-                plotBounds.subtractBorder(0, 0, this.legend.bounds.width, 0);
+                plotBounds = plotBounds.subtractBorder(0, 0, this.legend.bounds.width, 0);
             }
             this.plotArea.bounds = plotBounds;
             this.plotArea.performLayout();

@@ -30,17 +30,11 @@ export class Rectangle {
     }
 
     public translate(x: number, y: number): Rectangle {
-        this.x += x;
-        this.y += y;
-        return this;
+        return new Rectangle(this.x + x, this.y + y, this.width, this.height);
     }
 
     public subtractBorder(left: number, top: number, right: number, bottom: number): Rectangle {
-        this.x += left;
-        this.y += top;
-        this.width -= left + right;
-        this.height -= top + bottom;
-        return this;
+        return new Rectangle(this.x + left, this.y + top, this.width - left - right, this.height - top - bottom);
     }
 
     public subtractSpacing(spacing: number): Rectangle {
@@ -61,10 +55,6 @@ export class Rectangle {
             y = this.bottom - height;
         }
         return new Rectangle(x, y, width, height);
-    }
-
-    public clone(): Rectangle {
-        return new Rectangle(this.x, this.y, this.width, this.height);
     }
 
     public toString(): string {

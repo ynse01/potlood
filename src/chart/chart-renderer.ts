@@ -46,7 +46,7 @@ export class ChartRenderer {
             const yMid = y + (bounds.height / 2);
             this._painter.paintLine(x, yMid, xMax, yMid, shading, bounds.height);
         }
-        return bounds.clone().subtractSpacing(spacing);
+        return bounds.subtractSpacing(spacing);
     }
 
     private _renderLegend(legend: ChartLegend): void {
