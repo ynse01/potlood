@@ -14,7 +14,7 @@ export class ChartSpace implements ILayoutable {
     public textStyle: Style = new Style();
     public plotArea: ChartPlotArea = new ChartPlotArea();
     public legend: ChartLegend | undefined = undefined;
-    public bounds: Rectangle | undefined;
+    public bounds: Rectangle = new Rectangle(0, 0, 0, 0);
 
     constructor() {
         // Hard coded text style.
@@ -52,14 +52,12 @@ export class ChartSpace implements ILayoutable {
     }
 
     private _performLayout(): void {
-        if (this.bounds !== undefined) {
-            let plotBounds = this.bounds.subtractSpacing(10);
-            if (this.legend !== undefined) {
-                this.legend.performLayout();
-                plotBounds = plotBounds.subtractBorder(0, 0, this.legend.bounds.width, 0);
-            }
-            this.plotArea.bounds = plotBounds;
-            this.plotArea.performLayout();
+        let plotBounds = this.bounds.subtractSpacing(10);
+        if (this.legend !== undefined) {
+            this.legend.performLayout();
+            plotBounds = plotBounds.subtractBorder(0, 0, this.legend.bounds.width, 0);
         }
+        this.plotArea.bounds = plotBounds;
+        this.plotArea.performLayout();
     }
 }

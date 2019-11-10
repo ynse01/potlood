@@ -16,7 +16,7 @@ export class ChartRenderer {
         const spaceBounds = space.bounds;
         if (spaceBounds !== undefined) {
             this._renderBorderAndShading(space.plotArea.style, spaceBounds);
-            const plotBounds = this._renderBorderAndShading(space.plotArea.style, space.plotArea.bounds!);
+            const plotBounds = this._renderBorderAndShading(space.plotArea.style, space.plotArea.bounds);
             if (space.legend !== undefined) {
                 this._renderLegend(space.legend);
             }
