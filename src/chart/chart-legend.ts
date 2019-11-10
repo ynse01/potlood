@@ -68,13 +68,13 @@ export class ChartLegend {
 
     private _getSize(): { width: number, height: number } {
         const charWidth = FontMetrics.averageCharWidth(this.space.textStyle);
-        let maxWidth = 0;
+        let maxChars = 0;
         const names = this._getNames();
         names.forEach(name => {
-            maxWidth = Math.max(maxWidth, name.length * charWidth);
+            maxChars = Math.max(maxChars, name.length);
         });
         const lineSpacing = this.space.textStyle.lineSpacing;
         const height = names.length * lineSpacing;
-        return { width: maxWidth, height: height };
+        return { width: (maxChars + 1) * charWidth, height: height };
     }
 }

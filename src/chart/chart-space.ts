@@ -18,7 +18,7 @@ export class ChartSpace implements ILayoutable {
 
     constructor() {
         // Hard coded text style.
-        this.textStyle.runStyle.updateFont("Times New Roman", false, 10);
+        this.textStyle.runStyle.updateFont("Times New Roman", false, 11);
     }
 
     public async ensureLoaded(): Promise<void> {
