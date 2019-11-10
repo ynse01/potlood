@@ -13,13 +13,13 @@ export class TextFitter {
         let inRun = InSequence.First;
         let currentXPadding: number = 0;
         let isFollowing = false;
-        if (run.previousXPos !== undefined && !isStartingRun) {
-            currentXPadding = run.previousXPos;
-            isFollowing = true;
-        } else {
+        if (run.previousXPos === undefined || isStartingRun) {
             currentXPadding = run.style.getIndentation(inRun, run.inParagraph);
             // Text is on baseline, flow is at the top, correcting here.
             flow.advancePosition(FontMetrics.getTopToBaseline(run.style));
+        } else {
+            currentXPadding = run.previousXPos;
+            isFollowing = true;
         }
         let txt = run.texts.join(' ');
         if (run.style.caps || run.style.smallCaps) {
