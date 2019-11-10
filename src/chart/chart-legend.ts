@@ -13,6 +13,7 @@ export class ChartLegend {
     public overlayOnPlot: boolean = false;
     public bounds: Rectangle = new Rectangle(0, 0, 0, 0);
     private static _widgetSize = 10;
+    private static _widgetSpacing = 5;
 
     constructor(space: ChartSpace) {
         this.space = space;
@@ -22,10 +23,14 @@ export class ChartLegend {
         return ChartLegend._widgetSize;
     }
 
+    public get widgetSpacing(): number {
+        return ChartLegend._widgetSpacing;
+    }
+
     public getLines(): IPositionedTextLine[] {
         const lines: IPositionedTextLine[] = [];
         const textStyle = this.space.textStyle;
-        const x = this.bounds.x + 2 * ChartLegend._widgetSize;
+        const x = this.bounds.x + ChartLegend._widgetSize + ChartLegend._widgetSpacing;
         let y = this.bounds.y + FontMetrics.getTopToBaseline(textStyle);
         this._getNames().forEach(name => {
             lines.push({
@@ -86,6 +91,7 @@ export class ChartLegend {
         const lineSpacing = this.space.textStyle.lineSpacing;
         const height = names.length * lineSpacing;
         const textWidth = (maxChars + 1) * charWidth;
-        return { width: textWidth + 2 * ChartLegend._widgetSize, height: height };
+        const widgetWidth = ChartLegend._widgetSize + ChartLegend._widgetSpacing;
+        return { width: textWidth + widgetWidth, height: height };
     }
 }
