@@ -12,19 +12,25 @@ export class ChartLegend {
     public position: ChartAxisPosition = ChartAxisPosition.Right;
     public overlayOnPlot: boolean = false;
     public bounds: Rectangle = new Rectangle(0, 0, 0, 0);
+    private static _widgetSize = 10;
 
     constructor(space: ChartSpace) {
         this.space = space;
     }
 
+    public get widgetSize(): number {
+        return ChartLegend._widgetSize;
+    }
+
     public getLines(): IPositionedTextLine[] {
         const lines: IPositionedTextLine[] = [];
         const textStyle = this.space.textStyle;
+        const x = this.bounds.x + 2 * ChartLegend._widgetSize;
         let y = this.bounds.y + FontMetrics.getTopToBaseline(textStyle);
         this._getNames().forEach(name => {
             lines.push({
                 text: name,
-                x: this.bounds.x,
+                x: x,
                 y: y,
                 width: this.bounds.width,
                 fitWidth: false,
@@ -34,6 +40,10 @@ export class ChartLegend {
             y += textStyle.lineSpacing;
         });
         return lines;
+    }
+
+    public getColors(): string[] {
+        return this.space.barChart!.series.map((series) => series.color);
     }
 
     public performLayout(): void {
@@ -75,6 +85,7 @@ export class ChartLegend {
         });
         const lineSpacing = this.space.textStyle.lineSpacing;
         const height = names.length * lineSpacing;
-        return { width: (maxChars + 1) * charWidth, height: height };
+        const textWidth = (maxChars + 1) * charWidth;
+        return { width: textWidth + 2 * ChartLegend._widgetSize, height: height };
     }
 }

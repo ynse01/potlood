@@ -52,7 +52,12 @@ export class ChartRenderer {
     private _renderLegend(legend: ChartLegend): void {
         this._renderBorderAndShading(legend.style, legend.bounds);
         const style = legend.space.textStyle;
-        legend.getLines().forEach(line => {
+        const colors = legend.getColors();
+        const widgetSize = legend.widgetSize;
+        legend.getLines().forEach((line, index) => {
+            const widgetX = line.x - 2 * widgetSize;
+            const widgetY = line.y - 4;
+            this._painter.paintLine(widgetX, widgetY, widgetX + widgetSize, widgetY, colors[index], widgetSize);
             this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
         });
     }
