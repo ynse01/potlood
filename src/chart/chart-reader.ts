@@ -49,7 +49,7 @@ export class ChartReader {
     }
 
     private static _readLegend(legendNode: Node, space: ChartSpace): void {
-        const legend = new ChartLegend();
+        const legend = new ChartLegend(space);
         legendNode.childNodes.forEach((child: ChildNode) => {
             switch (child.nodeName) {
                 case "c:spPr":
@@ -160,6 +160,11 @@ export class ChartReader {
 
     private static _readChartSeries(seriesNode: Node): ChartSeries {
         const series = new ChartSeries();
+        const nameNode = Xml.getFirstChildOfName(seriesNode, "c:tx");
+        if (nameNode !== undefined && nameNode.firstChild !== null) {
+            const names = this._readStringReference(nameNode.firstChild);
+            series.name = names[0];
+        }
         const catNode = Xml.getFirstChildOfName(seriesNode, "c:cat");
         if (catNode !== undefined) {
             if (catNode.firstChild !== null) {

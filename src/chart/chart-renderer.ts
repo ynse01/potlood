@@ -3,6 +3,7 @@ import { IPainter } from "../painting/i-painter.js";
 import { ChartSpace } from "./chart-space.js";
 import { ChartStyle } from "./chart-style.js";
 import { Rectangle } from "../utils/rectangle.js";
+import { ChartLegend } from "./chart-legend.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -14,8 +15,11 @@ export class ChartRenderer {
     public renderChartSpace(space: ChartSpace) {
         const spaceBounds = space.bounds;
         if (spaceBounds !== undefined) {
-            this._renderBorderAndShading(space.style, spaceBounds);
-            const plotBounds = this._renderBorderAndShading(space.plotArea.style, spaceBounds);
+            this._renderBorderAndShading(space.plotArea.style, spaceBounds);
+            const plotBounds = this._renderBorderAndShading(space.plotArea.style, space.plotArea.bounds!);
+            if (space.legend !== undefined) {
+                this._renderLegend(space.legend);
+            }
             if (space.barChart !== undefined) {
                 this._renderBarChart(space.barChart, plotBounds);
             }
@@ -43,6 +47,14 @@ export class ChartRenderer {
             this._painter.paintLine(x, yMid, xMax, yMid, shading, bounds.height);
         }
         return bounds.clone().subtractSpacing(spacing);
+    }
+
+    private _renderLegend(legend: ChartLegend): void {
+        this._renderBorderAndShading(legend.style, legend.bounds);
+        const style = legend.space.textStyle;
+        legend.getLines().forEach(line => {
+            this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
+        });
     }
 
     private _renderBarChart(barChart: BarChart, bounds: Rectangle): void {

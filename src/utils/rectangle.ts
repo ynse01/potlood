@@ -1,3 +1,5 @@
+import { InSequence } from "./in-sequence.js";
+
 export class Rectangle {
     public x: number;
     public y: number;
@@ -43,6 +45,22 @@ export class Rectangle {
 
     public subtractSpacing(spacing: number): Rectangle {
         return this.subtractBorder(spacing, spacing, spacing, spacing);
+    }
+
+    public placeInRectangle(width: number, height: number, xPos: InSequence, yPos: InSequence): Rectangle {
+        let x = 0;
+        let y = 0;
+        if (xPos === InSequence.Middle) {
+            x = this.x + (this.width / 2) - (width / 2);
+        } else if (xPos === InSequence.Last) {
+            x = this.right - width;
+        }
+        if (yPos === InSequence.Middle) {
+            y = this.y + (this.height / 2) - (height / 2);
+        } else if (xPos === InSequence.Last) {
+            y = this.bottom - height;
+        }
+        return new Rectangle(x, y, width, height);
     }
 
     public clone(): Rectangle {
