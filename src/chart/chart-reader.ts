@@ -36,10 +36,10 @@ export class ChartReader {
                     space.setBarChart(this._readBarChart(child, space));
                     break;
                 case "c:catAx":
-                    space.plotArea.categoryAxis = this._readChartAxis(child);
+                    space.plotArea.categoryAxis = this._readChartAxis(child, space);
                     break;
                 case "c:valAx":
-                    space.plotArea.valueAxis = this._readChartAxis(child);
+                    space.plotArea.valueAxis = this._readChartAxis(child, space);
                     break;
                 case "c:spPr":
                     space.plotArea.style = this._readStyle(child);
@@ -104,7 +104,7 @@ export class ChartReader {
         return style;
     }
 
-    private static _readChartAxis(axisNode: Node): ChartAxis {
+    private static _readChartAxis(axisNode: Node, space: ChartSpace): ChartAxis {
         let pos: ChartAxisPosition = ChartAxisPosition.Bottom;
         let majorTickMode: ChartAxisTickMode = ChartAxisTickMode.None;
         let minorTickMode: ChartAxisTickMode = ChartAxisTickMode.None;
@@ -152,7 +152,7 @@ export class ChartReader {
                     break;
             }
         });
-        const axis = new ChartAxis(pos, majorTickMode, minorTickMode, labelOffset);
+        const axis = new ChartAxis(space, pos, majorTickMode, minorTickMode, labelOffset);
         axis.labelAlignment = labelAlignment;
         axis.crossMode = crossMode;
         return axis;
