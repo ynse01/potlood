@@ -1,6 +1,8 @@
 import { ChartSpace } from "./chart-space.js";
 import { FontMetrics } from "../utils/font-metrics.js";
 import { ChartStyle } from "./chart-style.js";
+import { IPositionedTextLine } from "../text/positioned-text-line.js";
+import { InSequence } from "../utils/in-sequence.js";
 
 export enum ChartAxisPosition {
     Top,
@@ -32,6 +34,7 @@ export class ChartAxis {
     public labelOffset: number;
     public crossMode: ChartAxisCrossMode = ChartAxisCrossMode.AutoZero;
     public style: ChartStyle;
+    public positionedTexts: IPositionedTextLine[] | undefined = undefined;
     private _space: ChartSpace;
     private _isValueAxis: boolean;
     private static _labelSpacing = 5;
@@ -79,11 +82,14 @@ export class ChartAxis {
     }
 
     public performLayout(): void {
+        this.positionedTexts = [];
+        const lines = this.positionedTexts;
+        const plotBounds = this._space.plotArea.bounds;
         const hasNumericValues = this._hasNumericValues();
         switch(this.position) {
             case ChartAxisPosition.Left:
                 if (hasNumericValues) {
-                    
+
                 }
                 break;
             case ChartAxisPosition.Right:
@@ -93,7 +99,24 @@ export class ChartAxis {
                 
                 break;
             case ChartAxisPosition.Bottom:
-                
+                if (!hasNumericValues) {
+                    const texts = this._getTexts();
+                    const segmentWidth = plotBounds.width / texts.length;
+                    let currentX = plotBounds.x + segmentWidth / 2;
+                    const y = plotBounds.bottom + ChartAxis._labelSpacing + FontMetrics.getTopToBaseline(this._space.textStyle);
+                    texts.forEach(text => {
+                        lines.push({
+                            text: text,
+                            x: currentX,
+                            y: y,
+                            width: 0,
+                            fitWidth: false,
+                            following: false,
+                            inRun: InSequence.Only
+                        });
+                        currentX += segmentWidth;
+                    });
+                }
                 break;
         }
     }

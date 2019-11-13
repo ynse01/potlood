@@ -4,6 +4,9 @@ import { ChartSpace, ChartType } from "./chart-space.js";
 import { ChartStyle } from "./chart-style.js";
 import { Rectangle } from "../utils/rectangle.js";
 import { ChartLegend } from "./chart-legend.js";
+import { ChartAxis } from "./chart-axis.js";
+import { Justification } from "../paragraph/par-style.js";
+import { Style } from "../text/style.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -22,6 +25,12 @@ export class ChartRenderer {
             }
             if (space.chartType === ChartType.Bar) {
                 this._renderBarChart(space.chart as BarChart, plotBounds);
+            }
+            if (space.plotArea.categoryAxis !== undefined) {
+                this._renderAxis(space.plotArea.categoryAxis, space.textStyle);
+            }
+            if (space.plotArea.valueAxis !== undefined) {
+                this._renderAxis(space.plotArea.valueAxis, space.textStyle);
             }
         }
     }
@@ -60,6 +69,14 @@ export class ChartRenderer {
             this._painter.paintLine(widgetX, widgetY, widgetX + widgetSize, widgetY, colors[index], widgetSize);
             this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
         });
+    }
+
+    private _renderAxis(axis: ChartAxis, style: Style): void {
+        if (axis.positionedTexts !== undefined) {
+            axis.positionedTexts.forEach(line => {
+                this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, Justification.center, style.fontFamily, style.fontSize, false, false);
+            })
+        }
     }
 
     private _renderBarChart(barChart: BarChart, bounds: Rectangle): void {
