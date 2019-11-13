@@ -1,7 +1,7 @@
 import { ChartSpace } from "./chart-space.js";
 import { FontMetrics } from "../utils/font-metrics.js";
 import { ChartStyle } from "./chart-style.js";
-import { IPositionedTextLine } from "../text/positioned-text-line.js";
+import { IPositionedTextLine, IPositionedLine } from "../text/positioned-text-line.js";
 import { InSequence } from "../utils/in-sequence.js";
 
 export enum ChartAxisPosition {
@@ -35,6 +35,7 @@ export class ChartAxis {
     public crossMode: ChartAxisCrossMode = ChartAxisCrossMode.AutoZero;
     public style: ChartStyle;
     public positionedTexts: IPositionedTextLine[] | undefined = undefined;
+    public positionedLines: IPositionedLine[] | undefined = undefined;
     private _space: ChartSpace;
     private _isValueAxis: boolean;
     private static _labelSpacing = 5;
@@ -83,7 +84,9 @@ export class ChartAxis {
 
     public performLayout(): void {
         this.positionedTexts = [];
-        const lines = this.positionedTexts;
+        this.positionedLines = [];
+        const textLines = this.positionedTexts;
+        const lines = this.positionedLines;
         const plotBounds = this._space.plotArea.bounds;
         const hasNumericValues = this._hasNumericValues();
         switch(this.position) {
@@ -101,20 +104,36 @@ export class ChartAxis {
             case ChartAxisPosition.Bottom:
                 if (!hasNumericValues) {
                     const texts = this._getTexts();
-                    const segmentWidth = plotBounds.width / texts.length;
-                    let currentX = plotBounds.x + segmentWidth / 2;
-                    const y = plotBounds.bottom + ChartAxis._labelSpacing + FontMetrics.getTopToBaseline(this._space.textStyle);
+                    const halfSegmentWidth = (plotBounds.width / texts.length) / 2;
+                    let currentX = plotBounds.x;
+                    let textY = plotBounds.bottom + ChartAxis._labelSpacing + FontMetrics.getTopToBaseline(this._space.textStyle);
+                    let lineY1 = plotBounds.bottom;
+                    let lineY2 = plotBounds.bottom;
+                    if (this.majorTickMode === ChartAxisTickMode.Outwards) {
+                        textY += ChartAxis._majorOutwardLength;
+                        lineY2 += ChartAxis._majorOutwardLength;
+                    } else if (this.minorTickMode === ChartAxisTickMode.Outwards) {
+                        textY += ChartAxis._minorOutwardLength;
+                        lineY2 += ChartAxis._minorOutwardLength;
+                    }
+                    if (this.majorGridStyle.lineColor !== undefined) {
+                        lineY1 += plotBounds.top;
+                    }
                     texts.forEach(text => {
+                        textLines.push(this._createPositionedText(currentX + halfSegmentWidth, textY, text));
                         lines.push({
-                            text: text,
-                            x: currentX,
-                            y: y,
-                            width: 0,
-                            fitWidth: false,
-                            following: false,
-                            inRun: InSequence.Only
+                            x1: currentX,
+                            x2: currentX,
+                            y1: lineY1,
+                            y2: lineY2
                         });
-                        currentX += segmentWidth;
+                        currentX += 2 * halfSegmentWidth;
+                    });
+                    lines.push({
+                        x1: currentX,
+                        x2: currentX,
+                        y1: lineY1,
+                        y2: lineY2
                     });
                 }
                 break;
@@ -140,5 +159,17 @@ export class ChartAxis {
         return this._space.chart.series[0].categories.map(cat => {
             return cat.toString();
         });
+    }
+
+    private _createPositionedText(x: number, y: number, text: string): IPositionedTextLine {
+        return {
+            text: text,
+            x: x,
+            y: y,
+            width: 0,
+            fitWidth: false,
+            following: false,
+            inRun: InSequence.Only
+        };
     }
 }

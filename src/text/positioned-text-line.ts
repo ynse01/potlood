@@ -10,3 +10,10 @@ export interface IPositionedTextLine {
     following: boolean;
     inRun: InSequence;
 }
+
+export interface IPositionedLine {
+    x1: number,
+    x2: number,
+    y1: number,
+    y2: number
+}

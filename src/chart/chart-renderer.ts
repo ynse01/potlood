@@ -77,6 +77,13 @@ export class ChartRenderer {
                 this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, Justification.center, style.fontFamily, style.fontSize, false, false);
             })
         }
+        if (axis.positionedLines !== undefined && axis.style.lineColor !== undefined) {
+            const lineColor = axis.style.lineColor;
+            const thickness = axis.style.lineThickness;
+            axis.positionedLines.forEach(line => {
+                this._painter.paintLine(line.x1, line.y1, line.x2, line.y2, lineColor, thickness);
+            });
+        }
     }
 
     private _renderBarChart(barChart: BarChart, bounds: Rectangle): void {
