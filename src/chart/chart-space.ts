@@ -8,10 +8,16 @@ import { Rectangle } from "../utils/rectangle.js";
 import { Style } from "../text/style.js";
 import { ChartAxisPosition, ChartAxis } from "./chart-axis.js";
 import { LineRule } from "../paragraph/par-style.js";
+import { BaseChart } from "./base-chart.js";
+
+export enum ChartType {
+    Bar
+}
 
 export class ChartSpace implements ILayoutable {
     private _promise: Promise<void> | undefined = undefined;
-    private _barChart: BarChart | undefined = undefined;
+    private _chart: BaseChart | undefined = undefined;
+    private _type = ChartType.Bar;
     public style: ChartStyle = new ChartStyle();
     public textStyle: Style = new Style();
     public plotArea: ChartPlotArea = new ChartPlotArea();
@@ -32,12 +38,17 @@ export class ChartSpace implements ILayoutable {
         }
     }
 
-    public get barChart(): BarChart | undefined {
-        return this._barChart;
+    public get chartType(): ChartType {
+        return this._type;
+    }
+
+    public get chart(): BaseChart {
+        return this._chart!;
     }
 
     public setBarChart(barChart: BarChart): void {
-        this._barChart = barChart;
+        this._chart = barChart;
+        this._type = ChartType.Bar;
     }
 
     public setPromise(promise: Promise<void>): void {

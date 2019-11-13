@@ -75,11 +75,11 @@ export class ChartLegend {
     }
 
     public getColors(): string[] {
-        return this.space.barChart!.series.map((series) => series.color);
+        return this.space.chart.series.map((series) => series.color);
     }
 
     private _getNames(): string[] {
-        return this.space.barChart!.series.map((series) => series.name);
+        return this.space.chart.series.map((series) => series.name);
     }
 
     private _getSize(): { width: number, height: number } {

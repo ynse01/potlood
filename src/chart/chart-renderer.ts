@@ -1,6 +1,6 @@
 import { BarChart } from "./bar-chart.js";
 import { IPainter } from "../painting/i-painter.js";
-import { ChartSpace } from "./chart-space.js";
+import { ChartSpace, ChartType } from "./chart-space.js";
 import { ChartStyle } from "./chart-style.js";
 import { Rectangle } from "../utils/rectangle.js";
 import { ChartLegend } from "./chart-legend.js";
@@ -20,8 +20,8 @@ export class ChartRenderer {
             if (space.legend !== undefined) {
                 this._renderLegend(space.legend);
             }
-            if (space.barChart !== undefined) {
-                this._renderBarChart(space.barChart, plotBounds);
+            if (space.chartType === ChartType.Bar) {
+                this._renderBarChart(space.chart as BarChart, plotBounds);
             }
         }
     }

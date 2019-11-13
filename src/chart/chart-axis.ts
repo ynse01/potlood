@@ -64,8 +64,7 @@ export class ChartAxis {
             maxDistance = ChartAxis._labelSpacing + this._space.textStyle.lineSpacing;
         } else {
             let maxChars = 0;
-            const texts = (this.isValueAxis) ? this._getValueNames() : this._getCategoryNames();
-            texts.forEach(text => {
+            this._getTexts().forEach(text => {
                 maxChars = Math.max(maxChars, text.length);
             });
             maxDistance = maxChars * FontMetrics.averageCharWidth(this._space.textStyle);
@@ -80,9 +79,12 @@ export class ChartAxis {
     }
 
     public performLayout(): void {
+        const hasNumericValues = this._hasNumericValues();
         switch(this.position) {
             case ChartAxisPosition.Left:
-                
+                if (hasNumericValues) {
+                    
+                }
                 break;
             case ChartAxisPosition.Right:
                 
@@ -96,14 +98,23 @@ export class ChartAxis {
         }
     }
 
+    private _hasNumericValues(): boolean {
+        const chart = this._space.chart;
+        return (this.isValueAxis) ? chart.series[0].hasNumericValues : chart.series[0].hasNumericCategories;
+    }
+
+    private _getTexts(): string[] {
+        return (this.isValueAxis) ? this._getValueNames() : this._getCategoryNames();
+    }
+
     private _getValueNames(): string[] {
-        return this._space.barChart!.series.map(serie => {
+        return this._space.chart.series.map(serie => {
             return serie.name;
         });
     }
 
     private _getCategoryNames(): string[]  {
-        return this._space.barChart!.series[0].categories.map(cat => {
+        return this._space.chart.series[0].categories.map(cat => {
             return cat.toString();
         });
     }
