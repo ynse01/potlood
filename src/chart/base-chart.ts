@@ -6,6 +6,8 @@ import { ChartAxisCrossMode } from "./chart-axis.js";
 export abstract class BaseChart {
     public series: ChartSeries[] = [];
     public space: ChartSpace;
+    private _rangeMin: number | undefined;
+    private _rangeMax: number | undefined;
 
     constructor(space: ChartSpace) {
         this.space = space;
@@ -24,6 +26,9 @@ export abstract class BaseChart {
     }
 
     public getValueRange(): { max: number, min: number } {
+        if (this._rangeMax !== undefined && this._rangeMin !== undefined) {
+            return { min: this._rangeMin, max: this._rangeMax };
+        }
         let max = Number.MIN_VALUE;
         let min = Number.MAX_VALUE;
         this.series.forEach(series => {
@@ -39,7 +44,14 @@ export abstract class BaseChart {
         if (valueAxis !== undefined && valueAxis.crossMode === ChartAxisCrossMode.AutoZero) {
             min = 0;
         }
+        this._rangeMin = min;
+        this._rangeMax = max;
         return { max: max, min: min};
+    }
+
+    public setValueRange(min: number, max: number): void {
+        this._rangeMin = min,
+        this._rangeMax = max;
     }
 
     public getColor(seriesIndex: number): string {

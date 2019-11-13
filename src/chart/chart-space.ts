@@ -20,7 +20,7 @@ export class ChartSpace implements ILayoutable {
     private _type = ChartType.Bar;
     public style: ChartStyle = new ChartStyle();
     public textStyle: Style = new Style();
-    public plotArea: ChartPlotArea = new ChartPlotArea();
+    public plotArea: ChartPlotArea;
     public legend: ChartLegend | undefined = undefined;
     public bounds: Rectangle = new Rectangle(0, 0, 0, 0);
 
@@ -29,6 +29,7 @@ export class ChartSpace implements ILayoutable {
         this.textStyle.runStyle.updateFont("Arial", false, 11);
         this.textStyle.parStyle._lineSpacing = 240;
         this.textStyle.parStyle._lineRule = LineRule.atLeast;
+        this.plotArea = new ChartPlotArea(this);
     }
 
     public async ensureLoaded(): Promise<void> {
