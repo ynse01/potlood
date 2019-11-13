@@ -7,6 +7,7 @@ import { VirtualFlow } from "../utils/virtual-flow.js";
 import { Rectangle } from "../utils/rectangle.js";
 import { Style } from "../text/style.js";
 import { ChartAxisPosition, ChartAxis } from "./chart-axis.js";
+import { LineRule } from "../paragraph/par-style.js";
 
 export class ChartSpace implements ILayoutable {
     private _promise: Promise<void> | undefined = undefined;
@@ -19,7 +20,9 @@ export class ChartSpace implements ILayoutable {
 
     constructor() {
         // Hard coded text style.
-        this.textStyle.runStyle.updateFont("Times New Roman", false, 11);
+        this.textStyle.runStyle.updateFont("Arial", false, 11);
+        this.textStyle.parStyle._lineSpacing = 240;
+        this.textStyle.parStyle._lineRule = LineRule.atLeast;
     }
 
     public async ensureLoaded(): Promise<void> {
