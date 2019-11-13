@@ -36,10 +36,10 @@ export class ChartReader {
                     space.setBarChart(this._readBarChart(child, space));
                     break;
                 case "c:catAx":
-                    space.plotArea.categoryAxis = this._readChartAxis(child, space);
+                    space.plotArea.categoryAxis = this._readChartAxis(child, space, false);
                     break;
                 case "c:valAx":
-                    space.plotArea.valueAxis = this._readChartAxis(child, space);
+                    space.plotArea.valueAxis = this._readChartAxis(child, space, true);
                     break;
                 case "c:spPr":
                     space.plotArea.style = this._readStyle(child);
@@ -104,16 +104,22 @@ export class ChartReader {
         return style;
     }
 
-    private static _readChartAxis(axisNode: Node, space: ChartSpace): ChartAxis {
+    private static _readChartAxis(axisNode: Node, space: ChartSpace, isValueAxis: boolean): ChartAxis {
         let pos: ChartAxisPosition = ChartAxisPosition.Bottom;
+        let style = new ChartStyle;
         let majorTickMode: ChartAxisTickMode = ChartAxisTickMode.None;
         let minorTickMode: ChartAxisTickMode = ChartAxisTickMode.None;
+        let majorGridStyle = new ChartStyle();
+        let minorGridStyle = new ChartStyle();
         let labelAlignment: ChartAxisLabelAlignment = ChartAxisLabelAlignment.Center;
         let crossMode: ChartAxisCrossMode = ChartAxisCrossMode.AutoZero;
         let labelOffset = 0;
         axisNode.childNodes.forEach(child => {
             let valAttr: string | undefined = undefined;
             switch (child.nodeName) {
+                case "c:spPr":
+                    style = this._readStyle(child);
+                    break;
                 case "c:majorTickMark":
                     valAttr = Xml.getAttribute(child, "val");
                     if (valAttr !== undefined) {
@@ -124,6 +130,16 @@ export class ChartReader {
                     valAttr = Xml.getAttribute(child, "val");
                     if (valAttr !== undefined) {
                         minorTickMode = this._parseTickMode(valAttr);
+                    }
+                    break;
+                case "c:majorGridlines":
+                    if (child.firstChild !== null) {
+                        majorGridStyle = this._readStyle(child.firstChild);
+                    }
+                    break;
+                case "c:minorGridlines":
+                    if (child.firstChild !== null) {
+                        minorGridStyle = this._readStyle(child.firstChild);
                     }
                     break;
                 case "c:axPos":
@@ -152,9 +168,11 @@ export class ChartReader {
                     break;
             }
         });
-        const axis = new ChartAxis(space, pos, majorTickMode, minorTickMode, labelOffset);
+        const axis = new ChartAxis(space, style, pos, majorTickMode, minorTickMode, labelOffset, isValueAxis);
         axis.labelAlignment = labelAlignment;
         axis.crossMode = crossMode;
+        axis.majorGridStyle = majorGridStyle;
+        axis.minorGridStyle = minorGridStyle;
         return axis;
     }
 

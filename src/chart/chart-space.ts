@@ -61,17 +61,17 @@ export class ChartSpace implements ILayoutable {
             plotBounds = this._layoutLegend(plotBounds, this.legend);
         }
         if (this.plotArea.valueAxis !== undefined) {
-            plotBounds = this._subtractAxis(plotBounds, this.plotArea.valueAxis, true);
+            plotBounds = this._subtractAxis(plotBounds, this.plotArea.valueAxis);
         }
         if (this.plotArea.categoryAxis !== undefined) {
-            plotBounds = this._subtractAxis(plotBounds, this.plotArea.categoryAxis, false);
+            plotBounds = this._subtractAxis(plotBounds, this.plotArea.categoryAxis);
         }
         this.plotArea.bounds = plotBounds;
         if (this.plotArea.valueAxis !== undefined) {
-            this.plotArea.valueAxis.performLayout(true);
+            this.plotArea.valueAxis.performLayout();
         }
         if (this.plotArea.categoryAxis !== undefined) {
-            this.plotArea.categoryAxis.performLayout(false);
+            this.plotArea.categoryAxis.performLayout();
         }
         this.plotArea.performLayout();
     }
@@ -103,8 +103,8 @@ export class ChartSpace implements ILayoutable {
         return plotBounds;
     }
 
-    private _subtractAxis(plotBounds: Rectangle, axis: ChartAxis, isValueAxis: boolean): Rectangle {
-        const distance = axis.getMaxDistanceFromPlot(isValueAxis);
+    private _subtractAxis(plotBounds: Rectangle, axis: ChartAxis): Rectangle {
+        const distance = axis.getMaxDistanceFromPlot();
         let left = 0;
         let right = 0;
         let top = 0;
