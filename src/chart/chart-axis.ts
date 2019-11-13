@@ -92,7 +92,33 @@ export class ChartAxis {
         switch(this.position) {
             case ChartAxisPosition.Left:
                 if (hasNumericValues) {
-
+                    const texts = ["0", "2", "4", "6", "8", "10", "12"].reverse();
+                    const halfLineSpacing = this._space.textStyle.lineSpacing / 2;
+                    const segmentHeight = plotBounds.height / (texts.length - 1);
+                    let currentY = plotBounds.top;
+                    let textX = plotBounds.left - ChartAxis._labelSpacing;
+                    let lineX1 = plotBounds.left;
+                    let lineX2 = plotBounds.left;
+                    if (this.majorTickMode === ChartAxisTickMode.Outwards) {
+                        textX -= ChartAxis._majorOutwardLength;
+                        lineX2 -= ChartAxis._majorOutwardLength;
+                    } else if (this.minorTickMode === ChartAxisTickMode.Outwards) {
+                        textX -= ChartAxis._minorOutwardLength;
+                        lineX2 -= ChartAxis._minorOutwardLength;
+                    }
+                    if (this.majorGridStyle.lineColor !== undefined) {
+                        lineX1 = plotBounds.right;
+                    }
+                    texts.forEach(text => {
+                        textLines.push(this._createPositionedText(textX, currentY + halfLineSpacing, text));
+                        lines.push({
+                            x1: lineX1,
+                            x2: lineX2,
+                            y1: currentY,
+                            y2: currentY
+                        });
+                        currentY += segmentHeight;
+                    });
                 }
                 break;
             case ChartAxisPosition.Right:
@@ -117,7 +143,7 @@ export class ChartAxis {
                         lineY2 += ChartAxis._minorOutwardLength;
                     }
                     if (this.majorGridStyle.lineColor !== undefined) {
-                        lineY1 += plotBounds.top;
+                        lineY1 = plotBounds.top;
                     }
                     texts.forEach(text => {
                         textLines.push(this._createPositionedText(currentX + halfSegmentWidth, textY, text));

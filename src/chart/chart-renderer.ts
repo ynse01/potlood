@@ -23,14 +23,14 @@ export class ChartRenderer {
             if (space.legend !== undefined) {
                 this._renderLegend(space.legend);
             }
-            if (space.chartType === ChartType.Bar) {
-                this._renderBarChart(space.chart as BarChart, plotBounds);
-            }
             if (space.plotArea.categoryAxis !== undefined) {
                 this._renderAxis(space.plotArea.categoryAxis, space.textStyle);
             }
             if (space.plotArea.valueAxis !== undefined) {
                 this._renderAxis(space.plotArea.valueAxis, space.textStyle);
+            }
+            if (space.chartType === ChartType.Bar) {
+                this._renderBarChart(space.chart as BarChart, plotBounds);
             }
         }
     }
