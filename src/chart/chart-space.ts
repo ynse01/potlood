@@ -79,13 +79,13 @@ export class ChartSpace implements ILayoutable {
             plotBounds = this._subtractAxis(plotBounds, this.plotArea.categoryAxis);
         }
         this.plotArea.bounds = plotBounds;
+        this.plotArea.performLayout();
         if (this.plotArea.valueAxis !== undefined) {
             this.plotArea.valueAxis.performLayout();
         }
         if (this.plotArea.categoryAxis !== undefined) {
             this.plotArea.categoryAxis.performLayout();
         }
-        this.plotArea.performLayout();
     }
 
     private _layoutLegend(plotBounds: Rectangle, legend: ChartLegend): Rectangle {

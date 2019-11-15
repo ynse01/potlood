@@ -42,6 +42,7 @@ export class ChartAxis {
     private static _labelSpacing = 5;
     private static _majorOutwardLength = 5;
     private static _minorOutwardLength = 5;
+    private static _numMajorTicks = 6;
 
     constructor(space: ChartSpace, style: ChartStyle, pos: ChartAxisPosition, major: ChartAxisTickMode, minor: ChartAxisTickMode, offset: number, isValueAxis: boolean) {
         this._space = space;
@@ -93,7 +94,8 @@ export class ChartAxis {
         switch(this.position) {
             case ChartAxisPosition.Left:
                 if (hasNumericValues) {
-                    const texts = ["0", "2", "4", "6", "8", "10", "12"].reverse();
+                    const { min, max } = this._space.chart.getValueRange();
+                    const texts = this._getMajorValues(min, max).reverse();
                     const halfLineSpacing = this._space.textStyle.lineSpacing / 2;
                     const segmentHeight = plotBounds.height / (texts.length - 1);
                     let currentY = plotBounds.top;
@@ -186,6 +188,15 @@ export class ChartAxis {
         return this._space.chart.series[0].categories.map(cat => {
             return cat.toString();
         });
+    }
+
+    private _getMajorValues(min: number, max: number): string[] {
+        const texts: string[] = [];
+        const delta = (max - min) / ChartAxis._numMajorTicks;
+        for (let i = min; i <= max; i += delta) {
+            texts.push(i.toString());
+        }
+        return texts;
     }
 
     private _createPositionedText(x: number, y: number, text: string, justification?: Justification): IPositionedTextLine {
