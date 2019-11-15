@@ -1,4 +1,5 @@
 import { InSequence } from "../utils/in-sequence.js";
+import { Justification } from "../paragraph/par-style.js";
 
 
 export interface IPositionedTextLine {
@@ -9,6 +10,7 @@ export interface IPositionedTextLine {
     fitWidth: boolean;
     following: boolean;
     inRun: InSequence;
+    justification?: Justification
 }
 
 export interface IPositionedLine {

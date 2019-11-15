@@ -32,7 +32,8 @@ export class TextRenderer {
             const y = line.y - FontMetrics.getTopToBaseline(style) + lineSpacing / 2;
             this._painter.paintLine(x, y, x + line.width, y, style.shadingColor, lineSpacing);
         }
-        this._painter.paintText(x, line.y, line.width, line.fitWidth, line.text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
+        const justification = (line.justification !== undefined) ? line.justification : style.justification;
+        this._painter.paintText(x, line.y, line.width, line.fitWidth, line.text, style.color, justification, style.fontFamily, style.fontSize, style.bold, style.italic);
         if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
             // Render underline after adding text to DOM.
             this._renderUnderline(style);

@@ -64,17 +64,19 @@ export class ChartRenderer {
         const colors = legend.getColors();
         const widgetSize = legend.widgetSize;
         legend.getLines().forEach((line, index) => {
+            const justification = (line.justification !== undefined) ? line.justification: style.justification;
             const widgetX = line.x - widgetSize - legend.widgetSpacing;
             const widgetY = line.y - 3;
             this._painter.paintLine(widgetX, widgetY, widgetX + widgetSize, widgetY, colors[index], widgetSize);
-            this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, style.justification, style.fontFamily, style.fontSize, style.bold, style.italic);
+            this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, justification, style.fontFamily, style.fontSize, style.bold, style.italic);
         });
     }
 
     private _renderAxis(axis: ChartAxis, style: Style): void {
         if (axis.positionedTexts !== undefined) {
             axis.positionedTexts.forEach(line => {
-                this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, Justification.center, style.fontFamily, style.fontSize, false, false);
+                const justification = (line.justification !== undefined) ? line.justification: Justification.center;
+                this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, justification, style.fontFamily, style.fontSize, false, false);
             })
         }
         if (axis.positionedLines !== undefined && axis.style.lineColor !== undefined) {

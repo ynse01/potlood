@@ -3,6 +3,7 @@ import { FontMetrics } from "../utils/font-metrics.js";
 import { ChartStyle } from "./chart-style.js";
 import { IPositionedTextLine, IPositionedLine } from "../text/positioned-text-line.js";
 import { InSequence } from "../utils/in-sequence.js";
+import { Justification } from "../paragraph/par-style.js";
 
 export enum ChartAxisPosition {
     Top,
@@ -110,7 +111,7 @@ export class ChartAxis {
                         lineX1 = plotBounds.right;
                     }
                     texts.forEach(text => {
-                        textLines.push(this._createPositionedText(textX, currentY + halfLineSpacing, text));
+                        textLines.push(this._createPositionedText(textX, currentY + halfLineSpacing, text, Justification.right));
                         lines.push({
                             x1: lineX1,
                             x2: lineX2,
@@ -187,7 +188,7 @@ export class ChartAxis {
         });
     }
 
-    private _createPositionedText(x: number, y: number, text: string): IPositionedTextLine {
+    private _createPositionedText(x: number, y: number, text: string, justification?: Justification): IPositionedTextLine {
         return {
             text: text,
             x: x,
@@ -195,7 +196,8 @@ export class ChartAxis {
             width: 0,
             fitWidth: false,
             following: false,
-            inRun: InSequence.Only
+            inRun: InSequence.Only,
+            justification: justification
         };
     }
 }
