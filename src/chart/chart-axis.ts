@@ -175,13 +175,8 @@ export class ChartAxis {
     }
 
     private _getTexts(): string[] {
-        return (this.isValueAxis) ? this._getValueNames() : this._getCategoryNames();
-    }
-
-    private _getValueNames(): string[] {
-        return this._space.chart.series.map(serie => {
-            return serie.name;
-        });
+        const { min, max } = this._space.chart.getValueRange();
+        return (this.isValueAxis) ? this._getMajorValues(min, max) : this._getCategoryNames();
     }
 
     private _getCategoryNames(): string[]  {

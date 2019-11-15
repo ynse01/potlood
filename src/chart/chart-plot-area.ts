@@ -14,7 +14,7 @@ export class ChartPlotArea {
         this.space = space;
     }
 
-    public performLayout(): void {
+    public determineRange(): void {
         if (this.valueAxis !== undefined && this.space.chart.series[0].hasNumericValues) {
             const valueRange = this.space.chart.getValueRange();
             valueRange.max = Math.ceil(1.2 * valueRange.max);

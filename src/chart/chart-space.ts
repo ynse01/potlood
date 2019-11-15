@@ -68,6 +68,7 @@ export class ChartSpace implements ILayoutable {
     }
 
     private _performLayout(): void {
+        this.plotArea.determineRange();
         let plotBounds = this.bounds.subtractSpacing(10);
         if (this.legend !== undefined) {
             plotBounds = this._layoutLegend(plotBounds, this.legend);
@@ -79,7 +80,6 @@ export class ChartSpace implements ILayoutable {
             plotBounds = this._subtractAxis(plotBounds, this.plotArea.categoryAxis);
         }
         this.plotArea.bounds = plotBounds;
-        this.plotArea.performLayout();
         if (this.plotArea.valueAxis !== undefined) {
             this.plotArea.valueAxis.performLayout();
         }
