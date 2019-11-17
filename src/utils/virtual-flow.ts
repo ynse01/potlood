@@ -1,4 +1,3 @@
-import { Metrics } from "./metrics.js";
 import { Section } from "../section.js";
 
 export class VirtualFlow {
@@ -15,7 +14,7 @@ export class VirtualFlow {
         if (section !== undefined) {
             let pageWidth = 700;
             if (section.pageWidth !== undefined) {
-                pageWidth = Metrics.convertPointToPixels(section.pageWidth);
+                pageWidth = section.pageWidth;
             }
             const pageHeight = section.pageHeight;
             if (pageHeight !== undefined) {
@@ -23,11 +22,11 @@ export class VirtualFlow {
             }
             const marginLeft = section.marginLeft;
             if (marginLeft !== undefined) {
-                flow._xMin = Metrics.convertTwipsToPixels(marginLeft);
+                flow._xMin = marginLeft;
             }
             const marginRight = section.marginRight;
             if (marginRight !== undefined) {
-                flow._xMax = pageWidth - Metrics.convertTwipsToPixels(marginRight);
+                flow._xMax = pageWidth - marginRight;
             }
         };
         return flow;

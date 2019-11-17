@@ -63,19 +63,19 @@ export class Section {
             if (margin !== undefined) {
                 const top = Xml.getAttribute(margin, "w:top");
                 if (top !== undefined) {
-                    this._marginTop = parseInt(top);
+                    this._marginTop = Metrics.convertTwipsToPixels(parseInt(top));
                 }
                 const left = Xml.getAttribute(margin, "w:left");
                 if (left !== undefined) {
-                    this._marginLeft = parseInt(left);
+                    this._marginLeft = Metrics.convertTwipsToPixels(parseInt(left));
                 }
                 const bottom = Xml.getAttribute(margin, "w:bottom");
                 if (bottom !== undefined) {
-                    this._marginBottom = parseInt(bottom);
+                    this._marginBottom = Metrics.convertTwipsToPixels(parseInt(bottom));
                 }
                 const right = Xml.getAttribute(margin, "w:right");
                 if (right !== undefined) {
-                    this._marginRight = parseInt(right);
+                    this._marginRight = Metrics.convertTwipsToPixels(parseInt(right));
                 }
             }
         }
