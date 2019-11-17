@@ -19,6 +19,9 @@ export class Renderer {
 
     public renderDocument(docx: DocumentX): number {
         const flow = VirtualFlow.fromSection(docx.section);
+        if (docx.section !== undefined && docx.section.pageWidth !== undefined) {
+            this._painter.setWidth(docx.section!.pageWidth);
+        }
         docx.paragraphs.forEach(parOrTable => {
             parOrTable.performLayout(flow);
         });

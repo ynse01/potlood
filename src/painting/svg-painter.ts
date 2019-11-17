@@ -91,6 +91,17 @@ export class SvgPainter implements IPainter {
         }
     }
 
+    public setWidth(newWidth: number): void {
+        const width = Xml.getAttribute(this.svg, "width");
+        if (width !== undefined) {
+            this._svg.setAttribute("width", `${newWidth}`);
+            const root = this._svg.parentElement;
+            if (root !== null) {
+                root.setAttribute("width", `${newWidth}`);
+            }
+        }
+    }
+
     public ensureHeight(newHeight: number): void {
         const height = Xml.getAttribute(this.svg, "height");
         if (height !== undefined) {
@@ -103,8 +114,7 @@ export class SvgPainter implements IPainter {
                     root.setAttribute("height", `${maxY}`);
                 }
             }
-        }
-  
+        }  
     }
 
     public startLink(url: string): void {
