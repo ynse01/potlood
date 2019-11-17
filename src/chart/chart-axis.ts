@@ -96,7 +96,7 @@ export class ChartAxis {
                 if (hasNumericValues) {
                     const { min, max } = this._space.chart.getValueRange();
                     const texts = this._getMajorValues(min, max).reverse();
-                    const halfLineSpacing = this._space.textStyle.lineSpacing / 2;
+                    const halfLineSpacing = this._space.textStyle.fontSize / 2;
                     const segmentHeight = plotBounds.height / (texts.length - 1);
                     let currentY = plotBounds.top;
                     let textX = plotBounds.left - ChartAxis._labelSpacing;
