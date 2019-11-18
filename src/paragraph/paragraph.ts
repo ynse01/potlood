@@ -3,6 +3,7 @@ import { DrawingRun } from "../drawing/drawing-run.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { ParStyle } from "./par-style.js";
+import { FontMetrics } from "../utils/font-metrics.js";
 
 export enum ParagraphType {
     Text = 0,
@@ -70,7 +71,10 @@ export class Paragraph implements ILayoutable {
             flow.advancePosition(this.style.spacingBefore);
         }
         if (this._numberingRun !== undefined) {
-            this._numberingRun.performLayout(flow.clone());
+            const clonedFlow = flow.clone();
+            // Fix bug in TextFitter.
+            clonedFlow.advancePosition(-FontMetrics.getTopToBaseline(this._numberingRun.style));
+            this._numberingRun.performLayout(clonedFlow);
             previousXPos = this._numberingRun.lastXPos;
         }
         this.runs.forEach(run => {
