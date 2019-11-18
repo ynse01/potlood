@@ -7,49 +7,48 @@ import { FontMetrics } from "../utils/font-metrics.js";
 import { Style } from "./style.js";
 
 export class TextFitter {
+    private _run: TextRun;
 
-    public static getFlowLines(run: TextRun, flow: VirtualFlow): { lines: IPositionedTextLine[], lastXPos: number } {
-        const isLastRun = (run.inParagraph === InSequence.Last || run.inParagraph === InSequence.Only);
+    constructor(run: TextRun) {
+        this._run = run;
+    }
+
+    public getFlowLines(flow: VirtualFlow): { lines: IPositionedTextLine[], lastXPos: number } {
         let inRun = InSequence.First;
-        let currentXPadding = this._getInitialXPadding(run);
-        let isFollowing = this._getIsFollowing(run);
-        this._fixPosition(isFollowing, run.style, flow);
-        let txt = run.texts.join(' ');
-        txt = this._fixCaps(txt, run.style);
+        let currentXPadding = this._getInitialXPadding(this._run);
+        let isFollowing = this._getIsFollowing(this._run);
+        this._fixPosition(isFollowing, this._run.style, flow);
+        let txt = this._run.texts.join(' ');
+        txt = this._fixCaps(txt, this._run.style);
         const words = txt.split(' ');
         let previousEnd = 0;
         let currentLength = 0;
-        let numChars = FontMetrics.fitCharacters(flow.getWidth() - currentXPadding, run.style);
+        let numAvailableChars = FontMetrics.fitCharacters(flow.getWidth() - currentXPadding, this._run.style);
         let isLastLine = false;
         const lines: IPositionedTextLine[] = [];
-        const lineHeight = run.style.lineSpacing;
+        const lineHeight = this._run.style.lineSpacing;
         for(let i = 0; i < words.length; i++) {
             currentLength += words[i].length + 1;
             isLastLine = (i === words.length - 1);
             const isNewLine = words[i] === '\n';
-            if (currentLength >= numChars || isLastLine || isNewLine) {
+            if (currentLength >= numAvailableChars || isLastLine || isNewLine) {
                 inRun = (isLastLine) ? InSequence.Last : inRun;
-                this._pushNewLine(lines, txt.substr(previousEnd, currentLength), flow, isFollowing, run.inParagraph, inRun, currentXPadding, lineHeight);
+                this._pushNewLine(lines, txt.substr(previousEnd, currentLength), flow, isFollowing, this._run.inParagraph, inRun, currentXPadding, lineHeight);
                 if (!isLastLine) {
                     isFollowing = false;
                     inRun = InSequence.Middle;
-                    currentXPadding = run.style.getIndentation(inRun, run.inParagraph);
-                    numChars = FontMetrics.fitCharacters(flow.getWidth() - currentXPadding, run.style);
+                    currentXPadding = this._run.style.getIndentation(inRun, this._run.inParagraph);
+                    numAvailableChars = FontMetrics.fitCharacters(flow.getWidth() - currentXPadding, this._run.style);
                     previousEnd += currentLength;
                     currentLength = 0;
                 }
             }
         }
-        if (lines.length === 1) {
-            lines[0].inRun = InSequence.Only;
-        }
-        if (isLastRun) {
-            flow.advancePosition(FontMetrics.getBaselineToBottom(run.style));
-        }
-        return { lines: lines, lastXPos: currentXPadding + Metrics.getTextWidth(lines[lines.length - 1].text, run.style) };
+        const lastXPadding = this._finalXPadding(lines, this._run, currentXPadding, flow);
+        return { lines: lines, lastXPos: lastXPadding };
     }
 
-    private static _pushNewLine(
+    private _pushNewLine(
         lines: IPositionedTextLine[],
         txt: string,
         flow: VirtualFlow,
@@ -75,21 +74,21 @@ export class TextFitter {
         }
     }
 
-    private static _fixCaps(txt: string, style: Style): string {
+    private _fixCaps(txt: string, style: Style): string {
         if (style.caps || style.smallCaps) {
             txt = txt.toLocaleUpperCase();
         }
         return txt;
     }
 
-    private static _fixPosition(isFollowing: boolean, style: Style, flow: VirtualFlow): void {
+    private _fixPosition(isFollowing: boolean, style: Style, flow: VirtualFlow): void {
         if (!isFollowing) {
             // Text is on baseline, flow is at the top, correcting here.
             flow.advancePosition(FontMetrics.getTopToBaseline(style));
         }
     }
 
-    private static _getIsFollowing(run: TextRun): boolean {
+    private _getIsFollowing(run: TextRun): boolean {
         let isFollowing: boolean;
         const isStartingRun = (run.inParagraph === InSequence.First || run.inParagraph === InSequence.Only);
         if (run.previousXPos === undefined || isStartingRun) {
@@ -100,7 +99,7 @@ export class TextFitter {
         return isFollowing;
     }
 
-    private static _getInitialXPadding(run: TextRun): number {
+    private _getInitialXPadding(run: TextRun): number {
         let xPadding = 0;
         const isStartingRun = (run.inParagraph === InSequence.First || run.inParagraph === InSequence.Only);
         if (run.previousXPos === undefined || isStartingRun) {
@@ -109,5 +108,16 @@ export class TextFitter {
             xPadding = run.previousXPos;
         }
         return xPadding;
+    }
+
+    private _finalXPadding(lines: IPositionedTextLine[], run: TextRun, currentXPadding: number, flow: VirtualFlow): number {
+        const isLastRun = (run.inParagraph === InSequence.Last || run.inParagraph === InSequence.Only);
+        if (lines.length === 1) {
+            lines[0].inRun = InSequence.Only;
+        }
+        if (isLastRun) {
+            flow.advancePosition(FontMetrics.getBaselineToBottom(run.style));
+        }
+        return currentXPadding + Metrics.getTextWidth(lines[lines.length - 1].text, run.style);
     }
 }

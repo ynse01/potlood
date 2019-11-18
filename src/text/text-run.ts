@@ -53,7 +53,8 @@ export class TextRun implements ILayoutable {
     private _getFlowLines(flow: VirtualFlow): IPositionedTextLine[] {
         let lines: IPositionedTextLine[] = [];
         if (!this.style.invisible) {
-            const result = TextFitter.getFlowLines(this, flow);
+            const fitter = new TextFitter(this);
+            const result = fitter.getFlowLines(flow);
             this.lastXPos = result.lastXPos;
             lines = result.lines;
         } else {
