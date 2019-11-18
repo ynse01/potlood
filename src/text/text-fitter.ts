@@ -4,7 +4,6 @@ import { InSequence } from "../utils/in-sequence.js";
 import { TextRun } from "./text-run.js";
 import { Metrics } from "../utils/metrics.js";
 import { FontMetrics } from "../utils/font-metrics.js";
-import { Style } from "./style.js";
 
 export class TextFitter {
     public lines: IPositionedTextLine[];
@@ -24,7 +23,7 @@ export class TextFitter {
         let isFollowing = this._isFollowing;
         this._fixYPosition(isFollowing, flow);
         let txt = this._run.texts.join(' ');
-        txt = this._fixCaps(txt, this._run.style);
+        txt = this._fixCaps(txt);
         const words = txt.split(' ');
         let previousEnd = 0;
         let currentLength = 0;
@@ -81,8 +80,8 @@ export class TextFitter {
         }
     }
 
-    private _fixCaps(txt: string, style: Style): string {
-        if (style.caps || style.smallCaps) {
+    private _fixCaps(txt: string): string {
+        if (this._run.style.caps || this._run.style.smallCaps) {
             txt = txt.toLocaleUpperCase();
         }
         return txt;
