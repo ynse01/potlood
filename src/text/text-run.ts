@@ -54,9 +54,9 @@ export class TextRun implements ILayoutable {
         let lines: IPositionedTextLine[] = [];
         if (!this.style.invisible) {
             const fitter = new TextFitter(this);
-            const result = fitter.getFlowLines(flow);
-            this.lastXPos = result.lastXPos;
-            lines = result.lines;
+            fitter.getFlowLines(flow);
+            this.lastXPos = fitter.lastXPadding;
+            lines = fitter.lines;
         } else {
             this.lastXPos = 0;
         }
