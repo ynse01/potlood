@@ -33,7 +33,12 @@ export class TextFitter {
             currentLength += words[i].length + 1;
             isLastLine = (i === words.length - 1);
             const isNewLine = words[i] === '\n';
-            if (currentLength >= numAvailableChars || isLastLine || isNewLine) {
+            let reachedEndOfLine = isLastLine || isNewLine;
+            if ((i + 1) < words.length && currentLength + words[i + 1].length >= numAvailableChars) {
+                // Next word would go over the boundary, chop now.
+                reachedEndOfLine = true;
+            }
+            if (reachedEndOfLine) {
                 inRun = (isLastLine) ? InSequence.Last : inRun;
                 this._pushNewLine(txt.substr(previousEnd, currentLength), flow, isFollowing, inRun, currentXPadding);
                 if (!isLastLine) {
