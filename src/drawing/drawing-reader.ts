@@ -1,5 +1,5 @@
 import { DocumentX } from "../document-x.js";
-import { DrawingRun } from "./drawing-run.js";
+import { DrawingRun, WrapMode } from "./drawing-run.js";
 import { ShapeBounds } from "./shape-bounds.js";
 import { Xml } from "../utils/xml.js";
 import { Picture } from "./picture.js";
@@ -10,13 +10,16 @@ import { ChartReader } from "../chart/chart-reader.js";
 export class DrawingReader {
     public static readDrawingRun(drawingNode: ChildNode, docx: DocumentX): DrawingRun {
         let bounds = new ShapeBounds();
+        let wrapMode = WrapMode.None;
         const child = drawingNode.childNodes[0];
         if (child.nodeName === "wp:anchor") {
             bounds = ShapeBounds.fromAnchorNode(child);
+            wrapMode = WrapMode.TopAndBottom;
         } else if (child.nodeName === "wp:inline") {
             bounds = ShapeBounds.fromInlineNode(child);
+            wrapMode = WrapMode.Inline;
         }
-        const drawing = new DrawingRun(bounds);
+        const drawing = new DrawingRun(bounds, wrapMode);
         const graphic = Xml.getFirstChildOfName(child, "a:graphic");
         if (graphic !== undefined) {
             const graphicData = Xml.getFirstChildOfName(graphic, "a:graphicData");

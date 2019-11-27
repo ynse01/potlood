@@ -4,15 +4,26 @@ import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { ChartSpace } from "../chart/chart-space.js";
 
+export enum WrapMode {
+    None,
+    Inline,
+    Square,
+    Through,
+    Tight,
+    TopAndBottom
+}
+
 export class DrawingRun implements ILayoutable {
     public bounds: ShapeBounds;
+    public wrapping: WrapMode;
     public picture: Picture | undefined;
     public chart: ChartSpace | undefined;
     public previousXPos: number | undefined;
     public lastXPos: number | undefined;
 
-    constructor(bounds: ShapeBounds) {
+    constructor(bounds: ShapeBounds, wrapping: WrapMode) {
         this.bounds = bounds;
+        this.wrapping = wrapping;
     }
 
     public getUsedWidth(): number {
@@ -34,7 +45,7 @@ export class DrawingRun implements ILayoutable {
             this.chart.performLayout(flow);
         }
         this.lastXPos = 0;
-        if (this.bounds.anchor === "anchor") {
+        if (this.wrapping !== WrapMode.Inline && this.wrapping !== WrapMode.None) {
             flow.advancePosition(this.bounds.boundSizeY);
         }
     }
