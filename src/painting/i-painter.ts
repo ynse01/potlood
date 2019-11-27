@@ -9,7 +9,7 @@ export interface IRectangle {
 }
 
 export interface IPainter {
-    paintText(x: number, y: number, width: number, fitWidth: boolean, text: string, color: string, justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void;
+    paintText(x: number, y: number, width: number, stretched: boolean, text: string, color: string, justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void;
 
     measureLastText(): IRectangle;
 

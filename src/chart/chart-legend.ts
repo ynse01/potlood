@@ -39,7 +39,7 @@ export class ChartLegend {
                 x: x,
                 y: y,
                 width: this.bounds.width,
-                fitWidth: false,
+                stretched: false,
                 following: false,
                 color: textStyle.color,
                 fontFamily: textStyle.fontFamily,

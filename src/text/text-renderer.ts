@@ -35,7 +35,7 @@ export class TextRenderer {
         const justification = (line.justification !== undefined) ? line.justification : style.justification;
         const isBold = Boolean(line.emphasis & Emphasis.Bold);
         const isItalic = Boolean(line.emphasis & Emphasis.Italic);
-        this._painter.paintText(x, line.y, line.width, line.fitWidth, line.text, line.color, justification, line.fontFamily, line.fontSize, isBold, isItalic);
+        this._painter.paintText(x, line.y, line.width, line.stretched, line.text, line.color, justification, line.fontFamily, line.fontSize, isBold, isItalic);
         if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
             // Render underline after adding text to DOM.
             this._renderUnderline(style);

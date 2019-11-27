@@ -68,7 +68,7 @@ export class ChartRenderer {
             const widgetX = line.x - widgetSize - legend.widgetSpacing;
             const widgetY = line.y - 3;
             this._painter.paintLine(widgetX, widgetY, widgetX + widgetSize, widgetY, colors[index], widgetSize);
-            this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, justification, style.fontFamily, style.fontSize, style.bold, style.italic);
+            this._painter.paintText(line.x, line.y, line.width, line.stretched, line.text, style.color, justification, style.fontFamily, style.fontSize, style.bold, style.italic);
         });
     }
 
@@ -76,7 +76,7 @@ export class ChartRenderer {
         if (axis.positionedTexts !== undefined) {
             axis.positionedTexts.forEach(line => {
                 const justification = (line.justification !== undefined) ? line.justification: Justification.center;
-                this._painter.paintText(line.x, line.y, line.width, line.fitWidth, line.text, style.color, justification, style.fontFamily, style.fontSize, false, false);
+                this._painter.paintText(line.x, line.y, line.width, line.stretched, line.text, style.color, justification, style.fontFamily, style.fontSize, false, false);
             })
         }
         if (axis.positionedLines !== undefined && axis.style.lineColor !== undefined) {

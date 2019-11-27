@@ -79,7 +79,7 @@ export class TextFitter {
             x: flow.getX() + xPadding,
             y: flow.getY(),
             width: flow.getWidth() - xPadding,
-            fitWidth: !isLastLine,
+            stretched: !isLastLine,
             following: isFollowing,
             color: style.color,
             fontFamily: style.fontFamily,

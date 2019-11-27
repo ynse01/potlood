@@ -200,7 +200,7 @@ export class ChartAxis {
             x: x,
             y: y,
             width: 0,
-            fitWidth: false,
+            stretched: false,
             following: false,
             justification: justification,
             color: textStyle.color,

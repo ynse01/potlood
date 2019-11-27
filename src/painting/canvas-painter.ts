@@ -23,7 +23,7 @@ export class CanvasPainter implements IPainter {
         content.appendChild(this._invisible);
     }
     
-    public paintText(x: number, y: number, _width: number, _fitWidth: boolean, text: string, color: string, _justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void {
+    public paintText(x: number, y: number, _width: number, _stretched: boolean, text: string, color: string, _justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void {
         this._context.fillStyle = `#${color}`;
         const italicText = (italic) ? "italic ": "";
         const boldText = (bold) ? "bold ": "";

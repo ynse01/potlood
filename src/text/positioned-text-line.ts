@@ -18,7 +18,7 @@ export interface IPositionedTextLine {
     x: number;
     y: number;
     width: number;
-    fitWidth: boolean;
+    stretched: boolean;
     following: boolean;
     color: string;
     fontFamily: string;
