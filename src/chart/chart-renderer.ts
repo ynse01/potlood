@@ -6,7 +6,6 @@ import { Rectangle } from "../utils/rectangle.js";
 import { ChartLegend } from "./chart-legend.js";
 import { ChartAxis } from "./chart-axis.js";
 import { Justification } from "../paragraph/par-style.js";
-import { Style } from "../text/style.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -24,10 +23,10 @@ export class ChartRenderer {
                 this._renderLegend(space.legend);
             }
             if (space.plotArea.categoryAxis !== undefined) {
-                this._renderAxis(space.plotArea.categoryAxis, space.textStyle);
+                this._renderAxis(space.plotArea.categoryAxis);
             }
             if (space.plotArea.valueAxis !== undefined) {
-                this._renderAxis(space.plotArea.valueAxis, space.textStyle);
+                this._renderAxis(space.plotArea.valueAxis);
             }
             if (space.chartType === ChartType.Bar) {
                 this._renderBarChart(space.chart as BarChart, plotBounds);
@@ -68,15 +67,15 @@ export class ChartRenderer {
             const widgetX = line.x - widgetSize - legend.widgetSpacing;
             const widgetY = line.y - 3;
             this._painter.paintLine(widgetX, widgetY, widgetX + widgetSize, widgetY, colors[index], widgetSize);
-            this._painter.paintText(line.x, line.y, line.width, line.stretched, line.text, style.color, justification, style.fontFamily, style.fontSize, style.bold, style.italic);
+            this._painter.paintText(line.x, line.y, line.width, line.stretched, line.text, line.color, justification, line.fontFamily, line.fontSize, false, false);
         });
     }
 
-    private _renderAxis(axis: ChartAxis, style: Style): void {
+    private _renderAxis(axis: ChartAxis): void {
         if (axis.positionedTexts !== undefined) {
             axis.positionedTexts.forEach(line => {
                 const justification = (line.justification !== undefined) ? line.justification: Justification.center;
-                this._painter.paintText(line.x, line.y, line.width, line.stretched, line.text, style.color, justification, style.fontFamily, style.fontSize, false, false);
+                this._painter.paintText(line.x, line.y, line.width, line.stretched, line.text, line.color, justification, line.fontFamily, line.fontSize, false, false);
             })
         }
         if (axis.positionedLines !== undefined && axis.style.lineColor !== undefined) {
