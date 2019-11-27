@@ -1,6 +1,9 @@
 import { InSequence } from "../utils/in-sequence.js";
 import { Justification } from "../paragraph/par-style.js";
 
+/**
+ * Bit flags for empasis of fonts (bold, italic, small caps).
+ */
 export enum Emphasis {
     Normal = 0,
     Bold = 1,
@@ -8,6 +11,9 @@ export enum Emphasis {
     SmallCaps = 4
 }
 
+/**
+ * A line of text with its position on the screen.
+ */
 export interface IPositionedTextLine {
     text: string;
     x: number;
@@ -23,6 +29,9 @@ export interface IPositionedTextLine {
     justification?: Justification
 }
 
+/**
+ * Line with its position on screen.
+ */
 export interface IPositionedLine {
     x1: number,
     x2: number,
