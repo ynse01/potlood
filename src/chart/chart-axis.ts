@@ -2,7 +2,6 @@ import { ChartSpace } from "./chart-space.js";
 import { FontMetrics } from "../utils/font-metrics.js";
 import { ChartStyle } from "./chart-style.js";
 import { IPositionedTextLine, IPositionedLine } from "../text/positioned-text-line.js";
-import { InSequence } from "../utils/in-sequence.js";
 import { Justification } from "../paragraph/par-style.js";
 
 export enum ChartAxisPosition {
@@ -203,7 +202,6 @@ export class ChartAxis {
             width: 0,
             fitWidth: false,
             following: false,
-            inRun: InSequence.Only,
             justification: justification,
             color: textStyle.color,
             fontFamily: textStyle.fontFamily,

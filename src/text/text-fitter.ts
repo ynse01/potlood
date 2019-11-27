@@ -81,7 +81,6 @@ export class TextFitter {
             width: flow.getWidth() - xPadding,
             fitWidth: !isLastLine,
             following: isFollowing,
-            inRun: inRun,
             color: style.color,
             fontFamily: style.fontFamily,
             fontSize: style.fontSize,
@@ -135,9 +134,6 @@ export class TextFitter {
     }
 
     private _finalXPadding(currentXPadding: number, flow: VirtualFlow): number {
-        if (this.lines.length === 1) {
-            this.lines[0].inRun = InSequence.Only;
-        }
         if (this._isLastRun) {
             flow.advancePosition(FontMetrics.getBaselineToBottom(this._run.style));
         }
