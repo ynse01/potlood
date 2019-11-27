@@ -1,5 +1,5 @@
 import { TextRun } from "./text-run.js";
-import { IPositionedTextLine } from "./positioned-text-line.js";
+import { IPositionedTextLine, Emphasis } from "./positioned-text-line.js";
 import { UnderlineMode } from "./run-style.js";
 import { IPainter } from "../painting/i-painter.js";
 import { Style } from "./style.js";
@@ -33,7 +33,9 @@ export class TextRenderer {
             this._painter.paintLine(x, y, x + line.width, y, style.shadingColor, lineSpacing);
         }
         const justification = (line.justification !== undefined) ? line.justification : style.justification;
-        this._painter.paintText(x, line.y, line.width, line.fitWidth, line.text, style.color, justification, style.fontFamily, style.fontSize, style.bold, style.italic);
+        const isBold = Boolean(line.emphasis & Emphasis.Bold);
+        const isItalic = Boolean(line.emphasis & Emphasis.Italic);
+        this._painter.paintText(x, line.y, line.width, line.fitWidth, line.text, line.color, justification, line.fontFamily, line.fontSize, isBold, isItalic);
         if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
             // Render underline after adding text to DOM.
             this._renderUnderline(style);

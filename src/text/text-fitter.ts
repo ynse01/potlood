@@ -4,6 +4,7 @@ import { InSequence } from "../utils/in-sequence.js";
 import { TextRun } from "./text-run.js";
 import { Metrics } from "../utils/metrics.js";
 import { FontMetrics } from "../utils/font-metrics.js";
+import { Style } from "./style.js";
 
 export class TextFitter {
     public lines: IPositionedTextLine[];
@@ -40,7 +41,7 @@ export class TextFitter {
             }
             if (reachedEndOfLine) {
                 inRun = (isLastLine) ? InSequence.Last : inRun;
-                this._pushNewLine(txt.substr(previousEnd, currentLength), flow, isFollowing, inRun, currentXPadding);
+                this._pushNewLine(txt.substr(previousEnd, currentLength), flow, isFollowing, inRun, currentXPadding, this._run.style);
                 if (!isLastLine) {
                     isFollowing = false;
                     inRun = InSequence.Middle;
@@ -67,10 +68,12 @@ export class TextFitter {
         flow: VirtualFlow,
         isFollowing: boolean,
         inRun: InSequence,
-        xPadding: number
+        xPadding: number,
+        style: Style
     ): void {
         const isLastLine = (inRun === InSequence.Last || inRun === InSequence.Only);
         const isLastRun = (this._run.inParagraph === InSequence.Last || this._run.inParagraph === InSequence.Only);
+        const emphasis = FontMetrics.getEmphasis(style);       
         this.lines.push({
             text: txt,
             x: flow.getX() + xPadding,
@@ -78,7 +81,11 @@ export class TextFitter {
             width: flow.getWidth() - xPadding,
             fitWidth: !isLastLine,
             following: isFollowing,
-            inRun: inRun
+            inRun: inRun,
+            color: style.color,
+            fontFamily: style.fontFamily,
+            fontSize: style.fontSize,
+            emphasis: emphasis
         });
         if (isLastRun || !isLastLine) {
             flow.advancePosition(this._lineHeight);

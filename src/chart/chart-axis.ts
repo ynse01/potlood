@@ -195,6 +195,7 @@ export class ChartAxis {
     }
 
     private _createPositionedText(x: number, y: number, text: string, justification?: Justification): IPositionedTextLine {
+        const textStyle = this._space.textStyle;
         return {
             text: text,
             x: x,
@@ -203,7 +204,11 @@ export class ChartAxis {
             fitWidth: false,
             following: false,
             inRun: InSequence.Only,
-            justification: justification
+            justification: justification,
+            color: textStyle.color,
+            fontFamily: textStyle.fontFamily,
+            fontSize: textStyle.fontSize,
+            emphasis: FontMetrics.getEmphasis(textStyle)
         };
     }
 }

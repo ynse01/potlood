@@ -1,6 +1,7 @@
 import { Fonts } from "./fonts.js";
 import { Style } from "../text/style.js";
 import { Metrics } from "./metrics.js";
+import { Emphasis } from "../text/positioned-text-line.js";
 
 export class FontMetrics {
     private static _fonts: { [key: string]: TextMetrics } = {};
@@ -40,6 +41,20 @@ export class FontMetrics {
         const baseToBottomFactor = 1 - FontMetrics._topToBaseFactor;
         const testHeight = metric.fontBoundingBoxDescent || this._testSize * baseToBottomFactor;
         return testHeight * style.fontSize / this._testSize;
+    }
+
+    public static getEmphasis(style: Style): Emphasis {
+        let emphasis = Emphasis.Normal;
+        if (style.bold) {
+            emphasis |= Emphasis.Bold;
+        }
+        if (style.italic) {
+            emphasis |= Emphasis.Italic;
+        }
+        if (style.smallCaps) {
+            emphasis |= Emphasis.SmallCaps;
+        }
+        return emphasis;
     }
 
     private static getFontMetrics(style: Style) {

@@ -41,7 +41,11 @@ export class ChartLegend {
                 width: this.bounds.width,
                 fitWidth: false,
                 following: false,
-                inRun: InSequence.Only
+                inRun: InSequence.Only,
+                color: textStyle.color,
+                fontFamily: textStyle.fontFamily,
+                fontSize: textStyle.fontSize,
+                emphasis: FontMetrics.getEmphasis(textStyle)
             });
             y += textStyle.lineSpacing;
         });
