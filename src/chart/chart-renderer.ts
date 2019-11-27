@@ -5,7 +5,6 @@ import { ChartStyle } from "./chart-style.js";
 import { Rectangle } from "../utils/rectangle.js";
 import { ChartLegend } from "./chart-legend.js";
 import { ChartAxis } from "./chart-axis.js";
-import { Justification } from "../paragraph/par-style.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -59,23 +58,20 @@ export class ChartRenderer {
 
     private _renderLegend(legend: ChartLegend): void {
         this._renderBorderAndShading(legend.style, legend.bounds);
-        const style = legend.space.textStyle;
         const colors = legend.getColors();
         const widgetSize = legend.widgetSize;
         legend.getLines().forEach((line, index) => {
-            const justification = (line.justification !== undefined) ? line.justification: style.justification;
             const widgetX = line.x - widgetSize - legend.widgetSpacing;
             const widgetY = line.y - 3;
             this._painter.paintLine(widgetX, widgetY, widgetX + widgetSize, widgetY, colors[index], widgetSize);
-            this._painter.paintText(line.x, line.y, line.width, line.stretched, line.text, line.color, justification, line.fontFamily, line.fontSize, false, false);
+            this._painter.paintText(line.x, line.y, line.width, line.stretched, line.text, line.color, line.justification!, line.fontFamily, line.fontSize, false, false);
         });
     }
 
     private _renderAxis(axis: ChartAxis): void {
         if (axis.positionedTexts !== undefined) {
             axis.positionedTexts.forEach(line => {
-                const justification = (line.justification !== undefined) ? line.justification: Justification.center;
-                this._painter.paintText(line.x, line.y, line.width, line.stretched, line.text, line.color, justification, line.fontFamily, line.fontSize, false, false);
+                this._painter.paintText(line.x, line.y, line.width, line.stretched, line.text, line.color, line.justification!, line.fontFamily, line.fontSize, false, false);
             })
         }
         if (axis.positionedLines !== undefined && axis.style.lineColor !== undefined) {

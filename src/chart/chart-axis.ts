@@ -148,7 +148,7 @@ export class ChartAxis {
                         lineY1 = plotBounds.top;
                     }
                     texts.forEach(text => {
-                        textLines.push(this._createPositionedText(currentX + halfSegmentWidth, textY, text));
+                        textLines.push(this._createPositionedText(currentX + halfSegmentWidth, textY, text, Justification.center));
                         lines.push({
                             x1: currentX,
                             x2: currentX,
@@ -193,7 +193,7 @@ export class ChartAxis {
         return texts;
     }
 
-    private _createPositionedText(x: number, y: number, text: string, justification?: Justification): IPositionedTextLine {
+    private _createPositionedText(x: number, y: number, text: string, justification: Justification): IPositionedTextLine {
         const textStyle = this._space.textStyle;
         return {
             text: text,
