@@ -44,7 +44,7 @@ export class ChartLegend {
                 color: textStyle.color,
                 fontFamily: textStyle.fontFamily,
                 fontSize: textStyle.fontSize,
-                emphasis: FontMetrics.getEmphasis(textStyle)
+                emphasis: textStyle.emphasis
             });
             y += textStyle.lineSpacing;
         });

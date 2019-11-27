@@ -5,6 +5,7 @@ import { Xml } from "../utils/xml.js";
 import { InSequence } from "../utils/in-sequence.js";
 import { Metrics } from "../utils/metrics.js";
 import { TableStyle } from "../table/table-style.js";
+import { Emphasis } from "./positioned-text-line.js";
 
 export class Style {
     private _basedOn: Style | undefined;
@@ -165,6 +166,20 @@ export class Style {
 
     public get invisible(): boolean {
         return this.getValue(false, undefined, (runStyle) => runStyle._invisible);
+    }
+
+    public get emphasis(): Emphasis {
+        let emphasis = Emphasis.Normal;
+        if (this.bold) {
+            emphasis |= Emphasis.Bold;
+        }
+        if (this.italic) {
+            emphasis |= Emphasis.Italic;
+        }
+        if (this.smallCaps) {
+            emphasis |= Emphasis.SmallCaps;
+        }
+        return emphasis;
     }
 
     public get font(): string {

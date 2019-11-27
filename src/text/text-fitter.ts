@@ -73,7 +73,6 @@ export class TextFitter {
     ): void {
         const isLastLine = (inRun === InSequence.Last || inRun === InSequence.Only);
         const isLastRun = (this._run.inParagraph === InSequence.Last || this._run.inParagraph === InSequence.Only);
-        const emphasis = FontMetrics.getEmphasis(style);       
         this.lines.push({
             text: txt,
             x: flow.getX() + xPadding,
@@ -84,7 +83,7 @@ export class TextFitter {
             color: style.color,
             fontFamily: style.fontFamily,
             fontSize: style.fontSize,
-            emphasis: emphasis
+            emphasis: style.emphasis
         });
         if (isLastRun || !isLastLine) {
             flow.advancePosition(this._lineHeight);

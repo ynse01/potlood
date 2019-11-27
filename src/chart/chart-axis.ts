@@ -206,7 +206,7 @@ export class ChartAxis {
             color: textStyle.color,
             fontFamily: textStyle.fontFamily,
             fontSize: textStyle.fontSize,
-            emphasis: FontMetrics.getEmphasis(textStyle)
+            emphasis: textStyle.emphasis
         };
     }
 }
