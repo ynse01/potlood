@@ -74,7 +74,7 @@ export class TextFitter {
     ): void {
         const isLastLine = (inRun === InSequence.Last || inRun === InSequence.Only);
         const isLastRun = (this._run.inParagraph === InSequence.Last || this._run.inParagraph === InSequence.Only);
-        const stretched = (style.justification == Justification.both) && !isLastLine;
+        const stretched = (style.justification === Justification.both) && !isLastLine;
         this.lines.push({
             text: txt,
             x: flow.getX() + xPadding,
