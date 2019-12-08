@@ -6,4 +6,8 @@ export class Vector {
         this.x = x;
         this.y = y;
     }
+
+    public scale(factor: number): Vector {
+        return new Vector(this.x * factor, this.y * factor);
+    }
 }

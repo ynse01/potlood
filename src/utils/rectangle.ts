@@ -8,6 +8,10 @@ export class Rectangle {
     public height: number;
     public rotation: number;
 
+    public static fromBox(box: Box): Rectangle {
+        return new Rectangle(box.top, box.left, box.width, box.height);
+    }
+
     constructor(x: number, y: number, width: number, height: number, rotation?: number) {
         this.x = x;
         this.y = y;
@@ -33,7 +37,7 @@ export class Rectangle {
         const yAxis = this.yAxis;
         const xPos = this.x + xAxis.x * norm.x + yAxis.x * norm.y;
         const yPos = this.y + xAxis.y * norm.x + yAxis.y * norm.y;
-        return {x: xPos, y: yPos};
+        return new Vector(xPos, yPos);
     }
 
     public get bounds(): Box {
