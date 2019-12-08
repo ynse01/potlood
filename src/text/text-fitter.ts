@@ -36,7 +36,7 @@ export class TextFitter {
             isLastLine = (i === words.length - 1);
             const isNewLine = words[i] === '\n';
             let reachedEndOfLine = isLastLine || isNewLine;
-            if ((i + 1) < words.length && currentLength + words[i + 1].length >= numAvailableChars) {
+            if (!isLastLine && !this._fitReasonably(currentLength, numAvailableChars, words[i + 1])) {
                 // Next word would go over the boundary, chop now.
                 reachedEndOfLine = true;
             }
@@ -122,6 +122,15 @@ export class TextFitter {
 
     private _getAvailableChars(xPadding: number, flow: VirtualFlow): number {
         return FontMetrics.fitCharacters(flow.getWidth() - xPadding, this._run.style);
+    }
+
+    /**
+     * Does the next word fit reasonably.
+     */
+    private _fitReasonably(length: number, numAvailableChars: number, nextWord: string): boolean {
+        const nextLength = length + nextWord.length;
+        const numAcceptableChars = numAvailableChars + 1;
+        return nextLength <= numAcceptableChars;
     }
 
     private _getInitialXPadding(): number {
