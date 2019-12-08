@@ -41,6 +41,14 @@ export class Box {
         return this.subtractBorder(spacing, spacing, spacing, spacing);
     }
 
+    public includePoint(x: number, y: number): Box {
+        const newX = Math.min(this.x, x);
+        const newY = Math.min(this.y, y);
+        const newWidth = Math.max(this.x + this.width, x + this.width) - newX;
+        const newHeight = Math.min(this.y + this.height, y + this.height) - newY;
+        return new Box(newX, newY, newWidth, newHeight);
+    }
+
     public placeInRectangle(width: number, height: number, xPos: InSequence, yPos: InSequence): Box {
         let x = 0;
         let y = 0;
