@@ -4,7 +4,7 @@ import { ChartPlotArea } from "./chart-plot-area.js";
 import { ChartLegend } from "./chart-legend.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Rectangle } from "../utils/rectangle.js";
+import { Box } from "../utils/box.js";
 import { Style } from "../text/style.js";
 import { ChartAxisPosition, ChartAxis } from "./chart-axis.js";
 import { LineRule } from "../paragraph/par-style.js";
@@ -22,7 +22,7 @@ export class ChartSpace implements ILayoutable {
     public textStyle: Style = new Style();
     public plotArea: ChartPlotArea;
     public legend: ChartLegend | undefined = undefined;
-    public bounds: Rectangle = new Rectangle(0, 0, 0, 0);
+    public bounds: Box = new Box(0, 0, 0, 0);
 
     constructor() {
         // Hard coded text style.
@@ -88,7 +88,7 @@ export class ChartSpace implements ILayoutable {
         }
     }
 
-    private _layoutLegend(plotBounds: Rectangle, legend: ChartLegend): Rectangle {
+    private _layoutLegend(plotBounds: Box, legend: ChartLegend): Box {
         legend.performLayout();
         if (!legend.overlayOnPlot) {
             let left = 0;
@@ -115,7 +115,7 @@ export class ChartSpace implements ILayoutable {
         return plotBounds;
     }
 
-    private _subtractAxis(plotBounds: Rectangle, axis: ChartAxis): Rectangle {
+    private _subtractAxis(plotBounds: Box, axis: ChartAxis): Box {
         const distance = axis.getMaxDistanceFromPlot();
         let left = 0;
         let right = 0;

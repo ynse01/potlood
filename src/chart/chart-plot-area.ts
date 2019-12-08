@@ -1,6 +1,6 @@
 import { ChartAxis } from "./chart-axis.js";
 import { ChartStyle } from "./chart-style.js";
-import { Rectangle } from "../utils/rectangle.js";
+import { Box } from "../utils/box.js";
 import { ChartSpace } from "./chart-space.js";
 
 export class ChartPlotArea {
@@ -8,7 +8,7 @@ export class ChartPlotArea {
     public style = new ChartStyle();
     public valueAxis: ChartAxis | undefined;
     public categoryAxis: ChartAxis | undefined;
-    public bounds: Rectangle = new Rectangle(0, 0, 0, 0);
+    public bounds: Box = new Box(0, 0, 0, 0);
 
     constructor(space: ChartSpace) {
         this.space = space;

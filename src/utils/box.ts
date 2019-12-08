@@ -1,6 +1,6 @@
 import { InSequence } from "./in-sequence.js";
 
-export class Rectangle {
+export class Box {
     public x: number;
     public y: number;
     public width: number;
@@ -29,19 +29,19 @@ export class Rectangle {
         return this.y + this.height;
     }
 
-    public translate(x: number, y: number): Rectangle {
-        return new Rectangle(this.x + x, this.y + y, this.width, this.height);
+    public translate(x: number, y: number): Box {
+        return new Box(this.x + x, this.y + y, this.width, this.height);
     }
 
-    public subtractBorder(left: number, top: number, right: number, bottom: number): Rectangle {
-        return new Rectangle(this.x + left, this.y + top, this.width - left - right, this.height - top - bottom);
+    public subtractBorder(left: number, top: number, right: number, bottom: number): Box {
+        return new Box(this.x + left, this.y + top, this.width - left - right, this.height - top - bottom);
     }
 
-    public subtractSpacing(spacing: number): Rectangle {
+    public subtractSpacing(spacing: number): Box {
         return this.subtractBorder(spacing, spacing, spacing, spacing);
     }
 
-    public placeInRectangle(width: number, height: number, xPos: InSequence, yPos: InSequence): Rectangle {
+    public placeInRectangle(width: number, height: number, xPos: InSequence, yPos: InSequence): Box {
         let x = 0;
         let y = 0;
         if (xPos === InSequence.Middle) {
@@ -54,7 +54,7 @@ export class Rectangle {
         } else if (xPos === InSequence.Last) {
             y = this.bottom - height;
         }
-        return new Rectangle(x, y, width, height);
+        return new Box(x, y, width, height);
     }
 
     public toString(): string {

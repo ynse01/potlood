@@ -1,6 +1,6 @@
 import { ChartStyle } from "./chart-style.js";
 import { ChartAxisPosition } from "./chart-axis.js";
-import { Rectangle } from "../utils/rectangle.js";
+import { Box } from "../utils/box.js";
 import { ChartSpace } from "./chart-space.js";
 import { FontMetrics } from "../utils/font-metrics.js";
 import { InSequence } from "../utils/in-sequence.js";
@@ -11,7 +11,7 @@ export class ChartLegend {
     public style: ChartStyle = new ChartStyle();
     public position: ChartAxisPosition = ChartAxisPosition.Right;
     public overlayOnPlot: boolean = false;
-    public bounds: Rectangle = new Rectangle(0, 0, 0, 0);
+    public bounds: Box = new Box(0, 0, 0, 0);
     private static _widgetSize = 10;
     private static _widgetSpacing = 5;
     public static spacing = 5;

@@ -1,6 +1,6 @@
 import { Xml } from "../utils/xml.js";
 import { Metrics } from "../utils/metrics.js";
-import { Rectangle } from "../utils/rectangle.js";
+import { Box } from "../utils/box.js";
 
 export class ShapeBounds {
     public boundOffsetX: number = 0;
@@ -60,8 +60,8 @@ export class ShapeBounds {
         return bounds;
     }
 
-    public get rectangle(): Rectangle {
-        return new Rectangle(this.boundOffsetX, this.boundOffsetY, this.boundSizeX, this.boundSizeY);
+    public get rectangle(): Box {
+        return new Box(this.boundOffsetX, this.boundOffsetY, this.boundSizeX, this.boundSizeY);
     }
 
     private static setExtent(parent: ChildNode, nodeName: string, bounds: ShapeBounds): void {

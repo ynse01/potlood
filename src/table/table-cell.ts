@@ -2,7 +2,7 @@ import { TableColumn } from "./table-column.js";
 import { Paragraph } from "../paragraph/paragraph.js";
 import { TableStyle } from "./table-style.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Rectangle } from "../utils/rectangle.js";
+import { Box } from "../utils/box.js";
 
 export class TableCell {
     public id: string | undefined = undefined;
@@ -10,7 +10,7 @@ export class TableCell {
     public rowSpan: number = 1;
     public pars: Paragraph[] = [];
     public style: TableStyle;
-    public bounds: Rectangle | undefined;
+    public bounds: Box | undefined;
 
     constructor(columns: TableColumn[], style: TableStyle, startIndex: number) {
         this.style = style;
@@ -43,7 +43,7 @@ export class TableCell {
             flow.advancePosition(bottomBorder.size);
         }
         let height = flow.getY() - y;
-        this.bounds = new Rectangle(x, y, this._getWidth(), height);
+        this.bounds = new Box(x, y, this._getWidth(), height);
     }
 
     public getCellFlow(flow: VirtualFlow): VirtualFlow {

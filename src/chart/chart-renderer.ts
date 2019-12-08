@@ -2,7 +2,7 @@ import { BarChart } from "./bar-chart.js";
 import { IPainter } from "../painting/i-painter.js";
 import { ChartSpace, ChartType } from "./chart-space.js";
 import { ChartStyle } from "./chart-style.js";
-import { Rectangle } from "../utils/rectangle.js";
+import { Box } from "../utils/box.js";
 import { ChartLegend } from "./chart-legend.js";
 import { ChartAxis } from "./chart-axis.js";
 
@@ -33,7 +33,7 @@ export class ChartRenderer {
         }
     }
 
-    private _renderBorderAndShading(style: ChartStyle, bounds: Rectangle): Rectangle {
+    private _renderBorderAndShading(style: ChartStyle, bounds: Box): Box {
         let spacing = 0;
         const x = bounds.left;
         const y = bounds.top;
@@ -83,7 +83,7 @@ export class ChartRenderer {
         }
     }
 
-    private _renderBarChart(barChart: BarChart, bounds: Rectangle): void {
+    private _renderBarChart(barChart: BarChart, bounds: Box): void {
         const counts = barChart.getCounts();
         const seriesSpacing = bounds.width / ((counts.numCats + 1) * (counts.numSeries + 1));
         const catSpacing = bounds.width / (counts.numSeries + 1);

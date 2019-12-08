@@ -1,7 +1,7 @@
 import { DocumentX } from "../document-x.js";
 import { Package } from "../package/package.js";
 import { Xml } from "../utils/xml.js";
-import { Rectangle } from "../utils/rectangle.js";
+import { Box } from "../utils/box.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 
@@ -11,7 +11,7 @@ export class Picture implements ILayoutable {
     private _pack: Package;
     private _name: string;
     private _imageUrl: string | undefined;
-    public bounds: Rectangle | undefined;
+    public bounds: Box | undefined;
 
     public static fromPicNode(picNode: ChildNode, docx: DocumentX): Picture | undefined {
         let run: Picture | undefined = undefined;
