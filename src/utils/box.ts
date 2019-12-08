@@ -1,4 +1,5 @@
 import { InSequence } from "./in-sequence.js";
+import { Vector } from "./vector.js";
 
 export class Box {
     public x: number;
@@ -41,7 +42,11 @@ export class Box {
         return this.subtractBorder(spacing, spacing, spacing, spacing);
     }
 
-    public includePoint(x: number, y: number): Box {
+    public includePoint(x: number, y: number): Box;
+    public includePoint(point: Vector): Box;
+    public includePoint(arg1: number | Vector, arg2?: number): Box {
+        const x = (arg1 instanceof Vector) ? arg1.x : arg1;
+        const y = (arg1 instanceof Vector) ? arg1.y : arg2!;
         const newX = Math.min(this.x, x);
         const newY = Math.min(this.y, y);
         const newWidth = Math.max(this.x + this.width, x + this.width) - newX;
