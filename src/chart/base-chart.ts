@@ -2,6 +2,7 @@ import { ChartSpace } from "./chart-space.js";
 import { ChartSeries } from "./chart-series.js";
 import { ChartValue } from "./chart-value.js";
 import { ChartAxisCrossMode } from "./chart-axis.js";
+import { ChartStyle } from "./chart-style.js";
 
 export abstract class BaseChart {
     public series: ChartSeries[] = [];
@@ -54,7 +55,7 @@ export abstract class BaseChart {
         this._rangeMax = max;
     }
 
-    public getColor(seriesIndex: number): string {
-        return this.series[seriesIndex].color;
+    public getSeriesStyle(seriesIndex: number): ChartStyle {
+        return this.series[seriesIndex].style;
     }
 }

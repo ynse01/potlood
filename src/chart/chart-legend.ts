@@ -78,7 +78,7 @@ export class ChartLegend {
     }
 
     public getColors(): string[] {
-        return this.space.chart.series.map((series) => series.color);
+        return this.space.chart.series.map((series) => series.style.lineColor || series.style.fillColor || "000000");
     }
 
     private _getNames(): string[] {

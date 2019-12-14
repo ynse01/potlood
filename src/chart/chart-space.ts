@@ -9,9 +9,11 @@ import { Style } from "../text/style.js";
 import { ChartAxisPosition, ChartAxis } from "./chart-axis.js";
 import { LineRule } from "../paragraph/par-style.js";
 import { BaseChart } from "./base-chart.js";
+import { LineChart } from "./line-chart.js";
 
 export enum ChartType {
-    Bar
+    Bar,
+    Line
 }
 
 export class ChartSpace implements ILayoutable {
@@ -45,6 +47,11 @@ export class ChartSpace implements ILayoutable {
 
     public get chart(): BaseChart {
         return this._chart!;
+    }
+
+    public setLineChart(lineChart: LineChart): void {
+        this._chart = lineChart;
+        this._type = ChartType.Line;
     }
 
     public setBarChart(barChart: BarChart): void {

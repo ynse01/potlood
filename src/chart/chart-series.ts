@@ -1,9 +1,10 @@
 import { ChartValue } from "./chart-value.js";
+import { ChartStyle } from "./chart-style.js";
 
 export class ChartSeries {
     public categories: ChartValue[] = [];
     public values: ChartValue[] = [];
-    public color: string = "";
+    public style: ChartStyle = new ChartStyle();
     public name: string = "";
 
     public get hasNumericValues(): boolean {

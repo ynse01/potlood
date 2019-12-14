@@ -7,6 +7,7 @@ import { ChartAxis, ChartAxisPosition, ChartAxisTickMode, ChartAxisLabelAlignmen
 import { ChartStyle } from "./chart-style.js";
 import { Metrics } from "../utils/metrics.js";
 import { ChartLegend } from "./chart-legend.js";
+import { LineChart } from "./line-chart.js";
 
 export class ChartReader {
     public static readChartFromNode(chartSpaceNode: Node, space: ChartSpace): ChartSpace {
@@ -32,6 +33,9 @@ export class ChartReader {
     private static _readPlotArea(plotAreaNode: Node, space: ChartSpace): void {
         plotAreaNode.childNodes.forEach(child => {
             switch(child.nodeName) {
+                case "c:lineChart":
+                    space.setLineChart(this._readLineChart(child, space));
+                    break;
                 case "c:barChart":
                     space.setBarChart(this._readBarChart(child, space));
                     break;
@@ -70,6 +74,17 @@ export class ChartReader {
             }
         });
         space.legend = legend;
+    }
+
+    private static _readLineChart(lineChartNode: Node, space: ChartSpace): LineChart {
+        const chart = new LineChart(space);
+        lineChartNode.childNodes.forEach(child => {
+            if (child.nodeName === "c:ser") {
+                const series = this._readChartSeries(child);
+                chart.series.push(series);
+            }
+        });
+        return chart;
     }
 
     private static _readBarChart(barChartNode: Node, space: ChartSpace): BarChart {
@@ -231,16 +246,7 @@ export class ChartReader {
         }
         const chartStyleNode = Xml.getFirstChildOfName(seriesNode, "c:spPr");
         if (chartStyleNode !== undefined) {
-            const fillNode = Xml.getFirstChildOfName(chartStyleNode, "a:solidFill");
-            if (fillNode !== undefined) {
-                const colorNode = Xml.getFirstChildOfName(fillNode, "a:srgbClr");
-                if (colorNode !== undefined) {
-                    const color = Xml.getAttribute(colorNode, "val");
-                    if (color !== undefined) {
-                        series.color = color;
-                    }
-                }
-            }
+            series.style = this._readStyle(chartStyleNode);
         }
         return series;
     }
