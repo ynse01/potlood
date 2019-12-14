@@ -101,17 +101,17 @@ export class ChartRenderer {
         const topY = bounds.y;
         const bottomY = topY + bounds.height;
         const range = areaChart.getValueRange();
-        for(let k = 0; k < counts.numSeries; k++) {
-            let previousVal = this._normalizeValue(areaChart.getValue(0, k), range);
-            for(let i = 1; i < counts.numCats; i++) {
-                const style = areaChart.getSeriesStyle(k, i);
+        for(let seriesIndex = 0; seriesIndex < counts.numSeries; seriesIndex++) {
+            let previousVal = this._normalizeValue(areaChart.getValue(0, seriesIndex), range);
+            for(let catIndex = 1; catIndex < counts.numCats; catIndex++) {
+                const style = areaChart.getSeriesStyle(seriesIndex, catIndex);
                 if (style.lineColor === undefined || style.lineColor === "ffffff") {
                     break;
                 }
-                const val = this._normalizeValue(areaChart.getValue(i, k), range);
-                const x1 = flowX + (i - 1) * catSpacing;
+                const val = this._normalizeValue(areaChart.getValue(catIndex, seriesIndex), range);
+                const x1 = flowX + (catIndex - 1) * catSpacing;
                 const y1 = bottomY - (bottomY - topY) * previousVal;
-                const x2 = flowX + i * catSpacing;
+                const x2 = flowX + catIndex * catSpacing;
                 const y2 = bottomY - (bottomY - topY) * val;
                 this._painter.paintLine(x1, y1, x2, y2, style.lineColor, style.lineThickness);
                 previousVal = val;
@@ -126,14 +126,14 @@ export class ChartRenderer {
         const topY = bounds.y;
         const bottomY = topY + bounds.height;
         const range = lineChart.getValueRange();
-        for(let k = 0; k < counts.numSeries; k++) {
-            let previousVal = this._normalizeValue(lineChart.getValue(0, k), range);
-            for(let i = 1; i < counts.numCats; i++) {
-                const style = lineChart.getSeriesStyle(k, i);
-                const val = this._normalizeValue(lineChart.getValue(i, k), range);
-                const x1 = flowX + (i - 1) * catSpacing;
+        for(let seriesIndex = 0; seriesIndex < counts.numSeries; seriesIndex++) {
+            let previousVal = this._normalizeValue(lineChart.getValue(0, seriesIndex), range);
+            for(let catIndex = 1; catIndex < counts.numCats; catIndex++) {
+                const style = lineChart.getSeriesStyle(seriesIndex, catIndex);
+                const val = this._normalizeValue(lineChart.getValue(catIndex, seriesIndex), range);
+                const x1 = flowX + (catIndex - 1) * catSpacing;
                 const y1 = bottomY - (bottomY - topY) * previousVal;
-                const x2 = flowX + i * catSpacing;
+                const x2 = flowX + catIndex * catSpacing;
                 const y2 = bottomY - (bottomY - topY) * val;
                 this._painter.paintLine(x1, y1, x2, y2, style.lineColor || "000000", style.lineThickness);
                 previousVal = val;
@@ -149,11 +149,11 @@ export class ChartRenderer {
         const topY = bounds.y;
         const bottomY = topY + bounds.height;
         const range = barChart.getValueRange();
-        for(let k = 0; k < counts.numSeries; k++) {
-            for(let i = 0; i < counts.numCats; i++) {
-                const color = barChart.getSeriesStyle(k, i).fillColor || "000000";
-                const val = this._normalizeValue(barChart.getValue(i, k), range);
-                const x = flowX + i * catSpacing + k * seriesSpacing;
+        for(let seriesIndex = 0; seriesIndex < counts.numSeries; seriesIndex++) {
+            for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
+                const color = barChart.getSeriesStyle(seriesIndex, catIndex).fillColor || "000000";
+                const val = this._normalizeValue(barChart.getValue(catIndex, seriesIndex), range);
+                const x = flowX + catIndex * catSpacing + seriesIndex * seriesSpacing;
                 const y = bottomY - (bottomY - topY) * val;
                 this._painter.paintLine(x, bottomY, x, y, color, seriesSpacing);
             }
