@@ -8,6 +8,7 @@ import { ChartStyle } from "./chart-style.js";
 import { Metrics } from "../utils/metrics.js";
 import { ChartLegend } from "./chart-legend.js";
 import { LineChart } from "./line-chart.js";
+import { AreaChart } from "./area-chart.js";
 
 export class ChartReader {
     public static readChartFromNode(chartSpaceNode: Node, space: ChartSpace): ChartSpace {
@@ -33,6 +34,9 @@ export class ChartReader {
     private static _readPlotArea(plotAreaNode: Node, space: ChartSpace): void {
         plotAreaNode.childNodes.forEach(child => {
             switch(child.nodeName) {
+                case "c:areaChart":
+                    space.setAreaChart(this._readAreaChart(child, space));
+                    break;
                 case "c:lineChart":
                     space.setLineChart(this._readLineChart(child, space));
                     break;
@@ -74,6 +78,17 @@ export class ChartReader {
             }
         });
         space.legend = legend;
+    }
+
+    private static _readAreaChart(lineChartNode: Node, space: ChartSpace): AreaChart {
+        const chart = new AreaChart(space);
+        lineChartNode.childNodes.forEach(child => {
+            if (child.nodeName === "c:ser") {
+                const series = this._readChartSeries(child);
+                chart.series.push(series);
+            }
+        });
+        return chart;
     }
 
     private static _readLineChart(lineChartNode: Node, space: ChartSpace): LineChart {
@@ -248,6 +263,15 @@ export class ChartReader {
         if (chartStyleNode !== undefined) {
             series.style = this._readStyle(chartStyleNode);
         }
+        seriesNode.childNodes.forEach(node => {
+            if (node.nodeName === "c:dPt") {
+                const index = Xml.getNumberValueFromNode(node, "c:idx");
+                const styleNode = Xml.getFirstChildOfName(node, "c:spPr");
+                if (index !== undefined && styleNode !== undefined) {
+                    series.categories[index].style = this._readStyle(styleNode);
+                }
+            }
+        });
         return series;
     }
 

@@ -7,6 +7,7 @@ import { ChartLegend } from "./chart-legend.js";
 import { ChartAxis } from "./chart-axis.js";
 import { LineChart } from "./line-chart.js";
 import { ChartValue } from "./chart-value.js";
+import { AreaChart } from "./area-chart.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -29,11 +30,16 @@ export class ChartRenderer {
             if (space.plotArea.valueAxis !== undefined) {
                 this._renderAxis(space.plotArea.valueAxis);
             }
-            if (space.chartType === ChartType.Bar) {
-                this._renderBarChart(space.chart as BarChart, plotBounds);
-            }
-            if (space.chartType === ChartType.Line) {
-                this._renderLineChart(space.chart as LineChart, plotBounds);
+            switch(space.chartType) {
+                case ChartType.Bar:
+                    this._renderBarChart(space.chart as BarChart, plotBounds);
+                    break;
+                case ChartType.Line:
+                    this._renderLineChart(space.chart as LineChart, plotBounds);
+                    break;
+                case ChartType.Area:
+                    this._renderAreaChart(space.chart as AreaChart, plotBounds);
+                    break;
             }
         }
     }
@@ -88,6 +94,31 @@ export class ChartRenderer {
         }
     }
 
+    private _renderAreaChart(areaChart: AreaChart, bounds: Box): void {
+        const counts = areaChart.getCounts();
+        const catSpacing = bounds.width / counts.numSeries;
+        const flowX = bounds.x;
+        const topY = bounds.y;
+        const bottomY = topY + bounds.height;
+        const range = areaChart.getValueRange();
+        for(let k = 0; k < counts.numSeries; k++) {
+            let previousVal = this._normalizeValue(areaChart.getValue(0, k), range);
+            for(let i = 1; i < counts.numCats; i++) {
+                const style = areaChart.getSeriesStyle(k, i);
+                if (style.lineColor === undefined || style.lineColor === "ffffff") {
+                    break;
+                }
+                const val = this._normalizeValue(areaChart.getValue(i, k), range);
+                const x1 = flowX + (i - 1) * catSpacing;
+                const y1 = bottomY - (bottomY - topY) * previousVal;
+                const x2 = flowX + i * catSpacing;
+                const y2 = bottomY - (bottomY - topY) * val;
+                this._painter.paintLine(x1, y1, x2, y2, style.lineColor, style.lineThickness);
+                previousVal = val;
+            }
+        }
+    }
+
     private _renderLineChart(lineChart: LineChart, bounds: Box): void {
         const counts = lineChart.getCounts();
         const catSpacing = bounds.width / counts.numSeries;
@@ -96,9 +127,9 @@ export class ChartRenderer {
         const bottomY = topY + bounds.height;
         const range = lineChart.getValueRange();
         for(let k = 0; k < counts.numSeries; k++) {
-            const style = lineChart.getSeriesStyle(k);
             let previousVal = this._normalizeValue(lineChart.getValue(0, k), range);
             for(let i = 1; i < counts.numCats; i++) {
+                const style = lineChart.getSeriesStyle(k, i);
                 const val = this._normalizeValue(lineChart.getValue(i, k), range);
                 const x1 = flowX + (i - 1) * catSpacing;
                 const y1 = bottomY - (bottomY - topY) * previousVal;
@@ -119,8 +150,8 @@ export class ChartRenderer {
         const bottomY = topY + bounds.height;
         const range = barChart.getValueRange();
         for(let k = 0; k < counts.numSeries; k++) {
-            const color = barChart.getSeriesStyle(k).fillColor || "000000";
             for(let i = 0; i < counts.numCats; i++) {
+                const color = barChart.getSeriesStyle(k, i).fillColor || "000000";
                 const val = this._normalizeValue(barChart.getValue(i, k), range);
                 const x = flowX + i * catSpacing + k * seriesSpacing;
                 const y = bottomY - (bottomY - topY) * val;

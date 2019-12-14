@@ -1,7 +1,9 @@
+import { ChartStyle } from "./chart-style.js";
 
 export class ChartValue {
     public numeric: number | undefined = undefined;
     public text: string | undefined = undefined;
+    public style: ChartStyle | undefined = undefined;
 
     public toString(): string {
         let str = "";

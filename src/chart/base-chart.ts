@@ -55,7 +55,14 @@ export abstract class BaseChart {
         this._rangeMax = max;
     }
 
-    public getSeriesStyle(seriesIndex: number): ChartStyle {
-        return this.series[seriesIndex].style;
+    public getSeriesStyle(seriesIndex: number, categoryIndex: number): ChartStyle {
+        let style;
+        const cat = this.series[seriesIndex].categories[categoryIndex];
+        if (cat.style !== undefined) {
+            style = cat.style;
+        } else {
+            style = this.series[seriesIndex].style;
+        }
+        return style;
     }
 }

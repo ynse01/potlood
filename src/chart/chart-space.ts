@@ -10,10 +10,12 @@ import { ChartAxisPosition, ChartAxis } from "./chart-axis.js";
 import { LineRule } from "../paragraph/par-style.js";
 import { BaseChart } from "./base-chart.js";
 import { LineChart } from "./line-chart.js";
+import { AreaChart } from "./area-chart.js";
 
 export enum ChartType {
     Bar,
-    Line
+    Line,
+    Area
 }
 
 export class ChartSpace implements ILayoutable {
@@ -47,6 +49,11 @@ export class ChartSpace implements ILayoutable {
 
     public get chart(): BaseChart {
         return this._chart!;
+    }
+
+    public setAreaChart(areaChart: AreaChart): void {
+        this._chart = areaChart;
+        this._type = ChartType.Area;
     }
 
     public setLineChart(lineChart: LineChart): void {
