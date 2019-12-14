@@ -310,8 +310,8 @@ export class ChartReader {
         return ref;
     }
 
-    private static _readFillColor(fillNode: Node): string {
-        let color = "ffffff";
+    private static _readFillColor(fillNode: Node): string | undefined {
+        let color: string | undefined = undefined;
         const colorNode = fillNode.firstChild;
         if (colorNode !== null && colorNode.nodeName === "a:srgbClr") {
             const valAttr = Xml.getAttribute(colorNode, "val");
