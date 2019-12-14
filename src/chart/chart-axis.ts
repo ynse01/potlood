@@ -1,4 +1,4 @@
-import { ChartSpace } from "./chart-space.js";
+import { ChartSpace, ChartType } from "./chart-space.js";
 import { FontMetrics } from "../utils/font-metrics.js";
 import { ChartStyle } from "./chart-style.js";
 import { IPositionedTextLine, IPositionedLine } from "../text/positioned-text-line.js";
@@ -132,7 +132,13 @@ export class ChartAxis {
             case ChartAxisPosition.Bottom:
                 if (!hasNumericValues) {
                     const texts = this._getTexts();
-                    const halfSegmentWidth = (plotBounds.width / texts.length) / 2;
+                    let numSegments = texts.length;
+                    let applyTextDelta = 1;
+                    if (this._space.chartType !== ChartType.Bar) {
+                        numSegments--;
+                        applyTextDelta = 0;
+                    }
+                    const halfSegmentWidth = (plotBounds.width / numSegments) / 2;
                     let currentX = plotBounds.x;
                     let textY = plotBounds.bottom + ChartAxis._labelSpacing + FontMetrics.getTopToBaseline(this._space.textStyle);
                     let lineY1 = plotBounds.bottom;
@@ -148,7 +154,7 @@ export class ChartAxis {
                         lineY1 = plotBounds.top;
                     }
                     texts.forEach(text => {
-                        textLines.push(this._createPositionedText(currentX + halfSegmentWidth, textY, text, Justification.center));
+                        textLines.push(this._createPositionedText(currentX + applyTextDelta * halfSegmentWidth, textY, text, Justification.center));
                         lines.push({
                             x1: currentX,
                             x2: currentX,
