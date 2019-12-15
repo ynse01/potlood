@@ -51,6 +51,21 @@ export class CanvasPainter implements IPainter {
         this._context.stroke();
     }
 
+    public paintPolygon(path: string, fillColor: string | undefined, strokeColor: string | undefined, strokeThickness: number | undefined): void {
+        const path2d = new Path2D(path);
+        if (strokeColor !== undefined) {
+            this._context.strokeStyle = strokeColor;
+            if (strokeThickness !== undefined) {
+                this._context.lineWidth = strokeThickness;
+            }
+            this._context.stroke(path2d);
+        }
+        if (fillColor != undefined) {
+            this._context.fillStyle = fillColor;
+            this._context.fill(path2d);
+        }
+    }
+
     public paintPicture(x: number, y: number, _width: number, _height: number, pic: Picture): void {
         pic.getImageUrl().then(url => {
             const img = document.createElement("img");

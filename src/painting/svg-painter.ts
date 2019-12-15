@@ -68,6 +68,14 @@ export class SvgPainter implements IPainter {
         this._svg.appendChild(line);
     }
 
+    public paintPolygon(path: string, fillColor: string | undefined, strokeColor: string | undefined, strokeThickness: number | undefined): void {
+        const element = document.createElementNS(SvgPainter.svgNS, "path");
+        element.setAttribute("d", path);
+        element.setAttribute("fill", `#${fillColor}`);
+        element.setAttribute("stroke", `${strokeColor}`);
+        element.setAttribute("stroke-width", `${strokeThickness}`);
+    }
+
     public paintPicture(x: number, y: number, width: number, height: number, pic: Picture): void {
         if (pic !== undefined) {
             const rect = document.createElementNS(SvgPainter.svgNS, "image");

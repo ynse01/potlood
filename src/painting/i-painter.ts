@@ -21,6 +21,8 @@ export interface IPainter {
 
     paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void;
 
+    paintPolygon(path: string, fillColor: string | undefined, strokeColor: string | undefined, strokeThickness: number | undefined): void;
+
     paintPicture(x: number, y: number, width: number, height: number, pic: Picture): void;
 
     startLink(url: string): void;
