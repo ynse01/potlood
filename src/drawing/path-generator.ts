@@ -19,12 +19,6 @@ export class PathGenerator {
         this.path += ` L ${point.x} ${point.y}`;
     }
 
-    public arcTo(point: Vector, radiusX: number, radiusY: number, largeArc: boolean, positiveSweep: boolean): void {
-        const la = (largeArc) ? "1" : "0";
-        const ps = (positiveSweep) ? "1" : "0";
-        this.path += ` A ${radiusX} ${radiusY} ${la} ${ps} ${point.x} ${point.y}`;
-    }
-
     public circleSegmentTo(circle: Circle, angle: number): void {
         const la = "0";
         const ps = "1";

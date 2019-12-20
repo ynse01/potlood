@@ -176,6 +176,7 @@ export class ChartRenderer {
         const seriesIndex = 0;
         const range = { min: 0, max: pieChart.getValueSum(seriesIndex)};
         const circle = new Circle(middle, bounds.height / 2);
+        // Start angle is relative to vertical (instead of horizontal axis of circle class).
         let previousAngle = pieChart.startAngle - Math.PI / 2;
         for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
             const color = pieChart.getSeriesStyle(seriesIndex, catIndex).fillColor || "000000";
