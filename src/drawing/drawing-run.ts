@@ -46,6 +46,9 @@ export class DrawingRun implements ILayoutable {
             this.chart.bounds = bounds;
             this.chart.performLayout(flow);
         }
+        if (this.shape !== undefined) {
+            this.shape.performLayout(bounds);
+        }
         this.lastXPos = 0;
         if ((bounds.width > 400) || (this.wrapping !== WrapMode.Inline && this.wrapping !== WrapMode.None)) {
             flow.advancePosition(this.bounds.boundSizeY);

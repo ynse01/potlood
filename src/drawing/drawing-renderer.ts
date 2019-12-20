@@ -25,7 +25,8 @@ export class DrawingRenderer {
         }
         const shape = drawing.shape;
         if (shape !== undefined) {
-            this._painter.paintPolygon(shape.path, "ffffff", "000000", 1);
+            const path = shape.generatePath();
+            this._painter.paintPolygon(path, "eeeeee", "888888", 1);
         }
     }
     

@@ -40,7 +40,7 @@ export class DrawingReader {
                             }
                             break;
                         case "wps:wsp":
-                            drawing.shape = this.shapeReader.readShape(childNode, bounds.box);
+                            drawing.shape = this.shapeReader.readShape(childNode);
                             break;
                         default:
                             console.log(`Don't know how to parse ${childNode.nodeName} during Drawing reading.`);
