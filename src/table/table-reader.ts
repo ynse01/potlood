@@ -16,28 +16,28 @@ import { TableMarginSet } from "./table-margin-set.js";
 export class TableReader {
     public static readTable(docx: DocumentX, tableNode: ChildNode): Table {
         const table = new Table(docx);
-        const grid = Xml.getFirstChildOfName(tableNode, "w:tblGrid");
-        if (grid !== undefined) {
-            let start = 0;
-            grid.childNodes.forEach(col => {
-                if (col.nodeName === "w:gridCol") {
-                    const w = Xml.getAttribute(col, "w:w");
-                    if (w !== undefined) {
-                        const width = Metrics.convertTwipsToPixels(parseInt(w));
-                        table.columns.push(new TableColumn(start, width));
-                        start += width;
-                    }
-                }
-            });
-        }
-        const prNode = Xml.getFirstChildOfName(tableNode, "w:tblPr");
-        if (prNode !== undefined) {
-            table.style = this.readTableStyle(prNode);
-        }
-        tableNode.childNodes.forEach(rowNode => {
-            if (rowNode.nodeName === "w:tr") {
-                const row = this.readTableRow(rowNode, table);
-                table.rows.push(row);
+        tableNode.childNodes.forEach(child => {
+            switch(child.nodeName) {
+                case "w:tr":
+                    const row = this.readTableRow(child, table);
+                    table.rows.push(row);
+                    break;
+                case "w:tblPr":
+                    table.style = this.readTableStyle(child);
+                    break;
+                case "w:tblGrid":
+                    let start = 0;
+                    child.childNodes.forEach(col => {
+                        if (col.nodeName === "w:gridCol") {
+                            const w = Xml.getAttribute(col, "w:w");
+                            if (w !== undefined) {
+                                const width = Metrics.convertTwipsToPixels(parseInt(w));
+                                table.columns.push(new TableColumn(start, width));
+                                start += width;
+                            }
+                        }
+                    });
+                    break;
             }
         });
         return table;
@@ -84,32 +84,34 @@ export class TableReader {
     private static readTableCellPresentation(cellPrNode: ChildNode, rowStyle: TableStyle): TableStyle {
         const style = new TableStyle();
         style.higherStyle = rowStyle;
-        const tcW = Xml.getFirstChildOfName(cellPrNode, "w:tcW");
-        if (tcW !== undefined) {
-            const w = Xml.getAttribute(tcW, "w:w");
-            if (w !== undefined) {
-                style.width = Metrics.convertTwipsToPixels(parseInt(w));
+        cellPrNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "w:tcW":
+                    const w = Xml.getAttribute(child, "w:w");
+                    if (w !== undefined) {
+                        style.width = Metrics.convertTwipsToPixels(parseInt(w));
+                    }
+                    break;
+                case "w:gridSpan":
+                    const gridSpan = Xml.getStringValue(child);
+                    if (gridSpan !== undefined) {
+                        style.gridSpan = parseInt(gridSpan);
+                    }
+                    break;
+                case "w:tcBorders":
+                    style.borders = this.readBorders(child);
+                    break;
+                case "w:tcMar":
+                    style.margins = this.readCellMargins(child);
+                    break;
+                case "w:shd":
+                    const shading = Xml.getAttribute(child, "fill");
+                    if (shading !== undefined) {
+                        style.shading = shading;
+                    }
+                    break;
             }
-        }
-        const gridSpan = Xml.getStringValueFromNode(cellPrNode, "w:gridSpan");
-        if (gridSpan !== undefined) {
-            style.gridSpan = parseInt(gridSpan);
-        }
-        const tcBorders = Xml.getFirstChildOfName(cellPrNode, "w:tcBorders");
-        if (tcBorders !== undefined) {
-            style.borders = this.readBorders(tcBorders);
-        }
-        const tcMargins = Xml.getFirstChildOfName(cellPrNode, "w:tcMar");
-        if (tcMargins !== undefined) {
-            style.margins = this.readCellMargins(tcMargins);
-        }
-        const tcShading = Xml.getFirstChildOfName(cellPrNode, "w:shd");
-        if (tcShading !== undefined) {
-            const shading = Xml.getAttribute(tcShading, "fill");
-            if (shading !== undefined) {
-                style.shading = shading;
-            }
-        }
+        });
         return style;
     }
 

@@ -33,6 +33,18 @@ export class Xml {
     }
 
     /**
+     * Get the "w:val" attribute as string, from the node.
+     */
+    public static getStringValue(node: Node): string | undefined {
+        let val: string | undefined = undefined;
+        const attr = Xml.getAttribute(node, "w:val");
+        if (attr !== undefined) {
+            val = attr;
+        }
+        return val;
+    }
+
+    /**
      * Get the "w:val" attribute as string, from the child node with the specified name.
      */
     public static getStringValueFromNode(parent: ChildNode, name: string): string | undefined {
