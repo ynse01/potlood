@@ -185,7 +185,6 @@ export class ChartRenderer {
             path.circleSegmentTo(circle, val);
             path.lineTo(middle);
             this._painter.paintPolygon(path.path, color, undefined, undefined);
-            console.log(path.path);
             previousAngle = val;
         }
     }
