@@ -3,6 +3,7 @@ import { Picture } from "./picture.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { ChartSpace } from "../chart/chart-space.js";
+import { Shape } from "./shape.js";
 
 export enum WrapMode {
     None,
@@ -18,6 +19,7 @@ export class DrawingRun implements ILayoutable {
     public wrapping: WrapMode;
     public picture: Picture | undefined;
     public chart: ChartSpace | undefined;
+    public shape: Shape | undefined;
     public previousXPos: number | undefined;
     public lastXPos: number | undefined;
 

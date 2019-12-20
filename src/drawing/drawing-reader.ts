@@ -6,8 +6,11 @@ import { Picture } from "./picture.js";
 import { ChartSpace } from "../chart/chart-space.js";
 import { XmlPart } from "../package/xml-part.js";
 import { ChartReader } from "../chart/chart-reader.js";
+import { ShapeReader } from "./shape-reader.js";
 
 export class DrawingReader {
+    private static shapeReader = new ShapeReader();
+
     public static readDrawingRun(drawingNode: ChildNode, docx: DocumentX): DrawingRun {
         let bounds = new ShapeBounds();
         let wrapMode = WrapMode.None;
@@ -25,17 +28,25 @@ export class DrawingReader {
             const graphicData = Xml.getFirstChildOfName(graphic, "a:graphicData");
             if (graphicData !== undefined) {
                 graphicData.childNodes.forEach(childNode => {
-                    if (childNode.nodeName === "pic:pic") {
-                        drawing.picture = Picture.fromPicNode(childNode, docx);    
+                    switch (childNode.nodeName) {
+                        case "pic:pic":
+                            drawing.picture = Picture.fromPicNode(childNode, docx);
+                            break;
+                        case "c:chart":
+                            const relationship = Xml.getAttribute(childNode, "r:id");
+                            if (relationship !== undefined && docx.relationships !== undefined) {
+                                const chartTarget = docx.relationships.getTarget(relationship);
+                                drawing.chart = this.readChartFromPart(docx.pack.loadPartAsXml(`word/${chartTarget}`));
+                            }
+                            break;
+                        case "wps:wsp":
+                            drawing.shape = this.shapeReader.readShape(childNode);
+                            break;
+                        default:
+                            console.log(`Don't know how to parse ${childNode.nodeName} during Drawing reading.`);
+                            break;
                     }
-                    if (childNode.nodeName === "c:chart") {
-                        const relationship = Xml.getAttribute(childNode, "r:id");
-                        if (relationship !== undefined && docx.relationships !== undefined) {
-                            const chartTarget = docx.relationships.getTarget(relationship);
-                            drawing.chart = this.readChartFromPart(docx.pack.loadPartAsXml(`word/${chartTarget}`));
-                        }
-                    }
-                })
+                });
             }
         }
         return drawing;
