@@ -30,7 +30,20 @@ export class ParagraphReader {
                 }
             }
             if (node.nodeName === "w:r") {
-                const drawingNode = Xml.getFirstChildOfName(node, "w:drawing");
+                let drawingNode = Xml.getFirstChildOfName(node, "w:drawing");
+                if (drawingNode === undefined) {
+                    node.childNodes.forEach(alternateNode => {
+                        if (alternateNode.nodeName === "mc:AlternateContent") {
+                            const choiceNode = Xml.getFirstChildOfName(alternateNode, "mc:Choice");
+                            if (choiceNode !== undefined) {
+                                const chosenNode = Xml.getFirstChildOfName(choiceNode, "w:drawing");
+                                if (chosenNode !== undefined) {
+                                    runs.push(DrawingReader.readDrawingRun(chosenNode, docx));
+                                }
+                            }                                    
+                        }
+                    })
+                }
                 if (drawingNode !== undefined) {
                     const drawing = DrawingReader.readDrawingRun(drawingNode, docx);
                     runs.push(drawing);
