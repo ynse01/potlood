@@ -233,68 +233,69 @@ export class ChartReader {
 
     private static _readChartSeries(seriesNode: Node): ChartSeries {
         const series = new ChartSeries();
-        const nameNode = Xml.getFirstChildOfName(seriesNode, "c:tx");
-        if (nameNode !== undefined && nameNode.firstChild !== null) {
-            const names = this._readStringReference(nameNode.firstChild);
-            series.name = names[0];
-        }
-        const catNode = Xml.getFirstChildOfName(seriesNode, "c:cat");
-        if (catNode !== undefined) {
-            if (catNode.firstChild !== null) {
-                const refName = catNode.firstChild.nodeName;
-                if (refName === "c:strRef") {
-                    const stringCats = this._readStringReference(catNode.firstChild);
-                    stringCats.forEach(stringCat => {
-                        const cat = new ChartValue();
-                        cat.text = stringCat;
-                        series.categories.push(cat);
-                    });
-                } else if (refName === "c:numRef") {
-                    const numValues = this._readNumericReference(catNode.firstChild);
-                    numValues.forEach(numValue => {
-                        const cat = new ChartValue();
-                        cat.numeric = numValue;
-                        series.categories.push(cat);
-                    });
-                } else {
-                    console.log(`Don't know how to parse Chart Category from node: ${refName}`);
-                }
-            }
-        }
-        const valNode = Xml.getFirstChildOfName(seriesNode, "c:val");
-        if (valNode !== undefined) {
-            if (valNode.firstChild !== null) {
-                const refName = valNode.firstChild.nodeName;
-                if (refName === "c:strRef") {
-                    const stringValues = this._readStringReference(valNode.firstChild);
-                    stringValues.forEach(stringValue => {
-                        const val = new ChartValue();
-                        val.text = stringValue;
-                        series.values.push(val);
-                    });
-                } else if (refName === "c:numRef") {
-                    const numValues = this._readNumericReference(valNode.firstChild);
-                    numValues.forEach(numValue => {
-                        const val = new ChartValue();
-                        val.numeric = numValue;
-                        series.values.push(val);
-                    });
-                } else {
-                    console.log(`Don't know how to parse Chart Value from node: ${refName}`);
-                }
-            }
-        }
-        const chartStyleNode = Xml.getFirstChildOfName(seriesNode, "c:spPr");
-        if (chartStyleNode !== undefined) {
-            series.style = this._readStyle(chartStyleNode);
-        }
-        seriesNode.childNodes.forEach(node => {
-            if (node.nodeName === "c:dPt") {
-                const index = Xml.getNumberValueFromNode(node, "c:idx");
-                const styleNode = Xml.getFirstChildOfName(node, "c:spPr");
-                if (index !== undefined && styleNode !== undefined) {
-                    series.categories[index].style = this._readStyle(styleNode);
-                }
+        seriesNode.childNodes.forEach((child) => {
+            const firstChild = child.firstChild;
+            switch(child.nodeName) {
+                case "c:tx":
+                    if (firstChild !== null) {
+                        const names = this._readStringReference(firstChild);
+                        series.name = names[0];
+                    }        
+                    break;
+                case "c:cat":
+                    if (firstChild !== null) {
+                        const refName = firstChild.nodeName;
+                        if (refName === "c:strRef") {
+                            const stringCats = this._readStringReference(firstChild);
+                            stringCats.forEach(stringCat => {
+                                const cat = new ChartValue();
+                                cat.text = stringCat;
+                                series.categories.push(cat);
+                            });
+                        } else if (refName === "c:numRef") {
+                            const numValues = this._readNumericReference(firstChild);
+                            numValues.forEach(numValue => {
+                                const cat = new ChartValue();
+                                cat.numeric = numValue;
+                                series.categories.push(cat);
+                            });
+                        } else {
+                            console.log(`Don't know how to parse Chart Category from node: ${refName}`);
+                        }
+                    }
+                    break;
+                case "c:val":
+                    if (firstChild !== null) {
+                        const refName = firstChild.nodeName;
+                        if (refName === "c:strRef") {
+                            const stringValues = this._readStringReference(firstChild);
+                            stringValues.forEach(stringValue => {
+                                const val = new ChartValue();
+                                val.text = stringValue;
+                                series.values.push(val);
+                            });
+                        } else if (refName === "c:numRef") {
+                            const numValues = this._readNumericReference(firstChild);
+                            numValues.forEach(numValue => {
+                                const val = new ChartValue();
+                                val.numeric = numValue;
+                                series.values.push(val);
+                            });
+                        } else {
+                            console.log(`Don't know how to parse Chart Value from node: ${refName}`);
+                        }
+                    }
+                    break;
+                case "c:spPr":
+                    series.style = this._readStyle(child);
+                    break;
+                case "c:dPt":
+                    const index = Xml.getNumberValueFromNode(child, "c:idx");
+                    const styleNode = Xml.getFirstChildOfName(child, "c:spPr");
+                    if (index !== undefined && styleNode !== undefined) {
+                        series.categories[index].style = this._readStyle(styleNode);
+                    }
+                        break;
             }
         });
         return series;
