@@ -2,7 +2,7 @@ import { TableColumn } from "./table-column.js";
 import { Paragraph } from "../paragraph/paragraph.js";
 import { TableStyle } from "./table-style.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Box } from "../utils/box.js";
+import { Box } from "../math/box.js";
 
 export class TableCell {
     public id: string | undefined = undefined;

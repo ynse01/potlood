@@ -1,6 +1,6 @@
 import { Xml } from "../utils/xml.js";
 import { Metrics } from "../utils/metrics.js";
-import { Box } from "../utils/box.js";
+import { Box } from "../math/box.js";
 
 export class ShapeBounds {
     public boundOffsetX: number = 0;

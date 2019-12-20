@@ -1,6 +1,6 @@
 import { ChartStyle } from "./chart-style.js";
 import { ChartAxisPosition } from "./chart-axis.js";
-import { Box } from "../utils/box.js";
+import { Box } from "../math/box.js";
 import { ChartSpace } from "./chart-space.js";
 import { FontMetrics } from "../utils/font-metrics.js";
 import { InSequence } from "../utils/in-sequence.js";

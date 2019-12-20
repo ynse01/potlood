@@ -1,5 +1,5 @@
-import { Vector } from "../utils/vector.js";
-import { Circle } from "../utils/circle.js";
+import { Vector } from "../math/vector.js";
+import { Circle } from "../math/circle.js";
 
 export class PathGenerator {
     public path: string;
