@@ -30,29 +30,26 @@ export class ParagraphReader {
                 }
             }
             if (node.nodeName === "w:r") {
-                let drawingNode = Xml.getFirstChildOfName(node, "w:drawing");
-                if (drawingNode === undefined) {
-                    node.childNodes.forEach(alternateNode => {
-                        if (alternateNode.nodeName === "mc:AlternateContent") {
-                            const choiceNode = Xml.getFirstChildOfName(alternateNode, "mc:Choice");
-                            if (choiceNode !== undefined) {
-                                const chosenNode = Xml.getFirstChildOfName(choiceNode, "w:drawing");
-                                if (chosenNode !== undefined) {
-                                    runs.push(DrawingReader.readDrawingRun(chosenNode, docx));
-                                }
-                            }                                    
-                        }
-                    })
-                }
-                if (drawingNode !== undefined) {
-                    const drawing = DrawingReader.readDrawingRun(drawingNode, docx);
-                    runs.push(drawing);
-                } else {
-                    const run = TextReader.readTextRun(node, parStyle, docx.styles);
-                    run.inParagraph = InSequence.Middle;
-                    run.linkTarget = linkTarget;
-                    runs.push(run);
-                }
+                node.childNodes.forEach(child => {
+                    if (child.nodeName === "w:drawing") {
+                        const drawing = DrawingReader.readDrawingRun(child, docx);
+                        runs.push(drawing);    
+                    }
+                    if (child.nodeName === "mc:AlternateContent") {
+                        const choiceNode = Xml.getFirstChildOfName(child, "mc:Choice");
+                        if (choiceNode !== undefined) {
+                            const chosenNode = Xml.getFirstChildOfName(choiceNode, "w:drawing");
+                            if (chosenNode !== undefined) {
+                                runs.push(DrawingReader.readDrawingRun(chosenNode, docx));
+                            }
+                        }                                    
+                    }
+                });
+                // Try to load text.
+                const run = TextReader.readTextRun(node, parStyle, docx.styles);
+                run.inParagraph = InSequence.Middle;
+                run.linkTarget = linkTarget;
+                runs.push(run);
             }
         });
         const firstRun = numberingRun || runs[0];
