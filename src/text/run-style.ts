@@ -111,6 +111,7 @@ export class RunStyle {
                 case "w:iCs":
                 case "w:bCs":
                 case "w:lang":
+                case "w:kern":
                         // Ignore
                     break;
                 default:
