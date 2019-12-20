@@ -1,4 +1,5 @@
 import { Vector } from "../utils/vector.js";
+import { Circle } from "../utils/circle.js";
 
 export class PathGenerator {
     public path: string;
@@ -16,5 +17,18 @@ export class PathGenerator {
 
     public lineTo(point: Vector): void {
         this.path += ` L ${point.x} ${point.y}`;
+    }
+
+    public arcTo(point: Vector, radiusX: number, radiusY: number, largeArc: boolean, positiveSweep: boolean): void {
+        const la = (largeArc) ? "1" : "0";
+        const ps = (positiveSweep) ? "1" : "0";
+        this.path += ` A ${radiusX} ${radiusY} ${la} ${ps} ${point.x} ${point.y}`;
+    }
+
+    public circleSegmentTo(circle: Circle, angle: number): void {
+        const la = "0";
+        const ps = "1";
+        const point = circle.pointAtAngle(angle);
+        this.path += ` A ${circle.radius} ${circle.radius} 0 ${la} ${ps} ${point.x} ${point.y}`;
     }
 }

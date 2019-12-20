@@ -10,6 +10,8 @@ import { ChartValue } from "./chart-value.js";
 import { AreaChart } from "./area-chart.js";
 import { Vector } from "../utils/vector.js";
 import { PathGenerator } from "../drawing/path-generator.js";
+import { PieChart } from "./pie-chart.js";
+import { Circle } from "../utils/circle.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -41,6 +43,9 @@ export class ChartRenderer {
                     break;
                 case ChartType.Area:
                     this._renderAreaChart(space.chart as AreaChart, plotBounds);
+                    break;
+                case ChartType.Pie:
+                    this._renderPieChart(space.chart as PieChart, plotBounds);
                     break;
             }
         }
@@ -162,6 +167,26 @@ export class ChartRenderer {
                 const y = bottomY - (bottomY - topY) * val;
                 this._painter.paintLine(x, bottomY, x, y, color, seriesSpacing);
             }
+        }
+    }
+
+    private _renderPieChart(pieChart: PieChart, bounds: Box): void {
+        const counts = pieChart.getCounts();
+        const middle = new Vector(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        const seriesIndex = 0;
+        const range = { min: 0, max: pieChart.getValueSum(seriesIndex)};
+        const circle = new Circle(middle, bounds.height / 2);
+        let previousAngle = pieChart.startAngle - Math.PI / 2;
+        for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
+            const color = pieChart.getSeriesStyle(seriesIndex, catIndex).fillColor || "000000";
+            const val = previousAngle + this._normalizeValue(pieChart.getValue(catIndex, seriesIndex), range) * Math.PI * 2;
+            const path = new PathGenerator(middle);
+            path.lineTo(circle.pointAtAngle(previousAngle));
+            path.circleSegmentTo(circle, val);
+            path.lineTo(middle);
+            this._painter.paintPolygon(path.path, color, undefined, undefined);
+            console.log(path.path);
+            previousAngle = val;
         }
     }
 
