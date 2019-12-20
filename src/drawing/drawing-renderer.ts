@@ -23,6 +23,10 @@ export class DrawingRenderer {
                 this._chartRenderer.renderChartSpace(chart);
             });
         }
+        const shape = drawing.shape;
+        if (shape !== undefined) {
+            this._painter.paintPolygon(shape.path, "ffffff", "000000", 1);
+        }
     }
     
 }

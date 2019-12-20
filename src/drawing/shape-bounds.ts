@@ -60,7 +60,7 @@ export class ShapeBounds {
         return bounds;
     }
 
-    public get rectangle(): Box {
+    public get box(): Box {
         return new Box(this.boundOffsetX, this.boundOffsetY, this.boundSizeX, this.boundSizeY);
     }
 

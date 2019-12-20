@@ -4,15 +4,21 @@ import { Circle } from "../math/circle.js";
 export class PathGenerator {
     public path: string;
 
-    constructor(start: Vector | Vector[]) {
+    constructor(start?: Vector | Vector[]) {
         if (Array.isArray(start)) {
             this.path = `M ${start[0].x} ${start[0].y}`;
             for (let i = 1; i < start.length; i++) {
                 this.lineTo(start[i]);
             }
-        } else {
+        } else if (start !== undefined) {
             this.path = `M ${start.x} ${start.y}`;
+        } else {
+            this.path = "";
         }
+    }
+
+    public moveTo(point: Vector): void {
+        this.path += `M ${point.x} ${point.y}`;
     }
 
     public lineTo(point: Vector): void {
