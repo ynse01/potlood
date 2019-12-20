@@ -11,11 +11,13 @@ import { LineRule } from "../paragraph/par-style.js";
 import { BaseChart } from "./base-chart.js";
 import { LineChart } from "./line-chart.js";
 import { AreaChart } from "./area-chart.js";
+import { PieChart } from "./pie-chart.js";
 
 export enum ChartType {
     Bar,
     Line,
-    Area
+    Area,
+    Pie
 }
 
 export class ChartSpace implements ILayoutable {
@@ -64,6 +66,11 @@ export class ChartSpace implements ILayoutable {
     public setBarChart(barChart: BarChart): void {
         this._chart = barChart;
         this._type = ChartType.Bar;
+    }
+
+    public setPieChart(pieChart: PieChart): void {
+        this._chart = pieChart;
+        this._type = ChartType.Pie;
     }
 
     public setPromise(promise: Promise<void>): void {

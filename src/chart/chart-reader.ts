@@ -9,6 +9,7 @@ import { Metrics } from "../utils/metrics.js";
 import { ChartLegend } from "./chart-legend.js";
 import { LineChart } from "./line-chart.js";
 import { AreaChart } from "./area-chart.js";
+import { PieChart } from "./pie-chart.js";
 
 export class ChartReader {
     public static readChartFromNode(chartSpaceNode: Node, space: ChartSpace): ChartSpace {
@@ -42,6 +43,9 @@ export class ChartReader {
                     break;
                 case "c:barChart":
                     space.setBarChart(this._readBarChart(child, space));
+                    break;
+                case "c:pieChart":
+                    space.setPieChart(this._readPieChart(child, space));
                     break;
                 case "c:catAx":
                     space.plotArea.categoryAxis = this._readChartAxis(child, space, false);
@@ -108,6 +112,23 @@ export class ChartReader {
             if (child.nodeName === "c:ser") {
                 const series = this._readChartSeries(child);
                 chart.series.push(series);
+            }
+        });
+        return chart;
+    }
+
+    private static _readPieChart(pieChartNode: Node, space: ChartSpace): PieChart {
+        const chart = new PieChart(space);
+        pieChartNode.childNodes.forEach(child => {
+            if (child.nodeName === "c:ser") {
+                const series = this._readChartSeries(child);
+                chart.series.push(series);
+            }
+            if (child.nodeName === "c:firstSliceAngle") {
+                const angleAttr = Xml.getAttribute(child, "val");
+                if (angleAttr !== undefined) {
+                    chart.startAngle = parseInt(angleAttr);
+                }
             }
         });
         return chart;
