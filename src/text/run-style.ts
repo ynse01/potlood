@@ -46,38 +46,78 @@ export class RunStyle {
     public static fromPresentationNode(runPresentationNode: ChildNode): RunStyle {
         // TODO: Handle themeShade, themeTint, em, emboss, fitText, imprint, outline, position, shadow, vanish, vertAlign
         const style = new RunStyle();
-        style._basedOnId = Xml.getStringValueFromNode(runPresentationNode, "w:rStyle");
-        style._bold = Xml.getBooleanValueFromNode(runPresentationNode, "w:b");
-        style._italic = Xml.getBooleanValueFromNode(runPresentationNode, "w:i");
-        style._shadingColor = Style.getShadingFromNode(runPresentationNode);
-        const underlineMode = Xml.getStringValueFromNode(runPresentationNode, "w:u");
-        if (underlineMode !== undefined) {
-            style._underlineMode = UnderlineMode[underlineMode as keyof typeof UnderlineMode];
-        }
-        style._strike = Xml.getBooleanValueFromNode(runPresentationNode, "w:strike");
-        style._dstrike = Xml.getBooleanValueFromNode(runPresentationNode, "w:dstrike");
-        const families = RunStyle.getFontFamilyFromNode(runPresentationNode);
-        if (families !== undefined) {
-            style._fontFamily = families[Fonts.tryAddFonts(families)];
-        } else {
-            style._fontFamily = undefined;
-        }
-        style._fontSize = RunStyle.getFontSizeFromNode(runPresentationNode);
-        const spacingTwips = Xml.getNumberValueFromNode(runPresentationNode, "w:spacing");
-        if (spacingTwips !== undefined) {
-            style._charSpacing = Metrics.convertTwipsToPixels(spacingTwips);
-        }
-        const stretchPercent =  Xml.getNumberValueFromNode(runPresentationNode, "w:w");
-        if (stretchPercent !== undefined) {
-            style._charStretch = stretchPercent / 100;
-        }
-        style._color = Xml.getStringValueFromNode(runPresentationNode, "w:color");
-        style._caps = Xml.getBooleanValueFromNode(runPresentationNode, "w:caps");
-        style._smallCaps = Xml.getBooleanValueFromNode(runPresentationNode, "w:smallcaps");
-        const vanish = Xml.getFirstChildOfName(runPresentationNode, "w:vanish");
-        if (vanish !== undefined) {
-            style._invisible = true;
-        }
+        runPresentationNode.childNodes.forEach(child => {
+            switch(child.nodeName) {
+                case "w:rStyle":
+                    style._basedOnId = Xml.getStringValue(child);
+                    break;
+                case "w:b":
+                    style._bold = Xml.getBooleanValue(child);
+                    break;
+                case "w:i":
+                    style._italic = Xml.getBooleanValue(child);
+                    break;
+                case "w:shd":
+                    style._shadingColor = Style.readShading(child);
+                    break;
+                case "w:u":
+                    const underlineMode = Xml.getStringValue(child);
+                    if (underlineMode !== undefined) {
+                        style._underlineMode = UnderlineMode[underlineMode as keyof typeof UnderlineMode];
+                    }
+                    break;
+                case "w:strike":
+                    style._strike = Xml.getBooleanValue(child);
+                    break;
+                case "w:dstrike":
+                    style._dstrike = Xml.getBooleanValue(child);
+                    break;
+                case "w:rFonts":
+                    const families = RunStyle.readFontFamily(child);
+                    if (families !== undefined) {
+                        style._fontFamily = families[Fonts.tryAddFonts(families)];
+                    } else {
+                        style._fontFamily = undefined;
+                    }
+                    break;
+                case "w:sz":
+                    style._fontSize = RunStyle.readFontSize(child);
+                    break;
+                case "w:spacing":
+                    const spacingTwips = Xml.getNumberValue(child);
+                    if (spacingTwips !== undefined) {
+                        style._charSpacing = Metrics.convertTwipsToPixels(spacingTwips);
+                    }
+                    break;
+                case "w:w":
+                    const stretchPercent =  Xml.getNumberValue(child);
+                    if (stretchPercent !== undefined) {
+                        style._charStretch = stretchPercent / 100;
+                    }
+                    break;
+                case "w:color":
+                    style._color = Xml.getStringValue(child);
+                    ;break;
+                case "w:caps":
+                    style._caps = Xml.getBooleanValue(child);
+                    break;
+                case "w:smallCaps":
+                    style._smallCaps = Xml.getBooleanValue(child);
+                    break;
+                case "w:vanish":
+                    style._invisible = true;
+                    break;
+                case "w:szCs":
+                case "w:iCs":
+                case "w:bCs":
+                case "w:lang":
+                        // Ignore
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during RunStyle reading.`);
+                    break;
+            }
+        });
         return style;
     }
 
@@ -115,20 +155,17 @@ export class RunStyle {
     /**
      * Return fonts from specified node in reverse order.
      */
-    private static getFontFamilyFromNode(styleNode: ChildNode): string[] | undefined {
+    private static readFontFamily(fontNode: ChildNode): string[] | undefined {
         let fonts: string[] | undefined = undefined;
-        const fontNode = Xml.getFirstChildOfName(styleNode, "w:rFonts") as Element;
-        if (fontNode !== undefined) {
-            const asciiFont = Xml.getAttribute(fontNode, "w:ascii");
-            if (asciiFont !== undefined) {
-                fonts = asciiFont.split(';');
-            }
+        const asciiFont = Xml.getAttribute(fontNode, "w:ascii");
+        if (asciiFont !== undefined) {
+            fonts = asciiFont.split(';');
         }
         return fonts;
     }
 
-    private static getFontSizeFromNode(styleNode: ChildNode): number | undefined {
-        const sizeInPoints = Xml.getNumberValueFromNode(styleNode, "w:sz");
+    private static readFontSize(sizeNode: ChildNode): number | undefined {
+        const sizeInPoints = Xml.getNumberValue(sizeNode);
         return (sizeInPoints !== undefined) ? Metrics.convertPointToFontSize(sizeInPoints) : undefined;
     }
 }

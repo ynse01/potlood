@@ -60,6 +60,21 @@ export class Xml {
     }
 
     /**
+     * Get the "w:val" attribute as boolean, from the node.
+     */
+    public static getBooleanValue(node: Node): boolean | undefined {
+        let val: boolean | undefined = undefined;
+        const attr = Xml.getAttribute(node, "w:val");
+        if (attr !== undefined) {
+            val = Xml.attributeAsBoolean(attr);
+        } else {
+            // Absence of w:val means true
+            val = true;
+        }
+        return val;
+    }
+
+    /**
      * Get the "w:val" attribute as boolean, from the child node with the specified name.
      */
     public static getBooleanValueFromNode(parent: ChildNode, name: string): boolean | undefined {
@@ -73,6 +88,18 @@ export class Xml {
                 // Absence of w:val means true
                 val = true;
             }
+        }
+        return val;
+    }
+
+    /**
+     * Get the "w:val" attribute as boolean, from the node.
+     */
+    public static getNumberValue(node: ChildNode): number | undefined {
+        let val: number | undefined = undefined;
+        const attr = Xml.getAttribute(node, "w:val");
+        if (attr !== undefined) {
+            val = parseFloat(attr);
         }
         return val;
     }

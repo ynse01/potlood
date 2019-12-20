@@ -37,20 +37,53 @@ export class ParStyle {
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
         const parStyle = new ParStyle();
-        parStyle._basedOnId = Xml.getStringValueFromNode(parPresentationNode, "w:pStyle");
-        const justification = Xml.getStringValueFromNode(parPresentationNode, "w:jc");
-        if (justification !== undefined) {
-            parStyle._justification = Justification[justification as keyof typeof Justification];
-        }
-        parStyle._hanging = ParStyle.getHangingFromNode(parPresentationNode);
-        parStyle._indentation = ParStyle.getIdentationFromNode(parPresentationNode);
-        const numPrNode = Xml.getFirstChildOfName(parPresentationNode, "w:numPr");
-        if (numPrNode !== undefined) {
-            parStyle._numStyle = NumberingStyle.fromNumPresentationNode(numPrNode);
-        }
-        parStyle.setLineSpacingFromNode(parPresentationNode);
-        parStyle.setParSpacingFromNode(parPresentationNode);
-        parStyle._shadingColor = Style.getShadingFromNode(parPresentationNode);
+        parPresentationNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "w:pStyle":
+                    parStyle._basedOnId = Xml.getStringValue(child);
+                    break;
+                case "w:jc":
+                    const justification = Xml.getStringValue(child);
+                    if (justification !== undefined) {
+                        parStyle._justification = Justification[justification as keyof typeof Justification];
+                    }
+                    break;
+                case "w:ind":
+                    const hangingAttr = Xml.getAttribute(child, "w:hanging");
+                    if (hangingAttr !== undefined) {
+                        parStyle._hanging = Metrics.convertTwipsToPixels(parseInt(hangingAttr, 10));
+                    }
+                    const leftAttr = Xml.getAttribute(child, "w:left");
+                    if (leftAttr !== undefined) {
+                        parStyle._indentation = Metrics.convertTwipsToPixels(parseInt(leftAttr, 10));
+                    }
+                    break;
+                case "w:numPr":
+                    parStyle._numStyle = NumberingStyle.fromNumPresentationNode(child);
+                    break;
+                case "w:spacing":
+                    parStyle.setLineSpacingFromNode(child);
+                    parStyle.setParSpacingFromNode(child);
+                    break;
+                case "w:shd":
+                    parStyle._shadingColor = Style.readShading(child);
+                    break;
+                case "w:widowControl":
+                case "w:rPr":
+                case "w:pBdr":
+                case "w:bidi":
+                case "w:tabs":
+                case "w:keepNext":
+                case "w:suppressAutoHyphens":
+                case "w:suppressLineNumbers":
+                case "w:outlineLvl":
+                        // Ignore
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during ParStyle reading.`);
+                    break;
+            }
+        });
         return parStyle;
     }
 
@@ -101,72 +134,42 @@ export class ParStyle {
         return `ParStyle: ${baseText} ${justText} ${indText} ${lineText}`;
     }
 
-    private static getHangingFromNode(styleNode: ChildNode): number {
-        let hanging = 0;
-        const indNode = Xml.getFirstChildOfName(styleNode, "w:ind") as Element;
-        if (indNode !== undefined) {
-            const hangingAttr = Xml.getAttribute(indNode, "w:hanging");
-            if (hangingAttr !== undefined) {
-                hanging = Metrics.convertTwipsToPixels(parseInt(hangingAttr, 10));
-            }
+    private setLineSpacingFromNode(spacingNode: ChildNode): void {
+        const lineAttr = Xml.getAttribute(spacingNode, "w:line");
+        if (lineAttr !== undefined) {
+            this._lineSpacing = parseInt(lineAttr, 10);
+            this._lineRule = LineRule.exactly;
         }
-        return hanging;
-    }
-
-    private static getIdentationFromNode(styleNode: ChildNode): number {
-        let left = 0;
-        const indNode = Xml.getFirstChildOfName(styleNode, "w:ind") as Element;
-        if (indNode !== undefined) {
-            const leftAttr = Xml.getAttribute(indNode, "w:left");
-            if (leftAttr !== undefined) {
-                left = Metrics.convertTwipsToPixels(parseInt(leftAttr, 10));
-            }
-        }
-        return left;
-    }
-
-    private setLineSpacingFromNode(styleNode: ChildNode): void {
-        const spacingNode = Xml.getFirstChildOfName(styleNode, "w:spacing") as Element;
-        if (spacingNode !== undefined) {
-            const lineAttr = Xml.getAttribute(spacingNode, "w:line");
-            if (lineAttr !== undefined) {
-                this._lineSpacing = parseInt(lineAttr, 10);
-                this._lineRule = LineRule.exactly;
-            }
-            const ruleAttr = Xml.getAttribute(spacingNode, "w:lineRule");
-            if (ruleAttr !== undefined) {
-                this._lineRule = LineRule[ruleAttr as keyof typeof LineRule];
-            }
+        const ruleAttr = Xml.getAttribute(spacingNode, "w:lineRule");
+        if (ruleAttr !== undefined) {
+            this._lineRule = LineRule[ruleAttr as keyof typeof LineRule];
         }
     }
 
-    private setParSpacingFromNode(styleNode: ChildNode): void {
-        const spacingNode = Xml.getFirstChildOfName(styleNode, "w:spacing") as Element;
-        if (spacingNode !== undefined) {
-            const beforeAttr = Xml.getAttribute(spacingNode, "w:before");
-            if (beforeAttr !== undefined) {
-                this._parSpacingBefore = Metrics.convertTwipsToPixels(parseInt(beforeAttr, 10));
-            }
-            const beforeLinesAttr = Xml.getAttribute(spacingNode, "w:beforeLines");
-            if (beforeLinesAttr !== undefined) {
-                this._parLinesBefore = parseInt(beforeLinesAttr, 10) / 100;
-            }
-            const beforeAutoAttr = Xml.getAttribute(spacingNode, "w:beforeAutospacing");
-            if (beforeAutoAttr !== undefined) {
-                this._parAutoSpacingBefore = Xml.attributeAsBoolean(beforeAutoAttr);
-            }
-            const afterAttr = Xml.getAttribute(spacingNode, "w:after");
-            if (afterAttr !== undefined) {
-                this._parSpacingAfter = Metrics.convertTwipsToPixels(parseInt(afterAttr, 10));
-            }
-            const afterLinesAttr = Xml.getAttribute(spacingNode, "w:afterLines");
-            if (afterLinesAttr !== undefined) {
-                this._parLinesAfter = parseInt(afterLinesAttr, 10) / 100;
-            }
-            const afterAutoAttr = Xml.getAttribute(spacingNode, "w:afterAutospacing");
-            if (afterAutoAttr !== undefined) {
-                this._parAutoSpacingAfter = Xml.attributeAsBoolean(afterAutoAttr);
-            }
+    private setParSpacingFromNode(spacingNode: ChildNode): void {
+        const beforeAttr = Xml.getAttribute(spacingNode, "w:before");
+        if (beforeAttr !== undefined) {
+            this._parSpacingBefore = Metrics.convertTwipsToPixels(parseInt(beforeAttr, 10));
+        }
+        const beforeLinesAttr = Xml.getAttribute(spacingNode, "w:beforeLines");
+        if (beforeLinesAttr !== undefined) {
+            this._parLinesBefore = parseInt(beforeLinesAttr, 10) / 100;
+        }
+        const beforeAutoAttr = Xml.getAttribute(spacingNode, "w:beforeAutospacing");
+        if (beforeAutoAttr !== undefined) {
+            this._parAutoSpacingBefore = Xml.attributeAsBoolean(beforeAutoAttr);
+        }
+        const afterAttr = Xml.getAttribute(spacingNode, "w:after");
+        if (afterAttr !== undefined) {
+            this._parSpacingAfter = Metrics.convertTwipsToPixels(parseInt(afterAttr, 10));
+        }
+        const afterLinesAttr = Xml.getAttribute(spacingNode, "w:afterLines");
+        if (afterLinesAttr !== undefined) {
+            this._parLinesAfter = parseInt(afterLinesAttr, 10) / 100;
+        }
+        const afterAutoAttr = Xml.getAttribute(spacingNode, "w:afterAutospacing");
+        if (afterAutoAttr !== undefined) {
+            this._parAutoSpacingAfter = Xml.attributeAsBoolean(afterAutoAttr);
         }
     }
 }

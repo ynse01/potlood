@@ -31,15 +31,12 @@ export class Style {
         return style;
     }
 
-    public static getShadingFromNode(styleNode: ChildNode): string | undefined {
+    public static readShading(shadingNode: ChildNode): string | undefined {
         let shadingColor: string | undefined = undefined;
-        const shadingNode = Xml.getFirstChildOfName(styleNode, "w:shd") as Element;
-        if (shadingNode !== undefined) {
-            // TODO: Parse patterns also.
-            const fillAttr = Xml.getAttribute(shadingNode, "w:fill");
-            if (fillAttr !== undefined) {
-                shadingColor = fillAttr;
-            }
+        // TODO: Parse patterns also.
+        const fillAttr = Xml.getAttribute(shadingNode, "w:fill");
+        if (fillAttr !== undefined) {
+            shadingColor = fillAttr;
         }
         return shadingColor;
     }
