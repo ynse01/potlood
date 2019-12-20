@@ -11,6 +11,7 @@ export class ChartLegend {
     public style: ChartStyle = new ChartStyle();
     public position: ChartAxisPosition = ChartAxisPosition.Right;
     public overlayOnPlot: boolean = false;
+    public onlySeries: number | undefined = undefined;
     public bounds: Box = new Box(0, 0, 0, 0);
     private static _widgetSize = 10;
     private static _widgetSpacing = 5;
@@ -78,11 +79,29 @@ export class ChartLegend {
     }
 
     public getColors(): string[] {
-        return this.space.chart.series.map((series) => series.style.lineColor || series.style.fillColor || "000000");
+        let colors: string[];
+        if (this.onlySeries === undefined) {
+            colors = this.space.chart.series.map((series) => series.style.lineColor || series.style.fillColor || "000000");
+        } else {
+            colors = this.space.chart.series[this.onlySeries].values.map((value) => {
+                let color = "000000";
+                if (value.style !== undefined) {
+                    color = value.style.lineColor || value.style.fillColor || "000000";
+                }
+                return color;
+            });
+        }
+        return colors;
     }
 
     private _getNames(): string[] {
-        return this.space.chart.series.map((series) => series.name);
+        let names: string[];
+        if (this.onlySeries === undefined) {
+            names = this.space.chart.series.map((series) => series.name);
+        } else {
+            names = this.space.chart.series[this.onlySeries].categories.map((cat) => cat.text || "");
+        }
+        return names;
     }
 
     private _getSize(): { width: number, height: number } {

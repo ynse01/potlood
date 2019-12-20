@@ -1,5 +1,5 @@
 import { Xml } from "../utils/xml.js";
-import { ChartSpace } from "./chart-space.js";
+import { ChartSpace, ChartType } from "./chart-space.js";
 import { BarChart } from "./bar-chart.js";
 import { ChartSeries } from "./chart-series.js";
 import { ChartValue } from "./chart-value.js";
@@ -81,6 +81,10 @@ export class ChartReader {
                     break;
             }
         });
+        // Pie chart shows series 0 by default.
+        if (space.chartType === ChartType.Pie) {
+            legend.onlySeries = 0;
+        }
         space.legend = legend;
     }
 
