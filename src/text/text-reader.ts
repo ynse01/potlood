@@ -22,7 +22,7 @@ export class TextReader {
 
     private static _getTexts(runNode: ChildNode): string[] {
         const texts: string[] = [];
-        if (runNode.hasChildNodes) {
+        if (runNode.hasChildNodes()) {
             runNode.childNodes.forEach((node) => {
                 switch(node.nodeName) {
                     case "w:t":

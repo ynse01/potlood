@@ -48,36 +48,48 @@ export class Section {
 
     private parseContent(): void {
         if (this._pageWidth === undefined) {
-            const pageSize = Xml.getFirstChildOfName(this.sectionNode, "w:pgSz") as Element;
-            if (pageSize !== undefined) {
-                const width = Xml.getAttribute(pageSize, "w:w");
-                if (width !== undefined) {
-                    this._pageWidth = Metrics.convertTwipsToPixels(parseInt(width, 10));
+            this.sectionNode.childNodes.forEach(child => {
+                switch(child.nodeName) {
+                    case "w:pgSz":
+                        const width = Xml.getAttribute(child, "w:w");
+                        if (width !== undefined) {
+                            this._pageWidth = Metrics.convertTwipsToPixels(parseInt(width, 10));
+                        }
+                        const height = Xml.getAttribute(child, "w:h");
+                        if (height !== undefined) {
+                            this._pageHeight = Metrics.convertTwipsToPixels(parseInt(height, 10));
+                        }
+                        break;
+                    case "w:pgMar":
+                        const top = Xml.getAttribute(child, "w:top");
+                        if (top !== undefined) {
+                            this._marginTop = Metrics.convertTwipsToPixels(parseInt(top));
+                        }
+                        const left = Xml.getAttribute(child, "w:left");
+                        if (left !== undefined) {
+                            this._marginLeft = Metrics.convertTwipsToPixels(parseInt(left));
+                        }
+                        const bottom = Xml.getAttribute(child, "w:bottom");
+                        if (bottom !== undefined) {
+                            this._marginBottom = Metrics.convertTwipsToPixels(parseInt(bottom));
+                        }
+                        const right = Xml.getAttribute(child, "w:right");
+                        if (right !== undefined) {
+                            this._marginRight = Metrics.convertTwipsToPixels(parseInt(right));
+                        }
+                        break;
+                    case "w:textDirection":
+                    case "w:docGrid":
+                    case "w:pgNumType":
+                    case "w:formProt":
+                    case "w:type":
+                        // Ignore
+                        break;
+                    default:
+                        console.log(`Don't know how to parse ${child.nodeName} during Section reading.`);
+                        break;
                 }
-                const height = Xml.getAttribute(pageSize, "w:h");
-                if (height !== undefined) {
-                    this._pageHeight = Metrics.convertTwipsToPixels(parseInt(height, 10));
-                }
-            }
-            const margin = Xml.getFirstChildOfName(this.sectionNode, "w:pgMar") as Element;
-            if (margin !== undefined) {
-                const top = Xml.getAttribute(margin, "w:top");
-                if (top !== undefined) {
-                    this._marginTop = Metrics.convertTwipsToPixels(parseInt(top));
-                }
-                const left = Xml.getAttribute(margin, "w:left");
-                if (left !== undefined) {
-                    this._marginLeft = Metrics.convertTwipsToPixels(parseInt(left));
-                }
-                const bottom = Xml.getAttribute(margin, "w:bottom");
-                if (bottom !== undefined) {
-                    this._marginBottom = Metrics.convertTwipsToPixels(parseInt(bottom));
-                }
-                const right = Xml.getAttribute(margin, "w:right");
-                if (right !== undefined) {
-                    this._marginRight = Metrics.convertTwipsToPixels(parseInt(right));
-                }
-            }
+            });
         }
     }
 }

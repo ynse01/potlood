@@ -38,6 +38,9 @@ export class TableReader {
                         }
                     });
                     break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Table reading.`);
+                    break;
             }
         });
         return table;
@@ -59,19 +62,21 @@ export class TableReader {
     }
 
     private static readTableCell(cellNode: ChildNode, table: Table, rowStyle: TableStyle, colIndex: number): TableCell {
-        const prNode = Xml.getFirstChildOfName(cellNode, "w:tcPr");
-        let style;
-        if (prNode !== undefined) {
-            style = this.readTableCellPresentation(prNode, rowStyle);
-        } else {
-            style = new TableStyle();
-        }
+        let style = new TableStyle();
         const cell = new TableCell(table.columns, style, colIndex);
-        cellNode.childNodes.forEach(pNode => {
-            if (pNode.nodeName === "w:p") {
-                const par = ParagraphReader.readParagraph(table.docx, pNode);
-                par.type = ParagraphType.TableCell;
-                cell.pars.push(par);
+        cellNode.childNodes.forEach(child => {
+            switch(child.nodeName) {
+                case "w:p":
+                    const par = ParagraphReader.readParagraph(table.docx, child);
+                    par.type = ParagraphType.TableCell;
+                    cell.pars.push(par);
+                    break;
+                case "w:tcPr":
+                    style = this.readTableCellPresentation(child, rowStyle);
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during TableCell reading.`);
+                    break;
             }
         });
         const id = Xml.getAttribute(cellNode, "w:id");
@@ -110,6 +115,9 @@ export class TableReader {
                         style.shading = shading;
                     }
                     break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Table Cell Style reading.`);
+                    break;
             }
         });
         return style;
@@ -147,6 +155,9 @@ export class TableReader {
                     break;
                 case "w:insideV":
                     borders.borderVertical = this.readTableBorder(node);
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${node.nodeName} during Table Borders reading.`);
                     break;
             }
         });
@@ -194,6 +205,9 @@ export class TableReader {
                         margins.cellMarginBottom = Metrics.convertTwipsToPixels(parseInt(bottom));
                     }
                     break;
+                default:
+                    console.log(`Don't know how to parse ${node.nodeName} during Table Cell Margins reading.`);
+                    break;
             }
         });
         return margins;
@@ -224,32 +238,40 @@ export class TableReader {
 
     private static readTableStyle(tblPrNode: ChildNode): TableStyle {
         const style = new TableStyle();
-        const tableBorders = Xml.getFirstChildOfName(tblPrNode, "w:tblBorders");
-        if (tableBorders !== undefined) {
-            style.borders = this.readBorders(tableBorders);
-        }
-        const cellMargins = Xml.getFirstChildOfName(tblPrNode, "w:tblCellMar");
-        if (cellMargins !== undefined) {
-            style.margins = this.readCellMargins(cellMargins);
-        }
-        const justification = Xml.getStringValueFromNode(tblPrNode, "w:jc");
-        if (justification !== undefined) {
-            style.justification = Justification[justification as keyof typeof Justification];
-        }
-        const identation = Xml.getFirstChildOfName(tblPrNode, "w:tblInd");
-        if (identation !== undefined) {
-            const w = Xml.getAttribute(identation, "w:w");
-            if (w !== undefined) {
-                style.identation = Metrics.convertTwipsToPixels(parseInt(w, 10));
+        tblPrNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "w:tblBorders":
+                    style.borders = this.readBorders(child);
+                    break;
+                case "w:tblCellMar":
+                    style.margins = this.readCellMargins(child);
+                    break;
+                case "w:jc":
+                    const justification = Xml.getStringValue(child);
+                    if (justification !== undefined) {
+                        style.justification = Justification[justification as keyof typeof Justification];
+                    }
+                    break;
+                case "w:tblInd":
+                    const w = Xml.getAttribute(child, "w:w");
+                    if (w !== undefined) {
+                        style.identation = Metrics.convertTwipsToPixels(parseInt(w, 10));
+                    }
+                    break;
+                case "w:cellSpacing":
+                    const spacing = Xml.getAttribute(child, "w:w");
+                    if (spacing !== undefined) {
+                        style.cellSpacing = Metrics.convertTwipsToPixels(parseInt(spacing, 10));
+                    }
+                    break;
+                case "w:tblW":
+                    // Ignore
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Table Style reading.`);
+                    break;
             }
-        }
-        const cellSpacing = Xml.getFirstChildOfName(tblPrNode, "w:tblCellSpacing");
-        if (cellSpacing !== undefined) {
-            const spacing = Xml.getAttribute(cellSpacing, "w:w");
-            if (spacing !== undefined) {
-                style.cellSpacing = Metrics.convertTwipsToPixels(parseInt(spacing, 10));
-            }
-        }
+        });
         return style;
     }
 }

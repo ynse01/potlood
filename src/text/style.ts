@@ -18,16 +18,37 @@ export class Style {
     public static fromStyleNode(styleNode: ChildNode): Style {
         let parStyle: ParStyle | undefined = undefined;
         let runStyle: RunStyle | undefined = undefined;
-        const parNode = Xml.getFirstChildOfName(styleNode, "w:pPr");
-        if (parNode !== undefined) {
-            parStyle = ParStyle.fromParPresentationNode(parNode);
-        }
-        const runNode = Xml.getFirstChildOfName(styleNode, "w:rPr");
-        if (runNode !== undefined) {
-            runStyle = RunStyle.fromPresentationNode(runNode);
-        }
+        let basedOnId: string | undefined = undefined;
+        styleNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "w:pPr":
+                    parStyle = ParStyle.fromParPresentationNode(child);
+                    break;
+                case "w:rPr":
+                    runStyle = RunStyle.fromPresentationNode(child);
+                    break;
+                case "w:basedOn":
+                    basedOnId = Xml.getStringValue(child);
+                    break;
+                case "w:name":
+                case "w:qFormat":
+                    // Ignore
+                    break;
+                case "w:start":
+                case "w:next":
+                case "w:lvlText":
+                case "w:lvlJc":
+                case "w:numFmt":
+                case "w:suff":
+                    // TODO: Read these Numbering style attributes
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Style reading.`);
+                    break;
+            }
+        });
         const style = new Style(parStyle, runStyle);
-        style._basedOnId = Xml.getStringValueFromNode(styleNode, "w:basedOn");
+        style._basedOnId = basedOnId;
         return style;
     }
 
