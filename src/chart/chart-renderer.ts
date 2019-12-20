@@ -112,7 +112,7 @@ export class ChartRenderer {
         for(let seriesIndex = counts.numSeries - 1; seriesIndex >= 0; seriesIndex--) {
             const points: Vector[] = [];
             points.push(bounds.bottomLeft);
-            const style = areaChart.getSeriesStyle(seriesIndex, 0);
+            const style = areaChart.series[seriesIndex].style;
             for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
                 if (style.fillColor === undefined || style.fillColor === "ffffff") {
                     break;
