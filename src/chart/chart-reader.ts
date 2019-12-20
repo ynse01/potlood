@@ -233,6 +233,7 @@ export class ChartReader {
 
     private static _readChartSeries(seriesNode: Node): ChartSeries {
         const series = new ChartSeries();
+        const catStyles: ChartStyle[] = [];
         seriesNode.childNodes.forEach((child) => {
             const firstChild = child.firstChild;
             switch(child.nodeName) {
@@ -293,10 +294,25 @@ export class ChartReader {
                     const index = Xml.getNumberValueFromNode(child, "c:idx");
                     const styleNode = Xml.getFirstChildOfName(child, "c:spPr");
                     if (index !== undefined && styleNode !== undefined) {
-                        series.categories[index].style = this._readStyle(styleNode);
+                        catStyles[index] = this._readStyle(styleNode);
                     }
-                        break;
+                    break;
+                case "c:idx":
+                case "c:order":
+                case "c:invertIfNegative":
+                case "c:dLbls":
+                case "c:marker":
+                case "c:smooth":
+                case "c:explosion":
+                    // Ignore
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Chart Series reading.`);
+                    break;
             }
+        });
+        catStyles.forEach((style: ChartStyle, i: number) => {
+            series.categories[i].style = style;
         });
         return series;
     }

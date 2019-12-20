@@ -40,6 +40,11 @@ export class Xml {
         const attr = Xml.getAttribute(node, "w:val");
         if (attr !== undefined) {
             val = attr;
+        } else {
+            const attr = Xml.getAttribute(node, "val");
+            if (attr !== undefined) {
+                val = attr;
+            }    
         }
         return val;
     }
@@ -51,10 +56,7 @@ export class Xml {
         let val: string | undefined = undefined;
         const child = Xml.getFirstChildOfName(parent, name) as Element;
         if (child !== undefined) {
-            const attr = Xml.getAttribute(child, "w:val");
-            if (attr !== undefined) {
-                val = attr;
-            }
+            val = Xml.getStringValue(child);
         }
         return val;
     }
@@ -64,7 +66,7 @@ export class Xml {
      */
     public static getBooleanValue(node: Node): boolean | undefined {
         let val: boolean | undefined = undefined;
-        const attr = Xml.getAttribute(node, "w:val");
+        const attr = Xml.getStringValue(node);
         if (attr !== undefined) {
             val = Xml.attributeAsBoolean(attr);
         } else {
@@ -81,13 +83,7 @@ export class Xml {
         let val: boolean | undefined = undefined;
         const child = Xml.getFirstChildOfName(parent, name) as Element;
         if (child !== undefined) {
-            const attr = Xml.getAttribute(child, "w:val");
-            if (attr !== undefined) {
-                val = Xml.attributeAsBoolean(attr);
-            } else {
-                // Absence of w:val means true
-                val = true;
-            }
+            val = Xml.getBooleanValue(child);
         }
         return val;
     }
@@ -97,7 +93,7 @@ export class Xml {
      */
     public static getNumberValue(node: ChildNode): number | undefined {
         let val: number | undefined = undefined;
-        const attr = Xml.getAttribute(node, "w:val");
+        const attr = Xml.getStringValue(node);
         if (attr !== undefined) {
             val = parseFloat(attr);
         }
@@ -111,10 +107,7 @@ export class Xml {
         let val: number | undefined = undefined;
         const child = Xml.getFirstChildOfName(parent, name);
         if (child !== undefined) {
-            const attr = Xml.getAttribute(child, "w:val");
-            if (attr !== undefined) {
-                val = parseFloat(attr);
-            }
+            val = Xml.getNumberValue(child);
         }
         return val;
     }

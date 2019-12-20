@@ -83,10 +83,10 @@ export class ChartLegend {
         if (this.onlySeries === undefined) {
             colors = this.space.chart.series.map((series) => series.style.lineColor || series.style.fillColor || "000000");
         } else {
-            colors = this.space.chart.series[this.onlySeries].values.map((value) => {
+            colors = this.space.chart.series[this.onlySeries].categories.map((cat) => {
                 let color = "000000";
-                if (value.style !== undefined) {
-                    color = value.style.lineColor || value.style.fillColor || "000000";
+                if (cat.style !== undefined) {
+                    color = cat.style.lineColor || cat.style.fillColor || "000000";
                 }
                 return color;
             });
