@@ -40,7 +40,7 @@ export class ShapeBounds {
                     bounds.boundOffsetY = Metrics.convertEmuToPixels(parseInt(offsetY));
                 }
             }
-            ShapeBounds.setExtent(frame, "a:ext", bounds);
+            ShapeBounds.readExtent(frame, "a:ext", bounds);
         }
         return bounds;
     }
@@ -48,7 +48,7 @@ export class ShapeBounds {
     public static fromInlineNode(inlineNode: ChildNode): ShapeBounds {
         const bounds = new ShapeBounds();
         bounds.anchor = "inline";
-        ShapeBounds.setExtent(inlineNode, "wp:extent", bounds);
+        ShapeBounds.readExtent(inlineNode, "wp:extent", bounds);
         
         return bounds;
     }
@@ -56,7 +56,7 @@ export class ShapeBounds {
     public static fromAnchorNode(anchorNode: ChildNode): ShapeBounds {
         const bounds = new ShapeBounds();
         bounds.anchor = "anchor";
-        ShapeBounds.setExtent(anchorNode, "wp:extent", bounds);
+        ShapeBounds.readExtent(anchorNode, "wp:extent", bounds);
         return bounds;
     }
 
@@ -64,7 +64,7 @@ export class ShapeBounds {
         return new Box(this.boundOffsetX, this.boundOffsetY, this.boundSizeX, this.boundSizeY);
     }
 
-    private static setExtent(parent: ChildNode, nodeName: string, bounds: ShapeBounds): void {
+    private static readExtent(parent: ChildNode, nodeName: string, bounds: ShapeBounds): void {
         const extent = Xml.getFirstChildOfName(parent, nodeName);
         if (extent !== undefined) {
             const extentX = Xml.getAttribute(extent, "cx");

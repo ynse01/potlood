@@ -45,7 +45,7 @@ export class DocumentX implements ILayoutable {
                                 this._section = new Section(this, node);
                                 break;
                             default:
-                                console.log("Don't know how to parse " + node.nodeName);
+                                console.log(`Don't know how to parse ${node.nodeName} during Document reading.`);
                                 break;
                         }
                     });
