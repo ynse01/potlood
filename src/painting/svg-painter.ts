@@ -74,6 +74,7 @@ export class SvgPainter implements IPainter {
         element.setAttribute("fill", `#${fillColor}`);
         element.setAttribute("stroke", `${strokeColor}`);
         element.setAttribute("stroke-width", `${strokeThickness}`);
+        this._svg.appendChild(element);
     }
 
     public paintPicture(x: number, y: number, width: number, height: number, pic: Picture): void {

@@ -8,6 +8,8 @@ import { ChartAxis } from "./chart-axis.js";
 import { LineChart } from "./line-chart.js";
 import { ChartValue } from "./chart-value.js";
 import { AreaChart } from "./area-chart.js";
+import { Vector } from "../utils/vector.js";
+import { PathGenerator } from "../drawing/path-generator.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -101,21 +103,24 @@ export class ChartRenderer {
         const topY = bounds.y;
         const bottomY = topY + bounds.height;
         const range = areaChart.getValueRange();
-        for(let seriesIndex = 0; seriesIndex < counts.numSeries; seriesIndex++) {
-            let previousVal = this._normalizeValue(areaChart.getValue(0, seriesIndex), range);
-            for(let catIndex = 1; catIndex < counts.numCats; catIndex++) {
-                const style = areaChart.getSeriesStyle(seriesIndex, catIndex);
-                if (style.lineColor === undefined || style.lineColor === "ffffff") {
+        // Loop backward, to got correct Z index.
+        for(let seriesIndex = counts.numSeries - 1; seriesIndex >= 0; seriesIndex--) {
+            const points: Vector[] = [];
+            points.push(bounds.bottomLeft);
+            const style = areaChart.getSeriesStyle(seriesIndex, 0);
+            for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
+                if (style.fillColor === undefined || style.fillColor === "ffffff") {
                     break;
                 }
                 const val = this._normalizeValue(areaChart.getValue(catIndex, seriesIndex), range);
-                const x1 = flowX + (catIndex - 1) * catSpacing;
-                const y1 = bottomY - (bottomY - topY) * previousVal;
-                const x2 = flowX + catIndex * catSpacing;
-                const y2 = bottomY - (bottomY - topY) * val;
-                this._painter.paintLine(x1, y1, x2, y2, style.lineColor, style.lineThickness);
-                previousVal = val;
+                const x = flowX + catIndex * catSpacing;
+                const y = bottomY - (bottomY - topY) * val;
+                points.push(new Vector(x, y));
             }
+            points.push(bounds.bottomRight);
+            points.push(bounds.bottomLeft);
+            const path = new PathGenerator(points).path;
+            this._painter.paintPolygon(path, style.fillColor, style.lineColor, style.lineThickness);
         }
     }
 

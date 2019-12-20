@@ -30,6 +30,22 @@ export class Box {
         return this.y + this.height;
     }
 
+    public get topLeft(): Vector {
+        return new Vector(this.left, this.top);
+    }
+
+    public get topRight(): Vector {
+        return new Vector(this.right, this.top);
+    }
+
+    public get bottomLeft(): Vector {
+        return new Vector(this.left, this.bottom);
+    }
+
+    public get bottomRight(): Vector {
+        return new Vector(this.right, this.bottom);
+    }
+
     public translate(x: number, y: number): Box {
         return new Box(this.x + x, this.y + y, this.width, this.height);
     }
