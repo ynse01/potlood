@@ -104,8 +104,8 @@ export class ShapeReader {
     private _addCubicBezier(segmentNode: Node, shape: Shape): void {
         const childNodes = segmentNode.childNodes;
         if (childNodes.length === 3) {
-            const endPoint = this._readPoint(childNodes[0]);
-            const control1 = this._readPoint(childNodes[1]);
+            const endPoint = this._readPoint(childNodes[1]);
+            const control1 = this._readPoint(childNodes[0]);
             const control2 = this._readPoint(childNodes[2]);
             shape.addCubicBezier(endPoint, control1, control2);
         }
