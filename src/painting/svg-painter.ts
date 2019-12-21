@@ -72,7 +72,7 @@ export class SvgPainter implements IPainter {
         const element = document.createElementNS(SvgPainter.svgNS, "path");
         element.setAttribute("d", path);
         element.setAttribute("fill", `#${fillColor}`);
-        element.setAttribute("stroke", `${strokeColor}`);
+        element.setAttribute("stroke", `#${strokeColor}`);
         element.setAttribute("stroke-width", `${strokeThickness}`);
         this._svg.appendChild(element);
     }
