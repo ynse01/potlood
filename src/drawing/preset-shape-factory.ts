@@ -1,5 +1,6 @@
 import { Shape } from "./shape.js";
 import { Vector } from "../math/vector.js";
+import { Circle } from "../math/circle.js";
 
 export class PresetShapeFactory {
     private static creators: any = {
@@ -23,7 +24,15 @@ export class PresetShapeFactory {
     }
 
     private static _createBlockArc(): Shape {
-        return new Shape();
+        const shape = new Shape();
+        shape.addMove(new Vector(0, 1));
+        shape.addCircle(new Circle(new Vector(0.5, 1), 0.5), 0);
+        shape.addLine(new Vector(0.8, 1));
+        shape.addMove(new Vector(0, 1));
+        shape.addLine(new Vector(0.2, 1));
+        shape.addCircle(new Circle(new Vector(0.5, 1), 0.3), 0);
+        shape.addLine(new Vector(0.8, 1));
+        return shape;
     }
 
     private static _createEllipse(): Shape {
@@ -31,15 +40,37 @@ export class PresetShapeFactory {
     }
 
     private static _createFlowChartCollate(): Shape {
-        return new Shape();
+        const shape = new Shape();
+        shape.addMove(new Vector(0, 0));
+        shape.addLine(new Vector(1, 0));
+        shape.addLine(new Vector(0, 1));
+        shape.addLine(new Vector(1, 1));
+        shape.addLine(new Vector(0, 0));
+        return shape;
     }
 
     private static _createFlowChartPunchedCard(): Shape {
-        return new Shape();
+        const shape = new Shape();
+        shape.addMove(new Vector(0.2, 0));
+        shape.addLine(new Vector(1, 0));
+        shape.addLine(new Vector(1, 1));
+        shape.addLine(new Vector(0, 1));
+        shape.addLine(new Vector(0, 0.2));
+        shape.addLine(new Vector(0.2, 0));
+        return shape;        
     }
 
     private static _createFlowChartSort(): Shape {
-        return new Shape();
+        const shape = new Shape();
+        shape.addMove(new Vector(0.5, 0));
+        shape.addLine(new Vector(1, 0.5));
+        shape.addLine(new Vector(0, 0.5));
+        shape.addLine(new Vector(0.5, 0));
+        shape.addMove(new Vector(0.5, 1));
+        shape.addLine(new Vector(1, 0.5));
+        shape.addLine(new Vector(0, 0.5));
+        shape.addLine(new Vector(0.5, 1));
+        return shape;
     }
 
     private static _createLine(): Shape {
@@ -54,7 +85,16 @@ export class PresetShapeFactory {
     }
 
     private static _createWedgeRectangularCallout(): Shape {
-        return new Shape();
+        const shape = new Shape();
+        shape.addMove(new Vector(0, 0));
+        shape.addLine(new Vector(1, 0));
+        shape.addLine(new Vector(1, 0.7));
+        shape.addLine(new Vector(0.4, 0.7));
+        shape.addLine(new Vector(0.1, 1));
+        shape.addLine(new Vector(0.15, 0.7));
+        shape.addLine(new Vector(0, 0.7));
+        shape.addLine(new Vector(0, 0));
+        return shape;        
     }
 
 }

@@ -1,6 +1,7 @@
 import { Vector } from "../math/vector.js";
 import { PathBuilder } from "./path-builder.js";
 import { Box } from "../math/box.js";
+import { Circle } from "../math/circle.js";
 
 interface IPathSegment {
     translate(offset: Vector): void;
@@ -27,6 +28,24 @@ class MoveTo implements IPathSegment {
 class LineTo extends MoveTo {
     public buildPath(builder: PathBuilder): void {
         builder.lineTo(this.point);
+    }
+}
+
+class CircleTo implements IPathSegment {
+    constructor(public circle: Circle, public angle: number) {
+    }
+
+    public translate(offset: Vector): void {
+        this.circle.center = this.circle.center.translate(offset);
+    }
+
+    public scale(scaling: Vector): void {
+        this.circle.center = this.circle.center.scale(scaling);
+        this.circle.radius = this.circle.radius * scaling.x;
+    }
+
+    public buildPath(builder: PathBuilder): void {
+        builder.circleSegmentTo(this.circle, this.angle);
     }
 }
 
@@ -77,6 +96,10 @@ export class Shape {
 
     public addLine(point: Vector): void {
         this.segments.push(new LineTo(point));
+    }
+
+    public addCircle(circle: Circle, angle: number): void {
+        this.segments.push(new CircleTo(circle, angle));
     }
 
     public addCubicBezier(point: Vector, control1: Vector, control2: Vector): void {
