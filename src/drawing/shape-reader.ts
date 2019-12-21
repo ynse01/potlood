@@ -5,29 +5,75 @@ import { Vector } from "../math/vector.js";
 export class ShapeReader {
 
     public readShape(shapeNode: Node): Shape | undefined {
-        let shape: Shape | undefined = undefined;
+        let shape: Shape | undefined = new Shape();
+        let fillColor: string | undefined = undefined;
+        let lineColor: string | undefined = undefined;
         const presentationNode = Xml.getFirstChildOfName(shapeNode, "wps:spPr");
         if (presentationNode !== undefined) {
-            const customNode = Xml.getFirstChildOfName(presentationNode, "a:custGeom");
-            if (customNode !== undefined) {
-                const pathListNode = Xml.getFirstChildOfName(customNode, "a:pathLst");
-                if (pathListNode !== undefined) {
-                    const pathNode = Xml.getFirstChildOfName(pathListNode, "a:path");
-                    if (pathNode !== undefined) {
-                        shape = this._readPath(pathNode);
-                        const widthAttr = Xml.getAttribute(pathNode, "w");
-                        if (widthAttr !== undefined) {
-                            shape.width = parseInt(widthAttr);
+            presentationNode.childNodes.forEach(child => {
+                switch(child.nodeName) {
+                    case "a:custGeom":
+                        shape = this._readCustomShape(child);
+                        break;
+                    case "a:prstGeom":
+                        shape = this._readPresetShape(child);
+                        break;
+                    case "a:solidFill":
+                        fillColor = this._readFillColor(child);
+                        break;
+                    case "a:ln":
+                        const firstChild = child.firstChild;
+                        if (firstChild !== null) {
+                            lineColor = this._readFillColor(child.firstChild!);
                         }
-                        const heightAttr = Xml.getAttribute(pathNode, "h");
-                        if (heightAttr !== undefined) {
-                            shape.height = parseInt(heightAttr);
-                        }
-                    }
+                        break;
+                    case "a:xfrm":
+                        // Ignore
+                        break;
+                    default:
+                        console.log(`Don't know how to parse ${child.nodeName} during Shape reading.`);
+                        break;
+                }
+            });
+        }
+        if (shape !== undefined) {
+            shape.lineColor = lineColor;
+            shape.fillColor = fillColor;
+        }
+        return shape;
+    }
+
+    private _readPresetShape(_presetNode: Node): Shape | undefined {
+        return undefined;
+    }
+
+    private _readCustomShape(customNode: Node): Shape | undefined {
+        let shape: Shape | undefined = undefined;
+        const pathListNode = Xml.getFirstChildOfName(customNode, "a:pathLst");
+        if (pathListNode !== undefined) {
+            const pathNode = Xml.getFirstChildOfName(pathListNode, "a:path");
+            if (pathNode !== undefined) {
+                shape = this._readPath(pathNode);
+                const widthAttr = Xml.getAttribute(pathNode, "w");
+                if (widthAttr !== undefined) {
+                    shape.width = parseInt(widthAttr);
+                }
+                const heightAttr = Xml.getAttribute(pathNode, "h");
+                if (heightAttr !== undefined) {
+                    shape.height = parseInt(heightAttr);
                 }
             }
         }
         return shape;
+    }
+
+    private _readFillColor(fillNode: Node): string | undefined {
+        let color: string | undefined = undefined;
+        const colorNode = fillNode.firstChild;
+        if (colorNode !== null) {
+            color = Xml.getStringValue(colorNode);
+        }
+        return color;
     }
 
     private _readPath(pathNode: Node): Shape {

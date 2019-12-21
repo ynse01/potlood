@@ -7,7 +7,7 @@ interface IPathSegment {
     scale(scaling: Vector): void;
     generatePath(generator: PathGenerator): void;
 }
-class MoveTo implements IPathSegment {
+class MoveTo implements IPathSegment {    
     constructor(public point: Vector) {
     }
 
@@ -54,6 +54,8 @@ class CubicBezierTo implements IPathSegment {
 export class Shape {
     public width: number = 1;
     public height: number = 1;
+    public fillColor: string | undefined = undefined;
+    public lineColor: string | undefined = undefined;
 
     private segments: IPathSegment[] = [];
 
