@@ -1,8 +1,10 @@
 import { Shape } from "./shape.js";
 import { Xml } from "../utils/xml.js";
 import { Vector } from "../math/vector.js";
+import { PresetShapeFactory } from "./preset-shape-factory.js";
 
 export class ShapeReader {
+    private _presetFactory = new PresetShapeFactory();
 
     public readShape(shapeNode: Node): Shape | undefined {
         let shape: Shape | undefined = new Shape();
@@ -43,8 +45,13 @@ export class ShapeReader {
         return shape;
     }
 
-    private _readPresetShape(_presetNode: Node): Shape | undefined {
-        return undefined;
+    private _readPresetShape(presetNode: Node): Shape | undefined {
+        let shape: Shape | undefined = undefined;
+        const name = Xml.getAttribute(presetNode, "prst");
+        if (name !== undefined) {
+            shape = this._presetFactory.createShape(name);
+        }
+        return shape;
     }
 
     private _readCustomShape(customNode: Node): Shape | undefined {
