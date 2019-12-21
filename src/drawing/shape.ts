@@ -1,11 +1,11 @@
 import { Vector } from "../math/vector.js";
-import { PathGenerator } from "./path-generator.js";
+import { PathBuilder } from "./path-builder.js";
 import { Box } from "../math/box.js";
 
 interface IPathSegment {
     translate(offset: Vector): void;
     scale(scaling: Vector): void;
-    generatePath(generator: PathGenerator): void;
+    buildPath(builder: PathBuilder): void;
 }
 class MoveTo implements IPathSegment {    
     constructor(public point: Vector) {
@@ -19,14 +19,14 @@ class MoveTo implements IPathSegment {
         this.point = this.point.scale(scaling);
     }
 
-    public generatePath(generator: PathGenerator): void {
-        generator.moveTo(this.point);
+    public buildPath(builder: PathBuilder): void {
+        builder.moveTo(this.point);
     }
 }
 
 class LineTo extends MoveTo {
-    public generatePath(generator: PathGenerator): void {
-        generator.lineTo(this.point);
+    public buildPath(builder: PathBuilder): void {
+        builder.lineTo(this.point);
     }
 }
 
@@ -46,8 +46,8 @@ class CubicBezierTo implements IPathSegment {
         this.control2 = this.control2.scale(scaling);
     }
 
-    public generatePath(generator: PathGenerator): void {
-        generator.cubicBezierTo(this.point, this.control1, this.control2);
+    public buildPath(builder: PathBuilder): void {
+        builder.cubicBezierTo(this.point, this.control1, this.control2);
     }
 }
 
@@ -83,12 +83,12 @@ export class Shape {
         this.segments.push(new CubicBezierTo(point, control1, control2));
     }
 
-    public generatePath(): string {
-        const generator = new PathGenerator();
+    public buildPath(): string {
+        const builder = new PathBuilder();
         this.segments.forEach((segment => {
-            segment.generatePath(generator);
+            segment.buildPath(builder);
         }))
-        return generator.path;
+        return builder.path;
     }
 
     public performLayout(bounds: Box): void {

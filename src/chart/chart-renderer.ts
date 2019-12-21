@@ -9,7 +9,7 @@ import { LineChart } from "./line-chart.js";
 import { ChartValue } from "./chart-value.js";
 import { AreaChart } from "./area-chart.js";
 import { Vector } from "../math/vector.js";
-import { PathGenerator } from "../drawing/path-generator.js";
+import { PathBuilder } from "../drawing/path-builder.js";
 import { PieChart } from "./pie-chart.js";
 import { Circle } from "../math/circle.js";
 
@@ -124,7 +124,7 @@ export class ChartRenderer {
             }
             points.push(bounds.bottomRight);
             points.push(bounds.bottomLeft);
-            const path = new PathGenerator(points).path;
+            const path = new PathBuilder(points).path;
             this._painter.paintPolygon(path, style.fillColor, style.lineColor, style.lineThickness);
         }
     }
@@ -181,7 +181,7 @@ export class ChartRenderer {
         for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
             const color = pieChart.getSeriesStyle(seriesIndex, catIndex).fillColor || "000000";
             const val = previousAngle + this._normalizeValue(pieChart.getValue(catIndex, seriesIndex), range) * Math.PI * 2;
-            const path = new PathGenerator(middle);
+            const path = new PathBuilder(middle);
             path.lineTo(circle.pointAtAngle(previousAngle));
             path.circleSegmentTo(circle, val);
             path.lineTo(middle);

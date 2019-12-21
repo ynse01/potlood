@@ -1,7 +1,7 @@
 import { Vector } from "../math/vector.js";
 import { Circle } from "../math/circle.js";
 
-export class PathGenerator {
+export class PathBuilder {
     public path: string;
 
     constructor(start?: Vector | Vector[]) {
