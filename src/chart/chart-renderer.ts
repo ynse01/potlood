@@ -11,7 +11,7 @@ import { AreaChart } from "./area-chart.js";
 import { Point } from "../math/point.js";
 import { Shape } from "../drawing/shape.js";
 import { PieChart } from "./pie-chart.js";
-import { Circle } from "../math/circle.js";
+import { Ellipse } from "../math/ellipse.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -175,7 +175,7 @@ export class ChartRenderer {
         const middle = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         const seriesIndex = 0;
         const range = { min: 0, max: pieChart.getValueSum(seriesIndex)};
-        const circle = new Circle(middle, bounds.height / 2);
+        const circle = new Ellipse(middle, bounds.height / 2, bounds.height / 2);
         // Start angle is relative to vertical (instead of horizontal axis of circle class).
         let previousAngle = pieChart.startAngle - Math.PI / 2;
         for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
@@ -184,7 +184,7 @@ export class ChartRenderer {
             const path = new Shape();
             path.addSegmentMove(middle);
             path.addSegmentLine(circle.pointAtAngle(previousAngle));
-            path.addSegmentCircle(circle, val, false, true);
+            path.addSegmentArc(circle, val, false, true);
             path.addSegmentLine(middle);
             this._painter.paintPolygon(path.buildPath(), color, undefined, undefined);
             previousAngle = val;

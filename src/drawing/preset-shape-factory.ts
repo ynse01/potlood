@@ -1,6 +1,6 @@
 import { Shape } from "./shape.js";
 import { Point } from "../math/point.js";
-import { Circle } from "../math/circle.js";
+import { Ellipse } from "../math/ellipse.js";
 
 export class PresetShapeFactory {
     private static creators: any = {
@@ -31,9 +31,9 @@ export class PresetShapeFactory {
     private static _createBlockArc(): Shape {
         const shape = new Shape();
         shape.addSegmentMove(new Point(0, 1));
-        shape.addSegmentCircle(new Circle(new Point(0.5, 1), 0.5), 0, false, true);
+        shape.addSegmentArc(new Ellipse(new Point(0.5, 1), 0.5, 0.5), 0, false, true);
         shape.addSegmentLine(new Point(0.8, 1));
-        shape.addSegmentCircle(new Circle(new Point(0.5, 1), 0.3), Math.PI, false, false);
+        shape.addSegmentArc(new Ellipse(new Point(0.5, 1), 0.3, 0.3), Math.PI, false, false);
         shape.addSegmentClose();
         return shape;
     }
@@ -50,11 +50,11 @@ export class PresetShapeFactory {
 
     private static _createEllipse(): Shape {
         const shape = new Shape();
-        const circle = new Circle(new Point(0.5, 0.5), 0.5);
+        const ellipse = new Ellipse(new Point(0.5, 0.5), 0.5, 0.5);
         shape.addSegmentMove(new Point(0, 0.5));
-        shape.addSegmentCircle(circle, Math.PI / 2, false, true);
-        shape.addSegmentCircle(circle, Math.PI, false, true);
-        shape.addSegmentCircle(circle, 3 * Math.PI / 2, false, true);
+        shape.addSegmentArc(ellipse, Math.PI / 2, false, true);
+        shape.addSegmentArc(ellipse, Math.PI, false, true);
+        shape.addSegmentArc(ellipse, 3 * Math.PI / 2, false, true);
         shape.addSegmentClose();
         return new Shape();
     }

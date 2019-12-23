@@ -1,6 +1,6 @@
 import { Point } from "../math/point.js";
 import { Box } from "../math/box.js";
-import { Circle } from "../math/circle.js";
+import { Ellipse } from "../math/ellipse.js";
 
 interface IPathSegment {
     translate(offset: Point): void;
@@ -46,8 +46,8 @@ class LineTo extends MoveTo {
     }
 }
 
-class CircleTo implements IPathSegment {
-    constructor(public circle: Circle, public angle: number, public largeArc: boolean, public sweep: boolean) {
+class ArcTo implements IPathSegment {
+    constructor(public circle: Ellipse, public angle: number, public largeArc: boolean, public sweep: boolean) {
     }
 
     public translate(offset: Point): void {
@@ -56,14 +56,15 @@ class CircleTo implements IPathSegment {
 
     public scale(scaling: Point): void {
         this.circle.center = this.circle.center.scale(scaling);
-        this.circle.radius = this.circle.radius * scaling.x;
+        this.circle.radiusX = this.circle.radiusX * scaling.x;
+        this.circle.radiusY = this.circle.radiusY * scaling.y;
     }
 
     public buildPath(): string {
         const la = this.largeArc ? "1" : "0";
         const ps = this.sweep ? "1" : "0";
         const point = this.circle.pointAtAngle(this.angle);
-        return ` A ${this.circle.radius} ${this.circle.radius} 0 ${la} ${ps} ${point.x} ${point.y}`;
+        return ` A ${this.circle.radiusX} ${this.circle.radiusY} 0 ${la} ${ps} ${point.x} ${point.y}`;
     }
 }
 
@@ -117,8 +118,8 @@ export class Shape {
         this.segments.push(new LineTo(point));
     }
 
-    public addSegmentCircle(circle: Circle, angle: number, largeArc: boolean, sweep: boolean): void {
-        this.segments.push(new CircleTo(circle, angle, largeArc, sweep));
+    public addSegmentArc(ellipse: Ellipse, angle: number, largeArc: boolean, sweep: boolean): void {
+        this.segments.push(new ArcTo(ellipse, angle, largeArc, sweep));
     }
 
     public addSegmentCubicBezier(point: Point, control1: Point, control2: Point): void {
