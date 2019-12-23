@@ -12,6 +12,7 @@ export class Ellipse {
     }
 
     public pointAtAngle(radians: number): Point {
+        // Ellipse has radius which changes with angle.
         const radius = this.localRadius(radians);
         const x = this.center.x + radius * Math.cos(radians);
         const y = this.center.y + radius * Math.sin(radians);
@@ -19,6 +20,7 @@ export class Ellipse {
     }
 
     public localRadius(radians: number): number {
+        // Taken from polar representation of Ellipse.
         const a = this.radiusX * Math.sin(radians);
         const b = this.radiusY * Math.cos(radians);
         const ab = this.radiusX * this.radiusY;
