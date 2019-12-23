@@ -12,9 +12,17 @@ export class Ellipse {
     }
 
     public pointAtAngle(radians: number): Point {
-        const x = this.center.x + this.radiusX * Math.cos(radians);
-        const y = this.center.y + this.radiusY * Math.sin(radians);
+        const radius = this.localRadius(radians);
+        const x = this.center.x + radius * Math.cos(radians);
+        const y = this.center.y + radius * Math.sin(radians);
         return new Point(x, y);
+    }
+
+    public localRadius(radians: number): number {
+        const a = this.radiusX * Math.sin(radians);
+        const b = this.radiusY * Math.cos(radians);
+        const ab = this.radiusX * this.radiusY;
+        return ab / Math.sqrt((b * b) + (a * a));
     }
 
     public clone(): Ellipse {
