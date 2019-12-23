@@ -102,8 +102,22 @@ export class PresetShapeFactory {
     }
 
     private static _createSmileyFace(): Shape {
-        console.log("Not sure how to draw a SmileyFace");
-        return new Shape();
+        const circle = PresetShapeFactory._createEllipse();
+        // Mouth
+        circle.addSegmentMove(new Point(0.1, 0.5));
+        circle.addSegmentArc(new Ellipse(new Point(0.5, 0.5), 0.4, 0.4), 0, false, false);
+        circle.addSegmentLine(new Point(0.1, 0.5));
+        // Left eye
+        circle.addSegmentMove(new Point(0.4, 0.3));
+        circle.addSegmentArc(new Ellipse(new Point(0.3, 0.3), 0.1, 0.1), Math.PI, false, false);
+        circle.addSegmentArc(new Ellipse(new Point(0.3, 0.3), 0.1, 0.1), 0, false, false);
+        circle.addSegmentLine(new Point(0.4, 0.3));
+        // Right eye
+        circle.addSegmentMove(new Point(0.8, 0.3));
+        circle.addSegmentArc(new Ellipse(new Point(0.7, 0.3), 0.1, 0.1), Math.PI, false, false);
+        circle.addSegmentArc(new Ellipse(new Point(0.7, 0.3), 0.1, 0.1), 0, false, false);
+        circle.addSegmentLine(new Point(0.8, 0.3));
+        return circle;
     }
 
     private static _createSquare(): Shape {

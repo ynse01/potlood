@@ -36,7 +36,7 @@ class MoveTo implements IPathSegment {
     }
 
     public buildPath(): string {
-        return `M ${this.point.x} ${this.point.y}`;
+        return ` M ${this.point.x} ${this.point.y}`;
     }
 }
 
