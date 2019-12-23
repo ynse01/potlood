@@ -9,7 +9,7 @@ import { LineChart } from "./line-chart.js";
 import { ChartValue } from "./chart-value.js";
 import { AreaChart } from "./area-chart.js";
 import { Vector } from "../math/vector.js";
-import { PathBuilder } from "../drawing/path-builder.js";
+import { Shape } from "../drawing/shape.js";
 import { PieChart } from "./pie-chart.js";
 import { Circle } from "../math/circle.js";
 
@@ -110,8 +110,8 @@ export class ChartRenderer {
         const range = areaChart.getValueRange();
         // Loop backward, to got correct Z index.
         for(let seriesIndex = counts.numSeries - 1; seriesIndex >= 0; seriesIndex--) {
-            const points: Vector[] = [];
-            points.push(bounds.bottomLeft);
+            const shape = new Shape();
+            shape.addSegmentMove(bounds.bottomLeft);
             const style = areaChart.series[seriesIndex].style;
             for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
                 if (style.fillColor === undefined || style.fillColor === "ffffff") {
@@ -120,11 +120,11 @@ export class ChartRenderer {
                 const val = this._normalizeValue(areaChart.getValue(catIndex, seriesIndex), range);
                 const x = flowX + catIndex * catSpacing;
                 const y = bottomY - (bottomY - topY) * val;
-                points.push(new Vector(x, y));
+                shape.addSegmentLine(new Vector(x, y));
             }
-            points.push(bounds.bottomRight);
-            points.push(bounds.bottomLeft);
-            const path = new PathBuilder(points).path;
+            shape.addSegmentLine(bounds.bottomRight);
+            shape.addSegmentLine(bounds.bottomLeft);
+            const path = shape.buildPath();
             this._painter.paintPolygon(path, style.fillColor, style.lineColor, style.lineThickness);
         }
     }
@@ -181,11 +181,12 @@ export class ChartRenderer {
         for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
             const color = pieChart.getSeriesStyle(seriesIndex, catIndex).fillColor || "000000";
             const val = previousAngle + this._normalizeValue(pieChart.getValue(catIndex, seriesIndex), range) * Math.PI * 2;
-            const path = new PathBuilder(middle);
-            path.lineTo(circle.pointAtAngle(previousAngle));
-            path.circleSegmentTo(circle, val);
-            path.lineTo(middle);
-            this._painter.paintPolygon(path.path, color, undefined, undefined);
+            const path = new Shape();
+            path.addSegmentMove(middle);
+            path.addSegmentLine(circle.pointAtAngle(previousAngle));
+            path.addSegmentCircle(circle, val);
+            path.addSegmentLine(middle);
+            this._painter.paintPolygon(path.buildPath(), color, undefined, undefined);
             previousAngle = val;
         }
     }

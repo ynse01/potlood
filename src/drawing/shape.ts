@@ -1,12 +1,11 @@
 import { Vector } from "../math/vector.js";
-import { PathBuilder } from "./path-builder.js";
 import { Box } from "../math/box.js";
 import { Circle } from "../math/circle.js";
 
 interface IPathSegment {
     translate(offset: Vector): void;
     scale(scaling: Vector): void;
-    buildPath(builder: PathBuilder): void;
+    buildPath(): string;
 }
 class MoveTo implements IPathSegment {    
     constructor(public point: Vector) {
@@ -20,14 +19,14 @@ class MoveTo implements IPathSegment {
         this.point = this.point.scale(scaling);
     }
 
-    public buildPath(builder: PathBuilder): void {
-        builder.moveTo(this.point);
+    public buildPath(): string {
+        return `M ${this.point.x} ${this.point.y}`;
     }
 }
 
 class LineTo extends MoveTo {
-    public buildPath(builder: PathBuilder): void {
-        builder.lineTo(this.point);
+    public buildPath(): string {
+        return `L ${this.point.x} ${this.point.y}`;
     }
 }
 
@@ -44,8 +43,11 @@ class CircleTo implements IPathSegment {
         this.circle.radius = this.circle.radius * scaling.x;
     }
 
-    public buildPath(builder: PathBuilder): void {
-        builder.circleSegmentTo(this.circle, this.angle);
+    public buildPath(): string {
+        const la = "0";
+        const ps = "1";
+        const point = this.circle.pointAtAngle(this.angle);
+        return ` A ${this.circle.radius} ${this.circle.radius} 0 ${la} ${ps} ${point.x} ${point.y}`;
     }
 }
 
@@ -65,8 +67,8 @@ class CubicBezierTo implements IPathSegment {
         this.control2 = this.control2.scale(scaling);
     }
 
-    public buildPath(builder: PathBuilder): void {
-        builder.cubicBezierTo(this.point, this.control1, this.control2);
+    public buildPath(): string {
+        return ` C ${this.control1.x} ${this.control1.y}, ${this.control2.x} ${this.control2.y}, ${this.point.x} ${this.point.y}`;
     }
 }
 
@@ -77,6 +79,7 @@ export class Shape {
     public lineColor: string | undefined = undefined;
 
     private segments: IPathSegment[] = [];
+    private _path: string | undefined = undefined;
 
     public translate(offset: Vector): void {
         this.segments.forEach(segment => {
@@ -107,11 +110,13 @@ export class Shape {
     }
 
     public buildPath(): string {
-        const builder = new PathBuilder();
-        this.segments.forEach((segment => {
-            segment.buildPath(builder);
-        }))
-        return builder.path;
+        if (this._path === undefined) {
+            this._path = "";
+            this.segments.forEach((segment => {
+                this._path += segment.buildPath();
+            }));
+        }
+        return this._path;
     }
 
     public performLayout(bounds: Box): void {
