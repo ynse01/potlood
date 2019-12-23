@@ -5,6 +5,9 @@ import { Circle } from "../math/circle.js";
 export class PresetShapeFactory {
     private static creators: any = {
         "line": PresetShapeFactory._createLine,
+        "rect": PresetShapeFactory._createRectangle,
+        "triangle": PresetShapeFactory._createTriangle,
+        "diamond": PresetShapeFactory._createDiamond,
         "ellipse": PresetShapeFactory._createEllipse,
         "blockArc": PresetShapeFactory._createBlockArc,
         "smileyFace": PresetShapeFactory._createSmileyFace,
@@ -32,6 +35,16 @@ export class PresetShapeFactory {
         shape.addLine(new Vector(0.2, 1));
         shape.addCircle(new Circle(new Vector(0.5, 1), 0.3), 0);
         shape.addLine(new Vector(0.8, 1));
+        return shape;
+    }
+
+    private static _createDiamond(): Shape {
+        const shape = new Shape();
+        shape.addMove(new Vector(0.5, 0));
+        shape.addLine(new Vector(0, 0.5));
+        shape.addLine(new Vector(0.5, 1));
+        shape.addLine(new Vector(1, 0.5));
+        shape.addLine(new Vector(0.5, 0));
         return shape;
     }
 
@@ -80,8 +93,27 @@ export class PresetShapeFactory {
         return line;
     }
 
+    private static _createRectangle(): Shape {
+        const shape = new Shape();
+        shape.addMove(new Vector(0, 0));
+        shape.addLine(new Vector(0, 1));
+        shape.addLine(new Vector(1, 1));
+        shape.addLine(new Vector(1, 0));
+        shape.addLine(new Vector(0, 0));
+        return shape;
+    }
+
     private static _createSmileyFace(): Shape {
         return new Shape();
+    }
+
+    private static _createTriangle(): Shape {
+        const shape = new Shape();
+        shape.addMove(new Vector(0.5, 0));
+        shape.addLine(new Vector(0, 1));
+        shape.addLine(new Vector(1, 1));
+        shape.addLine(new Vector(0.5, 0));
+        return shape;
     }
 
     private static _createWedgeRectangularCallout(): Shape {
