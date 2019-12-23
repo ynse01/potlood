@@ -88,10 +88,10 @@ export class ShapeReader {
         pathNode.childNodes.forEach(segmentNode => {
             switch(segmentNode.nodeName) {
                 case "a:moveTo":
-                    shape.addMove(this._readPoint(segmentNode.firstChild!));
+                    shape.addSegmentMove(this._readPoint(segmentNode.firstChild!));
                     break;
                 case "a:lnTo":
-                    shape.addLine(this._readPoint(segmentNode.firstChild!));
+                    shape.addSegmentLine(this._readPoint(segmentNode.firstChild!));
                     break;
                 case "a:cubicBezTo":
                     this._addCubicBezier(segmentNode, shape);
@@ -107,7 +107,7 @@ export class ShapeReader {
             const endPoint = this._readPoint(childNodes[1]);
             const control1 = this._readPoint(childNodes[0]);
             const control2 = this._readPoint(childNodes[2]);
-            shape.addCubicBezier(endPoint, control1, control2);
+            shape.addSegmentCubicBezier(endPoint, control1, control2);
         }
     }
 

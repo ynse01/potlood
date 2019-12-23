@@ -90,19 +90,19 @@ export class Shape {
         });
     }
 
-    public addMove(point: Vector): void {
+    public addSegmentMove(point: Vector): void {
         this.segments.push(new MoveTo(point));
     }
 
-    public addLine(point: Vector): void {
+    public addSegmentLine(point: Vector): void {
         this.segments.push(new LineTo(point));
     }
 
-    public addCircle(circle: Circle, angle: number): void {
+    public addSegmentCircle(circle: Circle, angle: number): void {
         this.segments.push(new CircleTo(circle, angle));
     }
 
-    public addCubicBezier(point: Vector, control1: Vector, control2: Vector): void {
+    public addSegmentCubicBezier(point: Vector, control1: Vector, control2: Vector): void {
         this.segments.push(new CubicBezierTo(point, control1, control2));
     }
 
