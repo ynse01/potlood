@@ -22,6 +22,8 @@ export class PresetShapeFactory {
         const creator: () => Shape = PresetShapeFactory.creators[name];
         if (creator !== undefined) {
             shape = creator();
+        } else {
+            console.log(`Not sure how to draw a ${name}.`);
         }
         return shape;
     }
@@ -32,7 +34,7 @@ export class PresetShapeFactory {
         shape.addSegmentCircle(new Circle(new Point(0.5, 1), 0.5), 0, false, true);
         shape.addSegmentLine(new Point(0.8, 1));
         shape.addSegmentCircle(new Circle(new Point(0.5, 1), 0.3), Math.PI, false, false);
-        shape.addSegmentLine(new Point(0, 1));
+        shape.addSegmentClose();
         return shape;
     }
 
@@ -42,11 +44,18 @@ export class PresetShapeFactory {
         shape.addSegmentLine(new Point(0, 0.5));
         shape.addSegmentLine(new Point(0.5, 1));
         shape.addSegmentLine(new Point(1, 0.5));
-        shape.addSegmentLine(new Point(0.5, 0));
+        shape.addSegmentClose();
         return shape;
     }
 
     private static _createEllipse(): Shape {
+        const shape = new Shape();
+        const circle = new Circle(new Point(0.5, 0.5), 0.5);
+        shape.addSegmentMove(new Point(0, 0.5));
+        shape.addSegmentCircle(circle, Math.PI / 2, false, true);
+        shape.addSegmentCircle(circle, Math.PI, false, true);
+        shape.addSegmentCircle(circle, 3 * Math.PI / 2, false, true);
+        shape.addSegmentClose();
         return new Shape();
     }
 
@@ -56,7 +65,7 @@ export class PresetShapeFactory {
         shape.addSegmentLine(new Point(1, 0));
         shape.addSegmentLine(new Point(0, 1));
         shape.addSegmentLine(new Point(1, 1));
-        shape.addSegmentLine(new Point(0, 0));
+        shape.addSegmentClose();
         return shape;
     }
 
@@ -67,7 +76,7 @@ export class PresetShapeFactory {
         shape.addSegmentLine(new Point(1, 1));
         shape.addSegmentLine(new Point(0, 1));
         shape.addSegmentLine(new Point(0, 0.2));
-        shape.addSegmentLine(new Point(0.2, 0));
+        shape.addSegmentClose();
         return shape;        
     }
 
@@ -80,7 +89,7 @@ export class PresetShapeFactory {
         shape.addSegmentMove(new Point(0.5, 1));
         shape.addSegmentLine(new Point(1, 0.5));
         shape.addSegmentLine(new Point(0, 0.5));
-        shape.addSegmentLine(new Point(0.5, 1));
+        shape.addSegmentClose();
         return shape;
     }
 
@@ -92,6 +101,7 @@ export class PresetShapeFactory {
     }
 
     private static _createSmileyFace(): Shape {
+        console.log("Not sure how to draw a SmileyFace");
         return new Shape();
     }
 
@@ -101,7 +111,7 @@ export class PresetShapeFactory {
         shape.addSegmentLine(new Point(0, 1));
         shape.addSegmentLine(new Point(1, 1));
         shape.addSegmentLine(new Point(1, 0));
-        shape.addSegmentLine(new Point(0, 0));
+        shape.addSegmentClose();
         return shape;
     }
 
@@ -110,7 +120,7 @@ export class PresetShapeFactory {
         shape.addSegmentMove(new Point(0.5, 0));
         shape.addSegmentLine(new Point(0, 1));
         shape.addSegmentLine(new Point(1, 1));
-        shape.addSegmentLine(new Point(0.5, 0));
+        shape.addSegmentClose();
         return shape;
     }
 
@@ -123,7 +133,7 @@ export class PresetShapeFactory {
         shape.addSegmentLine(new Point(0.1, 1));
         shape.addSegmentLine(new Point(0.15, 0.7));
         shape.addSegmentLine(new Point(0, 0.7));
-        shape.addSegmentLine(new Point(0, 0));
+        shape.addSegmentClose();
         return shape;        
     }
 

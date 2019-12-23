@@ -7,6 +7,22 @@ interface IPathSegment {
     scale(scaling: Point): void;
     buildPath(): string;
 }
+
+class CloseSegment implements IPathSegment {
+    public translate(_offset: Point): void {
+        // Nothing to do.
+    }
+    
+    public scale(_scaling: Point): void {
+        // Nothing to do.
+    }
+    buildPath(): string {
+        return " Z";
+    }
+
+
+}
+
 class MoveTo implements IPathSegment {    
     constructor(public point: Point) {
     }
@@ -107,6 +123,10 @@ export class Shape {
 
     public addSegmentCubicBezier(point: Point, control1: Point, control2: Point): void {
         this.segments.push(new CubicBezierTo(point, control1, control2));
+    }
+
+    public addSegmentClose(): void {
+        this.segments.push(new CloseSegment());
     }
 
     public buildPath(): string {
