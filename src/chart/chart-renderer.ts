@@ -184,7 +184,7 @@ export class ChartRenderer {
             const path = new Shape();
             path.addSegmentMove(middle);
             path.addSegmentLine(circle.pointAtAngle(previousAngle));
-            path.addSegmentCircle(circle, val);
+            path.addSegmentCircle(circle, val, false, true);
             path.addSegmentLine(middle);
             this._painter.paintPolygon(path.buildPath(), color, undefined, undefined);
             previousAngle = val;

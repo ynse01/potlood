@@ -5,7 +5,7 @@ import { Circle } from "../math/circle.js";
 export class PresetShapeFactory {
     private static creators: any = {
         "line": PresetShapeFactory._createLine,
-        "rect": PresetShapeFactory._createRectangle,
+        "square": PresetShapeFactory._createSquare,
         "triangle": PresetShapeFactory._createTriangle,
         "diamond": PresetShapeFactory._createDiamond,
         "ellipse": PresetShapeFactory._createEllipse,
@@ -29,12 +29,10 @@ export class PresetShapeFactory {
     private static _createBlockArc(): Shape {
         const shape = new Shape();
         shape.addSegmentMove(new Point(0, 1));
-        shape.addSegmentCircle(new Circle(new Point(0.5, 1), 0.5), 0);
+        shape.addSegmentCircle(new Circle(new Point(0.5, 1), 0.5), 0, false, true);
         shape.addSegmentLine(new Point(0.8, 1));
-        shape.addSegmentMove(new Point(0, 1));
-        shape.addSegmentLine(new Point(0.2, 1));
-        shape.addSegmentCircle(new Circle(new Point(0.5, 1), 0.3), 0);
-        shape.addSegmentLine(new Point(0.8, 1));
+        shape.addSegmentCircle(new Circle(new Point(0.5, 1), 0.3), Math.PI, false, false);
+        shape.addSegmentLine(new Point(0, 1));
         return shape;
     }
 
@@ -93,7 +91,11 @@ export class PresetShapeFactory {
         return line;
     }
 
-    private static _createRectangle(): Shape {
+    private static _createSmileyFace(): Shape {
+        return new Shape();
+    }
+
+    private static _createSquare(): Shape {
         const shape = new Shape();
         shape.addSegmentMove(new Point(0, 0));
         shape.addSegmentLine(new Point(0, 1));
@@ -101,10 +103,6 @@ export class PresetShapeFactory {
         shape.addSegmentLine(new Point(1, 0));
         shape.addSegmentLine(new Point(0, 0));
         return shape;
-    }
-
-    private static _createSmileyFace(): Shape {
-        return new Shape();
     }
 
     private static _createTriangle(): Shape {

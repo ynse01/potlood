@@ -31,7 +31,7 @@ class LineTo extends MoveTo {
 }
 
 class CircleTo implements IPathSegment {
-    constructor(public circle: Circle, public angle: number) {
+    constructor(public circle: Circle, public angle: number, public largeArc: boolean, public sweep: boolean) {
     }
 
     public translate(offset: Point): void {
@@ -44,8 +44,8 @@ class CircleTo implements IPathSegment {
     }
 
     public buildPath(): string {
-        const la = "0";
-        const ps = "1";
+        const la = this.largeArc ? "1" : "0";
+        const ps = this.sweep ? "1" : "0";
         const point = this.circle.pointAtAngle(this.angle);
         return ` A ${this.circle.radius} ${this.circle.radius} 0 ${la} ${ps} ${point.x} ${point.y}`;
     }
@@ -101,8 +101,8 @@ export class Shape {
         this.segments.push(new LineTo(point));
     }
 
-    public addSegmentCircle(circle: Circle, angle: number): void {
-        this.segments.push(new CircleTo(circle, angle));
+    public addSegmentCircle(circle: Circle, angle: number, largeArc: boolean, sweep: boolean): void {
+        this.segments.push(new CircleTo(circle, angle, largeArc, sweep));
     }
 
     public addSegmentCubicBezier(point: Point, control1: Point, control2: Point): void {
