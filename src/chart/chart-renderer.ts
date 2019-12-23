@@ -8,7 +8,7 @@ import { ChartAxis } from "./chart-axis.js";
 import { LineChart } from "./line-chart.js";
 import { ChartValue } from "./chart-value.js";
 import { AreaChart } from "./area-chart.js";
-import { Vector } from "../math/vector.js";
+import { Point } from "../math/point.js";
 import { Shape } from "../drawing/shape.js";
 import { PieChart } from "./pie-chart.js";
 import { Circle } from "../math/circle.js";
@@ -120,7 +120,7 @@ export class ChartRenderer {
                 const val = this._normalizeValue(areaChart.getValue(catIndex, seriesIndex), range);
                 const x = flowX + catIndex * catSpacing;
                 const y = bottomY - (bottomY - topY) * val;
-                shape.addSegmentLine(new Vector(x, y));
+                shape.addSegmentLine(new Point(x, y));
             }
             shape.addSegmentLine(bounds.bottomRight);
             shape.addSegmentLine(bounds.bottomLeft);
@@ -172,7 +172,7 @@ export class ChartRenderer {
 
     private _renderPieChart(pieChart: PieChart, bounds: Box): void {
         const counts = pieChart.getCounts();
-        const middle = new Vector(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        const middle = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         const seriesIndex = 0;
         const range = { min: 0, max: pieChart.getValueSum(seriesIndex)};
         const circle = new Circle(middle, bounds.height / 2);

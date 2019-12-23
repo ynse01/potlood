@@ -1,17 +1,17 @@
-import { Vector } from "./vector.js";
+import { Point } from "./point.js";
 
 export class Circle {
     public radius: number;
-    public center: Vector;
+    public center: Point;
 
-    constructor(center: Vector, radius: number) {
+    constructor(center: Point, radius: number) {
         this.center = center;
         this.radius = radius;
     }
 
-    public pointAtAngle(radians: number): Vector {
+    public pointAtAngle(radians: number): Point {
         const x = this.center.x + this.radius * Math.cos(radians);
         const y = this.center.y + this.radius * Math.sin(radians);
-        return new Vector(x, y);
+        return new Point(x, y);
     }
 }

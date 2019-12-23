@@ -1,5 +1,5 @@
 import { InSequence } from "../utils/in-sequence.js";
-import { Vector } from "./vector.js";
+import { Point } from "./point.js";
 
 export class Box {
     public x: number;
@@ -30,20 +30,20 @@ export class Box {
         return this.y + this.height;
     }
 
-    public get topLeft(): Vector {
-        return new Vector(this.left, this.top);
+    public get topLeft(): Point {
+        return new Point(this.left, this.top);
     }
 
-    public get topRight(): Vector {
-        return new Vector(this.right, this.top);
+    public get topRight(): Point {
+        return new Point(this.right, this.top);
     }
 
-    public get bottomLeft(): Vector {
-        return new Vector(this.left, this.bottom);
+    public get bottomLeft(): Point {
+        return new Point(this.left, this.bottom);
     }
 
-    public get bottomRight(): Vector {
-        return new Vector(this.right, this.bottom);
+    public get bottomRight(): Point {
+        return new Point(this.right, this.bottom);
     }
 
     public translate(x: number, y: number): Box {
@@ -59,10 +59,10 @@ export class Box {
     }
 
     public includePoint(x: number, y: number): Box;
-    public includePoint(point: Vector): Box;
-    public includePoint(arg1: number | Vector, arg2?: number): Box {
-        const x = (arg1 instanceof Vector) ? arg1.x : arg1;
-        const y = (arg1 instanceof Vector) ? arg1.y : arg2!;
+    public includePoint(point: Point): Box;
+    public includePoint(arg1: number | Point, arg2?: number): Box {
+        const x = (arg1 instanceof Point) ? arg1.x : arg1;
+        const y = (arg1 instanceof Point) ? arg1.y : arg2!;
         const newX = Math.min(this.x, x);
         const newY = Math.min(this.y, y);
         const newWidth = Math.max(this.x + this.width, x + this.width) - newX;

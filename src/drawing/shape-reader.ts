@@ -1,6 +1,6 @@
 import { Shape } from "./shape.js";
 import { Xml } from "../utils/xml.js";
-import { Vector } from "../math/vector.js";
+import { Point } from "../math/point.js";
 import { PresetShapeFactory } from "./preset-shape-factory.js";
 
 export class ShapeReader {
@@ -111,7 +111,7 @@ export class ShapeReader {
         }
     }
 
-    private _readPoint(pointNode: Node): Vector {
+    private _readPoint(pointNode: Node): Point {
         let x = 0;
         let y = 0;
         const xAttr = Xml.getAttribute(pointNode, "x");
@@ -122,6 +122,6 @@ export class ShapeReader {
         if (yAttr !== undefined) {
             y = parseInt(yAttr);
         }
-        return new Vector(x, y);
+        return new Point(x, y);
     }
 }

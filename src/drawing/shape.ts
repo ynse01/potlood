@@ -1,21 +1,21 @@
-import { Vector } from "../math/vector.js";
+import { Point } from "../math/point.js";
 import { Box } from "../math/box.js";
 import { Circle } from "../math/circle.js";
 
 interface IPathSegment {
-    translate(offset: Vector): void;
-    scale(scaling: Vector): void;
+    translate(offset: Point): void;
+    scale(scaling: Point): void;
     buildPath(): string;
 }
 class MoveTo implements IPathSegment {    
-    constructor(public point: Vector) {
+    constructor(public point: Point) {
     }
 
-    public translate(offset: Vector): void {
+    public translate(offset: Point): void {
         this.point = this.point.translate(offset);
     }
 
-    public scale(scaling: Vector): void {
+    public scale(scaling: Point): void {
         this.point = this.point.scale(scaling);
     }
 
@@ -34,11 +34,11 @@ class CircleTo implements IPathSegment {
     constructor(public circle: Circle, public angle: number) {
     }
 
-    public translate(offset: Vector): void {
+    public translate(offset: Point): void {
         this.circle.center = this.circle.center.translate(offset);
     }
 
-    public scale(scaling: Vector): void {
+    public scale(scaling: Point): void {
         this.circle.center = this.circle.center.scale(scaling);
         this.circle.radius = this.circle.radius * scaling.x;
     }
@@ -52,16 +52,16 @@ class CircleTo implements IPathSegment {
 }
 
 class CubicBezierTo implements IPathSegment {
-    constructor(public point: Vector, public control1: Vector, public control2: Vector) {
+    constructor(public point: Point, public control1: Point, public control2: Point) {
     }
 
-    public translate(offset: Vector): void {
+    public translate(offset: Point): void {
         this.point = this.point.translate(offset);
         this.control1 = this.control1.translate(offset);
         this.control2 = this.control2.translate(offset);
     }
 
-    public scale(scaling: Vector): void {
+    public scale(scaling: Point): void {
         this.point = this.point.scale(scaling);
         this.control1 = this.control1.scale(scaling);
         this.control2 = this.control2.scale(scaling);
@@ -81,23 +81,23 @@ export class Shape {
     private segments: IPathSegment[] = [];
     private _path: string | undefined = undefined;
 
-    public translate(offset: Vector): void {
+    public translate(offset: Point): void {
         this.segments.forEach(segment => {
             segment.translate(offset);
         });
     }
 
-    public scale(scaling: Vector): void {
+    public scale(scaling: Point): void {
         this.segments.forEach(segment => {
             segment.scale(scaling);
         });
     }
 
-    public addSegmentMove(point: Vector): void {
+    public addSegmentMove(point: Point): void {
         this.segments.push(new MoveTo(point));
     }
 
-    public addSegmentLine(point: Vector): void {
+    public addSegmentLine(point: Point): void {
         this.segments.push(new LineTo(point));
     }
 
@@ -105,7 +105,7 @@ export class Shape {
         this.segments.push(new CircleTo(circle, angle));
     }
 
-    public addSegmentCubicBezier(point: Vector, control1: Vector, control2: Vector): void {
+    public addSegmentCubicBezier(point: Point, control1: Point, control2: Point): void {
         this.segments.push(new CubicBezierTo(point, control1, control2));
     }
 
@@ -122,7 +122,7 @@ export class Shape {
     public performLayout(bounds: Box): void {
         const scalingX = bounds.width / this.width;
         const scalingY = bounds.height / this.height;
-        this.scale(new Vector(scalingX, scalingY));
+        this.scale(new Point(scalingX, scalingY));
         this.translate(bounds.topLeft);
     }
 }

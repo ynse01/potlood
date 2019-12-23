@@ -1,5 +1,5 @@
 import { Shape } from "./shape.js";
-import { Vector } from "../math/vector.js";
+import { Point } from "../math/point.js";
 import { Circle } from "../math/circle.js";
 
 export class PresetShapeFactory {
@@ -28,23 +28,23 @@ export class PresetShapeFactory {
 
     private static _createBlockArc(): Shape {
         const shape = new Shape();
-        shape.addSegmentMove(new Vector(0, 1));
-        shape.addSegmentCircle(new Circle(new Vector(0.5, 1), 0.5), 0);
-        shape.addSegmentLine(new Vector(0.8, 1));
-        shape.addSegmentMove(new Vector(0, 1));
-        shape.addSegmentLine(new Vector(0.2, 1));
-        shape.addSegmentCircle(new Circle(new Vector(0.5, 1), 0.3), 0);
-        shape.addSegmentLine(new Vector(0.8, 1));
+        shape.addSegmentMove(new Point(0, 1));
+        shape.addSegmentCircle(new Circle(new Point(0.5, 1), 0.5), 0);
+        shape.addSegmentLine(new Point(0.8, 1));
+        shape.addSegmentMove(new Point(0, 1));
+        shape.addSegmentLine(new Point(0.2, 1));
+        shape.addSegmentCircle(new Circle(new Point(0.5, 1), 0.3), 0);
+        shape.addSegmentLine(new Point(0.8, 1));
         return shape;
     }
 
     private static _createDiamond(): Shape {
         const shape = new Shape();
-        shape.addSegmentMove(new Vector(0.5, 0));
-        shape.addSegmentLine(new Vector(0, 0.5));
-        shape.addSegmentLine(new Vector(0.5, 1));
-        shape.addSegmentLine(new Vector(1, 0.5));
-        shape.addSegmentLine(new Vector(0.5, 0));
+        shape.addSegmentMove(new Point(0.5, 0));
+        shape.addSegmentLine(new Point(0, 0.5));
+        shape.addSegmentLine(new Point(0.5, 1));
+        shape.addSegmentLine(new Point(1, 0.5));
+        shape.addSegmentLine(new Point(0.5, 0));
         return shape;
     }
 
@@ -54,52 +54,52 @@ export class PresetShapeFactory {
 
     private static _createFlowChartCollate(): Shape {
         const shape = new Shape();
-        shape.addSegmentMove(new Vector(0, 0));
-        shape.addSegmentLine(new Vector(1, 0));
-        shape.addSegmentLine(new Vector(0, 1));
-        shape.addSegmentLine(new Vector(1, 1));
-        shape.addSegmentLine(new Vector(0, 0));
+        shape.addSegmentMove(new Point(0, 0));
+        shape.addSegmentLine(new Point(1, 0));
+        shape.addSegmentLine(new Point(0, 1));
+        shape.addSegmentLine(new Point(1, 1));
+        shape.addSegmentLine(new Point(0, 0));
         return shape;
     }
 
     private static _createFlowChartPunchedCard(): Shape {
         const shape = new Shape();
-        shape.addSegmentMove(new Vector(0.2, 0));
-        shape.addSegmentLine(new Vector(1, 0));
-        shape.addSegmentLine(new Vector(1, 1));
-        shape.addSegmentLine(new Vector(0, 1));
-        shape.addSegmentLine(new Vector(0, 0.2));
-        shape.addSegmentLine(new Vector(0.2, 0));
+        shape.addSegmentMove(new Point(0.2, 0));
+        shape.addSegmentLine(new Point(1, 0));
+        shape.addSegmentLine(new Point(1, 1));
+        shape.addSegmentLine(new Point(0, 1));
+        shape.addSegmentLine(new Point(0, 0.2));
+        shape.addSegmentLine(new Point(0.2, 0));
         return shape;        
     }
 
     private static _createFlowChartSort(): Shape {
         const shape = new Shape();
-        shape.addSegmentMove(new Vector(0.5, 0));
-        shape.addSegmentLine(new Vector(1, 0.5));
-        shape.addSegmentLine(new Vector(0, 0.5));
-        shape.addSegmentLine(new Vector(0.5, 0));
-        shape.addSegmentMove(new Vector(0.5, 1));
-        shape.addSegmentLine(new Vector(1, 0.5));
-        shape.addSegmentLine(new Vector(0, 0.5));
-        shape.addSegmentLine(new Vector(0.5, 1));
+        shape.addSegmentMove(new Point(0.5, 0));
+        shape.addSegmentLine(new Point(1, 0.5));
+        shape.addSegmentLine(new Point(0, 0.5));
+        shape.addSegmentLine(new Point(0.5, 0));
+        shape.addSegmentMove(new Point(0.5, 1));
+        shape.addSegmentLine(new Point(1, 0.5));
+        shape.addSegmentLine(new Point(0, 0.5));
+        shape.addSegmentLine(new Point(0.5, 1));
         return shape;
     }
 
     private static _createLine(): Shape {
         const line = new Shape();
-        line.addSegmentMove(new Vector(0, 0));
-        line.addSegmentLine(new Vector(1, 1));
+        line.addSegmentMove(new Point(0, 0));
+        line.addSegmentLine(new Point(1, 1));
         return line;
     }
 
     private static _createRectangle(): Shape {
         const shape = new Shape();
-        shape.addSegmentMove(new Vector(0, 0));
-        shape.addSegmentLine(new Vector(0, 1));
-        shape.addSegmentLine(new Vector(1, 1));
-        shape.addSegmentLine(new Vector(1, 0));
-        shape.addSegmentLine(new Vector(0, 0));
+        shape.addSegmentMove(new Point(0, 0));
+        shape.addSegmentLine(new Point(0, 1));
+        shape.addSegmentLine(new Point(1, 1));
+        shape.addSegmentLine(new Point(1, 0));
+        shape.addSegmentLine(new Point(0, 0));
         return shape;
     }
 
@@ -109,23 +109,23 @@ export class PresetShapeFactory {
 
     private static _createTriangle(): Shape {
         const shape = new Shape();
-        shape.addSegmentMove(new Vector(0.5, 0));
-        shape.addSegmentLine(new Vector(0, 1));
-        shape.addSegmentLine(new Vector(1, 1));
-        shape.addSegmentLine(new Vector(0.5, 0));
+        shape.addSegmentMove(new Point(0.5, 0));
+        shape.addSegmentLine(new Point(0, 1));
+        shape.addSegmentLine(new Point(1, 1));
+        shape.addSegmentLine(new Point(0.5, 0));
         return shape;
     }
 
     private static _createWedgeRectangularCallout(): Shape {
         const shape = new Shape();
-        shape.addSegmentMove(new Vector(0, 0));
-        shape.addSegmentLine(new Vector(1, 0));
-        shape.addSegmentLine(new Vector(1, 0.7));
-        shape.addSegmentLine(new Vector(0.4, 0.7));
-        shape.addSegmentLine(new Vector(0.1, 1));
-        shape.addSegmentLine(new Vector(0.15, 0.7));
-        shape.addSegmentLine(new Vector(0, 0.7));
-        shape.addSegmentLine(new Vector(0, 0));
+        shape.addSegmentMove(new Point(0, 0));
+        shape.addSegmentLine(new Point(1, 0));
+        shape.addSegmentLine(new Point(1, 0.7));
+        shape.addSegmentLine(new Point(0.4, 0.7));
+        shape.addSegmentLine(new Point(0.1, 1));
+        shape.addSegmentLine(new Point(0.15, 0.7));
+        shape.addSegmentLine(new Point(0, 0.7));
+        shape.addSegmentLine(new Point(0, 0));
         return shape;        
     }
 

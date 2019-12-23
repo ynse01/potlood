@@ -1,5 +1,5 @@
 import { Box } from "./box.js";
-import { Vector } from "./vector.js";
+import { Point } from "./point.js";
 
 export class Rectangle {
     public x: number;
@@ -20,31 +20,31 @@ export class Rectangle {
         this.rotation = rotation || 0;
     }
 
-    public get xAxis(): Vector {
+    public get xAxis(): Point {
         const cos = Math.cos(this.rotation);
         const sin = Math.sin(this.rotation);
-        return new Vector(cos, sin);
+        return new Point(cos, sin);
     }
 
-    public get yAxis(): Vector {
+    public get yAxis(): Point {
         const cos = Math.cos(this.rotation);
         const sin = Math.sin(this.rotation);
-        return new Vector(sin, cos);
+        return new Point(sin, cos);
     }
 
-    public getPosition(norm: Vector): Vector {
+    public getPosition(norm: Point): Point {
         const xAxis = this.xAxis;
         const yAxis = this.yAxis;
         const xPos = this.x + xAxis.x * norm.x + yAxis.x * norm.y;
         const yPos = this.y + xAxis.y * norm.x + yAxis.y * norm.y;
-        return new Vector(xPos, yPos);
+        return new Point(xPos, yPos);
     }
 
     public get bounds(): Box {
-        const pos00 = this.getPosition(new Vector(0, 0));
-        const pos10 = this.getPosition(new Vector(1, 0));
-        const pos01 = this.getPosition(new Vector(0, 1));
-        const pos11 = this.getPosition(new Vector(1, 1));
+        const pos00 = this.getPosition(new Point(0, 0));
+        const pos10 = this.getPosition(new Point(1, 0));
+        const pos01 = this.getPosition(new Point(0, 1));
+        const pos11 = this.getPosition(new Point(1, 1));
         let bounds = new Box(pos00.x, pos00.y, 0, 0);
         bounds = bounds.includePoint(pos10.x, pos10.y);
         bounds = bounds.includePoint(pos01.x, pos01.y);
