@@ -51,4 +51,8 @@ export class Rectangle {
         bounds = bounds.includePoint(pos11.x, pos11.y);
         return bounds;
     }
+
+    public clone(): Rectangle {
+        return new Rectangle(this.x, this.y, this.width, this.height, this.rotation);
+    }
 }

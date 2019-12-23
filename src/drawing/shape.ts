@@ -47,24 +47,24 @@ class LineTo extends MoveTo {
 }
 
 class ArcTo implements IPathSegment {
-    constructor(public circle: Ellipse, public angle: number, public largeArc: boolean, public sweep: boolean) {
+    constructor(public ellipse: Ellipse, public angle: number, public largeArc: boolean, public sweep: boolean) {
     }
 
     public translate(offset: Point): void {
-        this.circle.center = this.circle.center.translate(offset);
+        this.ellipse.center = this.ellipse.center.translate(offset);
     }
 
     public scale(scaling: Point): void {
-        this.circle.center = this.circle.center.scale(scaling);
-        this.circle.radiusX = this.circle.radiusX * scaling.x;
-        this.circle.radiusY = this.circle.radiusY * scaling.y;
+        this.ellipse.center = this.ellipse.center.scale(scaling);
+        this.ellipse.radiusX = this.ellipse.radiusX * scaling.x;
+        this.ellipse.radiusY = this.ellipse.radiusY * scaling.y;
     }
 
     public buildPath(): string {
         const la = this.largeArc ? "1" : "0";
         const ps = this.sweep ? "1" : "0";
-        const point = this.circle.pointAtAngle(this.angle);
-        return ` A ${this.circle.radiusX} ${this.circle.radiusY} 0 ${la} ${ps} ${point.x} ${point.y}`;
+        const point = this.ellipse.pointAtAngle(this.angle);
+        return ` A ${this.ellipse.radiusX} ${this.ellipse.radiusY} 0 ${la} ${ps} ${point.x} ${point.y}`;
     }
 }
 

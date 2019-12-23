@@ -23,4 +23,8 @@ export class Point {
         }
         return new Point(this.x * factor1, this.y * factor2);
     }
+
+    public clone(): Point {
+        return new Point(this.x, this.y);
+    }
 }

@@ -86,6 +86,10 @@ export class Box {
         return new Box(x, y, width, height);
     }
 
+    public clone(): Box {
+        return new Box(this.x, this.y, this.width, this.height);
+    }
+
     public toString(): string {
         return `{${this.x}, ${this.y}, ${this.width}, ${this.height}}`;
     }

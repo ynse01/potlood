@@ -16,4 +16,8 @@ export class Ellipse {
         const y = this.center.y + this.radiusY * Math.sin(radians);
         return new Point(x, y);
     }
+
+    public clone(): Ellipse {
+        return new Ellipse(this.center.clone(), this.radiusX, this.radiusY);
+    }
 }

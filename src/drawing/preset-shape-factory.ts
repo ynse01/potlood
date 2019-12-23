@@ -51,12 +51,13 @@ export class PresetShapeFactory {
     private static _createEllipse(): Shape {
         const shape = new Shape();
         const ellipse = new Ellipse(new Point(0.5, 0.5), 0.5, 0.5);
-        shape.addSegmentMove(new Point(0, 0.5));
-        shape.addSegmentArc(ellipse, Math.PI / 2, false, true);
-        shape.addSegmentArc(ellipse, Math.PI, false, true);
-        shape.addSegmentArc(ellipse, 3 * Math.PI / 2, false, true);
+        shape.addSegmentMove(new Point(1, 0.5));
+        shape.addSegmentArc(ellipse.clone(), Math.PI / 2, false, true);
+        shape.addSegmentArc(ellipse.clone(), Math.PI, false, true);
+        shape.addSegmentArc(ellipse.clone(), 3 * Math.PI / 2, false, true);
+        shape.addSegmentArc(ellipse.clone(), 0, false, true);
         shape.addSegmentClose();
-        return new Shape();
+        return shape;
     }
 
     private static _createFlowChartCollate(): Shape {
