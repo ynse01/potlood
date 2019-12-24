@@ -191,7 +191,7 @@ class SquareRootFormula implements IFormula {
     }
 }
 
-class TangusFormula implements IFormula {
+class TangentFormula implements IFormula {
 
     constructor(public name: string, private x: string, private y: string) {
     }
@@ -277,7 +277,7 @@ export class ShapeGuide {
                 form = new SquareRootFormula(name, parts[1]);
                 break;
             case "tan":
-                form = new TangusFormula(name, parts[1], parts[2]);
+                form = new TangentFormula(name, parts[1], parts[2]);
                 break;
             case "val":
                 form = new LiteralValueFormula(name, parts[1]);
