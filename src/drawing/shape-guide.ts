@@ -214,6 +214,18 @@ class LiteralValueFormula implements IFormula {
     }
 }
 
+class FunctionFormula implements IFormula {
+    constructor (public name: string, private func: (shape: Shape) => number) {
+    }
+
+
+    evaluate(guide: ShapeGuide): number {
+        return this.func(guide.shape);
+    }
+
+    
+}
+
 export class ShapeGuide {
     public shape: Shape;
     private _formulas: IFormula[] = [];
@@ -304,18 +316,45 @@ export class ShapeGuide {
 
     public evuluate(): void {
         this._formulas.forEach(formula => {
-            const name = formula.name;
-            const val = formula.evaluate(this);
-            this._setVariable(name, val);
+            this._evaluateVariable(formula);
         })
     }
 
     private _getVariableValue(name: string): number {
-        const val = this._variables.find((current) => current.name === name);
+        let val = this._variables.find((current) => current.name === name);
+        if (val === undefined) {
+            // Check pre-defined variables.
+            switch(name) {
+                case "h":
+                    val = this._createNamedVariable(new FunctionFormula("h", (shape: Shape) => shape.height));
+                    break;
+                case "w":
+                    val = this._createNamedVariable(new FunctionFormula("w", (shape: Shape) => shape.width));
+                    break;
+                case "ss":
+                case "hc":
+                case "vc":
+                case "r":
+                case "b":
+                case "hd2":
+                case "wd2":
+                case "wd32":
+                case "cd2":
+                case "cd4":
+                case "3cd4":
+                default:
+                    console.log(`Unable to find variable named ${name} in Shape Guide.`);
+                    break;
+            }
+        }
         return (val !== undefined) ? val.val : Number.NaN;
     }
 
-    private _setVariable(name: string, value: number): void {
-        this._variables.push({ name: name, val: value});
+    private _evaluateVariable(formula: IFormula): void {
+        this._variables.push(this._createNamedVariable(formula));
+    }
+
+    private _createNamedVariable(formula: IFormula): { name: string, val: number } {
+        return { name: formula.name, val : formula.evaluate(this)};
     }
 }
