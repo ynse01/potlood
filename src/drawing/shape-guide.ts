@@ -331,17 +331,27 @@ export class ShapeGuide {
                 case "w":
                     val = this._createNamedVariable(new FunctionFormula("w", (shape: Shape) => shape.width));
                     break;
-                case "ss":
+                case "cd2":
+                    val = this._createNamedVariable(new FunctionFormula("cd2", (_shape: Shape) => Math.PI));
+                    break;
+                case "cd4":
+                    val = this._createNamedVariable(new FunctionFormula("cd4", (_shape: Shape) => Math.PI / 2));
+                    break;
+                case "3cd4":
+                    val = this._createNamedVariable(new FunctionFormula("3cd4", (_shape: Shape) => 3 * Math.PI / 2));
+                    break;
                 case "hc":
+                    val = this._createNamedVariable(new FunctionFormula("hc", (shape: Shape) => shape.width / 2));
+                    break;
                 case "vc":
+                    val = this._createNamedVariable(new FunctionFormula("vc", (shape: Shape) => shape.height / 2));
+                    break;
+                case "ss":
                 case "r":
                 case "b":
                 case "hd2":
                 case "wd2":
                 case "wd32":
-                case "cd2":
-                case "cd4":
-                case "3cd4":
                 default:
                     console.log(`Unable to find variable named ${name} in Shape Guide.`);
                     break;
