@@ -4,7 +4,7 @@ import { Point } from "../math/point.js";
 import { PresetShapeFactory } from "./preset-shape-factory.js";
 
 export class ShapeReader {
-    private _presetFactory = new PresetShapeFactory();
+    private static _presetFactory = new PresetShapeFactory();
 
     public readShape(shapeNode: Node): Shape | undefined {
         let shape: Shape | undefined = new Shape();
@@ -45,11 +45,41 @@ export class ShapeReader {
         return shape;
     }
 
+    public readPath(pathNode: Node, shape: Shape): void {
+        pathNode.childNodes.forEach(segmentNode => {
+            switch(segmentNode.nodeName) {
+                case "a:arcTo":
+                case "arcTo":
+                    this._addAngle(segmentNode, shape);
+                    break;
+                case "a:moveTo":
+                case "moveTo":
+                    shape.addSegmentMove(this._readPoint(segmentNode.firstChild!));
+                    break;
+                case "a:lnTo":
+                case "lnTo":
+                    shape.addSegmentLine(this._readPoint(segmentNode.firstChild!));
+                    break;
+                case "a:cubicBezTo":
+                case "cubicBezTo":
+                    this._addCubicBezier(segmentNode, shape);
+                    break;
+                case "a:close":
+                case "close":
+                    shape.addSegmentClose();
+                    break;
+                default:
+                    console.log(`Unknown path segment ${segmentNode.nodeName} encountered during reading of Shape`);
+                    break;
+            }
+        });
+    }
+
     private _readPresetShape(presetNode: Node): Shape | undefined {
         let shape: Shape | undefined = undefined;
         const name = Xml.getAttribute(presetNode, "prst");
         if (name !== undefined) {
-            shape = this._presetFactory.createShape(name);
+            shape = ShapeReader._presetFactory.createShape(name);
         }
         return shape;
     }
@@ -60,7 +90,8 @@ export class ShapeReader {
         if (pathListNode !== undefined) {
             const pathNode = Xml.getFirstChildOfName(pathListNode, "a:path");
             if (pathNode !== undefined) {
-                shape = this._readPath(pathNode);
+                shape = new Shape();
+                this.readPath(pathNode, shape);
                 const widthAttr = Xml.getAttribute(pathNode, "w");
                 if (widthAttr !== undefined) {
                     shape.width = parseInt(widthAttr);
@@ -83,22 +114,14 @@ export class ShapeReader {
         return color;
     }
 
-    private _readPath(pathNode: Node): Shape {
-        const shape = new Shape();
-        pathNode.childNodes.forEach(segmentNode => {
-            switch(segmentNode.nodeName) {
-                case "a:moveTo":
-                    shape.addSegmentMove(this._readPoint(segmentNode.firstChild!));
-                    break;
-                case "a:lnTo":
-                    shape.addSegmentLine(this._readPoint(segmentNode.firstChild!));
-                    break;
-                case "a:cubicBezTo":
-                    this._addCubicBezier(segmentNode, shape);
-                    break;
-            }
-        });
-        return shape;
+    private _addAngle(segmentNode: Node, shape: Shape): void {
+        const sweepAngle = Xml.getAttribute(segmentNode, "swAng");
+        const startAngle = Xml.getAttribute(segmentNode, "stAng");
+        const radiusX = Xml.getAttribute(segmentNode, "wR");
+        const radiusY = Xml.getAttribute(segmentNode, "hR");
+        if (sweepAngle !== undefined && startAngle !== undefined && radiusX !== undefined && radiusY !== undefined) {
+            shape.addSegmentAngle(parseInt(sweepAngle), parseInt(startAngle), parseInt(radiusX), parseInt(radiusY));
+        }
     }
 
     private _addCubicBezier(segmentNode: Node, shape: Shape): void {

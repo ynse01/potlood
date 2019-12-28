@@ -1,6 +1,7 @@
 import { Point } from "../math/point.js";
 import { Box } from "../math/box.js";
 import { Ellipse } from "../math/ellipse.js";
+import { ShapeGuide } from "./shape-guide.js";
 
 interface IPathSegment {
     translate(offset: Point): void;
@@ -68,6 +69,24 @@ class ArcTo implements IPathSegment {
     }
 }
 
+class AngleTo implements IPathSegment {
+    constructor(public sweepAngle: number, public startAngle: number, public radiusX: number, public radiusY: number) {
+    }
+
+    public translate(_offset: Point): void {
+        // Nothing to be done.
+    }
+
+    public scale(scaling: Point): void {
+        this.radiusX = this.radiusX * scaling.x;
+        this.radiusY = this.radiusY * scaling.y;
+    }
+
+    public buildPath(): string {
+        return ``;
+    }
+}
+
 class CubicBezierTo implements IPathSegment {
     constructor(public point: Point, public control1: Point, public control2: Point) {
     }
@@ -95,6 +114,7 @@ export class Shape {
     public fillColor: string | undefined = undefined;
     public lineColor: string | undefined = undefined;
 
+    public guide: ShapeGuide = new ShapeGuide(this);
     private segments: IPathSegment[] = [];
     private _path: string | undefined = undefined;
 
@@ -120,6 +140,10 @@ export class Shape {
 
     public addSegmentArc(ellipse: Ellipse, angle: number, largeArc: boolean, sweep: boolean): void {
         this.segments.push(new ArcTo(ellipse, angle, largeArc, sweep));
+    }
+
+    public addSegmentAngle(sweepAngle: number, startAngle: number, radiusX: number, radiusY: number): void {
+        this.segments.push(new AngleTo(sweepAngle, startAngle, radiusX, radiusY));
     }
 
     public addSegmentCubicBezier(point: Point, control1: Point, control2: Point): void {
