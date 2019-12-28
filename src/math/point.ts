@@ -7,6 +7,10 @@ export class Point {
         this.y = y;
     }
 
+    public static difference(startPoint: Point, endPoint: Point): Point {
+        return new Point(startPoint.x - endPoint.x, startPoint.y - endPoint.y);
+    }
+
     public translate(offset: Point): Point {
         return new Point(this.x + offset.x, this.y + offset.y);
     }

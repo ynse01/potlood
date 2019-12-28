@@ -169,6 +169,14 @@ export class Shape {
         this.segments.push(new AngleTo(sweepAngle, startAngle, radiusX, radiusY));
     }
 
+    public addSegmentQuadBezier(endPoint: Point, control: Point): void {
+        const twoThird = 2 / 3;
+        const startPoint: Point = new Point(0, 0);
+        const cubic1 = startPoint.translate(Point.difference(control, startPoint).scale(twoThird));
+        const cubic2 = endPoint.translate(Point.difference(control, endPoint).scale(twoThird));
+        this.segments.push(new CubicBezierTo(endPoint, cubic1, cubic2));
+    }
+
     public addSegmentCubicBezier(point: Point, control1: Point, control2: Point): void {
         this.segments.push(new CubicBezierTo(point, control1, control2));
     }

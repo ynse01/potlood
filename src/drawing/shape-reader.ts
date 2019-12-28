@@ -73,7 +73,7 @@ export class ShapeReader {
                         break;
                     case "a:quadBezTo":
                     case "quadBezTo":
-                        console.log("TODO: Quad bezier curve path segment");
+                        this._addQuadBezier(segmentNode, shape);
                         break;
                     case "a:close":
                     case "close":
@@ -133,6 +133,15 @@ export class ShapeReader {
         const radiusY = Xml.getAttribute(segmentNode, "hR");
         if (sweepAngle !== undefined && startAngle !== undefined && radiusX !== undefined && radiusY !== undefined) {
             shape.addSegmentAngle(parseInt(sweepAngle), parseInt(startAngle), parseInt(radiusX), parseInt(radiusY));
+        }
+    }
+
+    private _addQuadBezier(segmentNode: Node, shape: Shape): void {
+        const childNodes = segmentNode.childNodes;
+        if (childNodes.length === 3) {
+            const endPoint = this._readPoint(childNodes[1]);
+            const control = this._readPoint(childNodes[0]);
+            shape.addSegmentQuadBezier(endPoint, control);
         }
     }
 
