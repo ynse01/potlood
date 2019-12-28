@@ -47,30 +47,42 @@ export class ShapeReader {
 
     public readPath(pathNode: Node, shape: Shape): void {
         pathNode.childNodes.forEach(segmentNode => {
-            switch(segmentNode.nodeName) {
-                case "a:arcTo":
-                case "arcTo":
-                    this._addAngle(segmentNode, shape);
-                    break;
-                case "a:moveTo":
-                case "moveTo":
-                    shape.addSegmentMove(this._readPoint(segmentNode.firstChild!));
-                    break;
-                case "a:lnTo":
-                case "lnTo":
-                    shape.addSegmentLine(this._readPoint(segmentNode.firstChild!));
-                    break;
-                case "a:cubicBezTo":
-                case "cubicBezTo":
-                    this._addCubicBezier(segmentNode, shape);
-                    break;
-                case "a:close":
-                case "close":
-                    shape.addSegmentClose();
-                    break;
-                default:
-                    console.log(`Unknown path segment ${segmentNode.nodeName} encountered during reading of Shape`);
-                    break;
+            if (segmentNode.nodeType === Node.ELEMENT_NODE) {
+                switch(segmentNode.nodeName) {
+                    case "a:arcTo":
+                    case "arcTo":
+                        this._addAngle(segmentNode, shape);
+                        break;
+                    case "a:moveTo":
+                    case "moveTo":
+                        const movePointNode = Xml.getFirstChildOfName(segmentNode, "pt");
+                        if (movePointNode !== undefined) {
+                            shape.addSegmentMove(this._readPoint(movePointNode));
+                        }
+                        break;
+                    case "a:lnTo":
+                    case "lnTo":
+                        const linePointNode = Xml.getFirstChildOfName(segmentNode, "pt");
+                        if (linePointNode !== undefined) {
+                            shape.addSegmentLine(this._readPoint(linePointNode));
+                        }
+                        break;
+                    case "a:cubicBezTo":
+                    case "cubicBezTo":
+                        this._addCubicBezier(segmentNode, shape);
+                        break;
+                    case "a:quadBezTo":
+                    case "quadBezTo":
+                        console.log("TODO: Quad bezier curve path segment");
+                        break;
+                    case "a:close":
+                    case "close":
+                        shape.addSegmentClose();
+                        break;
+                    default:
+                        console.log(`Unknown path segment ${segmentNode.nodeName} encountered during reading of Shape`);
+                        break;
+                }
             }
         });
     }

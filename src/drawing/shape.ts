@@ -7,6 +7,7 @@ interface IPathSegment {
     translate(offset: Point): void;
     scale(scaling: Point): void;
     buildPath(): string;
+    clone(): IPathSegment;
 }
 
 class CloseSegment implements IPathSegment {
@@ -21,7 +22,9 @@ class CloseSegment implements IPathSegment {
         return " Z";
     }
 
-
+    public clone(): CloseSegment {
+        return new CloseSegment();
+    }
 }
 
 class MoveTo implements IPathSegment {    
@@ -39,11 +42,19 @@ class MoveTo implements IPathSegment {
     public buildPath(): string {
         return ` M ${this.point.x} ${this.point.y}`;
     }
+
+    public clone(): MoveTo {
+        return new MoveTo(this.point);
+    }
 }
 
 class LineTo extends MoveTo {
     public buildPath(): string {
         return `L ${this.point.x} ${this.point.y}`;
+    }
+
+    public clone(): LineTo {
+        return new LineTo(this.point);
     }
 }
 
@@ -67,6 +78,10 @@ class ArcTo implements IPathSegment {
         const point = this.ellipse.pointAtAngle(this.angle);
         return ` A ${this.ellipse.radiusX} ${this.ellipse.radiusY} 0 ${la} ${ps} ${point.x} ${point.y}`;
     }
+
+    public clone(): ArcTo {
+        return new ArcTo(this.ellipse, this.angle, this.largeArc, this.sweep);
+    }
 }
 
 class AngleTo implements IPathSegment {
@@ -84,6 +99,10 @@ class AngleTo implements IPathSegment {
 
     public buildPath(): string {
         return ``;
+    }
+
+    public clone(): AngleTo {
+        return new AngleTo(this.sweepAngle, this.startAngle, this.radiusX, this.radiusY);
     }
 }
 
@@ -105,6 +124,10 @@ class CubicBezierTo implements IPathSegment {
 
     public buildPath(): string {
         return ` C ${this.control1.x} ${this.control1.y}, ${this.control2.x} ${this.control2.y}, ${this.point.x} ${this.point.y}`;
+    }
+
+    public clone(): CubicBezierTo {
+        return new CubicBezierTo(this.point, this.control1, this.control2);
     }
 }
 
@@ -169,5 +192,16 @@ export class Shape {
         const scalingY = bounds.height / this.height;
         this.scale(new Point(scalingX, scalingY));
         this.translate(bounds.topLeft);
+    }
+
+    public clone(): Shape {
+        const clone = new Shape();
+        clone.width = this.width;
+        clone.height = this.height;
+        clone.guide = this.guide;
+        clone.lineColor = this.lineColor;
+        clone.fillColor = this.fillColor;
+        clone.segments = this.segments.map((segment) => segment.clone());
+        return clone;
     }
 }

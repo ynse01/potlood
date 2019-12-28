@@ -243,7 +243,7 @@ export class ShapeGuide {
         }
         let form: IFormula | undefined = undefined;
         switch(parts[0]) {
-            case "/*":
+            case "*/":
                 form = new MultiplyDevideFormula(name, parts[1], parts[2], parts[3]);
                 break;
             case "+-":

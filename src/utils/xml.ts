@@ -1,5 +1,27 @@
 export class Xml {
 
+    public static loadFromUrl(url: string): Promise<Document> {
+        return new Promise<Document>((resolve, reject) => {
+            var oReq = new XMLHttpRequest();
+            oReq.open("GET", url, true);
+            oReq.responseType = "text";
+            
+            oReq.onload = (_oEvent) => {
+                if (oReq.status === 200) {
+                    var text = oReq.response as string;
+                    const doc = new DOMParser().parseFromString(text, "application/xml");
+                    resolve(doc);
+                } else {
+                    reject(`File not found: ${url}`);
+                }
+            };
+            oReq.onerror = (evt) => {
+                reject(evt);
+            }
+            oReq.send(null);
+        });
+    }
+
     /**
      * Get the value of the attribute.
      * @param node Node to get the attribute from.

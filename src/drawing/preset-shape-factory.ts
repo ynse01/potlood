@@ -17,6 +17,10 @@ export class PresetShapeFactory {
         "flowChartSort": PresetShapeFactory._createFlowChartSort
     }
 
+    public static defineShape(name: string, shape: Shape) {
+        this.creators[name] = () => shape.clone();
+    }
+
     public createShape(name: string): Shape | undefined {
         let shape: Shape | undefined = undefined;
         const creator: () => Shape = PresetShapeFactory.creators[name];

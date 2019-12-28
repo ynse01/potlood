@@ -5,6 +5,8 @@ import { DocumentX } from "./document-x.js";
 import { AbstractNumberings } from "./numbering/abstract-numberings.js";
 import { Relationships } from "./package/relationships.js";
 import { Metrics } from "./utils/metrics.js";
+import { PresetShapeReader } from "./drawing/preset-shape-reader.js";
+import { Xml } from "./utils/xml.js";
 
 export class Potlood {
     private renderer: Renderer;
@@ -14,8 +16,7 @@ export class Potlood {
     }
 
     public loadDocxFromUrl(url: string): void {
-        Metrics.init();
-        this.renderer.clear();
+        this._init();
         Package.loadFromUrl(url).then((pack) => {
             this._loadFromPackage(pack);
         }).catch((err) => {
@@ -24,8 +25,7 @@ export class Potlood {
     }
 
     public loadDocxFromFiles(files: FileList): void {
-        Metrics.init();
-        this.renderer.clear();
+        this._init();
         Package.loadFromFile(files).then((pack) => {
             this._loadFromPackage(pack);
         });
@@ -66,6 +66,16 @@ export class Potlood {
             docx.parseContent();
             const posY = this.renderer.renderDocument(docx);
             this.renderer.ensureHeight(posY);
+        });
+    }
+
+    private _init() {
+        Metrics.init();
+        this.renderer.clear();
+        Xml.loadFromUrl('./presetShapeDefinitions.xml').then(doc => {
+            new PresetShapeReader().readPresetShapeDefinitions(doc);
+        }).catch(() => {
+            console.log('Unable to load preset shapes');
         });
     }
 }
