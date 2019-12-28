@@ -28,6 +28,10 @@ export class Point {
         return new Point(this.x * factor1, this.y * factor2);
     }
 
+    public toString(): string {
+        return `(${this.x}, ${this.y})`;
+    }
+
     public clone(): Point {
         return new Point(this.x, this.y);
     }

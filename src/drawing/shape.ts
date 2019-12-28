@@ -1,24 +1,36 @@
 import { Point } from "../math/point.js";
 import { Box } from "../math/box.js";
-import { Ellipse } from "../math/ellipse.js";
 import { ShapeGuide } from "./shape-guide.js";
+import { PointGuide } from "./point-guide.js";
+import { Ellipse } from "../math/ellipse.js";
 
-interface IPathSegment {
-    translate(offset: Point): void;
-    scale(scaling: Point): void;
-    buildPath(): string;
-    clone(): IPathSegment;
+abstract class PathSegment {
+    protected _offset: Point = new Point(0, 0);
+    protected _scaling: Point = new Point(1, 1);
+
+    public translate(offset: Point): void {
+        this._offset = offset;
+    }
+
+    public scale(scaling: Point): void {
+        this._scaling = scaling;
+    }
+
+    abstract getEndPoint(guide: ShapeGuide, startPoint: Point): Point;
+    abstract buildPath(guide: ShapeGuide, startPoint: Point): string;
+    abstract clone(): PathSegment;
+
+    protected convertPoint(point: PointGuide, guide: ShapeGuide): Point {
+        return point.convertToPoint(guide).translate(this._offset).scale(this._scaling);
+    }
 }
 
-class CloseSegment implements IPathSegment {
-    public translate(_offset: Point): void {
-        // Nothing to do.
+class CloseSegment extends PathSegment {
+    public getEndPoint(_guide: ShapeGuide, _startPoint: Point): Point {
+        return new Point(0, 0);
     }
-    
-    public scale(_scaling: Point): void {
-        // Nothing to do.
-    }
-    buildPath(): string {
+
+    public buildPath(_guide: ShapeGuide, _startPoint: Point): string {
         return " Z";
     }
 
@@ -27,20 +39,18 @@ class CloseSegment implements IPathSegment {
     }
 }
 
-class MoveTo implements IPathSegment {    
-    constructor(public point: Point) {
+class MoveTo extends PathSegment {
+    constructor(public point: PointGuide) {
+        super();
     }
 
-    public translate(offset: Point): void {
-        this.point = this.point.translate(offset);
+    public getEndPoint(guide: ShapeGuide, _startPoint: Point): Point {
+        return this.point.convertToPoint(guide);
     }
 
-    public scale(scaling: Point): void {
-        this.point = this.point.scale(scaling);
-    }
-
-    public buildPath(): string {
-        return ` M ${this.point.x} ${this.point.y}`;
+    public buildPath(guide: ShapeGuide, _startPoint: Point): string {
+        const point = this.convertPoint(this.point, guide);
+        return ` M ${point.x} ${point.y}`;
     }
 
     public clone(): MoveTo {
@@ -49,8 +59,13 @@ class MoveTo implements IPathSegment {
 }
 
 class LineTo extends MoveTo {
-    public buildPath(): string {
-        return `L ${this.point.x} ${this.point.y}`;
+    public getEndPoint(guide: ShapeGuide, _startPoint: Point): Point {
+        return this.convertPoint(this.point, guide);
+    }
+
+    public buildPath(guide: ShapeGuide, _startPoint: Point): string {
+        const point = this.convertPoint(this.point, guide);
+        return ` L ${point.x} ${point.y}`;
     }
 
     public clone(): LineTo {
@@ -58,76 +73,74 @@ class LineTo extends MoveTo {
     }
 }
 
-class ArcTo implements IPathSegment {
-    constructor(public ellipse: Ellipse, public angle: number, public largeArc: boolean, public sweep: boolean) {
+class ArcTo extends PathSegment {
+    constructor(public sweepAngle: string, public startAngle: string, public radiusX: string, public radiusY: string) {
+        super();
     }
 
-    public translate(offset: Point): void {
-        this.ellipse.center = this.ellipse.center.translate(offset);
+    public getEndPoint(guide: ShapeGuide, startPoint: Point): Point {
+        const startAngle = guide.getValue(this.startAngle);
+        const sweepAngle = guide.getValue(this.sweepAngle);
+        const radiusX = guide.getValue(this.radiusX) * this._scaling.x;
+        const radiusY = guide.getValue(this.radiusY) * this._scaling.y;
+        const ellipse = Ellipse.fromSinglePoint(startPoint, startAngle, radiusX, radiusY);
+        return ellipse.pointAtAngle(startAngle + sweepAngle);
     }
 
-    public scale(scaling: Point): void {
-        this.ellipse.center = this.ellipse.center.scale(scaling);
-        this.ellipse.radiusX = this.ellipse.radiusX * scaling.x;
-        this.ellipse.radiusY = this.ellipse.radiusY * scaling.y;
-    }
-
-    public buildPath(): string {
-        const la = this.largeArc ? "1" : "0";
-        const ps = this.sweep ? "1" : "0";
-        const point = this.ellipse.pointAtAngle(this.angle);
-        return ` A ${this.ellipse.radiusX} ${this.ellipse.radiusY} 0 ${la} ${ps} ${point.x} ${point.y}`;
+    public buildPath(guide: ShapeGuide, startPoint: Point): string {
+        const la = guide.getValue(this.sweepAngle) > Math.PI ? "1" : "0";
+        const radiusX = guide.getValue(this.radiusX) * this._scaling.x;
+        const radiusY = guide.getValue(this.radiusY) * this._scaling.y;
+        const endPoint = this.getEndPoint(guide, startPoint);
+        return ` A ${radiusX} ${radiusY} 0 ${la} 1 ${endPoint.x} ${endPoint.y}`;
     }
 
     public clone(): ArcTo {
-        return new ArcTo(this.ellipse, this.angle, this.largeArc, this.sweep);
+        return new ArcTo(this.sweepAngle, this.startAngle, this.radiusX, this.radiusY);
     }
 }
 
-class AngleTo implements IPathSegment {
-    constructor(public sweepAngle: number, public startAngle: number, public radiusX: number, public radiusY: number) {
+class CubicBezierTo extends PathSegment {
+    constructor(public endPoint: PointGuide, public control1: PointGuide, public control2: PointGuide) {
+        super();
     }
 
-    public translate(_offset: Point): void {
-        // Nothing to be done.
+    public getEndPoint(guide: ShapeGuide, _startPoint: Point): Point {
+        return this.convertPoint(this.endPoint, guide);
     }
 
-    public scale(scaling: Point): void {
-        this.radiusX = this.radiusX * scaling.x;
-        this.radiusY = this.radiusY * scaling.y;
-    }
-
-    public buildPath(): string {
-        return ``;
-    }
-
-    public clone(): AngleTo {
-        return new AngleTo(this.sweepAngle, this.startAngle, this.radiusX, this.radiusY);
-    }
-}
-
-class CubicBezierTo implements IPathSegment {
-    constructor(public point: Point, public control1: Point, public control2: Point) {
-    }
-
-    public translate(offset: Point): void {
-        this.point = this.point.translate(offset);
-        this.control1 = this.control1.translate(offset);
-        this.control2 = this.control2.translate(offset);
-    }
-
-    public scale(scaling: Point): void {
-        this.point = this.point.scale(scaling);
-        this.control1 = this.control1.scale(scaling);
-        this.control2 = this.control2.scale(scaling);
-    }
-
-    public buildPath(): string {
-        return ` C ${this.control1.x} ${this.control1.y}, ${this.control2.x} ${this.control2.y}, ${this.point.x} ${this.point.y}`;
+    public buildPath(guide: ShapeGuide, _startPoint: Point): string {
+        const endPoint = this.convertPoint(this.endPoint, guide);
+        const control1 = this.convertPoint(this.control1, guide);
+        const control2 = this.convertPoint(this.control2, guide);
+        return ` C ${control1.x} ${control1.y}, ${control2.x} ${control2.y}, ${endPoint.x} ${endPoint.y}`;
     }
 
     public clone(): CubicBezierTo {
-        return new CubicBezierTo(this.point, this.control1, this.control2);
+        return new CubicBezierTo(this.endPoint, this.control1, this.control2);
+    }
+}
+
+class QuadBezierTo extends PathSegment {
+    constructor(public endPoint: PointGuide, public control: PointGuide) {
+        super();
+    }
+
+    public getEndPoint(guide: ShapeGuide, _startPoint: Point) {
+        return this.convertPoint(this.endPoint, guide);
+    }
+
+    public buildPath(guide: ShapeGuide, startPoint: Point): string {
+        const endPoint = this.convertPoint(this.endPoint, guide);
+        const control = this.convertPoint(this.control, guide);
+        const twoThird = 2 / 3;
+        const cubic1 = startPoint.translate(Point.difference(control, startPoint).scale(twoThird));
+        const cubic2 = endPoint.translate(Point.difference(control, endPoint).scale(twoThird));
+        return ` C ${cubic1.x} ${cubic1.y}, ${cubic2.x} ${cubic2.y}, ${endPoint.x} ${endPoint.y}`;
+    }
+
+    public clone(): QuadBezierTo {
+        return new QuadBezierTo(this.endPoint, this.control);
     }
 }
 
@@ -138,7 +151,7 @@ export class Shape {
     public lineColor: string | undefined = undefined;
 
     public guide: ShapeGuide = new ShapeGuide(this);
-    private segments: IPathSegment[] = [];
+    private segments: PathSegment[] = [];
     private _path: string | undefined = undefined;
 
     public translate(offset: Point): void {
@@ -153,31 +166,23 @@ export class Shape {
         });
     }
 
-    public addSegmentMove(point: Point): void {
+    public addSegmentMove(point: PointGuide): void {
         this.segments.push(new MoveTo(point));
     }
 
-    public addSegmentLine(point: Point): void {
+    public addSegmentLine(point: PointGuide): void {
         this.segments.push(new LineTo(point));
     }
 
-    public addSegmentArc(ellipse: Ellipse, angle: number, largeArc: boolean, sweep: boolean): void {
-        this.segments.push(new ArcTo(ellipse, angle, largeArc, sweep));
+    public addSegmentArc(sweepAngle: string, startAngle: string, radiusX: string, radiusY: string): void {
+        this.segments.push(new ArcTo(sweepAngle, startAngle, radiusX, radiusY));
     }
 
-    public addSegmentAngle(sweepAngle: number, startAngle: number, radiusX: number, radiusY: number): void {
-        this.segments.push(new AngleTo(sweepAngle, startAngle, radiusX, radiusY));
+    public addSegmentQuadBezier(endPoint: PointGuide, control: PointGuide): void {
+        this.segments.push(new QuadBezierTo(endPoint, control));
     }
 
-    public addSegmentQuadBezier(endPoint: Point, control: Point): void {
-        const twoThird = 2 / 3;
-        const startPoint: Point = new Point(0, 0);
-        const cubic1 = startPoint.translate(Point.difference(control, startPoint).scale(twoThird));
-        const cubic2 = endPoint.translate(Point.difference(control, endPoint).scale(twoThird));
-        this.segments.push(new CubicBezierTo(endPoint, cubic1, cubic2));
-    }
-
-    public addSegmentCubicBezier(point: Point, control1: Point, control2: Point): void {
+    public addSegmentCubicBezier(point: PointGuide, control1: PointGuide, control2: PointGuide): void {
         this.segments.push(new CubicBezierTo(point, control1, control2));
     }
 
@@ -188,8 +193,10 @@ export class Shape {
     public buildPath(): string {
         if (this._path === undefined) {
             this._path = "";
+            let currentPoint: Point = new Point(0, 0);
             this.segments.forEach((segment => {
-                this._path += segment.buildPath();
+                this._path += segment.buildPath(this.guide, currentPoint);
+                currentPoint = segment.getEndPoint(this.guide, currentPoint);
             }));
         }
         return this._path;

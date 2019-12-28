@@ -307,7 +307,7 @@ export class ShapeGuide {
         let val: number;
         const isNumber = /^(\d|-)/.test(statement);
         if (isNumber) {
-            val = parseInt(statement);
+            val = parseFloat(statement);
         } else {
             val = this._getVariableValue(statement);
         }

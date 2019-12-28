@@ -1,7 +1,7 @@
 import { Shape } from "./shape.js";
 import { Xml } from "../utils/xml.js";
-import { Point } from "../math/point.js";
 import { PresetShapeFactory } from "./preset-shape-factory.js";
+import { PointGuide } from "./point-guide.js";
 
 export class ShapeReader {
     private static _presetFactory = new PresetShapeFactory();
@@ -132,7 +132,7 @@ export class ShapeReader {
         const radiusX = Xml.getAttribute(segmentNode, "wR");
         const radiusY = Xml.getAttribute(segmentNode, "hR");
         if (sweepAngle !== undefined && startAngle !== undefined && radiusX !== undefined && radiusY !== undefined) {
-            shape.addSegmentAngle(parseInt(sweepAngle), parseInt(startAngle), parseInt(radiusX), parseInt(radiusY));
+            shape.addSegmentArc(sweepAngle, startAngle, radiusX, radiusY);
         }
     }
 
@@ -155,17 +155,17 @@ export class ShapeReader {
         }
     }
 
-    private _readPoint(pointNode: Node): Point {
-        let x = 0;
-        let y = 0;
+    private _readPoint(pointNode: Node): PointGuide {
+        let x = "0";
+        let y = "0";
         const xAttr = Xml.getAttribute(pointNode, "x");
         const yAttr = Xml.getAttribute(pointNode, "y");
         if (xAttr !== undefined) {
-            x = parseInt(xAttr);
+            x = xAttr;
         }
         if (yAttr !== undefined) {
-            y = parseInt(yAttr);
+            y = yAttr;
         }
-        return new Point(x, y);
+        return new PointGuide(x, y);
     }
 }

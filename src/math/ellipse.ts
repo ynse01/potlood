@@ -11,6 +11,12 @@ export class Ellipse {
         this.radiusY = radiusY;
     }
 
+    public static fromSinglePoint(point: Point, angle: number, radiusX: number, radiusY: number): Ellipse {
+        const localRadius = Ellipse._localRadius(angle, radiusX, radiusY);
+        const center = new Point(point.x - (localRadius * Math.cos(angle)), point.y - (localRadius * Math.sin(angle)));
+        return new Ellipse(center, radiusX, radiusY);
+    }
+
     public pointAtAngle(radians: number): Point {
         // Ellipse has radius which changes with angle.
         const radius = this.localRadius(radians);
@@ -20,14 +26,18 @@ export class Ellipse {
     }
 
     public localRadius(radians: number): number {
-        // Taken from polar representation of Ellipse.
-        const a = this.radiusX * Math.sin(radians);
-        const b = this.radiusY * Math.cos(radians);
-        const ab = this.radiusX * this.radiusY;
-        return ab / Math.sqrt((b * b) + (a * a));
+        return Ellipse._localRadius(radians, this.radiusX, this.radiusY);
     }
 
     public clone(): Ellipse {
         return new Ellipse(this.center.clone(), this.radiusX, this.radiusY);
+    }
+
+    private static _localRadius(radians: number, radiusX: number, radiusY: number): number {
+        // Taken from polar representation of Ellipse.
+        const a = radiusX * Math.sin(radians);
+        const b = radiusY * Math.cos(radians);
+        const ab = radiusX * radiusY;
+        return ab / Math.sqrt((b * b) + (a * a));
     }
 }

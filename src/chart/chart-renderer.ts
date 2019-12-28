@@ -12,6 +12,7 @@ import { Point } from "../math/point.js";
 import { Shape } from "../drawing/shape.js";
 import { PieChart } from "./pie-chart.js";
 import { Ellipse } from "../math/ellipse.js";
+import { PointGuide } from "../drawing/point-guide.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -111,7 +112,7 @@ export class ChartRenderer {
         // Loop backward, to got correct Z index.
         for(let seriesIndex = counts.numSeries - 1; seriesIndex >= 0; seriesIndex--) {
             const shape = new Shape();
-            shape.addSegmentMove(bounds.bottomLeft);
+            shape.addSegmentMove(PointGuide.fromPoint(bounds.bottomLeft));
             const style = areaChart.series[seriesIndex].style;
             for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
                 if (style.fillColor === undefined || style.fillColor === "ffffff") {
@@ -120,10 +121,10 @@ export class ChartRenderer {
                 const val = this._normalizeValue(areaChart.getValue(catIndex, seriesIndex), range);
                 const x = flowX + catIndex * catSpacing;
                 const y = bottomY - (bottomY - topY) * val;
-                shape.addSegmentLine(new Point(x, y));
+                shape.addSegmentLine(new PointGuide(x.toString(), y.toString()));
             }
-            shape.addSegmentLine(bounds.bottomRight);
-            shape.addSegmentLine(bounds.bottomLeft);
+            shape.addSegmentLine(PointGuide.fromPoint(bounds.bottomRight));
+            shape.addSegmentLine(PointGuide.fromPoint(bounds.bottomLeft));
             const path = shape.buildPath();
             this._painter.paintPolygon(path, style.fillColor, style.lineColor, style.lineThickness);
         }
@@ -175,19 +176,20 @@ export class ChartRenderer {
         const middle = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
         const seriesIndex = 0;
         const range = { min: 0, max: pieChart.getValueSum(seriesIndex)};
-        const circle = new Ellipse(middle, bounds.height / 2, bounds.height / 2);
+        const radius = bounds.height / 2;
+        const circle = new Ellipse(middle, radius, radius);
         // Start angle is relative to vertical (instead of horizontal axis of circle class).
         let previousAngle = pieChart.startAngle - Math.PI / 2;
         for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
             const color = pieChart.getSeriesStyle(seriesIndex, catIndex).fillColor || "000000";
-            const val = previousAngle + this._normalizeValue(pieChart.getValue(catIndex, seriesIndex), range) * Math.PI * 2;
+            const val = this._normalizeValue(pieChart.getValue(catIndex, seriesIndex), range) * Math.PI * 2;
             const path = new Shape();
-            path.addSegmentMove(middle);
-            path.addSegmentLine(circle.pointAtAngle(previousAngle));
-            path.addSegmentArc(circle, val, false, true);
-            path.addSegmentLine(middle);
+            path.addSegmentMove(PointGuide.fromPoint(middle));
+            path.addSegmentLine(PointGuide.fromPoint(circle.pointAtAngle(previousAngle)));
+            path.addSegmentArc(val.toString(), previousAngle.toString(), radius.toString(), radius.toString());
+            path.addSegmentLine(PointGuide.fromPoint(middle));
             this._painter.paintPolygon(path.buildPath(), color, undefined, undefined);
-            previousAngle = val;
+            previousAngle += val;
         }
     }
 
