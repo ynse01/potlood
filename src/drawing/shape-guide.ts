@@ -346,9 +346,19 @@ export class ShapeGuide {
                 case "vc":
                     val = this._createNamedVariable(new FunctionFormula("vc", (shape: Shape) => shape.height / 2));
                     break;
-                case "ss":
-                case "r":
+                case "t":
+                    val = this._createNamedVariable(new FunctionFormula("t", (_shape: Shape) => 0));
+                    break;
                 case "b":
+                    val = this._createNamedVariable(new FunctionFormula("b", (shape: Shape) => shape.height));
+                    break;
+                case "r":
+                    val = this._createNamedVariable(new FunctionFormula("r", (shape: Shape) => shape.width));
+                    break;
+                case "l":
+                    val = this._createNamedVariable(new FunctionFormula("l", (_shape: Shape) => 0));
+                    break;
+                case "ss":
                 case "hd2":
                 case "wd2":
                 case "wd32":
