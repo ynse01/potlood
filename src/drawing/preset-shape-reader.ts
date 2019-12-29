@@ -16,32 +16,30 @@ export class PresetShapeReader {
     }
 
     public readPresetShapeDefinition(defNode: Node): void {
-        if (defNode.nodeType === Node.ELEMENT_NODE) {
-            const shape = new Shape();
-            defNode.childNodes.forEach(child => {
-                switch (child.nodeName) {
-                    case "avLst":
-                        this._readShapeGuideList(child, shape);
-                        break;
-                    case "gdLst":
-                        this._readShapeGuideList(child, shape);
-                        break;
-                    case "pathLst":
-                        this._readPathList(child, shape);
-                        break;
-                    case "ahLst":
-                    case "rect":
-                    case "cxnLst":
-                    case "#text":
-                        // Ignore, only used for editing shapes.
-                        break;
-                    default:
-                        console.log(`Unknown node ${child.nodeName} encountered during reading of Shape definitions`);
-                        break;
-                }
-            });
-            PresetShapeFactory.defineShape(defNode.nodeName, shape);
-        }
+        const shape = new Shape();
+        defNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "avLst":
+                    this._readShapeGuideList(child, shape);
+                    break;
+                case "gdLst":
+                    this._readShapeGuideList(child, shape);
+                    break;
+                case "pathLst":
+                    this._readPathList(child, shape);
+                    break;
+                case "ahLst":
+                case "rect":
+                case "cxnLst":
+                case "#text":
+                    // Ignore, only used for editing shapes.
+                    break;
+                default:
+                    console.log(`Unknown node ${child.nodeName} encountered during reading of Shape definitions`);
+                    break;
+            }
+        });
+        PresetShapeFactory.defineShape(defNode.nodeName, shape);
     }
 
     private _readShapeGuideList(shapeGuideListNode: Node, shape: Shape): void {

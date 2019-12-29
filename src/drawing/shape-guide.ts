@@ -3,6 +3,7 @@ import { Shape } from "./shape";
 interface IFormula {
     readonly name: string;
     evaluate(guide: ShapeGuide): number;
+    toString(): string;
 }
 
 class MultiplyDevideFormula implements IFormula {
@@ -15,6 +16,10 @@ class MultiplyDevideFormula implements IFormula {
         const y = guide.getValue(this.y);
         const z = guide.getValue(this.z);
         return (x * y) / z;
+    }
+
+    public toString(): string {
+        return `${this.name}: */ ${this.x} ${this.y} ${this.z}`;
     }
 }
 
@@ -29,6 +34,10 @@ class AddSubtractFormula implements IFormula {
         const z = guide.getValue(this.z);
         return (x + y) - z;
     }
+
+    public toString(): string {
+        return `${this.name}: +- ${this.x} ${this.y} ${this.z}`;
+    }
 }
 
 class AddDevideFormula implements IFormula {
@@ -41,6 +50,10 @@ class AddDevideFormula implements IFormula {
         const y = guide.getValue(this.y);
         const z = guide.getValue(this.z);
         return (x + y) / z;
+    }
+
+    public toString(): string {
+        return `${this.name}: +* ${this.x} ${this.y} ${this.z}`;
     }
 }
 
@@ -55,6 +68,10 @@ class IfElseFormula implements IFormula {
         const z = guide.getValue(this.z);
         return (x > 0) ? y : z;
     }
+
+    public toString(): string {
+        return `${this.name}: ?: ${this.x} ${this.y} ${this.z}`;
+    }
 }
 
 class AbsoluteFormula implements IFormula {
@@ -65,6 +82,10 @@ class AbsoluteFormula implements IFormula {
     public evaluate(guide: ShapeGuide): number {
         const x = guide.getValue(this.x);
         return Math.abs(x);
+    }
+
+    public toString(): string {
+        return `${this.name}: abs ${this.x}`;
     }
 }
 
@@ -77,6 +98,10 @@ class ArcTanFormula implements IFormula {
         const x = guide.getValue(this.x);
         const y = guide.getValue(this.y);
         return Math.atan2(y, x);
+    }
+
+    public toString(): string {
+        return `${this.name}: at2 ${this.x} ${this.y}`;
     }
 }
 
@@ -91,6 +116,10 @@ class CosineArcTanFormula implements IFormula {
         const z = guide.getValue(this.z);
         return (x * Math.cos(Math.atan2(z, y)));
     }
+
+    public toString(): string {
+        return `${this.name}: cat2 ${this.x} ${this.y} ${this.z}`;
+    }
 }
 
 class CosineFormula implements IFormula {
@@ -102,6 +131,10 @@ class CosineFormula implements IFormula {
         const x = guide.getValue(this.x);
         const y = guide.getValue(this.y);
         return x * Math.cos(y);
+    }
+
+    public toString(): string {
+        return `${this.name}: cos ${this.x} ${this.y}`;
     }
 }
 
@@ -115,6 +148,10 @@ class MaximumFormula implements IFormula {
         const y = guide.getValue(this.y);
         return Math.max(x, y);
     }
+
+    public toString(): string {
+        return `${this.name}: max ${this.x} ${this.y}`;
+    }
 }
 
 class MinimumFormula implements IFormula {
@@ -126,6 +163,10 @@ class MinimumFormula implements IFormula {
         const x = guide.getValue(this.x);
         const y = guide.getValue(this.y);
         return Math.min(x, y);
+    }
+
+    public toString(): string {
+        return `${this.name}: min ${this.x} ${this.y}`;
     }
 }
 
@@ -140,6 +181,10 @@ class ModuloFormula implements IFormula {
         const z = guide.getValue(this.z);
         return Math.sqrt(x * x + y * y + z * z);
     }
+
+    public toString(): string {
+        return `${this.name}: mod ${this.x} ${this.y} ${this.z}`;
+    }
 }
 
 class PinFormula implements IFormula {
@@ -152,6 +197,10 @@ class PinFormula implements IFormula {
         const y = guide.getValue(this.y);
         const z = guide.getValue(this.z);
         return (y < x) ? x : (y > z) ? z : y;
+    }
+
+    public toString(): string {
+        return `${this.name}: pin ${this.x} ${this.y} ${this.z}`;
     }
 }
 
@@ -166,6 +215,10 @@ class SineArcTanFormula implements IFormula {
         const z = guide.getValue(this.z);
         return x * Math.sin(Math.atan2(z, y));
     }
+
+    public toString(): string {
+        return `${this.name}: sat2 ${this.x} ${this.y} ${this.z}`;
+    }
 }
 
 class SineFormula implements IFormula {
@@ -178,6 +231,10 @@ class SineFormula implements IFormula {
         const y = guide.getValue(this.y);
         return x * Math.sin(y);
     }
+
+    public toString(): string {
+        return `${this.name}: sin ${this.x} ${this.y}`;
+    }
 }
 
 class SquareRootFormula implements IFormula {
@@ -188,6 +245,10 @@ class SquareRootFormula implements IFormula {
     public evaluate(guide: ShapeGuide): number {
         const x = guide.getValue(this.x);
         return Math.sqrt(x);
+    }
+
+    public toString(): string {
+        return `${this.name}: sqrt ${this.x}`;
     }
 }
 
@@ -201,6 +262,10 @@ class TangentFormula implements IFormula {
         const y = guide.getValue(this.y);
         return x * Math.tan(y);
     }
+
+    public toString(): string {
+        return `${this.name}: tan ${this.x} ${this.y}`;
+    }
 }
 
 class LiteralValueFormula implements IFormula {
@@ -212,6 +277,10 @@ class LiteralValueFormula implements IFormula {
         const x = guide.getValue(this.x);
         return x;
     }
+
+    public toString(): string {
+        return `${this.name}: val ${this.x}`;
+    }
 }
 
 class FunctionFormula implements IFormula {
@@ -219,11 +288,14 @@ class FunctionFormula implements IFormula {
     }
 
 
-    evaluate(guide: ShapeGuide): number {
+    public evaluate(guide: ShapeGuide): number {
         return this.func(guide.shape);
     }
 
     
+    public toString(): string {
+        return `${this.name}: function`;
+    }
 }
 
 export class ShapeGuide {
@@ -314,7 +386,7 @@ export class ShapeGuide {
         return val;
     }
 
-    public evuluate(): void {
+    public evaluate(): void {
         this._formulas.forEach(formula => {
             this._evaluateVariable(formula);
         })
@@ -475,7 +547,8 @@ export class ShapeGuide {
                     val = this._createNamedVariable(new FunctionFormula("ls", (shape: Shape) => Math.max(shape.width, shape.height)));
                     break
                 default:
-                    console.log(`Unable to find variable named ${name} in Shape Guide.`);
+                    const names = this._formulas.map(formula => formula.name).join(",");
+                    console.log(`Unable to find variable ${name} in Shape Guide which defines variables: ${names}.`);
                     break;
             }
         }

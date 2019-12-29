@@ -193,6 +193,7 @@ export class Shape {
     public buildPath(): string {
         if (this._path === undefined) {
             this._path = "";
+            this.guide.evaluate();
             let currentPoint: Point = new Point(0, 0);
             this.segments.forEach((segment => {
                 this._path += segment.buildPath(this.guide, currentPoint);
