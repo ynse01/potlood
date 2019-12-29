@@ -324,44 +324,152 @@ export class ShapeGuide {
         let val = this._variables.find((current) => current.name === name);
         if (val === undefined) {
             // Check pre-defined variables.
+            // Taken from: https://social.msdn.microsoft.com/Forums/en-US/3f69ebb3-62a0-4fdd-b367-64790dfb2491/presetshapedefinitionsxml-does-not-specify-width-and-height-form-some-autoshapes?forum=os_binaryfile
             switch(name) {
                 case "h":
+                    // Height
                     val = this._createNamedVariable(new FunctionFormula("h", (shape: Shape) => shape.height));
                     break;
+                case "hd2":
+                    // Height / 2
+                    val = this._createNamedVariable(new FunctionFormula("hd2", (shape: Shape) => shape.height / 2));
+                    break;
+                case "hd3":
+                    // Height / 3
+                    val = this._createNamedVariable(new FunctionFormula("hd3", (shape: Shape) => shape.height / 3));
+                    break;
+                case "hd4":
+                    // Height / 4
+                    val = this._createNamedVariable(new FunctionFormula("hd4", (shape: Shape) => shape.height / 4));
+                    break;
+                case "hd5":
+                    // Height / 5
+                    val = this._createNamedVariable(new FunctionFormula("hd5", (shape: Shape) => shape.height / 5));
+                    break;
+                case "hd6":
+                    // Height / 6
+                    val = this._createNamedVariable(new FunctionFormula("hd6", (shape: Shape) => shape.height / 6));
+                    break;
+                case "hd8":
+                    // Height / 8
+                    val = this._createNamedVariable(new FunctionFormula("hd8", (shape: Shape) => shape.height / 8));
+                    break;
                 case "w":
+                    // Width
                     val = this._createNamedVariable(new FunctionFormula("w", (shape: Shape) => shape.width));
                     break;
+                case "wd2":
+                    // Width / 2
+                    val = this._createNamedVariable(new FunctionFormula("wd2", (shape: Shape) => shape.width / 2));
+                    break;
+                case "wd3":
+                    // Width / 3
+                    val = this._createNamedVariable(new FunctionFormula("wd3", (shape: Shape) => shape.width / 3));
+                    break;
+                case "wd4":
+                    // Width / 4
+                    val = this._createNamedVariable(new FunctionFormula("wd4", (shape: Shape) => shape.width / 4));
+                    break;
+                case "wd5":
+                    // Width / 5
+                    val = this._createNamedVariable(new FunctionFormula("wd5", (shape: Shape) => shape.width / 5));
+                    break;
+                case "wd6":
+                    // Width / 6
+                    val = this._createNamedVariable(new FunctionFormula("wd6", (shape: Shape) => shape.width / 6));
+                    break;
+                case "wd8":
+                    // Width / 8
+                    val = this._createNamedVariable(new FunctionFormula("wd8", (shape: Shape) => shape.width / 8));
+                    break;
+                case "wd10":
+                    // Width / 10
+                    val = this._createNamedVariable(new FunctionFormula("wd10", (shape: Shape) => shape.width / 10));
+                    break;
                 case "cd2":
+                    // 180 degrees or PI radians.
                     val = this._createNamedVariable(new FunctionFormula("cd2", (_shape: Shape) => Math.PI));
                     break;
                 case "cd4":
+                    // 90 degrees or half PI radians.
                     val = this._createNamedVariable(new FunctionFormula("cd4", (_shape: Shape) => Math.PI / 2));
                     break;
+                case "cd8":
+                    // 45 degrees or quarter PI radians.
+                    val = this._createNamedVariable(new FunctionFormula("cd8", (_shape: Shape) => Math.PI / 4));
+                    break;
                 case "3cd4":
+                    // 270 degrees or 1.5 PI radians.
                     val = this._createNamedVariable(new FunctionFormula("3cd4", (_shape: Shape) => 3 * Math.PI / 2));
                     break;
+                case "3cd8":
+                    // 135 degrees or 3/4 PI radians.
+                    val = this._createNamedVariable(new FunctionFormula("3cd8", (_shape: Shape) => 3 * Math.PI / 4));
+                    break;
+                case "5cd8":
+                    // 225 degrees or 5/4 PI radians.
+                    val = this._createNamedVariable(new FunctionFormula("5cd8", (_shape: Shape) => 5 * Math.PI / 4));
+                    break;
+                case "7cd8":
+                    // 315 degrees or 7/4 PI radians.
+                    val = this._createNamedVariable(new FunctionFormula("7cd8", (_shape: Shape) => 7 * Math.PI / 4));
+                    break;
                 case "hc":
+                    // Horizontal center
                     val = this._createNamedVariable(new FunctionFormula("hc", (shape: Shape) => shape.width / 2));
                     break;
                 case "vc":
+                    // Vertical center
                     val = this._createNamedVariable(new FunctionFormula("vc", (shape: Shape) => shape.height / 2));
                     break;
                 case "t":
+                    // Top
                     val = this._createNamedVariable(new FunctionFormula("t", (_shape: Shape) => 0));
                     break;
                 case "b":
+                    // Bottom
                     val = this._createNamedVariable(new FunctionFormula("b", (shape: Shape) => shape.height));
                     break;
                 case "r":
+                    // Right
                     val = this._createNamedVariable(new FunctionFormula("r", (shape: Shape) => shape.width));
                     break;
                 case "l":
+                    // Left
                     val = this._createNamedVariable(new FunctionFormula("l", (_shape: Shape) => 0));
                     break;
                 case "ss":
-                case "hd2":
-                case "wd2":
-                case "wd32":
+                    // Short Side
+                    val = this._createNamedVariable(new FunctionFormula("ss", (shape: Shape) => Math.min(shape.width, shape.height)));
+                    break;
+                case "ssd2":
+                    // Short Side / 2
+                    val = this._createNamedVariable(new FunctionFormula("ssd2", (shape: Shape) => Math.min(shape.width, shape.height) / 2));
+                    break;
+                case "ssd4":
+                    // Short Side / 4
+                    val = this._createNamedVariable(new FunctionFormula("ssd4", (shape: Shape) => Math.min(shape.width, shape.height) / 4));
+                    break;
+                case "ssd6":
+                    // Short Side / 6
+                    val = this._createNamedVariable(new FunctionFormula("ssd6", (shape: Shape) => Math.min(shape.width, shape.height) / 6));
+                    break;
+                case "ssd8":
+                    // Short Side / 8
+                    val = this._createNamedVariable(new FunctionFormula("ssd8", (shape: Shape) => Math.min(shape.width, shape.height) / 8));
+                    break;
+                case "ssd16":
+                    // Short Side / 8
+                    val = this._createNamedVariable(new FunctionFormula("ssd16", (shape: Shape) => Math.min(shape.width, shape.height) / 16));
+                    break;
+                case "ssd32":
+                    // Short Side / 32
+                    val = this._createNamedVariable(new FunctionFormula("ssd32", (shape: Shape) => Math.min(shape.width, shape.height) / 32));
+                    break;
+                case "ls":
+                    // Long Side
+                    val = this._createNamedVariable(new FunctionFormula("ls", (shape: Shape) => Math.max(shape.width, shape.height)));
+                    break
                 default:
                     console.log(`Unable to find variable named ${name} in Shape Guide.`);
                     break;
