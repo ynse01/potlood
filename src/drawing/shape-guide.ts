@@ -446,6 +446,10 @@ export class ShapeGuide {
                     // Short Side / 2
                     val = this._createNamedVariable(new FunctionFormula("ssd2", (shape: Shape) => Math.min(shape.width, shape.height) / 2));
                     break;
+                case "ssd3":
+                    // Short Side / 3
+                    val = this._createNamedVariable(new FunctionFormula("ssd3", (shape: Shape) => Math.min(shape.width, shape.height) / 3));
+                    break;
                 case "ssd4":
                     // Short Side / 4
                     val = this._createNamedVariable(new FunctionFormula("ssd4", (shape: Shape) => Math.min(shape.width, shape.height) / 4));
