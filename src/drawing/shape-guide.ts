@@ -302,7 +302,7 @@ export class ShapeGuide {
     public shape: Shape;
     private _formulas: IFormula[] = [];
     private _variables: { name: string, val: number}[] = [];
-
+    private static _fullRotation = 360 * 60000;
     constructor(shape: Shape) {
         this.shape = shape;
     }
@@ -460,31 +460,31 @@ export class ShapeGuide {
                     break;
                 case "cd2":
                     // 180 degrees or PI radians.
-                    val = this._createNamedVariable(new FunctionFormula("cd2", (_shape: Shape) => Math.PI));
+                    val = this._createNamedVariable(new FunctionFormula("cd2", (_shape: Shape) => ShapeGuide._fullRotation / 2));
                     break;
                 case "cd4":
                     // 90 degrees or half PI radians.
-                    val = this._createNamedVariable(new FunctionFormula("cd4", (_shape: Shape) => Math.PI / 2));
+                    val = this._createNamedVariable(new FunctionFormula("cd4", (_shape: Shape) => ShapeGuide._fullRotation / 4));
                     break;
                 case "cd8":
                     // 45 degrees or quarter PI radians.
-                    val = this._createNamedVariable(new FunctionFormula("cd8", (_shape: Shape) => Math.PI / 4));
+                    val = this._createNamedVariable(new FunctionFormula("cd8", (_shape: Shape) => ShapeGuide._fullRotation / 8));
                     break;
                 case "3cd4":
                     // 270 degrees or 1.5 PI radians.
-                    val = this._createNamedVariable(new FunctionFormula("3cd4", (_shape: Shape) => 3 * Math.PI / 2));
+                    val = this._createNamedVariable(new FunctionFormula("3cd4", (_shape: Shape) => 3 * ShapeGuide._fullRotation / 4));
                     break;
                 case "3cd8":
                     // 135 degrees or 3/4 PI radians.
-                    val = this._createNamedVariable(new FunctionFormula("3cd8", (_shape: Shape) => 3 * Math.PI / 4));
+                    val = this._createNamedVariable(new FunctionFormula("3cd8", (_shape: Shape) => 3 * ShapeGuide._fullRotation / 8));
                     break;
                 case "5cd8":
                     // 225 degrees or 5/4 PI radians.
-                    val = this._createNamedVariable(new FunctionFormula("5cd8", (_shape: Shape) => 5 * Math.PI / 4));
+                    val = this._createNamedVariable(new FunctionFormula("5cd8", (_shape: Shape) => 5 * ShapeGuide._fullRotation / 8));
                     break;
                 case "7cd8":
                     // 315 degrees or 7/4 PI radians.
-                    val = this._createNamedVariable(new FunctionFormula("7cd8", (_shape: Shape) => 7 * Math.PI / 4));
+                    val = this._createNamedVariable(new FunctionFormula("7cd8", (_shape: Shape) => 7 * ShapeGuide._fullRotation / 8));
                     break;
                 case "hc":
                     // Horizontal center

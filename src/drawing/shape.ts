@@ -79,16 +79,17 @@ class ArcTo extends PathSegment {
     }
 
     public getEndPoint(guide: ShapeGuide, startPoint: Point): Point {
-        const startAngle = guide.getValue(this.startAngle);
-        const sweepAngle = guide.getValue(this.sweepAngle);
+        const startAngle = this._getAngleValue(guide, this.startAngle);
+        const sweepAngle = this._getAngleValue(guide, this.sweepAngle);
         const radiusX = guide.getValue(this.radiusX) * this._scaling.x;
         const radiusY = guide.getValue(this.radiusY) * this._scaling.y;
+        console.log(`Ellipse from ${startAngle} and sweep ${sweepAngle}`);
         const ellipse = Ellipse.fromSinglePoint(startPoint, startAngle, radiusX, radiusY);
         return ellipse.pointAtAngle(startAngle + sweepAngle);
     }
 
     public buildPath(guide: ShapeGuide, startPoint: Point): string {
-        const la = guide.getValue(this.sweepAngle) > Math.PI ? "1" : "0";
+        const la = this._getAngleValue(guide, this.sweepAngle) > Math.PI ? "1" : "0";
         const radiusX = guide.getValue(this.radiusX) * this._scaling.x;
         const radiusY = guide.getValue(this.radiusY) * this._scaling.y;
         const endPoint = this.getEndPoint(guide, startPoint);
@@ -97,6 +98,13 @@ class ArcTo extends PathSegment {
 
     public clone(): ArcTo {
         return new ArcTo(this.sweepAngle, this.startAngle, this.radiusX, this.radiusY);
+    }
+
+    private _getAngleValue(guide: ShapeGuide, variable: string): number {
+        const val = guide.getValue(variable);
+        const rad = (val * Math.PI) / (180 * 60000);
+        console.log(`Angle in radians ${rad} has raw value ${val}`);
+        return rad;
     }
 }
 

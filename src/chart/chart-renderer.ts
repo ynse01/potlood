@@ -178,6 +178,7 @@ export class ChartRenderer {
         const range = { min: 0, max: pieChart.getValueSum(seriesIndex)};
         const radius = bounds.height / 2;
         const circle = new Ellipse(middle, radius, radius);
+        const rot2Radians = (60000 * 180) / Math.PI;
         // Start angle is relative to vertical (instead of horizontal axis of circle class).
         let previousAngle = pieChart.startAngle - Math.PI / 2;
         for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
@@ -186,7 +187,7 @@ export class ChartRenderer {
             const path = new Shape();
             path.addSegmentMove(PointGuide.fromPoint(middle));
             path.addSegmentLine(PointGuide.fromPoint(circle.pointAtAngle(previousAngle)));
-            path.addSegmentArc(val.toString(), previousAngle.toString(), radius.toString(), radius.toString());
+            path.addSegmentArc((val * rot2Radians).toString(), (previousAngle * rot2Radians).toString(), radius.toString(), radius.toString());
             path.addSegmentLine(PointGuide.fromPoint(middle));
             this._painter.paintPolygon(path.buildPath(), color, undefined, undefined);
             previousAngle += val;
