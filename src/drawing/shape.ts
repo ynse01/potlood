@@ -199,6 +199,7 @@ export class Shape {
                 this._path += segment.buildPath(this.guide, currentPoint);
                 currentPoint = segment.getEndPoint(this.guide, currentPoint);
             }));
+            console.log(`Rendering to path ${this._path}`);
         }
         return this._path;
     }

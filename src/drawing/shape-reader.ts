@@ -55,16 +55,20 @@ export class ShapeReader {
                         break;
                     case "a:moveTo":
                     case "moveTo":
-                        const movePointNode = Xml.getFirstChildOfName(segmentNode, "pt");
+                        const movePointNode = Xml.getFirstChildOfName(segmentNode, ["pt", "a:pt"]);
                         if (movePointNode !== undefined) {
                             shape.addSegmentMove(this._readPoint(movePointNode));
+                        } else {
+                            console.log("Invalid move-to path segment encountered.");
                         }
                         break;
                     case "a:lnTo":
                     case "lnTo":
-                        const linePointNode = Xml.getFirstChildOfName(segmentNode, "pt");
+                        const linePointNode = Xml.getFirstChildOfName(segmentNode, ["pt", "a:pt"]);
                         if (linePointNode !== undefined) {
                             shape.addSegmentLine(this._readPoint(linePointNode));
+                        } else {
+                            console.log("Invalid line-to path segment encountered.");
                         }
                         break;
                     case "a:cubicBezTo":

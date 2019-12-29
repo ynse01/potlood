@@ -42,11 +42,14 @@ export class Xml {
      * @param parent The node under which to search for nodes.
      * @param name  The node name to search for.
      */
-    public static getFirstChildOfName(parent: Node, name: string): ChildNode | undefined {
+    public static getFirstChildOfName(parent: Node, name: string | string[]): ChildNode | undefined {
+        if (!Array.isArray(name)) {
+            return this.getFirstChildOfName(parent, [name]);
+        }
         let child: ChildNode | undefined = undefined;
         const children = parent.childNodes;
         for (let i = 0; i < children.length; i++) {
-            if (children[i].nodeName === name) {
+            if (name.indexOf(children[i].nodeName) !== -1) {
                 child = children[i];
                 break;
             }
