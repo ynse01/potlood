@@ -61,7 +61,8 @@ export class NumberingLevel {
 
     public getText(indices: number[]): string {
         if (this.text !== undefined) {
-            return this.text;
+            // Woprk around for FireFox 71+, crashing on non ASCII characters.
+            return (this.text === "") ? "" : "-";
         }
         return this.getFormatted(indices);
     }
@@ -73,8 +74,11 @@ export class NumberingLevel {
                 text = "&#x2002;";
                 break;
             case NumberingFormat.none:
-            default:
                 text = "";
+                break;
+            default:
+                console.log(`Don't know how to render numbering format ${this.format}`);
+                text = "-";
                 break;
         }
         return text;
