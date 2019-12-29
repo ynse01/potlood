@@ -35,12 +35,14 @@ export class Style {
                     // Ignore
                     break;
                 case "w:start":
-                case "w:next":
                 case "w:lvlText":
                 case "w:lvlJc":
                 case "w:numFmt":
                 case "w:suff":
-                    // TODO: Read these Numbering style attributes
+                    // Ignore, Numbering style related.
+                    break;
+                case "w:next":
+                    // TODO: Read these attributes
                     break;
                 default:
                     console.log(`Don't know how to parse ${child.nodeName} during Style reading.`);
