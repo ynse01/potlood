@@ -42,16 +42,36 @@ export class NumberingLevel {
         const level = new NumberingLevel(index);
         level.style = Style.fromStyleNode(levelNode);
         level.style.applyNamedStyles(namedStyles);
-        level.start = Xml.getNumberValueFromNode(levelNode, "w:start");
-        const suffix = Xml.getStringValueFromNode(levelNode, "w:suff");
-        if (suffix !== undefined) {
-            level.suffix = NumberingSuffix[suffix as keyof typeof NumberingSuffix];
-        }
-        const format = Xml.getStringValueFromNode(levelNode, "w:numFormat");
-        if (format !== undefined) {
-            level.format = NumberingFormat[format as keyof typeof NumberingFormat];
-        }
-        level.text = Xml.getStringValueFromNode(levelNode, "w:lvlText");
+        levelNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "w:start":
+                    level.start = Xml.getNumberValue(child);
+                    break;
+                case "w:suff":
+                    const suffix = Xml.getStringValue(child);
+                    if (suffix !== undefined) {
+                        level.suffix = NumberingSuffix[suffix as keyof typeof NumberingSuffix];
+                    }                                
+                    break;
+                case "w:numFmt":
+                    const format = Xml.getStringValue(child);
+                    if (format !== undefined) {
+                        level.format = NumberingFormat[format as keyof typeof NumberingFormat];
+                    }
+                    break;
+                case "w:lvlText":
+                    level.text = Xml.getStringValue(child);
+                    break;
+                case "w:lvlJc":
+                case "w:pPr":
+                case "w:rPr":
+                    // Ignore, part of Style.
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Numbering Level reading.`);
+                    break;
+            }
+        });
         return level;
     }
 
@@ -61,7 +81,7 @@ export class NumberingLevel {
 
     public getText(indices: number[]): string {
         if (this.text !== undefined) {
-            // Woprk around for FireFox 71+, crashing on non ASCII characters.
+            // Work around for FireFox 71+, crashing on non ASCII characters.
             return (this.text === "") ? "" : "-";
         }
         return this.getFormatted(indices);
