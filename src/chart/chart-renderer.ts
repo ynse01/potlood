@@ -190,7 +190,6 @@ export class ChartRenderer {
             path.addSegmentArc((val.toRotation()).toString(), (previousAngle.toRotation()).toString(), radius.toString(), radius.toString());
             path.addSegmentLine(PointGuide.fromPoint(middle));
             this._painter.paintPolygon(path.buildPath(), color, undefined, undefined);
-            console.log(`Angles: ${val} and ${previousAngle}`);
             previousAngle = previousAngle.add(val);
         }
     }
