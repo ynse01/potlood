@@ -13,6 +13,7 @@ import { Shape } from "../drawing/shape.js";
 import { PieChart } from "./pie-chart.js";
 import { Ellipse } from "../math/ellipse.js";
 import { PointGuide } from "../drawing/point-guide.js";
+import { Angle } from "../math/angle.js";
 
 export class ChartRenderer {
     private _painter: IPainter;
@@ -178,19 +179,19 @@ export class ChartRenderer {
         const range = { min: 0, max: pieChart.getValueSum(seriesIndex)};
         const radius = bounds.height / 2;
         const circle = new Ellipse(middle, radius, radius);
-        const rot2Radians = (60000 * 180) / Math.PI;
         // Start angle is relative to vertical (instead of horizontal axis of circle class).
-        let previousAngle = pieChart.startAngle - Math.PI / 2;
+        let previousAngle = Angle.fromRotation(pieChart.startAngle).subtract(Angle.fromNormalized(0.25));
         for(let catIndex = 0; catIndex < counts.numCats; catIndex++) {
             const color = pieChart.getSeriesStyle(seriesIndex, catIndex).fillColor || "000000";
-            const val = this._normalizeValue(pieChart.getValue(catIndex, seriesIndex), range) * Math.PI * 2;
+            const val = Angle.fromNormalized(this._normalizeValue(pieChart.getValue(catIndex, seriesIndex), range));
             const path = new Shape();
             path.addSegmentMove(PointGuide.fromPoint(middle));
             path.addSegmentLine(PointGuide.fromPoint(circle.pointAtAngle(previousAngle)));
-            path.addSegmentArc((val * rot2Radians).toString(), (previousAngle * rot2Radians).toString(), radius.toString(), radius.toString());
+            path.addSegmentArc((val.toRotation()).toString(), (previousAngle.toRotation()).toString(), radius.toString(), radius.toString());
             path.addSegmentLine(PointGuide.fromPoint(middle));
             this._painter.paintPolygon(path.buildPath(), color, undefined, undefined);
-            previousAngle += val;
+            console.log(`Angles: ${val} and ${previousAngle}`);
+            previousAngle = previousAngle.add(val);
         }
     }
 

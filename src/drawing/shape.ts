@@ -3,6 +3,7 @@ import { Box } from "../math/box.js";
 import { ShapeGuide } from "./shape-guide.js";
 import { PointGuide } from "./point-guide.js";
 import { Ellipse } from "../math/ellipse.js";
+import { Angle } from "../math/angle.js";
 
 abstract class PathSegment {
     protected _offset: Point = new Point(0, 0);
@@ -79,17 +80,17 @@ class ArcTo extends PathSegment {
     }
 
     public getEndPoint(guide: ShapeGuide, startPoint: Point): Point {
-        const startAngle = this._getAngleValue(guide, this.startAngle);
-        const sweepAngle = this._getAngleValue(guide, this.sweepAngle);
+        const startAngle = this._getAngleValue(guide, this.startAngle, false);
+        let sweepAngle = this._getAngleValue(guide, this.sweepAngle, true);
         const radiusX = guide.getValue(this.radiusX) * this._scaling.x;
         const radiusY = guide.getValue(this.radiusY) * this._scaling.y;
-        console.log(`Ellipse from ${startAngle} and sweep ${sweepAngle}`);
         const ellipse = Ellipse.fromSinglePoint(startPoint, startAngle, radiusX, radiusY);
-        return ellipse.pointAtAngle(startAngle + sweepAngle);
+        return ellipse.pointAtAngle(startAngle.add(sweepAngle));
     }
 
     public buildPath(guide: ShapeGuide, startPoint: Point): string {
-        const la = this._getAngleValue(guide, this.sweepAngle) > Math.PI ? "1" : "0";
+        let sweepAngle = this._getAngleValue(guide, this.sweepAngle, true);
+        const la = (sweepAngle.toRadians()) > Math.PI ? "1" : "0";
         const radiusX = guide.getValue(this.radiusX) * this._scaling.x;
         const radiusY = guide.getValue(this.radiusY) * this._scaling.y;
         const endPoint = this.getEndPoint(guide, startPoint);
@@ -100,11 +101,11 @@ class ArcTo extends PathSegment {
         return new ArcTo(this.sweepAngle, this.startAngle, this.radiusX, this.radiusY);
     }
 
-    private _getAngleValue(guide: ShapeGuide, variable: string): number {
+    private _getAngleValue(guide: ShapeGuide, variable: string, addFullRound: boolean): Angle {
         const val = guide.getValue(variable);
-        const rad = (val * Math.PI) / (180 * 60000);
-        console.log(`Angle in radians ${rad} has raw value ${val}`);
-        return rad;
+        const angle = Angle.fromRotation(val);
+        angle.round(addFullRound);
+        return angle;
     }
 }
 
