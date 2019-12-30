@@ -1,4 +1,5 @@
-import { Shape } from "./shape";
+import { Shape } from "./shape.js";
+import { Angle } from "../math/angle.js";
 
 interface IFormula {
     readonly name: string;
@@ -129,8 +130,8 @@ class CosineFormula implements IFormula {
 
     public evaluate(guide: ShapeGuide): number {
         const x = guide.getValue(this.x);
-        const y = guide.getValue(this.y);
-        return x * Math.cos(y);
+        const y = guide.getAngleValue(this.y);
+        return x * Math.cos(y.toRadians());
     }
 
     public toString(): string {
@@ -228,8 +229,8 @@ class SineFormula implements IFormula {
 
     public evaluate(guide: ShapeGuide): number {
         const x = guide.getValue(this.x);
-        const y = guide.getValue(this.y);
-        return x * Math.sin(y);
+        const y = guide.getAngleValue(this.y);
+        return x * Math.sin(y.toRadians());
     }
 
     public toString(): string {
@@ -384,6 +385,12 @@ export class ShapeGuide {
             val = this._getVariableValue(statement);
         }
         return val;
+    }
+
+    public getAngleValue(statement: string): Angle {
+        const val = this.getValue(statement);
+        const angle = Angle.fromRotation(val);
+        return angle;
     }
 
     public evaluate(): void {

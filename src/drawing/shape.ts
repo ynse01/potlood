@@ -90,10 +90,11 @@ class ArcTo extends PathSegment {
 
     public buildPath(guide: ShapeGuide, startPoint: Point): string {
         let sweepAngle = this._getAngleValue(guide, this.sweepAngle, true);
-        const la = (sweepAngle.toRadians()) > Math.PI ? "1" : "0";
+        const la = (sweepAngle.toNormalized() > 0.5) ? "1" : "0";
         const radiusX = guide.getValue(this.radiusX) * this._scaling.x;
         const radiusY = guide.getValue(this.radiusY) * this._scaling.y;
         const endPoint = this.getEndPoint(guide, startPoint);
+        console.log(`Start ${startPoint} to ${endPoint} with sweep ${sweepAngle.toString()}`);
         return ` A ${radiusX} ${radiusY} 0 ${la} 1 ${endPoint.x} ${endPoint.y}`;
     }
 

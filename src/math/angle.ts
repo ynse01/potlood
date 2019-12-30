@@ -39,6 +39,10 @@ export class Angle {
         return this._degrees;
     }
 
+    public toNormalized(): number {
+        return this._degrees / 360;
+    }
+
     public toRadians(): number {
         return this._degrees * Math.PI / 180;
     }
