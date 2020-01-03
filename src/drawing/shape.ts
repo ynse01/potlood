@@ -90,11 +90,12 @@ class ArcTo extends PathSegment {
 
     public buildPath(guide: ShapeGuide, startPoint: Point): string {
         let sweepAngle = this._getAngleValue(guide, this.sweepAngle, true);
-        const la = (sweepAngle.toNormalized() > 0.5) ? "1" : "0";
+        const largeArc = (sweepAngle.toNormalized() > 0.5) ? "1" : "0";
+        const sweep = (this._clockwise(guide)) ? "1" : "0";
         const radiusX = guide.getValue(this.radiusX) * this._scaling.x;
         const radiusY = guide.getValue(this.radiusY) * this._scaling.y;
         const endPoint = this.getEndPoint(guide, startPoint);
-        return ` A ${radiusX} ${radiusY} 0 ${la} 1 ${endPoint.x} ${endPoint.y}`;
+        return ` A ${radiusX} ${radiusY} 0 ${largeArc} ${sweep} ${endPoint.x} ${endPoint.y}`;
     }
 
     public clone(): ArcTo {
@@ -106,6 +107,11 @@ class ArcTo extends PathSegment {
         const angle = Angle.fromRotation(val);
         angle.round(addFullRound);
         return angle;
+    }
+
+    private _clockwise(guide: ShapeGuide): boolean {
+        const val = guide.getValue(this.sweepAngle);
+        return val > 0;
     }
 }
 
