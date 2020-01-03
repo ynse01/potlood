@@ -79,9 +79,9 @@ class ArcTo extends PathSegment {
         super();
     }
 
-    public getEndPoint(guide: ShapeGuide, startPoint: Point): Point {
+    public getEndPoint(guide: ShapeGuide, startPoint: Point, overrideSweepAngle?: Angle): Point {
         const startAngle = this._getAngleValue(guide, this.startAngle, false);
-        let sweepAngle = this._getAngleValue(guide, this.sweepAngle, true);
+        let sweepAngle = overrideSweepAngle || this._getAngleValue(guide, this.sweepAngle, true);
         const radiusX = guide.getValue(this.radiusX) * this._scaling.x;
         const radiusY = guide.getValue(this.radiusY) * this._scaling.y;
         const ellipse = Ellipse.fromSinglePoint(startPoint, startAngle, radiusX, radiusY);
@@ -90,16 +90,28 @@ class ArcTo extends PathSegment {
 
     public buildPath(guide: ShapeGuide, startPoint: Point): string {
         let sweepAngle = this._getAngleValue(guide, this.sweepAngle, true);
-        const largeArc = (sweepAngle.toNormalized() > 0.5) ? "1" : "0";
-        const sweep = (this._clockwise(guide)) ? "1" : "0";
+        const clockwise = this._clockwise(guide);
         const radiusX = guide.getValue(this.radiusX) * this._scaling.x;
         const radiusY = guide.getValue(this.radiusY) * this._scaling.y;
         const endPoint = this.getEndPoint(guide, startPoint);
-        return ` A ${radiusX} ${radiusY} 0 ${largeArc} ${sweep} ${endPoint.x} ${endPoint.y}`;
+        if (this._fullRotation(guide)) {
+            const midPoint = this.getEndPoint(guide, startPoint, Angle.fromNormalized(0.5));
+            const firstHalfPath = this._buildInternalPath(midPoint, Math.PI, radiusX, radiusY, true);
+            const secondHalfPath = this._buildInternalPath(endPoint, Math.PI, radiusX, radiusY, true);
+            return `${firstHalfPath}${secondHalfPath}`;
+        } else {
+            return this._buildInternalPath(endPoint, sweepAngle.toRadians(), radiusX, radiusY, clockwise);
+        }
     }
 
     public clone(): ArcTo {
         return new ArcTo(this.sweepAngle, this.startAngle, this.radiusX, this.radiusY);
+    }
+
+    private _buildInternalPath(endPoint: Point, sweepAngle: number, radiusX: number, radiusY: number, clockwise: boolean): string {
+        const largeArc = (sweepAngle > Math.PI) ? "1" : "0";
+        const sweep = (clockwise) ? "1" : "0";
+        return ` A ${radiusX} ${radiusY} 0 ${largeArc} ${sweep} ${endPoint.x} ${endPoint.y}`;
     }
 
     private _getAngleValue(guide: ShapeGuide, variable: string, addFullRound: boolean): Angle {
@@ -112,6 +124,11 @@ class ArcTo extends PathSegment {
     private _clockwise(guide: ShapeGuide): boolean {
         const val = guide.getValue(this.sweepAngle);
         return val > 0;
+    }
+
+    private _fullRotation(guide: ShapeGuide): boolean {
+        const val = guide.getValue(this.sweepAngle);
+        return Angle.fromRotation(val).toNormalized() === 1;
     }
 }
 
