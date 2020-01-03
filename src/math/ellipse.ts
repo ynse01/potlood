@@ -14,8 +14,10 @@ export class Ellipse {
 
     public static fromSinglePoint(point: Point, angle: Angle, radiusX: number, radiusY: number): Ellipse {
         const radians = angle.toRadians();
-        const localRadius = Ellipse._localRadius(radians, radiusX, radiusY);
-        const center = new Point(point.x - (localRadius * Math.cos(radians)), point.y - (localRadius * Math.sin(radians)));
+        const radius = Ellipse._localRadius(radians, radiusX, radiusY);
+        const x = point.x - radius * Math.cos(radians);
+        const y = point.y - radius * Math.sin(radians);
+        const center = new Point(x, y);
         return new Ellipse(center, radiusX, radiusY);
     }
 
@@ -39,8 +41,8 @@ export class Ellipse {
 
     private static _localRadius(radians: number, radiusX: number, radiusY: number): number {
         // Taken from polar representation of Ellipse.
-        const a = radiusX * Math.cos(radians);
-        const b = radiusY * Math.sin(radians);
+        const a = radiusX * Math.sin(radians);
+        const b = radiusY * Math.cos(radians);
         const ab = radiusX * radiusY;
         return ab / Math.sqrt((b * b) + (a * a));
     }

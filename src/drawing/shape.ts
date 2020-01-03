@@ -46,7 +46,7 @@ class MoveTo extends PathSegment {
     }
 
     public getEndPoint(guide: ShapeGuide, _startPoint: Point): Point {
-        return this.point.convertToPoint(guide);
+        return this.convertPoint(this.point, guide);
     }
 
     public buildPath(guide: ShapeGuide, _startPoint: Point): string {
@@ -94,7 +94,6 @@ class ArcTo extends PathSegment {
         const radiusX = guide.getValue(this.radiusX) * this._scaling.x;
         const radiusY = guide.getValue(this.radiusY) * this._scaling.y;
         const endPoint = this.getEndPoint(guide, startPoint);
-        console.log(`Start ${startPoint} to ${endPoint} with sweep ${sweepAngle.toString()}`);
         return ` A ${radiusX} ${radiusY} 0 ${la} 1 ${endPoint.x} ${endPoint.y}`;
     }
 
