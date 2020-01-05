@@ -46,6 +46,17 @@ export class ShapeReader {
     }
 
     public readPath(pathNode: Node, shape: Shape): void {
+        let filledIn = true;
+        let stroked = true;
+        const fill = Xml.getAttribute(pathNode, "fill");
+        if (fill !== undefined) {
+            filledIn = fill !== "none";
+        }
+        const stroke = Xml.getAttribute(pathNode, "stroke");
+        if (stroke !== undefined) {
+            stroked = Xml.attributeAsBoolean(stroke);
+        }
+        shape.addPath(filledIn, stroked);
         pathNode.childNodes.forEach(segmentNode => {
             if (segmentNode.nodeType === Node.ELEMENT_NODE) {
                 switch(segmentNode.nodeName) {

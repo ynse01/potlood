@@ -176,12 +176,17 @@ class QuadBezierTo extends PathSegment {
 }
 
 export class ShapePath {
+    public filledIn: boolean;
+    public stroked: boolean;
+
     private _guide: ShapeGuide;
     private segments: PathSegment[] = [];
     private _path: string | undefined = undefined;
 
-    constructor(guide: ShapeGuide) {
+    constructor(guide: ShapeGuide, filledIn: boolean = true, stroked: boolean = true) {
         this._guide = guide;
+        this.filledIn = filledIn;
+        this.stroked = stroked;
     }
 
     public translate(offset: Point): void {

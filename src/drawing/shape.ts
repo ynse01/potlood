@@ -53,7 +53,10 @@ export class Shape {
 
     public addSegmentClose(): void {
         this.paths[this.paths.length - 1].close();
-        this.paths.push(new ShapePath(this.guide));
+    }
+
+    public addPath(filledIn: boolean, stroked: boolean) {
+        this.paths.push(new ShapePath(this.guide, filledIn, stroked));
     }
 
     public performLayout(bounds: Box): void {
