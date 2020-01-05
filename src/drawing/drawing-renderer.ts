@@ -25,8 +25,10 @@ export class DrawingRenderer {
         }
         const shape = drawing.shape;
         if (shape !== undefined) {
-            const path = shape.buildPath();
-            this._painter.paintPolygon(path, shape.fillColor, shape.lineColor, 1);
+            shape.paths.forEach(path => {
+                const g = path.buildPath();
+                this._painter.paintPolygon(g, shape.fillColor, shape.lineColor, 1);    
+            });
         }
     }
     

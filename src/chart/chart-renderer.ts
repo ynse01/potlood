@@ -126,7 +126,7 @@ export class ChartRenderer {
             }
             shape.addSegmentLine(PointGuide.fromPoint(bounds.bottomRight));
             shape.addSegmentLine(PointGuide.fromPoint(bounds.bottomLeft));
-            const path = shape.buildPath();
+            const path = shape.paths[0].buildPath();
             this._painter.paintPolygon(path, style.fillColor, style.lineColor, style.lineThickness);
         }
     }
@@ -189,7 +189,7 @@ export class ChartRenderer {
             path.addSegmentLine(PointGuide.fromPoint(circle.pointAtAngle(previousAngle)));
             path.addSegmentArc((val.toRotation()).toString(), (previousAngle.toRotation()).toString(), radius.toString(), radius.toString());
             path.addSegmentLine(PointGuide.fromPoint(middle));
-            this._painter.paintPolygon(path.buildPath(), color, undefined, undefined);
+            this._painter.paintPolygon(path.paths[0].buildPath(), color, undefined, undefined);
             previousAngle = previousAngle.add(val);
         }
     }
