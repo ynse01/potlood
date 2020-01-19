@@ -2,6 +2,11 @@ import { Xml } from "../utils/xml.js";
 import { Metrics } from "../utils/metrics.js";
 import { Box } from "../math/box.js";
 
+export enum ShapeAnchorMode {
+    Inline,
+    Floating
+}
+
 export class ShapeBounds {
     public boundOffsetX: number = 0;
     public boundOffsetY: number = 0;
@@ -10,11 +15,11 @@ export class ShapeBounds {
     public flipHorizontal = false;
     public flipVertical = false;
     public rotation = 0;
-    public anchor = "";
+    public anchor = ShapeAnchorMode.Inline;
 
     public static fromShapePropertiesNode(shapePropNode: ChildNode): ShapeBounds {
         const bounds = new ShapeBounds();
-        bounds.anchor = "absolute";
+        bounds.anchor = ShapeAnchorMode.Floating;
         const frame = Xml.getFirstChildOfName(shapePropNode, "a:xfrm");
         if (frame !== undefined) {
             const flipH = Xml.getAttribute(frame, "flipH");
@@ -47,7 +52,7 @@ export class ShapeBounds {
 
     public static fromInlineNode(inlineNode: ChildNode): ShapeBounds {
         const bounds = new ShapeBounds();
-        bounds.anchor = "inline";
+        bounds.anchor = ShapeAnchorMode.Inline;
         ShapeBounds.readExtent(inlineNode, "wp:extent", bounds);
         
         return bounds;
@@ -55,7 +60,7 @@ export class ShapeBounds {
 
     public static fromAnchorNode(anchorNode: ChildNode): ShapeBounds {
         const bounds = new ShapeBounds();
-        bounds.anchor = "anchor";
+        bounds.anchor = ShapeAnchorMode.Floating;
         ShapeBounds.readExtent(anchorNode, "wp:extent", bounds);
         return bounds;
     }

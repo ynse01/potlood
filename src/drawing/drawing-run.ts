@@ -1,4 +1,4 @@
-import { ShapeBounds } from "./shape-bounds.js";
+import { ShapeBounds, ShapeAnchorMode } from "./shape-bounds.js";
 import { Picture } from "./picture.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
@@ -7,7 +7,6 @@ import { Shape } from "./shape.js";
 
 export enum WrapMode {
     None,
-    Inline,
     Square,
     Through,
     Tight,
@@ -50,7 +49,7 @@ export class DrawingRun implements ILayoutable {
             this.shape.performLayout(bounds);
         }
         this.lastXPos = 0;
-        if ((bounds.width > 400) || (this.wrapping !== WrapMode.Inline && this.wrapping !== WrapMode.None)) {
+        if ((bounds.width > 400) || (this.bounds.anchor !== ShapeAnchorMode.Inline && this.wrapping !== WrapMode.None)) {
             flow.advancePosition(this.bounds.boundSizeY);
         }
     }

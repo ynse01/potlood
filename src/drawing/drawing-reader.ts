@@ -20,7 +20,6 @@ export class DrawingReader {
             wrapMode = WrapMode.TopAndBottom;
         } else if (child.nodeName === "wp:inline") {
             bounds = ShapeBounds.fromInlineNode(child);
-            wrapMode = WrapMode.Inline;
         }
         const drawing = new DrawingRun(bounds, wrapMode);
         const graphic = Xml.getFirstChildOfName(child, "a:graphic");
