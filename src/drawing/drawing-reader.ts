@@ -7,6 +7,7 @@ import { ChartSpace } from "../chart/chart-space.js";
 import { XmlPart } from "../package/xml-part.js";
 import { ChartReader } from "../chart/chart-reader.js";
 import { ShapeReader } from "./shape-reader.js";
+import { ShapeBoundsReader } from "./shape-bounds-reader.js";
 
 export class DrawingReader {
     private static shapeReader = new ShapeReader();
@@ -16,10 +17,10 @@ export class DrawingReader {
         let wrapMode = WrapMode.None;
         const child = drawingNode.childNodes[0];
         if (child.nodeName === "wp:anchor") {
-            bounds = ShapeBounds.fromAnchorNode(child);
+            bounds = ShapeBoundsReader.fromAnchorNode(child);
             wrapMode = WrapMode.TopAndBottom;
         } else if (child.nodeName === "wp:inline") {
-            bounds = ShapeBounds.fromInlineNode(child);
+            bounds = ShapeBoundsReader.fromInlineNode(child);
         }
         const drawing = new DrawingRun(bounds, wrapMode);
         const graphic = Xml.getFirstChildOfName(child, "a:graphic");
