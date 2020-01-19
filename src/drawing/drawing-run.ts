@@ -28,11 +28,11 @@ export class DrawingRun implements ILayoutable {
     }
 
     public getUsedWidth(): number {
-        return this.bounds.boundSizeX;
+        return this.bounds.sizeX;
     }
 
     public getHeight(): number {
-        return this.bounds.boundSizeY;
+        return this.bounds.sizeY;
     }
 
     public performLayout(flow: VirtualFlow): void {
@@ -50,7 +50,7 @@ export class DrawingRun implements ILayoutable {
         }
         this.lastXPos = 0;
         if ((bounds.width > 400) || (this.bounds.anchor !== ShapeAnchorMode.Inline && this.wrapping !== WrapMode.None)) {
-            flow.advancePosition(this.bounds.boundSizeY);
+            flow.advancePosition(this.bounds.sizeY);
         }
     }
 }
