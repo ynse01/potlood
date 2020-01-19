@@ -1,4 +1,5 @@
 import { Box } from "../math/box.js";
+import { VirtualFlow } from "../utils/virtual-flow.js";
 
 export enum ShapeAnchorMode {
     /** Inline with the text */
@@ -59,7 +60,7 @@ export class ShapeBounds {
     public rotation = 0;
     public anchor = ShapeAnchorMode.Inline;
 
-    public get box(): Box {
+    public getBox(_flow: VirtualFlow): Box {
         return new Box(this.offsetX, this.offsetY, this.sizeX, this.sizeY);
     }
 }
