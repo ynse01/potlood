@@ -8,6 +8,7 @@ export class VirtualFlow {
     // private _pageHeight: number;
     private _pos: number;
     private _lastParPos: number = 0;
+    private _lastCharX: number = 0;
 
     public static fromSection(section: Section | undefined): VirtualFlow {
         const flow = new VirtualFlow(40, 700 - 40);
@@ -44,9 +45,20 @@ export class VirtualFlow {
         return this._xMin;
     }
 
-    public getReferenceX(_reference: ShapePositionReference): number {
+    public getReferenceX(reference: ShapePositionReference): number {
+        let x = this._xMin;
         // TODO: Support more reference modes.
-        return this._xMin;
+        switch(reference) {
+            case ShapePositionReference.Character:
+                x = this._lastCharX;
+                break;
+            case ShapePositionReference.None:
+            case ShapePositionReference.Column:
+            default:
+                x = this._xMin;
+                break;
+        }
+        return x;
     }
 
     public getY(): number {
@@ -56,8 +68,13 @@ export class VirtualFlow {
     public getReferenceY(reference: ShapePositionReference): number {
         let pos = this._pos;
         // TODO: Support more reference modes.
-        if (reference === ShapePositionReference.Paragraph) {
-            pos = this._lastParPos;
+        switch(reference) {
+            case ShapePositionReference.Paragraph:
+                pos = this._lastParPos;
+                break;
+            default:
+                pos = this._pos;
+                break;
         }
         return pos;
     }
@@ -79,6 +96,10 @@ export class VirtualFlow {
 
     public fixParagraph(): void {
         this._lastParPos = this._pos;
+    }
+
+    public fixCharacter(xDelta: number): void {
+        this._lastCharX = this._xMin + xDelta;
     }
 
     public clone(): VirtualFlow {

@@ -69,15 +69,23 @@ export class ShapeBounds {
     private _getStartPoint(flow: VirtualFlow): Point {
         let x = flow.getReferenceX(this.referenceX);
         let y = flow.getReferenceY(this.referenceY);
-        if (this.referenceX == ShapePositionReference.None) {
-            x += this.offsetX;
-        } else {
-            x += this.referenceOffsetX;
+        switch (this.referenceX) {
+            case ShapePositionReference.None:
+                x += this.offsetX;
+                break;
+            case ShapePositionReference.Column:
+            default:
+                x += this.referenceOffsetX;
+                break;
         }
-        if (this.referenceY == ShapePositionReference.None) {
-            y += this.offsetY;
-        } else {
-            y += this.referenceOffsetY;
+        switch (this.referenceY) {
+            case ShapePositionReference.None:
+                y += this.offsetY;
+                break;
+            case ShapePositionReference.Paragraph:
+            default:
+                y += this.referenceOffsetY;
+                break;
         }
         return new Point(x, y);
     }
