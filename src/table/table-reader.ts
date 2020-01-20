@@ -62,7 +62,7 @@ export class TableReader {
     }
 
     private static readTableCell(cellNode: ChildNode, table: Table, rowStyle: TableStyle, colIndex: number): TableCell {
-        let style = new TableStyle();
+        const style = new TableStyle();
         const cell = new TableCell(table.columns, style, colIndex);
         cellNode.childNodes.forEach(child => {
             switch(child.nodeName) {
@@ -72,7 +72,7 @@ export class TableReader {
                     cell.pars.push(par);
                     break;
                 case "w:tcPr":
-                    style = this.readTableCellPresentation(child, rowStyle);
+                    this.readTableCellPresentation(child, rowStyle, style);
                     break;
                 default:
                     console.log(`Don't know how to parse ${child.nodeName} during TableCell reading.`);
@@ -86,33 +86,32 @@ export class TableReader {
         return cell;
     }
 
-    private static readTableCellPresentation(cellPrNode: ChildNode, rowStyle: TableStyle): TableStyle {
-        const style = new TableStyle();
-        style.higherStyle = rowStyle;
+    private static readTableCellPresentation(cellPrNode: ChildNode, rowStyle: TableStyle, cellStyle: TableStyle): void {
+        cellStyle.higherStyle = rowStyle;
         cellPrNode.childNodes.forEach(child => {
             switch (child.nodeName) {
                 case "w:tcW":
                     const w = Xml.getAttribute(child, "w:w");
                     if (w !== undefined) {
-                        style.width = Metrics.convertTwipsToPixels(parseInt(w));
+                        cellStyle.width = Metrics.convertTwipsToPixels(parseInt(w));
                     }
                     break;
                 case "w:gridSpan":
                     const gridSpan = Xml.getStringValue(child);
                     if (gridSpan !== undefined) {
-                        style.gridSpan = parseInt(gridSpan);
+                        cellStyle.gridSpan = parseInt(gridSpan);
                     }
                     break;
                 case "w:tcBorders":
-                    style.borders = this.readBorders(child);
+                    cellStyle.borders = this.readBorders(child);
                     break;
                 case "w:tcMar":
-                    style.margins = this.readCellMargins(child);
+                    cellStyle.margins = this.readCellMargins(child);
                     break;
                 case "w:shd":
                     const shading = Xml.getAttribute(child, "fill");
                     if (shading !== undefined) {
-                        style.shading = shading;
+                        cellStyle.shading = shading;
                     }
                     break;
                 default:
@@ -120,7 +119,6 @@ export class TableReader {
                     break;
             }
         });
-        return style;
     }
 
     private static readBorders(bordersNode: ChildNode): TableBorderSet {
