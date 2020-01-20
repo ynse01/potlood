@@ -36,7 +36,7 @@ export class DrawingRun implements ILayoutable {
     }
 
     public performLayout(flow: VirtualFlow): void {
-        const bounds = this.bounds.getBox(flow).translate(flow.getX(), flow.getY());
+        const bounds = this.bounds.getBox(flow);
         if (this.picture !== undefined) {
             this.picture.bounds = bounds;
             this.picture.performLayout(flow);

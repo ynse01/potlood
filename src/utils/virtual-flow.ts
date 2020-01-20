@@ -1,4 +1,5 @@
 import { Section } from "../section.js";
+import { ShapePositionReference } from "../drawing/shape-bounds.js";
 
 export class VirtualFlow {
     // private _width: number;
@@ -6,6 +7,7 @@ export class VirtualFlow {
     private _xMax: number;
     // private _pageHeight: number;
     private _pos: number;
+    private _lastParPos: number = 0;
 
     public static fromSection(section: Section | undefined): VirtualFlow {
         const flow = new VirtualFlow(40, 700 - 40);
@@ -42,8 +44,22 @@ export class VirtualFlow {
         return this._xMin;
     }
 
+    public getReferenceX(_reference: ShapePositionReference): number {
+        // TODO: Support more reference modes.
+        return this._xMin;
+    }
+
     public getY(): number {
         return this._pos;
+    }
+
+    public getReferenceY(reference: ShapePositionReference): number {
+        let pos = this._pos;
+        // TODO: Support more reference modes.
+        if (reference === ShapePositionReference.Paragraph) {
+            pos = this._lastParPos;
+        }
+        return pos;
     }
 
     public getWidth(): number {
@@ -59,6 +75,10 @@ export class VirtualFlow {
     public advancePosition(delta: number): VirtualFlow {
         this._pos += delta;
         return this;
+    }
+
+    public fixParagraph(): void {
+        this._lastParPos = this._pos;
     }
 
     public clone(): VirtualFlow {

@@ -1,5 +1,6 @@
 import { Box } from "../math/box.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
+import { Point } from "../math/point.js";
 
 export enum ShapeAnchorMode {
     /** Inline with the text */
@@ -60,7 +61,24 @@ export class ShapeBounds {
     public rotation = 0;
     public anchor = ShapeAnchorMode.Inline;
 
-    public getBox(_flow: VirtualFlow): Box {
-        return new Box(this.offsetX, this.offsetY, this.sizeX, this.sizeY);
+    public getBox(flow: VirtualFlow): Box {
+        const start = this._getStartPoint(flow);
+        return new Box(start.x, start.y, this.sizeX, this.sizeY);
+    }
+
+    private _getStartPoint(flow: VirtualFlow): Point {
+        let x = flow.getReferenceX(this.referenceX);
+        let y = flow.getReferenceY(this.referenceY);
+        if (this.referenceX == ShapePositionReference.None) {
+            x += this.offsetX;
+        } else {
+            x += this.referenceOffsetX;
+        }
+        if (this.referenceY == ShapePositionReference.None) {
+            y += this.offsetY;
+        } else {
+            y += this.referenceOffsetY;
+        }
+        return new Point(x, y);
     }
 }
