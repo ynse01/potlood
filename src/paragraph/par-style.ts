@@ -71,6 +71,8 @@ export class ParStyle {
                 case "w:widowControl":
                 case "w:rPr":
                 case "w:pBdr":
+                case "w:contextualSpacing":
+                case "w:keepLines":
                 case "w:bidi":
                 case "w:tabs":
                 case "w:keepNext":

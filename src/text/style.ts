@@ -32,6 +32,9 @@ export class Style {
                     break;
                 case "w:name":
                 case "w:qFormat":
+                case "w:semiHidden":
+                case "w:uiPriority":
+                case "w:unhideWhenUsed":
                     // Ignore
                     break;
                 case "w:start":
@@ -42,6 +45,9 @@ export class Style {
                     // Ignore, Numbering style related.
                     break;
                 case "w:next":
+                case "w:link":
+                case "w:rsid":
+                case "w:tblPr":
                     // TODO: Read these attributes
                     break;
                 default:

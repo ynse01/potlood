@@ -265,6 +265,8 @@ export class TableReader {
                     }
                     break;
                 case "w:tblW":
+                case "w:tblStyle":
+                case "w:tblLook":
                     // Ignore
                     break;
                 default:
