@@ -20,6 +20,7 @@ export class Style {
         let runStyle: RunStyle | undefined = undefined;
         let basedOnId: string | undefined = undefined;
         styleNode.childNodes.forEach(child => {
+            // ISO/IEC 29500-1:2016 section: 17.7.4
             switch (child.nodeName) {
                 case "w:pPr":
                     parStyle = ParStyle.fromParPresentationNode(child);
@@ -31,10 +32,18 @@ export class Style {
                     basedOnId = Xml.getStringValue(child);
                     break;
                 case "w:name":
+                case "w:aliases":
+                case "w:autoRedefine":
                 case "w:qFormat":
                 case "w:semiHidden":
                 case "w:uiPriority":
                 case "w:unhideWhenUsed":
+                case "w:rsid":
+                case "w:locked":
+                case "w:lsdException":
+                case "w:personal":
+                case "w:personalCompose":
+                case "w:personalReply":
                     // Ignore
                     break;
                 case "w:start":
@@ -46,8 +55,9 @@ export class Style {
                     break;
                 case "w:next":
                 case "w:link":
-                case "w:rsid":
                 case "w:tblPr":
+                case "w:hidden":
+                case "w:latentStyles":
                     // TODO: Read these attributes
                     break;
                 default:
