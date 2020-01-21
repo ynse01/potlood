@@ -6,15 +6,18 @@ import { Box } from "../math/box.js";
 
 export class TableCell {
     public id: string | undefined = undefined;
-    public columns: TableColumn[];
     public rowSpan: number = 1;
     public pars: Paragraph[] = [];
     public style: TableStyle;
     public bounds: Box | undefined;
+    private _allColumns: TableColumn[];
+    private _startColumnIndex: number;
+    private _columns: TableColumn[] | undefined = undefined;
 
     constructor(columns: TableColumn[], style: TableStyle, startIndex: number) {
         this.style = style;
-        this.columns = this._getColumns(columns, startIndex);
+        this._allColumns = columns;
+        this._startColumnIndex = startIndex;
     }
 
     public performLayout(flow: VirtualFlow): void {
@@ -51,16 +54,19 @@ export class TableCell {
         return new VirtualFlow(x, x + this._getWidth(), flow.getY());
     }
 
+    public get columns(): TableColumn[] {
+        if (this._columns === undefined) {
+            const colSpan = this.style.gridSpan;
+            this._columns = this._allColumns.slice(this._startColumnIndex, this._startColumnIndex + colSpan);
+        }
+        return this._columns;
+    }
+
     private _getWidth(): number {
         let width = 0;
         this.columns.forEach(col => {
             width += col.width;
         });
         return width;
-    }
-
-    private _getColumns(columns: TableColumn[], startIndex: number): TableColumn[] {
-        const colSpan = this.style.gridSpan;
-        return columns.slice(startIndex, startIndex + colSpan);
     }
 }
