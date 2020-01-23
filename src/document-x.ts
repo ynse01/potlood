@@ -11,6 +11,7 @@ import { ILayoutable } from "./utils/i-layoutable.js";
 import { VirtualFlow } from "./utils/virtual-flow.js";
 import { TableReader } from "./table/table-reader.js";
 import { ParagraphReader } from "./paragraph/paragraph-reader.js";
+import { CoreProperties } from "./fields/core-properties.js";
 
 export class DocumentX implements ILayoutable {
     private part: XmlPart;
@@ -19,6 +20,7 @@ export class DocumentX implements ILayoutable {
     private _styles: NamedStyles | undefined;
     private _numberings: AbstractNumberings | undefined;
     private _rels: Relationships | undefined;
+    private _coreProperties: CoreProperties | undefined;
 
     public pack: Package;
 
@@ -73,6 +75,10 @@ export class DocumentX implements ILayoutable {
         return this._numberings;
     }
 
+    public get coreProperties(): CoreProperties | undefined {
+        return this._coreProperties;
+    }
+
     public setRelationships(relationships: Relationships): void {
         this._rels = relationships;
     }
@@ -83,6 +89,10 @@ export class DocumentX implements ILayoutable {
 
     public setNumberings(numberings: AbstractNumberings): void {
         this._numberings = numberings;
+    }
+
+    public setCoreProperties(coreProperties: CoreProperties): void {
+        this._coreProperties = coreProperties;
     }
 
     public get paragraphs(): (Paragraph | Table)[] {

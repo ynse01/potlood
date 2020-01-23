@@ -7,6 +7,7 @@ import { Relationships } from "./package/relationships.js";
 import { Metrics } from "./utils/metrics.js";
 import { PresetShapeReader } from "./drawing/preset-shape-reader.js";
 import { Xml } from "./utils/xml.js";
+import { CoreProperties } from "./fields/core-properties.js";
 
 export class Potlood {
     private renderer: Renderer;
@@ -37,15 +38,18 @@ export class Potlood {
             pack.loadPartAsXml('word/styles.xml').then(stylePart => {
                 const styles = new NamedStyles(stylePart);
                 styles.parseContent();
-                if (pack.hasPart('word/numbering.xml')) {
-                    pack.loadPartAsXml('word/numbering.xml').then(numPart => {
-                        const numberings = new AbstractNumberings(numPart);
-                        numberings.parseContent(styles);
-                        this._loadDocument(pack, relationships, styles, numberings);
-                    });
-                } else {
-                    this._loadDocument(pack, relationships, styles, undefined);
-                }
+                pack.loadPartAsXml('docProps/core.xml').then(core => {
+                    const coreProperties = CoreProperties.fromDocument(core.document);
+                    if (pack.hasPart('word/numbering.xml')) {
+                        pack.loadPartAsXml('word/numbering.xml').then(numPart => {
+                            const numberings = new AbstractNumberings(numPart);
+                            numberings.parseContent(styles);
+                            this._loadDocument(pack, relationships, styles, coreProperties, numberings);
+                        });
+                    } else {
+                        this._loadDocument(pack, relationships, styles, coreProperties, undefined);
+                    }
+                });
             });
         });
     }
@@ -54,12 +58,14 @@ export class Potlood {
         pack: Package,
         relationships: Relationships,
         styles: NamedStyles,
+        coreProperties: CoreProperties,
         numberings: AbstractNumberings | undefined
     ) {
         pack.loadPartAsXml('word/document.xml').then(part => {
             const docx = new DocumentX(pack, part);
             docx.setRelationships(relationships);
             docx.setNamedStyles(styles);
+            docx.setCoreProperties(coreProperties);
             if (numberings !== undefined) {
                 docx.setNumberings(numberings);
             }
