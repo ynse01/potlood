@@ -5,10 +5,12 @@ export class CoreProperties {
     public description: string | undefined = undefined;
     public language: string | undefined = undefined;
     public lastModifiedBy: string | undefined = undefined;
-    public modified: Date | undefined = undefined;
+    public lastModified: Date | undefined = undefined;
+    public lastPrinted: Date | undefined = undefined;
     public revision: number | undefined = undefined;
     public subject: string | undefined = undefined;
     public title: string | undefined = undefined;
+    public keywords: string | undefined = undefined;
 
     public static fromDocument(doc: XMLDocument): CoreProperties {
         const coreProperties = new CoreProperties();
@@ -32,7 +34,10 @@ export class CoreProperties {
                         coreProperties.lastModifiedBy = text;
                         break;
                     case "dcterms:modified":
-                        coreProperties.modified = CoreProperties._parseDateString(text);
+                        coreProperties.lastModified = CoreProperties._parseDateString(text);
+                        break;
+                    case "cp:lastPrinted":
+                        coreProperties.lastPrinted = CoreProperties._parseDateString(text);
                         break;
                     case "cp:revision":
                         coreProperties.revision = parseInt(text);
@@ -43,8 +48,11 @@ export class CoreProperties {
                     case "dc:title":
                         coreProperties.title = text;
                         break;
+                    case "cp:keywords":
+                        coreProperties.keywords = text;
+                        break;
                     default:
-                        console.log(`Unknown core property encountered during reading.`);
+                        console.log(`Unknown core property ${propNode.nodeName} encountered during reading.`);
                         break;
                 }
             });
