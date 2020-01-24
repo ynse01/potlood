@@ -27,29 +27,36 @@ export class DrawingReader {
         if (graphic !== undefined) {
             const graphicData = Xml.getFirstChildOfName(graphic, "a:graphicData");
             if (graphicData !== undefined) {
-                graphicData.childNodes.forEach(childNode => {
-                    switch (childNode.nodeName) {
-                        case "pic:pic":
-                            drawing.picture = Picture.fromPicNode(childNode, docx);
-                            break;
-                        case "c:chart":
-                            const relationship = Xml.getAttribute(childNode, "r:id");
-                            if (relationship !== undefined && docx.relationships !== undefined) {
-                                const chartTarget = docx.relationships.getTarget(relationship);
-                                drawing.chart = this.readChartFromPart(docx.pack.loadPartAsXml(`word/${chartTarget}`));
-                            }
-                            break;
-                        case "wps:wsp":
-                            drawing.shape = this.shapeReader.readShape(childNode);
-                            break;
-                        default:
-                            console.log(`Don't know how to parse ${childNode.nodeName} during Drawing reading.`);
-                            break;
-                    }
-                });
+                this._readGraphicData(drawing, graphicData, docx);
             }
         }
         return drawing;
+    }
+
+    private static _readGraphicData(drawing: DrawingRun, graphicData: Node, docx: DocumentX): void {
+        graphicData.childNodes.forEach(childNode => {
+            switch (childNode.nodeName) {
+                case "pic:pic":
+                    drawing.picture = Picture.fromPicNode(childNode, docx);
+                    break;
+                case "c:chart":
+                    const relationship = Xml.getAttribute(childNode, "r:id");
+                    if (relationship !== undefined && docx.relationships !== undefined) {
+                        const chartTarget = docx.relationships.getTarget(relationship);
+                        drawing.chart = this.readChartFromPart(docx.pack.loadPartAsXml(`word/${chartTarget}`));
+                    }
+                    break;
+                case "wps:wsp":
+                    drawing.shape = this.shapeReader.readShape(childNode);
+                    break;
+                case "wpg:wgp":
+                    this._readGraphicData(drawing, childNode, docx);
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${childNode.nodeName} during Drawing reading.`);
+                    break;
+            }
+        });
     }
 
     private static readChartFromPart(promise: Promise<XmlPart>): ChartSpace {
