@@ -53,13 +53,26 @@ export class CoreProperties {
     }
 
     private static _parseDateString(text: string): Date | undefined {
-        // Expecting format: YYYY-MM-DDThh:mm:ssZ
+        // Expecting formats: 
+        // YYYY
+        // YYYY-MM
+        // YYYY-MM-DD
+        // YYYY-MM-DDThh:mmZ
+        // YYYY-MM-DDThh:mm:ssZ
+        // YYYY-MM-DDThh:mm:ss.sZ
+        // Where T is literal and Z can be literal Z or a time zone offset (+hh:mm or -hh:mm).
         const year = parseInt(text.substr(0, 4));
-        const month = parseInt(text.substr(5, 2));
-        const day = parseInt(text.substr(8, 2));
-        const hour = parseInt(text.substr(11, 2));
-        const min = parseInt(text.substr(14, 2));
-        const sec = parseInt(text.substr(17, 2));
-        return new Date(Date.UTC(year, month - 1, day, hour, min, sec));
+        const month = (text.length <= 4) ? 0 : parseInt(text.substr(5, 2));
+        const day = (text.length <= 7) ? 0 : parseInt(text.substr(8, 2));
+        let hour = 0;
+        let min = 0;
+        let sec = 0;
+        const milli = 0;
+        if (text.length > 10) {
+            hour = parseInt(text.substr(11, 2));
+            min = parseInt(text.substr(14, 2));
+            sec = parseInt(text.substr(17, 2));
+        }
+        return new Date(Date.UTC(year, month - 1, day, hour, min, sec, milli));
     }
 }
