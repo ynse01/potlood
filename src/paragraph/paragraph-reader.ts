@@ -9,6 +9,24 @@ import { DrawingReader } from "../drawing/drawing-reader.js";
 import { InSequence } from "../utils/in-sequence.js";
 
 export class ParagraphReader {
+    public static readStructuredDocumentTag(docx: DocumentX, sdtNode: Node): Paragraph[] {
+        const pars: Paragraph[] = [];
+        const contentNode = Xml.getFirstChildOfName(sdtNode, "w:sdtContent");
+        if (contentNode !== undefined) {
+            contentNode.childNodes.forEach(child => {
+                switch (child.nodeName) {
+                    case "w:p":
+                        pars.push(ParagraphReader.readParagraph(docx, child));
+                        break;
+                    default:
+                        // Ignore
+                        break;
+                }
+            });
+        }
+        return pars;
+    }
+
     public static readParagraph(docx: DocumentX, pNode: Node): Paragraph {
         let numberingRun: TextRun | undefined;
         let linkTarget: string | undefined = undefined;

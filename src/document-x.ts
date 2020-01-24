@@ -46,6 +46,10 @@ export class DocumentX implements ILayoutable {
                             case "w:sectPr":
                                 this._section = new Section(this, node);
                                 break;
+                            case "w:sdt":
+                                const sdtPars = ParagraphReader.readStructuredDocumentTag(this, node);
+                                this.pars.push(...sdtPars);
+                                break;
                             default:
                                 console.log(`Don't know how to parse ${node.nodeName} during Document reading.`);
                                 break;
