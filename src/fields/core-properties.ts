@@ -52,7 +52,14 @@ export class CoreProperties {
         return coreProperties;
     }
 
-    private static _parseDateString(_text: string): Date | undefined {
-        return undefined;
+    private static _parseDateString(text: string): Date | undefined {
+        // Expecting format: YYYY-MM-DDThh:mm:ssZ
+        const year = parseInt(text.substr(0, 4));
+        const month = parseInt(text.substr(5, 2));
+        const day = parseInt(text.substr(8, 2));
+        const hour = parseInt(text.substr(11, 2));
+        const min = parseInt(text.substr(14, 2));
+        const sec = parseInt(text.substr(17, 2));
+        return new Date(Date.UTC(year, month - 1, day, hour, min, sec));
     }
 }
