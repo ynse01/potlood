@@ -294,7 +294,7 @@ export class Style {
                     // Fourthly look at the numbering style.
                     const numStyle = this.parStyle._numStyle.style;
                     if (numStyle !== undefined) {
-                        val = this.parStyle._numStyle.style.getRecursive<T>(parCb, runCb);
+                        val = numStyle.getRecursive<T>(parCb, runCb);
                     }
                 }
                 if (val === undefined && this.parStyle._basedOn !== undefined) {

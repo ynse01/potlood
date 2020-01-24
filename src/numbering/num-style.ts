@@ -31,14 +31,22 @@ export class NumberingStyle {
         return (this.level) ? this.level.getText([0]) : "";
     }
 
-    public get style(): Style {
-        return this.level!.style;
+    public get style(): Style | undefined {
+        let style: Style | undefined = undefined;
+        if (this.level !== undefined) {
+            style = this.level.style;
+        }
+        return style;
     }
 
     public applyNumberings(numberings: AbstractNumberings | undefined): void {
         if (numberings !== undefined) {
             const numbering = numberings.getNumberingById(this.numId);
-            this.level = numbering.getLevel(this.index);
+            if (numbering !== undefined) {
+                this.level = numbering.getLevel(this.index);
+            } else {
+                console.log(`Could not find numbering ID ${this.numId}`);
+            }
         }
     }
 }

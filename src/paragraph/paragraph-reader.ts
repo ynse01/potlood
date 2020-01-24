@@ -14,7 +14,7 @@ export class ParagraphReader {
         let linkTarget: string | undefined = undefined;
         const runs: (TextRun | DrawingRun)[] = [];
         const parStyle = this.readStyle(docx, pNode);
-        if (parStyle !== undefined && parStyle._numStyle !== undefined) {
+        if (parStyle !== undefined && parStyle._numStyle !== undefined && parStyle._numStyle.style !== undefined) {
             numberingRun = new TextRun([parStyle._numStyle.getPrefixText()], parStyle._numStyle.style);
         }
         pNode.childNodes.forEach(node => {
