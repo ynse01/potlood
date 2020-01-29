@@ -23,6 +23,10 @@ export class TextFitter {
         let inRun = InSequence.First;
         let currentXPadding = this._getInitialXPadding();
         let isFollowing = this._isFollowing;
+        if (this._run.texts.length === 0) {
+            this.lastXPadding = currentXPadding;
+            return;
+        }
         this._fixYPosition(isFollowing, flow);
         let txt = this._run.texts.join(' ');
         txt = this._fixCaps(txt);
