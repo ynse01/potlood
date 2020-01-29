@@ -66,7 +66,7 @@ export class Paragraph implements ILayoutable {
     }
 
     public performLayout(flow: VirtualFlow): void {
-        flow.fixParagraph();
+        flow.mentionParagraphPosition();
         const startY = flow.getY();
         let previousXPos: number | undefined = 0;
         if (this.style !== undefined) {
@@ -83,7 +83,7 @@ export class Paragraph implements ILayoutable {
             run.previousXPos = previousXPos;
             run.performLayout(flow);
             previousXPos = run.lastXPos;
-            flow.fixCharacter(run.lastXPos!);
+            flow.mentionCharacterPosition(run.lastXPos!);
         });
         if (this.style !== undefined) {
             flow.advancePosition(this.style.spacingAfter);

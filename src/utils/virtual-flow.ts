@@ -94,11 +94,11 @@ export class VirtualFlow {
         return this;
     }
 
-    public fixParagraph(): void {
+    public mentionParagraphPosition(): void {
         this._lastParPos = this._pos;
     }
 
-    public fixCharacter(xDelta: number): void {
+    public mentionCharacterPosition(xDelta: number): void {
         this._lastCharX = this._xMin + xDelta;
     }
 
