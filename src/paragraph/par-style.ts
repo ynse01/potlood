@@ -69,6 +69,7 @@ export class ParStyle {
                     parStyle._shadingColor = Style.readShading(child);
                     break;
                 case "w:widowControl":
+                case "w:snapToGrid":
                 case "w:rPr":
                 case "w:pBdr":
                 case "w:contextualSpacing":

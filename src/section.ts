@@ -83,6 +83,9 @@ export class Section {
                     case "w:pgNumType":
                     case "w:formProt":
                     case "w:type":
+                    case "w:headerReference":
+                    case "w:footerReference":
+                    case "w:titlePg":
                         // Ignore
                         break;
                     default:

@@ -58,6 +58,7 @@ export class Style {
                 case "w:tblPr":
                 case "w:hidden":
                 case "w:latentStyles":
+                case "w:pStyle":
                     // TODO: Read these attributes
                     break;
                 default:

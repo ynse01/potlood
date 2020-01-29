@@ -107,6 +107,13 @@ export class RunStyle {
                 case "w:vanish":
                     style._invisible = true;
                     break;
+                case "w:shadow":
+                case "w:outline":
+                case "w:position":
+                case "w:vertAlign":
+                case "w:em":
+                    // TODO: Implement.
+                    break;
                 case "w:szCs":
                 case "w:iCs":
                 case "w:bCs":

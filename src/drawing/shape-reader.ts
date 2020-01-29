@@ -29,6 +29,9 @@ export class ShapeReader {
                             lineColor = this._readFillColor(child.firstChild!);
                         }
                         break;
+                    case "a:noFill":
+                        fillColor = undefined;
+                        break;
                     case "a:xfrm":
                         // Ignore
                         break;

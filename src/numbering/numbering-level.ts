@@ -65,6 +65,7 @@ export class NumberingLevel {
                 case "w:lvlJc":
                 case "w:pPr":
                 case "w:rPr":
+                case "w:pStyle":
                     // Ignore, part of Style.
                     break;
                 default:

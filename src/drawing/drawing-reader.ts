@@ -52,6 +52,10 @@ export class DrawingReader {
                 case "wpg:wgp":
                     this._readGraphicData(drawing, childNode, docx);
                     break;
+                case "wpg:grpSpPr":
+                case "wpg:cNvGrpSpPr":
+                    // TODO: Imeplement style for shape group.
+                    break;
                 default:
                     console.log(`Don't know how to parse ${childNode.nodeName} during Drawing reading.`);
                     break;

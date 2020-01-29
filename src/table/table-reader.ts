@@ -114,6 +114,10 @@ export class TableReader {
                         cellStyle.shading = shading;
                     }
                     break;
+                case "w:vAlign":
+                case "w:vMerge":
+                    // TODO: Implement.
+                    break;
                 default:
                     console.log(`Don't know how to parse ${child.nodeName} during Table Cell Style reading.`);
                     break;
