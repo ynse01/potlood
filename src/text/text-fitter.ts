@@ -155,6 +155,7 @@ export class TextFitter {
         if (this._isLastRun) {
             flow.advancePosition(FontMetrics.getBaselineToBottom(this._run.style));
         }
-        return currentXPadding + Metrics.getTextWidth(this.lines[this.lines.length - 1].text, this._run.style);
+        const lastLineWidth = Metrics.getTextWidth(this.lines[this.lines.length - 1].text, this._run.style);
+        return currentXPadding + lastLineWidth;
     }
 }

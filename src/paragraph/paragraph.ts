@@ -23,15 +23,14 @@ export class Paragraph implements ILayoutable {
     }
 
     public get style(): ParStyle {
-        let parStyle: ParStyle;
-        const firstRun = this._runs[0];
-        if (firstRun instanceof TextRun) {
-            const firstTextRun = firstRun as TextRun;
-            parStyle = firstTextRun.style.parStyle;
-        } else {
-            parStyle = new ParStyle();
+        let idx = 0;
+        while(idx < this._runs.length && !(this._runs[idx] instanceof TextRun)) {
+            idx++;
+            if (idx == this._runs.length) {
+                return new ParStyle();
+            }
         }
-        return parStyle;
+        return (this._runs[idx] as TextRun).style.parStyle;
     }
 
     public get runs(): (TextRun | DrawingRun)[] {
