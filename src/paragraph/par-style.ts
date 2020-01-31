@@ -129,6 +129,26 @@ export class ParStyle {
         }
     }
 
+    public clone(): ParStyle {
+        const cloned = new ParStyle();
+        cloned._basedOn = this._basedOn;
+        cloned._basedOnId = this._basedOnId;
+        cloned._justification = this._justification;
+        cloned._indentation = this._indentation;
+        cloned._hanging = this._hanging;
+        cloned._lineSpacing = this._lineSpacing;
+        cloned._lineRule = this._lineRule;
+        cloned._numStyle = this._numStyle;
+        cloned._shadingColor = this._shadingColor;
+        cloned._parSpacingBefore = this._parSpacingBefore;
+        cloned._parSpacingAfter = this._parSpacingAfter;
+        cloned._parLinesBefore = this._parLinesBefore;
+        cloned._parLinesAfter = this._parLinesAfter;
+        cloned._parAutoSpacingBefore = this._parAutoSpacingBefore;
+        cloned._parAutoSpacingAfter = this._parAutoSpacingAfter;
+        return cloned;
+    }
+
     public toString(): string {
         const baseText = (this._basedOnId !== undefined) ? `base=${this._basedOnId}` : "";
         const justText = (this._justification !== undefined) ? `jc=${this._justification.toString()}` : "";

@@ -35,6 +35,8 @@ export class ParagraphReader {
         if (parStyle !== undefined && parStyle._numStyle !== undefined && parStyle._numStyle.style !== undefined) {
             numberingRun = new TextRun([parStyle._numStyle.getPrefixText([0])], parStyle._numStyle.style);
         }
+        const textStyle = parStyle.clone();
+        textStyle._numStyle = undefined;
         pNode.childNodes.forEach(node => {
             linkTarget = undefined;
             if (node.nodeName === "w:hyperlink") {
@@ -64,7 +66,7 @@ export class ParagraphReader {
                     }
                 });
                 // Try to load text.
-                const run = TextReader.readTextRun(node, parStyle, docx.styles);
+                const run = TextReader.readTextRun(node, textStyle, docx.styles);
                 run.inParagraph = InSequence.Middle;
                 run.linkTarget = linkTarget;
                 runs.push(run);
