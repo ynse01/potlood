@@ -31,6 +31,10 @@ export class TextFitter {
         let txt = this._run.texts.join(' ');
         txt = this._fixCaps(txt);
         const words = txt.split(' ');
+        if (this._run.texts.length === 1 && this._run.texts[0] === " ") {
+            this.lastXPadding = currentXPadding + FontMetrics.averageCharWidth(this._run.style);
+            return;
+        }
         let previousEnd = 0;
         let currentLength = 0;
         let numAvailableChars = this._getAvailableChars(currentXPadding, flow);
