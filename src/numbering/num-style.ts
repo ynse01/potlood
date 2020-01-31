@@ -27,8 +27,8 @@ export class NumberingStyle {
         this.index = index;
     }
 
-    public getPrefixText(): string {
-        return (this.level) ? this.level.getText([0]) : "";
+    public getPrefixText(indices: number[]): string {
+        return (this.level) ? this.level.getText(indices) : "";
     }
 
     public get style(): Style | undefined {

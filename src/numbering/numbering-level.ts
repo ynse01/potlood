@@ -81,21 +81,38 @@ export class NumberingLevel {
     }
 
     public getText(indices: number[]): string {
-        if (this.text !== undefined) {
-            // Work around for FireFox 71+, crashing on non ASCII characters.
-            return (this.text === "") ? "" : "-";
-        }
+        //if (this.text !== undefined) {
+        //    // Work around for FireFox 71+, crashing on non ASCII characters.
+        //   return (this.text === "") ? "" : "-";
+        //}
         return this.getFormatted(indices);
     }
 
-    private getFormatted(_indices: number[]): string {
+    private getFormatted(indices: number[]): string {
         let text: string;
         switch (this.format) {
             case NumberingFormat.bullet:
                 text = "&#x2002;";
+                // Work around for FireFox 71+, crashing on non ASCII characters.
+                text = "-";
                 break;
             case NumberingFormat.none:
                 text = "";
+                break;
+            case NumberingFormat.decimal:
+                text = indices.map(idx => idx.toString()).join(".");
+                break;
+            case NumberingFormat.lowerLetter:
+                text = indices.map(this._toDecimal).join(".");
+                break;
+            case NumberingFormat.upperLetter:
+                text = indices.map(this._toDecimal).join(".").toLocaleUpperCase();
+                break;
+            case NumberingFormat.lowerRoman:
+                text = indices.map(this._toRoman).join(".");
+                break;
+            case NumberingFormat.upperRoman:
+                text = indices.map(this._toRoman).join(".").toLocaleUpperCase();
                 break;
             default:
                 console.log(`Don't know how to render numbering format ${this.format}`);
@@ -103,5 +120,26 @@ export class NumberingLevel {
                 break;
         }
         return text;
+    }
+
+    private _toDecimal(num: number): string {
+        if (num > 26) {
+            return this._toDecimal(num / 26) + this._toDecimal(num % 26);
+        }
+        return String.fromCharCode(97 + Math.floor(num));
+    }
+
+    private _romanCodes = [
+        ["","I","II","III","IV","V","VI","VII","VIII","IX"],         // Ones
+        ["","X","XX","XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"],   // Tens
+        ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"]];        // Hundreds
+
+    private _toRoman(num: number): string {
+        var numeral = "";
+        var digits = num.toString().split('').reverse();
+        for (let i = 0; i < digits.length; i++) {
+            numeral = this._romanCodes[i][parseInt(digits[i])] + numeral;
+        }
+        return numeral;  
     }
 }
