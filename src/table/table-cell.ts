@@ -6,7 +6,6 @@ import { Box } from "../math/box.js";
 
 export class TableCell {
     public id: string | undefined = undefined;
-    public rowSpan: number = 1;
     public pars: Paragraph[] = [];
     public style: TableStyle;
     public bounds: Box | undefined;

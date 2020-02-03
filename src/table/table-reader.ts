@@ -12,6 +12,7 @@ import { Justification } from "../paragraph/par-style.js";
 import { ParagraphReader } from "../paragraph/paragraph-reader.js";
 import { TableBorderSet } from "./table-border-set.js";
 import { TableMarginSet } from "./table-margin-set.js";
+import { InSequence } from "../utils/in-sequence.js";
 
 export class TableReader {
     public static readTable(docx: DocumentX, tableNode: ChildNode): Table {
@@ -114,8 +115,15 @@ export class TableReader {
                         cellStyle.shading = shading;
                     }
                     break;
-                case "w:vAlign":
                 case "w:vMerge":
+                    let rowSpan = InSequence.Middle;
+                    const vMerge = Xml.getStringValue(child);
+                    if (vMerge !== undefined && vMerge === "restart") {
+                        rowSpan = InSequence.First;
+                    }
+                    cellStyle.rowSpan = rowSpan;
+                    break;
+                case "w:vAlign":
                     // TODO: Implement.
                     break;
                 default:

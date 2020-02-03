@@ -1,6 +1,7 @@
 import { Justification } from "../paragraph/par-style.js";
 import { TableBorderSet } from "./table-border-set.js";
 import { TableMarginSet } from "./table-margin-set.js";
+import { InSequence } from "../utils/in-sequence.js";
 
 export class TableStyle {
     public higherStyle: TableStyle | undefined;
@@ -11,6 +12,7 @@ export class TableStyle {
     private _margins: TableMarginSet | undefined;
     private _cellSpacing: number | undefined;
     private _gridSpan: number | undefined;
+    private _rowSpan: InSequence | undefined;
     private _shading: string | undefined;
 
     public get justification(): Justification {
@@ -63,6 +65,14 @@ export class TableStyle {
 
     public set gridSpan(gridSpan: number) {
         this._gridSpan = gridSpan;
+    }
+
+    public get rowSpan(): InSequence {
+        return this._getValue(InSequence.Only, (style) => style._rowSpan);
+    }
+
+    public set rowSpan(rowSpan: InSequence) {
+        this._rowSpan = rowSpan;
     }
 
     public get shading(): string {
