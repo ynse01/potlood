@@ -98,9 +98,9 @@ export class TableReader {
                     }
                     break;
                 case "w:gridSpan":
-                    const gridSpan = Xml.getStringValue(child);
-                    if (gridSpan !== undefined) {
-                        cellStyle.gridSpan = parseInt(gridSpan);
+                    const columnSpan = Xml.getStringValue(child);
+                    if (columnSpan !== undefined) {
+                        cellStyle.columnSpan = parseInt(columnSpan);
                     }
                     break;
                 case "w:tcBorders":

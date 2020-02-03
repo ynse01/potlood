@@ -11,7 +11,7 @@ export class TableStyle {
     private _borders: TableBorderSet | undefined;
     private _margins: TableMarginSet | undefined;
     private _cellSpacing: number | undefined;
-    private _gridSpan: number | undefined;
+    private _columnSpan: number | undefined;
     private _rowSpan: InSequence | undefined;
     private _shading: string | undefined;
 
@@ -59,12 +59,12 @@ export class TableStyle {
         this._cellSpacing = cellSpacing;
     }
 
-    public get gridSpan(): number {
-        return this._getValue(1, (style) => style._gridSpan);
+    public get columnSpan(): number {
+        return this._getValue(1, (style) => style._columnSpan);
     }
 
-    public set gridSpan(gridSpan: number) {
-        this._gridSpan = gridSpan;
+    public set columnSpan(columnSpan: number) {
+        this._columnSpan = columnSpan;
     }
 
     public get rowSpan(): InSequence {

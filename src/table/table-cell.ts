@@ -55,8 +55,8 @@ export class TableCell {
 
     public get columns(): TableColumn[] {
         if (this._columns === undefined) {
-            const colSpan = this.style.gridSpan;
-            this._columns = this._allColumns.slice(this._startColumnIndex, this._startColumnIndex + colSpan);
+            const columnSpan = this.style.columnSpan;
+            this._columns = this._allColumns.slice(this._startColumnIndex, this._startColumnIndex + columnSpan);
         }
         return this._columns;
     }
