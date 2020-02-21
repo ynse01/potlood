@@ -30,7 +30,11 @@ export class Paragraph implements ILayoutable {
                 return new ParStyle();
             }
         }
-        return (this._runs[idx] as TextRun).style.parStyle;
+        const foundRun = this._runs[idx];
+        if (foundRun === undefined) {
+            return new ParStyle();
+        }
+        return (foundRun as TextRun).style.parStyle;
     }
 
     public get runs(): (TextRun | DrawingRun)[] {
