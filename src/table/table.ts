@@ -78,7 +78,7 @@ export class Table implements ILayoutable {
         let height = 0;
         const numRows = this.rows[startRowIndex].cells[cellIndex].numRowsInSpan;
         for (let i = 0; i < numRows; i++) {
-            height += this.rows[i].maxHeight || 0;
+            height += this.rows[startRowIndex + i].maxHeight || 0;
         }
         return height;
     }
