@@ -70,6 +70,7 @@ export class ParStyle {
                     break;
                 case "w:widowControl":
                 case "w:snapToGrid":
+                case "w:sectPr":
                 case "w:rPr":
                 case "w:pBdr":
                 case "w:contextualSpacing":

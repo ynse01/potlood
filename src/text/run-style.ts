@@ -60,6 +60,10 @@ export class RunStyle {
                 case "w:shd":
                     style._shadingColor = Style.readShading(child);
                     break;
+                case "w:highlight":
+                    // Highlight equals yellow shading
+                    style._shadingColor = "ffff00";
+                    break
                 case "w:u":
                     const underlineMode = Xml.getStringValue(child);
                     if (underlineMode !== undefined) {
@@ -104,6 +108,7 @@ export class RunStyle {
                 case "w:smallCaps":
                     style._smallCaps = Xml.getBooleanValue(child);
                     break;
+                case "w:webHidden":
                 case "w:vanish":
                     style._invisible = true;
                     break;
