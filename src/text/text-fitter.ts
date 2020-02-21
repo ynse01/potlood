@@ -30,7 +30,7 @@ export class TextFitter {
         this._fixYPosition(isFollowing, flow);
         let txt = this._run.texts.join(' ');
         txt = this._fixCaps(txt);
-        const words = txt.split(' ');
+        const words = txt.split(/[\s-]/);
         if (this._run.texts.length === 1 && this._run.texts[0] === " ") {
             this.lastXPadding = currentXPadding + FontMetrics.averageCharWidth(this._run.style);
             return;
