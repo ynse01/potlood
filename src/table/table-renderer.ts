@@ -17,17 +17,19 @@ export class TableRenderer {
     public renderTable(table: Table): void {
         table.rows.forEach(row => {
             row.cells.forEach(cell => {
-                this.renderCellShading(cell);
-                this.renderCellBorder(cell, table.style);
-                // let topPadding = table.style.margins.cellMarginTop;
-                // const topBorder = cell.style.borders.borderTop;
-                // if (topBorder !== undefined) {
-                //    topPadding += topBorder.size;
-                // }
-                // cellFlow.advancePosition(topPadding);
-                cell.pars.forEach(par => {
-                    this._parRenderer.renderParagraph(par);
-                });
+                if (cell.numRowsInSpan > 0) {
+                    this.renderCellShading(cell);
+                    this.renderCellBorder(cell, table.style);
+                    // let topPadding = table.style.margins.cellMarginTop;
+                    // const topBorder = cell.style.borders.borderTop;
+                    // if (topBorder !== undefined) {
+                    //    topPadding += topBorder.size;
+                    // }
+                    // cellFlow.advancePosition(topPadding);
+                    cell.pars.forEach(par => {
+                        this._parRenderer.renderParagraph(par);
+                    });
+                }
             });
         });
     }

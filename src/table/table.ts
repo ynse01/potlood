@@ -5,6 +5,7 @@ import { TableColumn } from "./table-column.js";
 import { TableRow } from "./table-row.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
+import { InSequence } from "../utils/in-sequence.js";
 
 export class Table implements ILayoutable {
     public columns: TableColumn[];
@@ -36,9 +37,49 @@ export class Table implements ILayoutable {
     }
 
     public performLayout(flow: VirtualFlow): void {
+        // Update row span
+        this.rows.forEach((row, rowIndex) => {
+            row.cells.forEach((cell, columnIndex) => {
+                if (cell.style.rowSpan === InSequence.First) {
+                    this._updateRowSpan(columnIndex, rowIndex);
+                }
+            });
+        });
         this.rows.forEach(row => {
             row.performLayout(flow);
-        })
+        });
+        // Set height of span cells
+        this.rows.forEach((row, rowIndex) => {
+            row.cells.forEach((cell, cellIndex) => {
+                if ((cell.numRowsInSpan > 1) && cell.bounds !== undefined) {
+                    cell.bounds.height = this._getHeightOfRowSpan(cellIndex, rowIndex);
+                }
+            });
+        });
+
     }
 
+    private _updateRowSpan(cellIndex: number, startRowIndex: number): void {
+        let numRows = 1;
+        for (let i = startRowIndex; i < this.rows.length; i++) {
+            const currentRow = this.rows[i + 1];
+            if (currentRow === undefined || currentRow.cells[cellIndex].style.rowSpan !== InSequence.Middle) {
+                // Past the last row of the span, set previous as last of the span.
+                this.rows[i].cells[cellIndex].style.rowSpan = InSequence.Last;
+                break;
+            }
+            currentRow.cells[cellIndex].numRowsInSpan = 0;
+            numRows++;
+        }
+        this.rows[startRowIndex].cells[cellIndex].numRowsInSpan = numRows;
+    }
+
+    private _getHeightOfRowSpan(cellIndex: number, startRowIndex: number): number {
+        let height = 0;
+        const numRows = this.rows[startRowIndex].cells[cellIndex].numRowsInSpan;
+        for (let i = 0; i < numRows; i++) {
+            height += this.rows[i].maxHeight || 0;
+        }
+        return height;
+    }
 }

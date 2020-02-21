@@ -9,6 +9,7 @@ export class TableCell {
     public pars: Paragraph[] = [];
     public style: TableStyle;
     public bounds: Box | undefined;
+    public numRowsInSpan: number = 1;
     private _allColumns: TableColumn[];
     private _startColumnIndex: number;
     private _columns: TableColumn[] | undefined = undefined;

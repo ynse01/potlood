@@ -2,6 +2,7 @@ import { Paragraph } from "../paragraph/paragraph.js";
 import { TableCell } from "./table-cell.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { Table } from "./table.js";
+import { InSequence } from "../utils/in-sequence.js";
 
 export class TableRow {
     public table: Table;
@@ -26,12 +27,16 @@ export class TableRow {
         this.cells.forEach(cell => {
             const cellFlow = cell.getCellFlow(flow);
             cell.performLayout(cellFlow);
-            maxY = Math.max(cellFlow.getY(), maxY);
+            if (cell.style.rowSpan === InSequence.Only) {
+                maxY = Math.max(cellFlow.getY(), maxY);
+            }
         });
         const maxHeight = maxY - startY;
         // Set the max height as height for all cells.
         this.cells.forEach(cell => {
-            cell.bounds!.height = maxHeight;
+            if (cell.style.rowSpan === InSequence.Only) {
+                cell.bounds!.height = maxHeight;
+            }
         });
         this.maxHeight = maxHeight;
         flow.advancePosition(maxHeight);
