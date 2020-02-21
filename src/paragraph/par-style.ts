@@ -4,6 +4,7 @@ import { NamedStyles } from "../text/named-styles.js";
 import { Style } from "../text/style.js";
 import { NumberingStyle } from "../numbering/num-style.js";
 import { AbstractNumberings } from "../numbering/abstract-numberings.js";
+import { TabStop } from "./tab-stop.js";
 
 export enum Justification {
     center = "center",
@@ -34,6 +35,7 @@ export class ParStyle {
     public _parLinesAfter: number | undefined;
     public _parAutoSpacingBefore: boolean | undefined;
     public _parAutoSpacingAfter: boolean | undefined;
+    public _tabStops: TabStop[] | undefined;
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
         const parStyle = new ParStyle();
@@ -68,6 +70,9 @@ export class ParStyle {
                 case "w:shd":
                     parStyle._shadingColor = Style.readShading(child);
                     break;
+                case "w:tabs":
+                    parStyle._tabStops = TabStop.fromTabsNode(child);
+                    break;
                 case "w:widowControl":
                 case "w:snapToGrid":
                 case "w:sectPr":
@@ -76,7 +81,6 @@ export class ParStyle {
                 case "w:contextualSpacing":
                 case "w:keepLines":
                 case "w:bidi":
-                case "w:tabs":
                 case "w:keepNext":
                 case "w:suppressAutoHyphens":
                 case "w:suppressLineNumbers":
