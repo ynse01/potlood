@@ -75,6 +75,9 @@ export class Paragraph implements ILayoutable {
         if (this.style !== undefined) {
             flow.advancePosition(this.style.spacingBefore);
         }
+        if (this.style._tabStops !== undefined) {
+            this.style._tabStops.forEach(stop => stop.performLayout(flow));
+        }
         if (this._numberingRun !== undefined) {
             const clonedFlow = flow.clone();
             // Fix bug in TextFitter.
