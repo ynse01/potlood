@@ -6,7 +6,7 @@ import { Metrics } from "../utils/metrics.js";
 import { FontMetrics } from "../utils/font-metrics.js";
 import { Style } from "./style.js";
 import { Justification } from "../paragraph/par-style.js";
-import { WordSplitter } from "./word-splitter.js";
+import { WordSplitter, WordSeperator } from "./word-splitter.js";
 
 export class TextFitter {
     public lines: IPositionedTextLine[];
@@ -44,7 +44,7 @@ export class TextFitter {
         for(let i = 0; i < words.length; i++) {
             currentLength += words[i].length + 1;
             isLastLine = (i === words.length - 1);
-            const isNewLine = words[i] === '\n';
+            const isNewLine = splitter.getSeperator(i) === WordSeperator.LineFeed;
             let reachedEndOfLine = isLastLine || isNewLine;
             if (!isLastLine && !this._fitReasonably(currentLength, numAvailableChars, words[i + 1])) {
                 // Next word would go over the boundary, chop now.
@@ -137,7 +137,10 @@ export class TextFitter {
     /**
      * Does the next word fit reasonably.
      */
-    private _fitReasonably(length: number, numAvailableChars: number, nextWord: string): boolean {
+    private _fitReasonably(length: number, numAvailableChars: number, nextWord: string | undefined): boolean {
+        if (nextWord === undefined) {
+            return true;
+        }
         const nextLength = length + nextWord.length;
         const numAcceptableChars = numAvailableChars + 1;
         return nextLength <= numAcceptableChars;
