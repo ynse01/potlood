@@ -7,12 +7,12 @@ export enum WordSeperator {
 }
 
 export class WordSplitter {
-    private _txt: string;
+    private _texts: string[];
     private _words: string[] | undefined;
     private _seperators: WordSeperator[] | undefined;
 
-    constructor(txt: string){
-        this._txt = txt;
+    constructor(texts: string[]){
+        this._texts = texts;
     }
 
     public get words(): string[] {
@@ -45,12 +45,13 @@ export class WordSplitter {
     }
 
     private _split(): void {
-        this._words = this._txt.split(/[\s-\t]/);
+        const txt = this._texts.join(' ');
+        this._words = txt.split(/[\s-\t]/);
         const seperators: WordSeperator[] = [];
         let index = 0;
         for (let i = 1; i < this._words.length; i++) {
             index += this._words[i - 1].length;
-            const currentChar = this._txt.charAt(index);
+            const currentChar = txt.charAt(index);
             switch(currentChar) {
                 case " ":
                     seperators.push(WordSeperator.Space);

@@ -29,9 +29,8 @@ export class TextFitter {
             return;
         }
         this._fixYPosition(isFollowing, flow);
-        let txt = this._run.texts.join(' ');
-        txt = this._fixCaps(txt);
-        const splitter = new WordSplitter(this._fixCaps(txt));
+        const texts = this._fixAllCaps(this._run.texts);
+        const splitter = new WordSplitter(texts);
         const words = splitter.words;
         if (this._run.texts.length === 1 && this._run.texts[0] === " ") {
             this.lastXPadding = currentXPadding + FontMetrics.averageCharWidth(this._run.style);
@@ -102,11 +101,11 @@ export class TextFitter {
         }
     }
 
-    private _fixCaps(txt: string): string {
+    private _fixAllCaps(txts: string[]): string[] {
         if (this._run.style.caps || this._run.style.smallCaps) {
-            txt = txt.toLocaleUpperCase();
+            txts = txts.map((txt) => txt.toLocaleUpperCase());
         }
-        return txt;
+        return txts;
     }
 
     private _fixYPosition(isFollowing: boolean, flow: VirtualFlow): void {
