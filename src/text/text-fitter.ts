@@ -6,6 +6,7 @@ import { Metrics } from "../utils/metrics.js";
 import { FontMetrics } from "../utils/font-metrics.js";
 import { Style } from "./style.js";
 import { Justification } from "../paragraph/par-style.js";
+import { WordSplitter } from "./word-splitter.js";
 
 export class TextFitter {
     public lines: IPositionedTextLine[];
@@ -30,7 +31,8 @@ export class TextFitter {
         this._fixYPosition(isFollowing, flow);
         let txt = this._run.texts.join(' ');
         txt = this._fixCaps(txt);
-        const words = txt.split(/[\s-]/);
+        const splitter = new WordSplitter(this._fixCaps(txt));
+        const words = splitter.words;
         if (this._run.texts.length === 1 && this._run.texts[0] === " ") {
             this.lastXPadding = currentXPadding + FontMetrics.averageCharWidth(this._run.style);
             return;
