@@ -55,11 +55,11 @@ export class TextFitter {
             }
             if (reachedEndOfLine) {
                 inRun = (isLastLine) ? InSequence.Last : inRun;
-                this._pushNewLine(splitter.combine(previousIndex, i), flow, isFollowing, inRun, currentXPadding, this._run.style);
+                this._pushNewLine(splitter.combine(previousIndex, i), flow, isFollowing, isTab, inRun, currentXPadding, this._run.style);
                 if (!isLastLine) {
                     isFollowing = false;
                     inRun = InSequence.Middle;
-                    currentXPadding = this._getIndentation(inRun);
+                    currentXPadding = isTab ? this._getTabPadding() : this._getIndentation(inRun);
                     numAvailableChars = this._getAvailableChars(currentXPadding, flow);
                     currentLength = 0;
                     previousIndex = i + 1;
@@ -81,6 +81,7 @@ export class TextFitter {
         txt: string,
         flow: VirtualFlow,
         isFollowing: boolean,
+        isTab: boolean,
         inRun: InSequence,
         xPadding: number,
         style: Style
@@ -100,7 +101,7 @@ export class TextFitter {
             fontSize: style.fontSize,
             emphasis: style.emphasis
         });
-        if (isLastRun || !isLastLine) {
+        if (!isTab && (isLastRun || !isLastLine)) {
             flow.advancePosition(this._lineHeight);
         }
     }
@@ -131,6 +132,10 @@ export class TextFitter {
 
     private _getIndentation(inRun: InSequence): number {
         return this._run.style.getIndentation(inRun, this._run.inParagraph);
+    }
+
+    private _getTabPadding(): number {
+        return 0;
     }
 
     private _getAvailableChars(xPadding: number, flow: VirtualFlow): number {
