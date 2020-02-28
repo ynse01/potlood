@@ -58,7 +58,7 @@ export class TextFitter {
                     isFollowing = false;
                     inRun = InSequence.Middle;
                     currentXPadding = this._getIndentation(inRun);
-                    numAvailableChars = this._getAvailableChars(currentXPadding, flow)
+                    numAvailableChars = this._getAvailableChars(currentXPadding, flow);
                     currentLength = 0;
                     previousIndex = i + 1;
                 }
