@@ -33,7 +33,10 @@ export class TextReader {
                         break;
                     case "w:br":
                     case "w:cr":
-                        texts.push(" \n ");
+                        texts.push("\n");
+                        break;
+                    case "w:tab":
+                        texts.push("\t");
                         break;
                     default:
                         // Ignore all other nodes
