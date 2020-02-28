@@ -60,7 +60,7 @@ export class TextFitter {
                     currentXPadding = this._getIndentation(inRun);
                     numAvailableChars = this._getAvailableChars(currentXPadding, flow)
                     currentLength = 0;
-                    previousIndex = i;
+                    previousIndex = i + 1;
                 }
             }
         }
