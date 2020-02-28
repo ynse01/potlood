@@ -45,9 +45,11 @@ export class TextFitter {
         for(let i = 0; i < words.length; i++) {
             currentLength += words[i].length + 1;
             isLastLine = (i === words.length - 1);
-            const isNewLine = splitter.getSeperator(i) === WordSeperator.LineFeed;
-            let reachedEndOfLine = isLastLine || isNewLine;
-            if (!isLastLine && !this._fitReasonably(currentLength, numAvailableChars, strictFit, words[i + 1])) {
+            const seperator = splitter.getSeperator(i);
+            const isNewLine = seperator === WordSeperator.LineFeed;
+            const isTab = seperator === WordSeperator.Tab;
+            let reachedEndOfLine = isLastLine || isNewLine || isTab;
+            if (!reachedEndOfLine && !this._fitReasonably(currentLength, numAvailableChars, strictFit, words[i + 1])) {
                 // Next word would go over the boundary, chop now.
                 reachedEndOfLine = true;
             }
