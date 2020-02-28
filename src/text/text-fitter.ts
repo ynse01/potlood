@@ -38,6 +38,7 @@ export class TextFitter {
             return;
         }
         const strictFit = this._run.paragraphType === ParagraphType.TableCell;
+        let tabIndex = 0;
         let previousIndex = 0;
         let currentLength = 0;
         let numAvailableChars = this._getAvailableChars(currentXPadding, flow);
@@ -59,9 +60,10 @@ export class TextFitter {
                 if (!isLastLine) {
                     isFollowing = false;
                     inRun = InSequence.Middle;
-                    currentXPadding = isTab ? this._getTabPadding() : this._getIndentation(inRun);
+                    currentXPadding = isTab ? this._getTabPadding(tabIndex, this._run.style) : this._getIndentation(inRun);
                     numAvailableChars = this._getAvailableChars(currentXPadding, flow);
                     currentLength = 0;
+                    tabIndex = isTab ? tabIndex + 1 : 0;
                     previousIndex = i + 1;
                 }
             }
@@ -134,7 +136,12 @@ export class TextFitter {
         return this._run.style.getIndentation(inRun, this._run.inParagraph);
     }
 
-    private _getTabPadding(): number {
+    private _getTabPadding(tabIndex: number, style: Style): number {
+        const tabStops = style.parStyle._tabStops;
+        if (tabStops !== undefined) {
+            console.log(`Found tab stop: ${tabStops[tabIndex].position}`);
+            return tabStops[tabIndex].position || 0;
+        }
         return 0;
     }
 
