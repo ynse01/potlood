@@ -24,7 +24,7 @@ export class TextFitter {
         let inRun = InSequence.First;
         let currentXPadding = this._getInitialXPadding();
         let isFollowing = this._isFollowing;
-        if (this._run.texts.length === 0) {
+        if (this._run.hasEmptyText) {
             this.lastXPadding = currentXPadding;
             return;
         }

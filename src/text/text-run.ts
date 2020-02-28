@@ -44,6 +44,10 @@ export class TextRun implements ILayoutable {
         return lines;
     }
 
+    public get hasEmptyText(): boolean {
+        return this.texts.length === 0;
+    }
+
     public performLayout(flow: VirtualFlow): void {
         if (this._lines === undefined) {
             this._lines = this._getFlowLines(flow);
