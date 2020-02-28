@@ -5,11 +5,13 @@ import { IPositionedTextLine } from "./positioned-text-line.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { TextFitter } from "./text-fitter.js";
 import { Metrics } from "../utils/metrics.js";
+import { ParagraphType } from "../paragraph/paragraph.js";
 
 export class TextRun implements ILayoutable {
     public texts: string[];
     public style: Style;
     public inParagraph: InSequence = InSequence.Only;
+    public paragraphType = ParagraphType.Text;
     public linkTarget: string | undefined = undefined;
     public previousXPos: number | undefined;
     public lastXPos = 0;

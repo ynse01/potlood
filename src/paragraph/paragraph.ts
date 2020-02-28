@@ -12,12 +12,12 @@ export enum ParagraphType {
 }
 
 export class Paragraph implements ILayoutable {
-    public type: ParagraphType;
+    private _type: ParagraphType;
     private _runs: (TextRun | DrawingRun)[];
     private _numberingRun: TextRun | undefined;
 
     constructor(runs: (TextRun | DrawingRun)[], numberingRun: TextRun | undefined) {
-        this.type = ParagraphType.Text;
+        this._type = ParagraphType.Text;
         this._runs = runs;
         this._numberingRun = numberingRun;
     }
@@ -43,6 +43,19 @@ export class Paragraph implements ILayoutable {
 
     public get numberingRun(): TextRun | undefined {
         return this._numberingRun;
+    }
+
+    public get type(): ParagraphType {
+        return this._type;
+    }
+
+    public set type(type: ParagraphType) {
+        this._type = type;
+        this._runs.forEach(run => {
+            if (run instanceof TextRun) {
+                run.paragraphType = type;
+            }
+        })
     }
 
     public getUsedWidth(availableWidth: number): number {

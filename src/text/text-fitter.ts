@@ -7,6 +7,7 @@ import { FontMetrics } from "../utils/font-metrics.js";
 import { Style } from "./style.js";
 import { Justification } from "../paragraph/par-style.js";
 import { WordSplitter, WordSeperator } from "./word-splitter.js";
+import { ParagraphType } from "../paragraph/paragraph.js";
 
 export class TextFitter {
     public lines: IPositionedTextLine[];
@@ -36,6 +37,7 @@ export class TextFitter {
             this.lastXPadding = currentXPadding + FontMetrics.averageCharWidth(this._run.style);
             return;
         }
+        const strictFit = this._run.paragraphType === ParagraphType.TableCell;
         let previousIndex = 0;
         let currentLength = 0;
         let numAvailableChars = this._getAvailableChars(currentXPadding, flow);
@@ -45,7 +47,7 @@ export class TextFitter {
             isLastLine = (i === words.length - 1);
             const isNewLine = splitter.getSeperator(i) === WordSeperator.LineFeed;
             let reachedEndOfLine = isLastLine || isNewLine;
-            if (!isLastLine && !this._fitReasonably(currentLength, numAvailableChars, words[i + 1])) {
+            if (!isLastLine && !this._fitReasonably(currentLength, numAvailableChars, strictFit, words[i + 1])) {
                 // Next word would go over the boundary, chop now.
                 reachedEndOfLine = true;
             }
@@ -136,12 +138,13 @@ export class TextFitter {
     /**
      * Does the next word fit reasonably.
      */
-    private _fitReasonably(length: number, numAvailableChars: number, nextWord: string | undefined): boolean {
+    private _fitReasonably(length: number, numAvailableChars: number, strictFit: boolean, nextWord: string | undefined): boolean {
         if (nextWord === undefined) {
             return true;
         }
+        const graceNumber = strictFit ? 0 : 1;
         const nextLength = length + nextWord.length;
-        const numAcceptableChars = numAvailableChars + 1;
+        const numAcceptableChars = numAvailableChars + graceNumber;
         return nextLength <= numAcceptableChars;
     }
 
