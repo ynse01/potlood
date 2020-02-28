@@ -29,6 +29,21 @@ export class WordSplitter {
         return this._seperators![index];
     }
 
+    /**
+     * Combine the words from start to end index, inclusive.
+     */
+    public combine(start: number, end: number): string {
+        let result = "";
+        if (this._words === undefined) {
+            this._split();
+        }
+        for (let i = start; i <= end; i++) {
+            const sepChar = this.getSeperator(i) === WordSeperator.Dash ? "-" : " ";
+            result = result.concat(this._words![i], sepChar);
+        }
+        return result;
+    }
+
     private _split(): void {
         this._words = this._txt.split(/[\s-\t]/);
         const seperators: WordSeperator[] = [];

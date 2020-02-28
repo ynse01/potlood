@@ -37,7 +37,7 @@ export class TextFitter {
             this.lastXPadding = currentXPadding + FontMetrics.averageCharWidth(this._run.style);
             return;
         }
-        let previousEnd = 0;
+        let previousIndex = 0;
         let currentLength = 0;
         let numAvailableChars = this._getAvailableChars(currentXPadding, flow);
         let isLastLine = false;
@@ -52,14 +52,14 @@ export class TextFitter {
             }
             if (reachedEndOfLine) {
                 inRun = (isLastLine) ? InSequence.Last : inRun;
-                this._pushNewLine(txt.substr(previousEnd, currentLength), flow, isFollowing, inRun, currentXPadding, this._run.style);
+                this._pushNewLine(splitter.combine(previousIndex, i), flow, isFollowing, inRun, currentXPadding, this._run.style);
                 if (!isLastLine) {
                     isFollowing = false;
                     inRun = InSequence.Middle;
                     currentXPadding = this._getIndentation(inRun);
                     numAvailableChars = this._getAvailableChars(currentXPadding, flow)
-                    previousEnd += currentLength;
                     currentLength = 0;
+                    previousIndex = i;
                 }
             }
         }
