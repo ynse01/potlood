@@ -21,9 +21,9 @@ export class TabStop {
         const stops: TabStop[] = [];
         tabsNode.childNodes.forEach(tabNode => {
             const alignStr = Xml.getStringValue(tabNode);
-            const leaderAttr = Xml.getAttribute(tabsNode, "w:leader");
-            const posAttr = Xml.getAttribute(tabsNode, "w:pos");
-            if (alignStr !== undefined && leaderAttr !== undefined && posAttr !== undefined) {
+            const leaderAttr = Xml.getAttribute(tabNode, "w:leader");
+            const posAttr = Xml.getAttribute(tabNode, "w:pos");
+            if (alignStr !== undefined && posAttr !== undefined) {
                 const alignment = this._readTabAlignment(alignStr);
                 const leader = this._readTabLeader(leaderAttr);
                 const stop = new TabStop(parseInt(posAttr), alignment, leader);
@@ -45,14 +45,16 @@ export class TabStop {
         return alignment;
     }
 
-    private static _readTabLeader(leaderAttr: string): TabLeader {
+    private static _readTabLeader(leaderAttr: string | undefined): TabLeader {
         let leader = TabLeader.None;
-        switch (leaderAttr.toLowerCase()) {
-            case "dot":
-                leader = TabLeader.Dot;
-                break;
-            default:
-                break;
+        if (leaderAttr !== undefined) {
+            switch (leaderAttr.toLowerCase()) {
+                case "dot":
+                    leader = TabLeader.Dot;
+                    break;
+                default:
+                    break;
+            }
         }
         return leader;
     }
