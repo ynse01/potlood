@@ -89,7 +89,10 @@ export class Paragraph implements ILayoutable {
             flow.advancePosition(this.style.spacingBefore);
         }
         if (this.style._tabStops !== undefined) {
-            this.style._tabStops.forEach(stop => stop.performLayout(flow));
+            this.style._tabStops.forEach(stop => {
+                stop.performLayout(flow);
+                flow.addTabStop(stop.position!);
+            });
         }
         if (this._numberingRun !== undefined) {
             const clonedFlow = flow.clone();

@@ -9,6 +9,7 @@ export class VirtualFlow {
     private _pos: number;
     private _lastParPos: number = 0;
     private _lastCharX: number = 0;
+    private _stops: number[] = [];
 
     public static fromSection(section: Section | undefined): VirtualFlow {
         const flow = new VirtualFlow(40, 700 - 40);
@@ -92,6 +93,18 @@ export class VirtualFlow {
     public advancePosition(delta: number): VirtualFlow {
         this._pos += delta;
         return this;
+    }
+
+    public getTabPosition(index: number): number {
+        return this._stops[index] || 0;
+    }
+
+    public addTabStop(pos: number): void {
+        this._stops.push(pos);
+    }
+
+    public removeTabStop(_pos: number): void {
+        this._stops.pop();
     }
 
     public mentionParagraphPosition(): void {

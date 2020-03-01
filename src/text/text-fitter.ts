@@ -60,7 +60,7 @@ export class TextFitter {
                 if (!isLastLine) {
                     isFollowing = false;
                     inRun = InSequence.Middle;
-                    currentXPadding = isTab ? this._getTabPadding(tabIndex, this._run.style) : this._getIndentation(inRun);
+                    currentXPadding = isTab ? this._getTabPadding(tabIndex, flow) : this._getIndentation(inRun);
                     numAvailableChars = this._getAvailableChars(currentXPadding, flow);
                     currentLength = 0;
                     tabIndex = isTab ? tabIndex + 1 : 0;
@@ -136,13 +136,8 @@ export class TextFitter {
         return this._run.style.getIndentation(inRun, this._run.inParagraph);
     }
 
-    private _getTabPadding(tabIndex: number, style: Style): number {
-        const tabStops = style.parStyle._tabStops;
-        if (tabStops !== undefined) {
-            console.log(`Found tab stop: ${tabStops[tabIndex].position}`);
-            return tabStops[tabIndex].position || 0;
-        }
-        return 0;
+    private _getTabPadding(tabIndex: number, flow: VirtualFlow): number {
+        return flow.getTabPosition(tabIndex);
     }
 
     private _getAvailableChars(xPadding: number, flow: VirtualFlow): number {
