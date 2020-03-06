@@ -1,4 +1,4 @@
-import { Point } from "../math/point.js";
+import { Point } from "../utils/math/point.js";
 import { ShapeGuide } from "./shape-guide.js";
 
 export class PointGuide {

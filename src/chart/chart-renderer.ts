@@ -2,18 +2,18 @@ import { BarChart } from "./bar-chart.js";
 import { IPainter } from "../painting/i-painter.js";
 import { ChartSpace, ChartType } from "./chart-space.js";
 import { ChartStyle } from "./chart-style.js";
-import { Box } from "../math/box.js";
+import { Box } from "../utils/math/box.js";
 import { ChartLegend } from "./chart-legend.js";
 import { ChartAxis } from "./chart-axis.js";
 import { LineChart } from "./line-chart.js";
 import { ChartValue } from "./chart-value.js";
 import { AreaChart } from "./area-chart.js";
-import { Point } from "../math/point.js";
+import { Point } from "../utils/math/point.js";
 import { Shape } from "../drawing/shape.js";
 import { PieChart } from "./pie-chart.js";
-import { Ellipse } from "../math/ellipse.js";
+import { Ellipse } from "../utils/math/ellipse.js";
 import { PointGuide } from "../drawing/point-guide.js";
-import { Angle } from "../math/angle.js";
+import { Angle } from "../utils/math/angle.js";
 
 export class ChartRenderer {
     private _painter: IPainter;

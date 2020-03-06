@@ -1,4 +1,4 @@
-import { InSequence } from "../utils/in-sequence.js";
+import { InSequence } from "../in-sequence.js";
 import { Point } from "./point.js";
 
 export class Box {
