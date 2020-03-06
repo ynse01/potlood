@@ -10,6 +10,8 @@ import { DelimiterStyle } from "./delimiter-style.js";
 import { Xml } from "../utils/xml.js";
 import { FractionObject } from "./fraction-object.js";
 import { FractionStyle } from "./fraction-style.js";
+import { MatrixStyle } from "./matrix-style.js";
+import { MatrixObject } from "./matrix-object.js";
 
 export class MathReader {
 
@@ -148,6 +150,58 @@ export class MathReader {
         return style;
     }
 
+    private static _readMatrixObject(matrixNode: Node): MatrixObject {
+        let style = new MatrixStyle();
+        let rows = new MathObjectList();
+        matrixNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "m:mPr":
+                    style = this._readMatrixStyle(child);
+                    break;
+                case "m:mr":
+                    const row = new MathObjectList();
+                    child.childNodes.forEach(grandChild => 
+                        row.add(this._readMathElement(grandChild))
+                    );
+                    rows.add(row);
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Fraction reading.`);
+                    break;
+            }
+        });
+        return new MatrixObject(rows, style);
+    }
+
+    private static _readMatrixStyle(presentationNode: Node): MatrixStyle {
+        const style = new MatrixStyle();
+        presentationNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "m:baseJc":
+                    style.setJustification(Xml.getStringValue(child));
+                    break;
+                case "m:plcHide":
+                    style.hidePlaceholder = Xml.getBooleanValue(child) || false;
+                    break;
+                case "m:rSp":
+                    style.rowSpacing = Xml.getNumberValue(child) || 1;
+                    break;
+                case "m:cSp":
+                    style.columnSpacing = Xml.getNumberValue(child) || 1;
+                    break;
+                case "m:cGp":
+                case "m:mcs":
+                case "m:ctrlPr":
+                    // Ignore for now.
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Delimiter style reading.`);
+                    break;
+            }
+        })
+        return style;
+    }
+
     private static _readRunObject(runNode: Node): RunObject {
         let style: RunStyle | undefined = undefined;
         let text: string = "";
@@ -182,6 +236,9 @@ export class MathReader {
                     break;
                 case "m:f":
                     objects.add(this._readFractionObject(child));
+                    break;
+                case "m:m":
+                    objects.add(this._readMatrixObject(child));
                     break;
                 default:
                     console.log(`Unknown node ${child.nodeName} encountered during reading of Math Objects`);
