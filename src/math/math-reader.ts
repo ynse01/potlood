@@ -8,6 +8,8 @@ import { DelimiterObject } from "./delimiter-object.js";
 import { RunObject } from "./run-object.js";
 import { DelimiterStyle } from "./delimiter-style.js";
 import { Xml } from "../utils/xml.js";
+import { FractionObject } from "./fraction-object.js";
+import { FractionStyle } from "./fraction-style.js";
 
 export class MathReader {
 
@@ -108,6 +110,44 @@ export class MathReader {
         return style;
     }
 
+    private static _readFractionObject(fracNode: Node): FractionObject {
+        let style: FractionStyle = new FractionStyle();
+        let numerator: MathObject | undefined = undefined;
+        let denumerator: MathObject | undefined = undefined;
+        fracNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "m:fPr":
+                    style = this._readFractionStyle(child);
+                    break;
+                case "m:num":
+                    numerator = this._readMathElement(child);
+                    break;
+                case "m:den":
+                    denumerator = this._readMathElement(child);
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Fraction reading.`);
+                    break;
+            }
+        });
+        return new FractionObject(numerator, denumerator, style);
+    }
+
+    private static _readFractionStyle(presentationNode: Node): FractionStyle {
+        const style = new FractionStyle();
+        presentationNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "m:type":
+                    style.setType(Xml.getStringValue(child));
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Delimiter style reading.`);
+                    break;
+            }
+        })
+        return style;
+    }
+
     private static _readRunObject(runNode: Node): RunObject {
         let style: RunStyle | undefined = undefined;
         let text: string = "";
@@ -139,6 +179,9 @@ export class MathReader {
                     break;
                 case "m:r":
                     objects.add(this._readRunObject(child));
+                    break;
+                case "m:f":
+                    objects.add(this._readFractionObject(child));
                     break;
                 default:
                     console.log(`Unknown node ${child.nodeName} encountered during reading of Math Objects`);
