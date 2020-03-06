@@ -6,14 +6,13 @@ Potlood is Dutch for Pencil.
 
 - Inline anchoring of Drawing
 - Equations
-- Numbering types
 - Underline modes
 - Table border modes
 - Page visualization
 - Header and footer
 - Horizontal bar Chart
 - Scatter plot
-- Multiple columns
-- Tab stop leader
+- Multiple text columns
+- Tab stop leader characters
 - Theme colors
 - Patterns
