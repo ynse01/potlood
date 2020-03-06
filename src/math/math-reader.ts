@@ -12,6 +12,8 @@ import { FractionObject } from "./fraction-object.js";
 import { FractionStyle } from "./fraction-style.js";
 import { MatrixStyle } from "./matrix-style.js";
 import { MatrixObject } from "./matrix-object.js";
+import { FunctionStyle } from "./function-style.js";
+import { FunctionObject } from "./function-object.js";
 
 export class MathReader {
 
@@ -150,6 +152,44 @@ export class MathReader {
         return style;
     }
 
+    private static _readFunctionObject(fracNode: Node): FunctionObject {
+        let style = new FunctionStyle();
+        let functionName: MathObject | undefined = undefined;
+        let elem: MathObject | undefined = undefined;
+        fracNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "m:funcPr":
+                    style = this._readFunctionStyle(child);
+                    break;
+                case "m:fName":
+                    functionName = this._readMathElement(child);
+                    break;
+                case "m:e":
+                    elem = this._readMathElement(child);
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Fraction reading.`);
+                    break;
+            }
+        });
+        return new FunctionObject(functionName, elem, style);
+    }
+
+    private static _readFunctionStyle(presentationNode: Node): FunctionStyle {
+        const style = new FunctionStyle();
+        presentationNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "m:ctrlPr":
+                    // Ignore for now.
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Delimiter style reading.`);
+                    break;
+            }
+        })
+        return style;
+    }
+
     private static _readMatrixObject(matrixNode: Node): MatrixObject {
         let style = new MatrixStyle();
         let rows = new MathObjectList();
@@ -225,6 +265,9 @@ export class MathReader {
         const objects = new MathObjectList();
         node.childNodes.forEach(child => {
             switch (child.nodeName) {
+                case "m:e":
+                    objects.add(this._readMathElement(child));
+                    break;
                 case "m:nary":
                     objects.add(this._readNAryObject(child));
                     break;
@@ -239,6 +282,9 @@ export class MathReader {
                     break;
                 case "m:m":
                     objects.add(this._readMatrixObject(child));
+                    break;
+                case "m:func":
+                    objects.add(this._readFunctionObject(child));
                     break;
                 default:
                     console.log(`Unknown node ${child.nodeName} encountered during reading of Math Objects`);
