@@ -1,6 +1,7 @@
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { Xml } from "../utils/xml.js";
 import { Metrics } from "../utils/metrics.js";
+import { Justification } from "./par-style.js";
 
 export enum TabLeader {
     None,
@@ -85,6 +86,16 @@ export class TabStop {
 
     public get isClear(): boolean {
         return this._alignment === TabAlignment.Clear;
+    }
+
+    public get justification(): Justification {
+        let justification = Justification.left;
+        if (this._alignment === TabAlignment.Center) {
+            justification = Justification.center;
+        } else if (this._alignment === TabAlignment.Right) {
+            justification = Justification.right;
+        }
+        return justification;
     }
 
     public performLayout(flow: VirtualFlow) {

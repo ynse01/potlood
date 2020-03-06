@@ -96,8 +96,8 @@ export class VirtualFlow {
         return this;
     }
 
-    public getTabPosition(index: number): number {
-        return this._stops[index].position!;
+    public getTab(index: number): TabStop {
+        return this._stops[index];
     }
 
     public addTabStop(tabStop: TabStop): void {

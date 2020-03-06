@@ -43,6 +43,7 @@ export class TextFitter {
         let currentLength = 0;
         let numAvailableChars = this._getAvailableChars(currentXPadding, flow);
         let isLastLine = false;
+        let justification = this._run.style.justification;
         for(let i = 0; i < words.length; i++) {
             currentLength += words[i].length + 1;
             isLastLine = (i === words.length - 1);
@@ -56,14 +57,20 @@ export class TextFitter {
             }
             if (reachedEndOfLine) {
                 inRun = (isLastLine) ? InSequence.Last : inRun;
-                this._pushNewLine(splitter.combine(previousIndex, i), flow, isFollowing, isTab, inRun, currentXPadding, this._run.style);
+                this._pushNewLine(splitter.combine(previousIndex, i), flow, isFollowing, isTab, inRun, currentXPadding, justification, this._run.style);
                 if (!isLastLine) {
                     isFollowing = false;
                     inRun = InSequence.Middle;
-                    currentXPadding = isTab ? this._getTabPadding(tabIndex, flow) : this._getIndentation(inRun);
+                    if (isTab) {
+                        currentXPadding = this._getTabPadding(tabIndex, flow);
+                        justification = this._getTabJustification(tabIndex, flow);
+                        tabIndex++;
+                    } else {
+                        currentXPadding = this._getIndentation(inRun);
+                        tabIndex = 0;
+                    }
                     numAvailableChars = this._getAvailableChars(currentXPadding, flow);
                     currentLength = 0;
-                    tabIndex = isTab ? tabIndex + 1 : 0;
                     previousIndex = i + 1;
                 }
             }
@@ -86,6 +93,7 @@ export class TextFitter {
         isTab: boolean,
         inRun: InSequence,
         xPadding: number,
+        justification: Justification,
         style: Style
     ): void {
         const isLastLine = (inRun === InSequence.Last || inRun === InSequence.Only);
@@ -101,7 +109,8 @@ export class TextFitter {
             color: style.color,
             fontFamily: style.fontFamily,
             fontSize: style.fontSize,
-            emphasis: style.emphasis
+            emphasis: style.emphasis,
+            justification: justification
         });
         if (!isTab && (isLastRun || !isLastLine)) {
             flow.advancePosition(this._lineHeight);
@@ -137,7 +146,11 @@ export class TextFitter {
     }
 
     private _getTabPadding(tabIndex: number, flow: VirtualFlow): number {
-        return flow.getTabPosition(tabIndex);
+        return flow.getTab(tabIndex).position!;
+    }
+
+    private _getTabJustification(tabIndex: number, flow: VirtualFlow): Justification {
+        return flow.getTab(tabIndex).justification;
     }
 
     private _getAvailableChars(xPadding: number, flow: VirtualFlow): number {
