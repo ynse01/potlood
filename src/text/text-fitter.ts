@@ -57,7 +57,9 @@ export class TextFitter {
             }
             if (reachedEndOfLine) {
                 inRun = (isLastLine) ? InSequence.Last : inRun;
+                // Ready to push the line out to the renderer.
                 this._pushNewLine(splitter.combine(previousIndex, i), flow, isFollowing, isTab, inRun, currentXPadding, justification, this._run.style);
+                // Resetting the state for next line.
                 if (!isLastLine) {
                     isFollowing = false;
                     inRun = InSequence.Middle;
