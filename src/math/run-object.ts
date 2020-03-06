@@ -19,6 +19,7 @@ export class RunObject extends MathObject {
     }
     
     public render(painter: IPainter): void {
-        new TextRenderer(painter).renderTextRun(this._run);
+        const renderer = new TextRenderer(painter);
+        renderer.renderTextRun(this._run);
     }
 }

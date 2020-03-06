@@ -62,14 +62,19 @@ export class Xml {
      */
     public static getStringValue(node: Node): string | undefined {
         let val: string | undefined = undefined;
-        const attr = Xml.getAttribute(node, "w:val");
+        let attr = Xml.getAttribute(node, "w:val");
         if (attr !== undefined) {
             val = attr;
         } else {
-            const attr = Xml.getAttribute(node, "val");
+            attr = Xml.getAttribute(node, "val");
             if (attr !== undefined) {
                 val = attr;
-            }    
+            } else {
+                attr = Xml.getAttribute(node, "m:val");
+                if (attr !== undefined) {
+                    val = attr;
+                }
+            }
         }
         return val;
     }

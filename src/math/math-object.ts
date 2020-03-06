@@ -14,6 +14,10 @@ export class MathObjectList extends MathObject {
         this._list.push(obj);
     } 
 
+    public forEach(func: (obj: MathObject) => any): any {
+        return this._list.forEach(func);
+    }
+
     public performLayout(flow: VirtualFlow): void {
         this._list.forEach(obj => obj.performLayout(flow));
     }
