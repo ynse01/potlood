@@ -15,6 +15,7 @@ export class SvgPainter implements IPainter {
         root.setAttribute('id', 'svg');
         root.setAttribute('width', width);
         root.setAttribute('height', '500');
+        root.setAttribute('style', 'white-space:pre');
         content.appendChild(root);
         this._svg = root;
         this._root = root;
@@ -26,7 +27,6 @@ export class SvgPainter implements IPainter {
 
     public paintText(x: number, y: number, width: number, stretched: boolean, text: string, color: string, justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean) {
         const newText = document.createElementNS(SvgPainter.svgNS, 'text');
-        newText.setAttribute('style', 'white-space:pre');
         this._setFont(newText, fontFamily, fontSize, bold, italic);
         this._setColor(newText, color);
         this._setHorizontalAlignment(newText, x, width, justification, stretched);
