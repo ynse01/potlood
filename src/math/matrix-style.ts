@@ -1,9 +1,18 @@
+import { MatrixColumnStyle } from "./matrix-column-style";
 
-export enum MatrixJustification {
+export enum MatrixYAlign {
     Inline,
     Top,
     Center,
     Bottom,
+    Inside,
+    Outside
+}
+
+export enum MatrixColumnXAlign {
+    Left,
+    Center,
+    Right,
     Inside,
     Outside
 }
@@ -17,13 +26,14 @@ export enum MatrixSpacingRule {
 }
 
 export class MatrixStyle {
-    public baseJustification: MatrixJustification = MatrixJustification.Inline;
+    public baseJustification: MatrixYAlign = MatrixYAlign.Inline;
     public hidePlaceholder: boolean = false;
     public rowSpacingRule: MatrixSpacingRule = MatrixSpacingRule.Single;
     public rowSpacing: number = 1;
     public columnGapRule: MatrixSpacingRule = MatrixSpacingRule.Single;
     public columnGap: number = 1;
     public columnMinimalWidth: number = 1;
+    public columnStyles: MatrixColumnStyle[] | undefined = undefined;
 
     public setJustification(jcStr: string | undefined): void {
         switch (jcStr) {

@@ -16,6 +16,7 @@ import { FunctionStyle } from "./function-style.js";
 import { FunctionObject } from "./function-object.js";
 import { RadicalStyle } from "./radical-style.js";
 import { RadicalObject } from "./radical-object.js";
+import { MatrixColumnStyle } from "./matrix-column-style.js";
 
 export class MathReader {
 
@@ -241,6 +242,8 @@ export class MathReader {
                     style.columnGapRule = this._readMatrixSpacingRule(child);
                     break;
                 case "m:mcs":
+                    style.columnStyles = this._readMatrixColumnStyleList(child);
+                    break;
                 case "m:ctrlPr":
                     // Ignore for now.
                     break;
@@ -254,6 +257,34 @@ export class MathReader {
 
     private static _readMatrixSpacingRule(_ruleNode: Node): MatrixSpacingRule {
         return MatrixSpacingRule.Single;
+    }
+
+    private static _readMatrixColumnStyleList(columnsNode: Node): MatrixColumnStyle[] {
+        const columns: MatrixColumnStyle[] = [];
+        columnsNode.childNodes.forEach(child => {
+            if (child.nodeName === "m:mc") {
+                columns.push(this._readMatrixColumnStyle(child));
+            }
+        });
+        return columns;
+    }
+
+    private static _readMatrixColumnStyle(columnNode: Node): MatrixColumnStyle {
+        const style = new MatrixColumnStyle();
+        columnNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "m:count":
+                    style.count = Xml.getNumberValue(child) || 0;
+                    break;
+                case "m:mcJc":
+                    style.setJustification(Xml.getStringValue(child));
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Matrix Column Style reading.`);
+                    break;
+            }
+        });
+        return style;
     }
 
     private static _readRadicalObject(delNode: Node): RadicalObject {
@@ -272,7 +303,7 @@ export class MathReader {
                     elem = this._readMathElement(child);
                     break;
                 default:
-                    console.log(`Don't know how to parse ${child.nodeName} during Delimiter reading.`);
+                    console.log(`Don't know how to parse ${child.nodeName} during Radical reading.`);
                     break;
             }
         });
