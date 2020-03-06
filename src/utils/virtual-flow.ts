@@ -1,5 +1,6 @@
 import { Section } from "../section.js";
 import { ShapePositionReference } from "../drawing/shape-bounds.js";
+import { TabStop } from "../paragraph/tab-stop.js";
 
 export class VirtualFlow {
     // private _width: number;
@@ -9,7 +10,7 @@ export class VirtualFlow {
     private _pos: number;
     private _lastParPos: number = 0;
     private _lastCharX: number = 0;
-    private _stops: number[] = [];
+    private _stops: TabStop[] = [];
 
     public static fromSection(section: Section | undefined): VirtualFlow {
         const flow = new VirtualFlow(40, 700 - 40);
@@ -96,14 +97,14 @@ export class VirtualFlow {
     }
 
     public getTabPosition(index: number): number {
-        return this._stops[index] || 0;
+        return this._stops[index].position!;
     }
 
-    public addTabStop(pos: number): void {
-        this._stops.push(pos);
+    public addTabStop(tabStop: TabStop): void {
+        this._stops.push(tabStop);
     }
 
-    public removeTabStop(_pos: number): void {
+    public removeTabStop(): void {
         this._stops.pop();
     }
 
