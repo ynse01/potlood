@@ -11,6 +11,7 @@ export class VirtualFlow {
     private _lastParPos: number = 0;
     private _lastCharX: number = 0;
     private _stops: TabStop[] = [];
+    private _nums: any = {};
 
     public static fromSection(section: Section | undefined): VirtualFlow {
         const flow = new VirtualFlow(40, 700 - 40);
@@ -96,6 +97,21 @@ export class VirtualFlow {
         return this;
     }
 
+    public advanceNumbering(numId: number, level: number): void {
+        const id = `${numId}-${level}`;
+        const currentNum = this._nums[id];
+        if (currentNum === undefined) {
+            this._nums[id] = 2;
+        } else {
+            this._nums[id] = currentNum + 1;
+        }
+    }
+
+    public getNumbering(numId: number, level: number): number {
+        const id = `${numId}-${level}`;
+        return this._nums[id] || 1;
+    }
+
     public getTab(index: number): TabStop {
         return this._stops[index];
     }
@@ -117,6 +133,9 @@ export class VirtualFlow {
     }
 
     public clone(): VirtualFlow {
-        return new VirtualFlow(this._xMin, this._xMax, this._pos);
+        const cloned = new VirtualFlow(this._xMin, this._xMax, this._pos);
+        cloned._stops = this._stops;
+        cloned._nums = this._nums;
+        return cloned;
     }
 }

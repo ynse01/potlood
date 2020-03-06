@@ -126,7 +126,8 @@ export class NumberingLevel {
         if (num > 26) {
             return this._toDecimal(num / 26) + this._toDecimal(num % 26);
         }
-        return String.fromCharCode(97 + Math.floor(num));
+        // 1 maps to a, which is charcode 97.
+        return String.fromCharCode(96 + Math.floor(num));
     }
 
     private _romanCodes = [

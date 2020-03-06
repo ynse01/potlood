@@ -4,9 +4,9 @@ import { NumberingLevel } from "./numbering-level.js";
 import { Style } from "../text/style.js";
 
 export class NumberingStyle {
-    private index: number;
-    private numId: number; 
-    private level: NumberingLevel | undefined;
+    public numId: number; 
+    public level: NumberingLevel | undefined;
+    private _levelIndex: number;
 
     public static fromNumPresentationNode(numPrNode: ChildNode | undefined): NumberingStyle | undefined {
         let style: NumberingStyle | undefined = undefined;
@@ -22,9 +22,9 @@ export class NumberingStyle {
         return style;
     }
 
-    constructor(numId: number, index: number) {
+    constructor(numId: number, levelIndex: number) {
         this.numId = numId;
-        this.index = index;
+        this._levelIndex = levelIndex;
     }
 
     public getPrefixText(indices: number[]): string {
@@ -43,7 +43,7 @@ export class NumberingStyle {
         if (numberings !== undefined) {
             const numbering = numberings.getNumberingById(this.numId);
             if (numbering !== undefined) {
-                this.level = numbering.getLevel(this.index);
+                this.level = numbering.getLevel(this._levelIndex);
             } else {
                 console.log(`Could not find numbering ID ${this.numId}`);
             }

@@ -7,6 +7,7 @@ import { DocumentX } from "../document-x.js";
 import { ParStyle } from "./par-style.js";
 import { DrawingReader } from "../drawing/drawing-reader.js";
 import { InSequence } from "../utils/in-sequence.js";
+import { NumberingRun } from "../numbering/numbering-run.js";
 
 export class ParagraphReader {
     public static readStructuredDocumentTag(docx: DocumentX, sdtNode: Node): Paragraph[] {
@@ -28,12 +29,12 @@ export class ParagraphReader {
     }
 
     public static readParagraph(docx: DocumentX, pNode: Node): Paragraph {
-        let numberingRun: TextRun | undefined;
+        let numberingRun: NumberingRun | undefined;
         let linkTarget: string | undefined = undefined;
         const runs: (TextRun | DrawingRun)[] = [];
         const parStyle = this.readStyle(docx, pNode);
-        if (parStyle !== undefined && parStyle._numStyle !== undefined && parStyle._numStyle.style !== undefined) {
-            numberingRun = new TextRun([parStyle._numStyle.getPrefixText([0])], parStyle._numStyle.style);
+        if (parStyle !== undefined && parStyle._numStyle !== undefined) {
+            numberingRun = new NumberingRun(parStyle._numStyle);
         }
         const textStyle = parStyle.clone();
         textStyle._numStyle = undefined;
@@ -97,5 +98,4 @@ export class ParagraphReader {
         }
         return new ParStyle();
     }
-
 }
