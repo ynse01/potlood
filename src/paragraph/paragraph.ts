@@ -91,7 +91,11 @@ export class Paragraph implements ILayoutable {
         if (this.style._tabStops !== undefined) {
             this.style._tabStops.forEach(stop => {
                 stop.performLayout(flow);
-                flow.addTabStop(stop.position!);
+                if (stop.isClear) {
+                    flow.removeTabStop(0);
+                } else {
+                    flow.addTabStop(stop.position!);
+                }
             });
         }
         if (this._numberingRun !== undefined) {

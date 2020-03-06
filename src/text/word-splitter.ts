@@ -33,19 +33,31 @@ export class WordSplitter {
      * Combine the words from start to end index, inclusive.
      */
     public combine(start: number, end: number): string {
-        let result = "";
+        const results: string[] = [];
         if (this._words === undefined) {
             this._split();
         }
+        const words = this._words!;
         for (let i = start; i <= end; i++) {
-            const sepChar = this.getSeperator(i) === WordSeperator.Dash ? "-" : " ";
-            result = result.concat(this._words![i], sepChar);
+            results.push(words![i]);
+            const sep = this.getSeperator(i);
+            switch(sep) {
+                case WordSeperator.Dash:
+                    results.push("-");
+                    break;
+                case WordSeperator.Tab:
+                    // Push nothing
+                    break;
+                default:
+                    results.push(" ");
+                    break;
+            }
         }
-        return result;
+        return results.join("");
     }
 
     private _split(): void {
-        const txt = this._texts.join(' ');
+        const txt = this._texts.join('');
         this._words = txt.split(/[\s-\t]/);
         const seperators: WordSeperator[] = [];
         let index = 0;

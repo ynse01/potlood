@@ -151,6 +151,7 @@ export class ParStyle {
         cloned._parLinesAfter = this._parLinesAfter;
         cloned._parAutoSpacingBefore = this._parAutoSpacingBefore;
         cloned._parAutoSpacingAfter = this._parAutoSpacingAfter;
+        cloned._tabStops = this._tabStops;
         return cloned;
     }
 

@@ -1,5 +1,6 @@
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { Xml } from "../utils/xml.js";
+import { Metrics } from "../utils/metrics.js";
 
 export enum TabLeader {
     None,
@@ -7,8 +8,11 @@ export enum TabLeader {
 }
 
 export enum TabAlignment {
+    Clear,
     Left,
-    Right
+    Right,
+    Center,
+    Numbering
 }
 
 export class TabStop {
@@ -26,7 +30,8 @@ export class TabStop {
             if (alignStr !== undefined && posAttr !== undefined) {
                 const alignment = this._readTabAlignment(alignStr);
                 const leader = this._readTabLeader(leaderAttr);
-                const stop = new TabStop(parseInt(posAttr), alignment, leader);
+                const pos = Metrics.convertTwipsToPixels(parseInt(posAttr));
+                const stop = new TabStop(pos, alignment, leader);
                 stops.push(stop);
             }
         });
@@ -36,10 +41,23 @@ export class TabStop {
     private static _readTabAlignment(align: string): TabAlignment {
         let alignment = TabAlignment.Left;
         switch (align.toLowerCase()) {
+            case "num":
+                alignment = TabAlignment.Numbering;
+                break;
+            case "center":
+                alignment = TabAlignment.Center;
+                break;
+            case "clear":
+                alignment = TabAlignment.Clear;
+                break;
+            case "left":
+                alignment = TabAlignment.Left;
+                break;
             case "right":
                 alignment = TabAlignment.Right;
                 break;
             default:
+                console.log(`Unknown tab alignment value encountered: ${align}`);
                 break;
         }
         return alignment;
@@ -65,11 +83,13 @@ export class TabStop {
         this.leader = leader;
     }
 
+    public get isClear(): boolean {
+        return this._alignment === TabAlignment.Clear;
+    }
+
     public performLayout(flow: VirtualFlow) {
-        if (this._alignment === TabAlignment.Left) {
+        if (this._alignment !== TabAlignment.Clear) {
             this.position = flow.getX() + this._pos;
-        } else {
-            this.position = flow.getX() + flow.getWidth() - this._pos;
         }
     }
 }
