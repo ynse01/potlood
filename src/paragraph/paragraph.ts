@@ -1,5 +1,4 @@
 import { TextRun } from "../text/text-run.js";
-import { DrawingRun } from "../drawing/drawing-run.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { ParStyle } from "./par-style.js";
@@ -11,12 +10,19 @@ export enum ParagraphType {
     Drawing = 2
 }
 
+export interface IRun extends ILayoutable {
+    getUsedWidth(): number;
+    getHeight(): number;
+    previousXPos: number | undefined;
+    lastXPos: number | undefined;
+}
+
 export class Paragraph implements ILayoutable {
     private _type: ParagraphType;
-    private _runs: (TextRun | DrawingRun)[];
+    private _runs: IRun[];
     private _numberingRun: TextRun | undefined;
 
-    constructor(runs: (TextRun | DrawingRun)[], numberingRun: TextRun | undefined) {
+    constructor(runs: IRun[], numberingRun: TextRun | undefined) {
         this._type = ParagraphType.Text;
         this._runs = runs;
         this._numberingRun = numberingRun;
@@ -37,7 +43,7 @@ export class Paragraph implements ILayoutable {
         return (foundRun as TextRun).style.parStyle;
     }
 
-    public get runs(): (TextRun | DrawingRun)[] {
+    public get runs(): IRun[] {
         return this._runs!;
     }
 
@@ -121,6 +127,6 @@ export class Paragraph implements ILayoutable {
     }
 
     private _getLineSpacing(): number {
-        return (this.runs[0] instanceof TextRun) ? this.runs[0].style.lineSpacing : 10;
+        return (this.runs[0] instanceof TextRun) ? (this.runs[0] as TextRun).style.lineSpacing : 10;
     }
 }

@@ -1,13 +1,13 @@
 import { Xml } from "../utils/xml.js";
-import { Paragraph } from "./paragraph.js";
+import { Paragraph, IRun } from "./paragraph.js";
 import { TextRun } from "../text/text-run.js";
 import { TextReader } from "../text/text-reader.js";
-import { DrawingRun } from "../drawing/drawing-run.js";
 import { DocumentX } from "../document-x.js";
 import { ParStyle } from "./par-style.js";
 import { DrawingReader } from "../drawing/drawing-reader.js";
 import { InSequence } from "../utils/in-sequence.js";
 import { NumberingRun } from "../numbering/numbering-run.js";
+import { MathReader } from "../math/math-reader.js";
 
 export class ParagraphReader {
     public static readStructuredDocumentTag(docx: DocumentX, sdtNode: Node): Paragraph[] {
@@ -31,7 +31,7 @@ export class ParagraphReader {
     public static readParagraph(docx: DocumentX, pNode: Node): Paragraph {
         let numberingRun: NumberingRun | undefined;
         let linkTarget: string | undefined = undefined;
-        const runs: (TextRun | DrawingRun)[] = [];
+        const runs: IRun[] = [];
         const parStyle = this.readStyle(docx, pNode);
         if (parStyle !== undefined && parStyle._numStyle !== undefined) {
             numberingRun = new NumberingRun(parStyle._numStyle);
@@ -71,6 +71,10 @@ export class ParagraphReader {
                 run.inParagraph = InSequence.Middle;
                 run.linkTarget = linkTarget;
                 runs.push(run);
+            }
+            if (node.nodeName === "m:oMath") {
+                const mathRun = MathReader.fromMathNode(node);
+                runs.push(mathRun);
             }
         });
         const firstRun = numberingRun || runs[0];

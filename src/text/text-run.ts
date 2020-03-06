@@ -2,12 +2,11 @@ import { Style } from "./style.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { InSequence } from "../utils/in-sequence.js";
 import { IPositionedTextLine } from "./positioned-text-line.js";
-import { ILayoutable } from "../utils/i-layoutable.js";
 import { TextFitter } from "./text-fitter.js";
 import { Metrics } from "../utils/metrics.js";
-import { ParagraphType } from "../paragraph/paragraph.js";
+import { ParagraphType, IRun } from "../paragraph/paragraph.js";
 
-export class TextRun implements ILayoutable {
+export class TextRun implements IRun {
     public texts: string[];
     public style: Style;
     public inParagraph: InSequence = InSequence.Only;

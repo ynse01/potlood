@@ -1,9 +1,9 @@
 import { ShapeBounds, ShapeAnchorMode } from "./shape-bounds.js";
 import { Picture } from "./picture.js";
-import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { ChartSpace } from "../chart/chart-space.js";
 import { Shape } from "./shape.js";
+import { IRun } from "../paragraph/paragraph.js";
 
 export enum WrapMode {
     None,
@@ -13,7 +13,7 @@ export enum WrapMode {
     TopAndBottom
 }
 
-export class DrawingRun implements ILayoutable {
+export class DrawingRun implements IRun {
     public bounds: ShapeBounds;
     public wrapping: WrapMode;
     public picture: Picture | undefined;
