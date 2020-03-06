@@ -65,7 +65,7 @@ export class TextFitter {
                     inRun = InSequence.Middle;
                     if (isTab) {
                         currentXPadding = this._getTabPadding(tabIndex, flow);
-                        justification = this._getTabJustification(tabIndex, flow);
+                        justification = this._getTabJustification(tabIndex, this._run.style, flow);
                         tabIndex++;
                     } else {
                         currentXPadding = this._getIndentation(inRun);
@@ -148,11 +148,21 @@ export class TextFitter {
     }
 
     private _getTabPadding(tabIndex: number, flow: VirtualFlow): number {
-        return flow.getTab(tabIndex).position!;
+        let padding = 0;
+        const tab = flow.getTab(tabIndex);
+        if (tab !== undefined && tab.position !== undefined) {
+            padding = tab.position;
+        }
+        return padding;
     }
 
-    private _getTabJustification(tabIndex: number, flow: VirtualFlow): Justification {
-        return flow.getTab(tabIndex).justification;
+    private _getTabJustification(tabIndex: number, style: Style, flow: VirtualFlow): Justification {
+        let justification = style.justification;
+        const tab = flow.getTab(tabIndex);
+        if (tab !== undefined) {
+            justification = tab.justification;
+        }
+        return justification;
     }
 
     private _getAvailableChars(xPadding: number, flow: VirtualFlow): number {
