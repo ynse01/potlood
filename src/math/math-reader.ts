@@ -10,10 +10,12 @@ import { DelimiterStyle } from "./delimiter-style.js";
 import { Xml } from "../utils/xml.js";
 import { FractionObject } from "./fraction-object.js";
 import { FractionStyle } from "./fraction-style.js";
-import { MatrixStyle } from "./matrix-style.js";
+import { MatrixStyle, MatrixSpacingRule } from "./matrix-style.js";
 import { MatrixObject } from "./matrix-object.js";
 import { FunctionStyle } from "./function-style.js";
 import { FunctionObject } from "./function-object.js";
+import { RadicalStyle } from "./radical-style.js";
+import { RadicalObject } from "./radical-object.js";
 
 export class MathReader {
 
@@ -226,11 +228,64 @@ export class MathReader {
                 case "m:rSp":
                     style.rowSpacing = Xml.getNumberValue(child) || 1;
                     break;
+                case "m:rSpRule":
+                    style.rowSpacingRule = this._readMatrixSpacingRule(child);
+                    break;
                 case "m:cSp":
-                    style.columnSpacing = Xml.getNumberValue(child) || 1;
+                    style.columnMinimalWidth = Xml.getNumberValue(child) || 0;
                     break;
                 case "m:cGp":
+                    style.columnGap = Xml.getNumberValue(child) || 1;
+                    break;
+                case "m:cGpRule":
+                    style.columnGapRule = this._readMatrixSpacingRule(child);
+                    break;
                 case "m:mcs":
+                case "m:ctrlPr":
+                    // Ignore for now.
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Delimiter style reading.`);
+                    break;
+            }
+        })
+        return style;
+    }
+
+    private static _readMatrixSpacingRule(_ruleNode: Node): MatrixSpacingRule {
+        return MatrixSpacingRule.Single;
+    }
+
+    private static _readRadicalObject(delNode: Node): RadicalObject {
+        let style = new RadicalStyle();
+        let degree: MathObject | undefined = undefined;
+        let elem: MathObject | undefined = undefined;
+        delNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "m:radPr":
+                    style = this._readRadicalStyle(child);
+                    break;
+                case "m:deg":
+                    degree = this._readMathElement(child);
+                    break;
+                case "m:e":
+                    elem = this._readMathElement(child);
+                    break;
+                default:
+                    console.log(`Don't know how to parse ${child.nodeName} during Delimiter reading.`);
+                    break;
+            }
+        });
+        return new RadicalObject(degree, elem, style);
+    }
+
+    private static _readRadicalStyle(presentationNode: Node): RadicalStyle {
+        const style = new RadicalStyle();
+        presentationNode.childNodes.forEach(child => {
+            switch (child.nodeName) {
+                case "m:degHide":
+                    style.hideDegree = Xml.getBooleanValue(child) || false;
+                    break;
                 case "m:ctrlPr":
                     // Ignore for now.
                     break;
@@ -285,6 +340,24 @@ export class MathReader {
                     break;
                 case "m:func":
                     objects.add(this._readFunctionObject(child));
+                    break;
+                case "m:rad":
+                    objects.add(this._readRadicalObject(child));
+                    break;
+                case "m:acc":
+                case "m:bar":
+                case "m:box":
+                case "m:borderBox":
+                case "m:eqArr":
+                case "m:groupChr":
+                case "m:limLow":
+                case "m:limUpp":
+                case "m:phant":
+                case "m:sPre":
+                case "m:sSub":
+                case "m:sSubSup":
+                case "m:sSup":
+                    console.log(`Math Object ${child.nodeName} not implemented yet`);
                     break;
                 default:
                     console.log(`Unknown node ${child.nodeName} encountered during reading of Math Objects`);
