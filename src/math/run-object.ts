@@ -5,6 +5,7 @@ import { VirtualFlow } from "../utils/virtual-flow.js";
 import { Style } from "../text/style.js";
 import { IPainter } from "../painting/i-painter.js";
 import { TextRenderer } from "../text/text-renderer.js";
+import { Box } from "../utils/math/box.js";
 
 export class RunObject extends MathObject {
     private _run: TextRun;
@@ -12,6 +13,12 @@ export class RunObject extends MathObject {
     constructor(text: string, style: RunStyle) {
         super();
         this._run = new TextRun([text], new Style(undefined, style));
+    }
+
+    public  getBoundingBox(): Box {
+        const width = this._run.getUsedWidth();
+        const height = this._run.getHeight();
+        return new Box(0, 0, width, height);
     }
 
     public performLayout(flow: VirtualFlow): void {
