@@ -86,6 +86,18 @@ export class Box {
         return new Box(x, y, width, height);
     }
 
+    public addOnTopOf(other: Box, spacing: number = 0): Box {
+        const width = Math.max(this.width, other.width);
+        const height = this.height + other.height + spacing;
+        return new Box(this.x, this.y, width, height);
+    }
+
+    public addInFrontOf(other: Box, spacing: number = 0): Box {
+        const width = this.width + other.width + spacing;
+        const height = Math.max(this.height, other.height);
+        return new Box(this.x, this.y, width, height);
+    }
+
     public clone(): Box {
         return new Box(this.x, this.y, this.width, this.height);
     }

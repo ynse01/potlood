@@ -16,7 +16,7 @@ export class RadicalObject extends MathObject {
         this.style = style;
     }
 
-    public  getBoundingBox(): Box {
+    public getBoundingBox(): Box {
         let elemBox : Box;
         if (this._elem !== undefined) {
             elemBox = this._elem.getBoundingBox();

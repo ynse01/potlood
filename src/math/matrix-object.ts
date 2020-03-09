@@ -14,9 +14,9 @@ export class MatrixObject extends MathObject {
         this.style = style;
     }
 
-    public  getBoundingBox(): Box {
+    public getBoundingBox(): Box {
         const rowBox = this.rows.get(0).getBoundingBox();
-        rowBox.height *= this.rows.length;
+        rowBox.height = (rowBox.height + 20) * this.rows.length - 20;
         return rowBox;
     }
 

@@ -16,7 +16,7 @@ export class FractionObject extends MathObject {
         this.style = style;
     }
 
-    public  getBoundingBox(): Box {
+    public getBoundingBox(): Box {
         let denominatorBox : Box;
         if (this._denumerator !== undefined) {
             denominatorBox = this._denumerator.getBoundingBox();
@@ -29,10 +29,7 @@ export class FractionObject extends MathObject {
         } else {
             numeratorBox = new Box(0, 0, 0, 0);
         }
-        const box = denominatorBox.clone();
-        box.width = Math.max(denominatorBox.width, numeratorBox.width);
-        box.height = 20 + denominatorBox.height + numeratorBox.height;
-        return box;
+        return denominatorBox.addOnTopOf(numeratorBox, 20);
     }
     
     public performLayout(flow: VirtualFlow): void {

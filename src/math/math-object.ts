@@ -30,8 +30,12 @@ export class MathObjectList extends MathObject {
         return this._list.forEach(func);
     }
 
-    public  getBoundingBox(): Box {
-        return new Box(0, 0, 0, 0);
+    public getBoundingBox(): Box {
+        let box = new Box(0, 0, 0, 0);
+        this._list.forEach(obj => {
+            box = box.addInFrontOf(obj.getBoundingBox());
+        });
+        return box;
     }
 
     public performLayout(flow: VirtualFlow): void {

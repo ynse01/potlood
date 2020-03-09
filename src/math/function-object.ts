@@ -29,9 +29,7 @@ export class FunctionObject extends MathObject {
         } else {
             nameBox = new Box(0, 0, 0, 0);
         }
-        const box = elemBox.clone();
-        box.width = box.width + nameBox.width;
-        box.height = Math.max(box.height, nameBox.height);
+        const box = nameBox.addOnTopOf(elemBox);
         return box;
     }
     

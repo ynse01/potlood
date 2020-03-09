@@ -18,17 +18,12 @@ export class NAryObject extends MathObject {
         this._style = style;
     }
 
-    public  getBoundingBox(): Box {
-        let elemBox : Box;
-        if (this._elem !== undefined) {
-            elemBox = this._elem.getBoundingBox();
-        } else {
-            elemBox = new Box(0, 0, 0, 0);
-        }
-        elemBox.width += 20;
-        elemBox.height += 20;
-        elemBox.y = -20;
-        return elemBox;
+    public getBoundingBox(): Box {
+        let elemBox = (this._elem !== undefined)  ? this._elem.getBoundingBox() : new Box(0, 0, 0, 0);
+        let superBox = (this._super !== undefined)  ? this._super.getBoundingBox() : new Box(0, 0, 0, 0);
+        let subBox = (this._sub !== undefined)  ? this._sub.getBoundingBox() : new Box(0, 0, 0, 0);
+        const box = superBox.addOnTopOf(elemBox).addOnTopOf(subBox);
+        return box;
     }
 
     public performLayout(flow: VirtualFlow): void {

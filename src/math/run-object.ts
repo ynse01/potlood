@@ -15,10 +15,8 @@ export class RunObject extends MathObject {
         this._run = new TextRun([text], new Style(undefined, style));
     }
 
-    public  getBoundingBox(): Box {
-        const width = this._run.getUsedWidth();
-        const height = this._run.getHeight();
-        return new Box(0, 0, width, height);
+    public getBoundingBox(): Box {
+        return this._run.getBoundingBox();
     }
 
     public performLayout(flow: VirtualFlow): void {
