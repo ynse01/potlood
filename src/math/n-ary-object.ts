@@ -2,6 +2,7 @@ import { VirtualFlow } from "../utils/virtual-flow.js";
 import { MathObject } from "./math-object.js";
 import { NAryStyle } from "./n-ary-style.js";
 import { IPainter } from "../painting/i-painter.js";
+import { Box } from "../utils/math/box.js";
 
 export class NAryObject extends MathObject {
     private _sub: MathObject | undefined;
@@ -15,6 +16,19 @@ export class NAryObject extends MathObject {
         this._super = sup;
         this._elem = elem;
         this._style = style;
+    }
+
+    public  getBoundingBox(): Box {
+        let elemBox : Box;
+        if (this._elem !== undefined) {
+            elemBox = this._elem.getBoundingBox();
+        } else {
+            elemBox = new Box(0, 0, 0, 0);
+        }
+        elemBox.width += 20;
+        elemBox.height += 20;
+        elemBox.y = -20;
+        return elemBox;
     }
 
     public performLayout(flow: VirtualFlow): void {
