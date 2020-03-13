@@ -5,8 +5,10 @@ import { Equation } from "./equation.js";
 export class MathRun implements IRun {
     public previousXPos: number | undefined;
     public lastXPos: number | undefined;
+    public equation: Equation;
 
-    constructor(_equation: Equation) {
+    constructor(equation: Equation) {
+        this.equation = equation;
     }
 
     public getUsedWidth(): number {
@@ -17,8 +19,8 @@ export class MathRun implements IRun {
         return 0;
     }
     
-    public performLayout(_flow: VirtualFlow): void {
-        // Nothing to do yet.
+    public performLayout(flow: VirtualFlow): void {
+        this.equation.objects.performLayout(flow);
     }
 
 

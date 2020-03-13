@@ -27,15 +27,9 @@ export class NAryObject extends MathObject {
     }
 
     public performLayout(flow: VirtualFlow): void {
-        if (!this._style.hideSub && this._sub !== undefined) {
-            this._sub.performLayout(flow);
-        }
-        if (!this._style.hideSuper && this._super !== undefined) {
-            this._super.performLayout(flow);
-        }
-        if (this._elem !== undefined) {
-            this._elem.performLayout(flow);
-        }
+        this._sub?.performLayout(flow);
+        this._super?.performLayout(flow);
+        this._elem?.performLayout(flow);
     }
     
     public render(painter: IPainter): void {

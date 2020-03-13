@@ -38,7 +38,8 @@ export class FunctionObject extends MathObject {
         this._elem?.performLayout(flow);
     }
     
-    public render(_painter: IPainter): void {
-        throw new Error("Method not implemented.");
+    public render(painter: IPainter): void {
+        this._functionName?.render(painter);
+        this._elem?.render(painter);
     }   
 }
