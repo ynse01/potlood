@@ -2,7 +2,7 @@ import { MathObject, MathObjectList } from "./math-object.js";
 import { IPainter } from "../painting/i-painter.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { MatrixStyle } from "./matrix-style.js";
-import { Box } from "../utils/math/box.js";
+import { Size } from "../utils/math/size.js";
 
 export class MatrixObject extends MathObject {
     public rows: MathObjectList;
@@ -14,10 +14,10 @@ export class MatrixObject extends MathObject {
         this.style = style;
     }
 
-    public getBoundingBox(): Box {
-        const rowBox = this.rows.get(0).getBoundingBox();
-        rowBox.height = (rowBox.height + 20) * this.rows.length - 20;
-        return rowBox;
+    public getSize(): Size {
+        const rowSize = this.rows.get(0).getSize().clone();
+        rowSize.height = (rowSize.height + 20) * this.rows.length - 20;
+        return rowSize;
     }
 
     public performLayout(_flow: VirtualFlow): void {

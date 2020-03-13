@@ -5,7 +5,7 @@ import { IPositionedTextLine } from "./positioned-text-line.js";
 import { TextFitter } from "./text-fitter.js";
 import { Metrics } from "../utils/metrics.js";
 import { ParagraphType, IRun } from "../paragraph/paragraph.js";
-import { Box } from "../utils/math/box.js";
+import { Size } from "../utils/math/size.js";
 
 export class TextRun implements IRun {
     public texts: string[];
@@ -22,8 +22,8 @@ export class TextRun implements IRun {
         this.texts = texts;
     }
 
-    public getBoundingBox(): Box {
-        return new Box(0, 0, this.getUsedWidth(), this.getHeight());
+    public getSize(): Size {
+        return new Size(this.getUsedWidth(), this.getHeight());
     }
 
     public getUsedWidth(): number {

@@ -2,7 +2,7 @@ import { MathObject } from "./math-object.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { IPainter } from "../painting/i-painter.js";
 import { FunctionStyle } from "./function-style.js";
-import { Box } from "../utils/math/box.js";
+import { Size } from "../utils/math/size.js";
 
 export class FunctionObject extends MathObject {
     private _functionName: MathObject | undefined;
@@ -16,21 +16,21 @@ export class FunctionObject extends MathObject {
         this.style = style;
     }
 
-    public getBoundingBox(): Box {
-        let elemBox: Box;
+    public getSize(): Size {
+        let elemSize: Size;
         if (this._elem !== undefined) {
-            elemBox = this._elem?.getBoundingBox();
+            elemSize = this._elem.getSize();
         } else {
-            elemBox = new Box(0, 0, 0, 0);
+            elemSize = new Size(0, 0);
         }
-        let nameBox: Box;
+        let nameSize: Size;
         if (this._functionName !== undefined) {
-            nameBox = this._functionName?.getBoundingBox();
+            nameSize = this._functionName.getSize();
         } else {
-            nameBox = new Box(0, 0, 0, 0);
+            nameSize = new Size(0, 0);
         }
-        const box = nameBox.addOnTopOf(elemBox);
-        return box;
+        const size = nameSize.addVertical(elemSize);
+        return size;
     }
     
     public performLayout(flow: VirtualFlow): void {

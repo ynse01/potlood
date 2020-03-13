@@ -1,10 +1,10 @@
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { IPainter } from "../painting/i-painter.js";
-import { Box } from "../utils/math/box.js";
+import { Size } from "../utils/math/size.js";
 
 export abstract class MathObject {
 
-    public abstract getBoundingBox(): Box;
+    public abstract getSize(): Size;
 
     public abstract performLayout(flow: VirtualFlow): void;
 
@@ -30,12 +30,12 @@ export class MathObjectList extends MathObject {
         return this._list.forEach(func);
     }
 
-    public getBoundingBox(): Box {
-        let box = new Box(0, 0, 0, 0);
+    public getSize(): Size {
+        let size = new Size(0, 0);
         this._list.forEach(obj => {
-            box = box.addInFrontOf(obj.getBoundingBox());
+            size = size.addHorizontal(obj.getSize());
         });
-        return box;
+        return size;
     }
 
     public performLayout(flow: VirtualFlow): void {

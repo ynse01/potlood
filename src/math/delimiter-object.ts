@@ -2,7 +2,7 @@ import { MathObject } from "./math-object.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { IPainter } from "../painting/i-painter.js";
 import { DelimiterStyle } from "./delimiter-style.js";
-import { Box } from "../utils/math/box.js";
+import { Size } from "../utils/math/size.js";
 
 export class DelimiterObject extends MathObject {
     private _elem: MathObject | undefined;
@@ -14,16 +14,16 @@ export class DelimiterObject extends MathObject {
         this._style = style;
     }
 
-    public getBoundingBox(): Box {
-        let elemBox: Box;
+    public getSize(): Size {
+        let elemSize: Size;
         if (this._elem !== undefined) {
-            elemBox = this._elem?.getBoundingBox();
+            elemSize = this._elem.getSize();
         } else {
-            elemBox = new Box(0, 0, 0, 0);
+            elemSize = new Size(0, 0);
         }
-        const box = elemBox.clone();
-        box.width += 20;
-        return box;
+        const size = elemSize.clone();
+        size.width += 20;
+        return size;
     }
     
     public performLayout(flow: VirtualFlow): void {

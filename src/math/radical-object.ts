@@ -2,7 +2,7 @@ import { MathObject } from "./math-object.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { IPainter } from "../painting/i-painter.js";
 import { RadicalStyle } from "./radical-style.js";
-import { Box } from "../utils/math/box.js";
+import { Size } from "../utils/math/size.js";
 
 export class RadicalObject extends MathObject {
     private _degree: MathObject | undefined;
@@ -16,17 +16,16 @@ export class RadicalObject extends MathObject {
         this.style = style;
     }
 
-    public getBoundingBox(): Box {
-        let elemBox : Box;
+    public getSize(): Size {
+        let elemSize : Size;
         if (this._elem !== undefined) {
-            elemBox = this._elem.getBoundingBox();
+            elemSize = this._elem.getSize();
         } else {
-            elemBox = new Box(0, 0, 0, 0);
+            elemSize = new Size(0, 0);
         }
-        elemBox.width += 20;
-        elemBox.height += 20;
-        elemBox.y = -20;
-        return elemBox;
+        elemSize.width += 20;
+        elemSize.height += 20;
+        return elemSize;
     }
 
     public performLayout(flow: VirtualFlow): void {

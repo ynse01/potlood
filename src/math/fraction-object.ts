@@ -2,7 +2,7 @@ import { MathObject } from "./math-object.js";
 import { IPainter } from "../painting/i-painter.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { FractionStyle } from "./fraction-style.js";
-import { Box } from "../utils/math/box.js";
+import { Size } from "../utils/math/size.js";
 
 export class FractionObject extends MathObject {
     private _numerator: MathObject | undefined;
@@ -16,20 +16,20 @@ export class FractionObject extends MathObject {
         this.style = style;
     }
 
-    public getBoundingBox(): Box {
-        let denominatorBox : Box;
+    public getSize(): Size {
+        let denominatorSize: Size;
         if (this._denumerator !== undefined) {
-            denominatorBox = this._denumerator.getBoundingBox();
+            denominatorSize = this._denumerator.getSize();
         } else {
-            denominatorBox = new Box(0, 0, 0, 0);
+            denominatorSize = new Size(0, 0);
         }
-        let numeratorBox : Box;
+        let numeratorSize: Size;
         if (this._numerator !== undefined) {
-            numeratorBox = this._numerator.getBoundingBox();
+            numeratorSize = this._numerator.getSize();
         } else {
-            numeratorBox = new Box(0, 0, 0, 0);
+            numeratorSize = new Size(0, 0);
         }
-        return denominatorBox.addOnTopOf(numeratorBox, 20);
+        return denominatorSize.addVertical(numeratorSize, 20);
     }
     
     public performLayout(flow: VirtualFlow): void {
