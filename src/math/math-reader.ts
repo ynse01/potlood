@@ -65,7 +65,7 @@ export class MathReader {
         presentationNode.childNodes.forEach(child => {
             switch (child.nodeName) {
                 case "m:chr":
-                    style.char = child.textContent || "";
+                    style.char = Xml.getStringValue(child) || "";
                     break;
                 case "m:subHide":
                     style.hideSub = Xml.getBooleanValue(child) || false;
