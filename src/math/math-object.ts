@@ -6,7 +6,7 @@ export abstract class MathObject {
 
     public abstract getSize(): Size;
 
-    public abstract performLayout(flow: VirtualFlow): void;
+    public abstract performLayout(flow: VirtualFlow, xPadding: number): number;
 
     public abstract render(painter: IPainter): void;
 }
@@ -17,6 +17,10 @@ export class MathObjectList extends MathObject {
     public add(obj: MathObject): void {
         this._list.push(obj);
     } 
+
+    public unshift(obj: MathObject): void {
+        this._list.unshift(obj);
+    }
 
     public get(index: number): MathObject {
         return this._list[index];
@@ -38,8 +42,10 @@ export class MathObjectList extends MathObject {
         return size;
     }
 
-    public performLayout(flow: VirtualFlow): void {
-        this._list.forEach(obj => obj.performLayout(flow));
+    public performLayout(flow: VirtualFlow, xPadding: number): number {
+        let padding = xPadding;
+        this._list.forEach(obj => padding = obj.performLayout(flow, padding));
+        return padding;
     }
     
     public render(painter: IPainter): void {

@@ -17,6 +17,7 @@ import { FunctionObject } from "./function-object.js";
 import { RadicalStyle } from "./radical-style.js";
 import { RadicalObject } from "./radical-object.js";
 import { MatrixColumnStyle } from "./matrix-column-style.js";
+import { Style } from "../text/style.js";
 
 export class MathReader {
 
@@ -96,7 +97,7 @@ export class MathReader {
                     break;
             }
         });
-        return new DelimiterObject(elem, style);
+        return new DelimiterObject(elem, style, new Style());
     }
 
     private static _readDelimiterStyle(presentationNode: Node): DelimiterStyle {

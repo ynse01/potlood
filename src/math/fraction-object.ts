@@ -32,9 +32,10 @@ export class FractionObject extends MathObject {
         return denominatorSize.addVertical(numeratorSize, 20);
     }
     
-    public performLayout(flow: VirtualFlow): void {
-        this._numerator?.performLayout(flow);
-        this._denumerator?.performLayout(flow);
+    public performLayout(flow: VirtualFlow, xPadding: number): number {
+        const numPadding = this._numerator?.performLayout(flow, xPadding) || xPadding;
+        const denPadding = this._denumerator?.performLayout(flow, xPadding) || xPadding;
+        return Math.max(numPadding, denPadding);
     }
     
     public render(painter: IPainter): void {

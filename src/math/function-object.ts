@@ -33,9 +33,9 @@ export class FunctionObject extends MathObject {
         return size;
     }
     
-    public performLayout(flow: VirtualFlow): void {
-        this._functionName?.performLayout(flow);
-        this._elem?.performLayout(flow);
+    public performLayout(flow: VirtualFlow, xPadding: number): number {
+        let padding = this._functionName?.performLayout(flow, xPadding) || xPadding;
+        return this._elem?.performLayout(flow, padding) || padding;
     }
     
     public render(painter: IPainter): void {

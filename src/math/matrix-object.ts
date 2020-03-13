@@ -20,7 +20,7 @@ export class MatrixObject extends MathObject {
         return rowSize;
     }
 
-    public performLayout(_flow: VirtualFlow): void {
+    public performLayout(_flow: VirtualFlow, _xPadding: number): number {
         throw new Error("Method not implemented.");
     }
     

@@ -74,7 +74,7 @@ export class TextRenderer {
         let x = line.x;
         if (line.following) {
             const rect = this._painter.measureLastText();
-            x = rect.x + rect.width;
+            x = Math.max(x, rect.x + rect.width);
         }
         return x;
     }
