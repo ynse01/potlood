@@ -4,6 +4,7 @@ import { VirtualFlow } from "../utils/virtual-flow.js";
 import { ChartSpace } from "../chart/chart-space.js";
 import { Shape } from "./shape.js";
 import { IRun } from "../paragraph/paragraph.js";
+import { Box } from "../utils/math/box.js";
 
 export enum WrapMode {
     None,
@@ -49,6 +50,14 @@ export class DrawingRun implements IRun {
             this.shape.performLayout(bounds);
         }
         this.lastXPos = 0;
-        flow.addObstacle(bounds);
+        this._addObstacle(flow, bounds);
+    }
+
+    private _addObstacle(flow: VirtualFlow, bounds: Box): void {
+        const box = bounds.clone();
+        if (this.wrapping === WrapMode.TopAndBottom) {
+            box.width = flow.getWidth();
+        }
+        flow.addObstacle(box);
     }
 }
