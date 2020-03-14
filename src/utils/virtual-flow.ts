@@ -46,12 +46,12 @@ export class VirtualFlow {
         this._pos = position;
     }
 
-    public getX(): number {
+    public getX(needsWidth: number = 0): number {
         let x = this._xMin;
         const obstacle = this._getApplicableObstacle();
         if (obstacle !== undefined) {
             // Is obstacle all the width?
-            const isWide = obstacle.width >= (this._xMax - this._xMin);
+            const isWide = obstacle.width >= ((this._xMax - this._xMin) - needsWidth);
             if (isWide) {
                 this.advancePosition(obstacle.height);
             } else {
@@ -62,8 +62,8 @@ export class VirtualFlow {
         return x;
     }
 
-    public getReferenceX(reference: ShapePositionReference): number {
-        let x = this._xMin;
+    public getReferenceX(reference: ShapePositionReference, width: number): number {
+        let x = this.getX(width);
         // TODO: Support more reference modes.
         switch(reference) {
             case ShapePositionReference.Character:
