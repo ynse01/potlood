@@ -32,7 +32,7 @@ export class Renderer {
                 this._tableRenderer.renderTable(parOrTable);
             }
         });
-        return flow.getY();
+        return flow.getMaxY();
     }
 
     public clear() {

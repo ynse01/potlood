@@ -82,6 +82,14 @@ export class VirtualFlow {
         return this._pos;
     }
 
+    public getMaxY(): number {
+        let maxY = this._pos;
+        this._obstacles.forEach(bounds => {
+            maxY = Math.max(maxY, bounds.bottom);
+        });
+        return maxY;
+    }
+
     public getReferenceY(reference: ShapePositionReference): number {
         let pos = this._pos;
         // TODO: Support more reference modes.
