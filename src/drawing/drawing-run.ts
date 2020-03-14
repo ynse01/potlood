@@ -1,4 +1,4 @@
-import { ShapeBounds, ShapeAnchorMode } from "./shape-bounds.js";
+import { ShapeBounds } from "./shape-bounds.js";
 import { Picture } from "./picture.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { ChartSpace } from "../chart/chart-space.js";
@@ -49,8 +49,6 @@ export class DrawingRun implements IRun {
             this.shape.performLayout(bounds);
         }
         this.lastXPos = 0;
-        if ((bounds.width > 400) || (this.bounds.anchor !== ShapeAnchorMode.Inline && this.wrapping !== WrapMode.None)) {
-            flow.advancePosition(this.bounds.sizeY);
-        }
+        flow.addObstacle(bounds);
     }
 }

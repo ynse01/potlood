@@ -1,6 +1,7 @@
 import { Section } from "../section.js";
 import { ShapePositionReference } from "../drawing/shape-bounds.js";
 import { TabStop } from "../paragraph/tab-stop.js";
+import { Box } from "./math/box.js";
 
 export class VirtualFlow {
     // private _width: number;
@@ -12,6 +13,7 @@ export class VirtualFlow {
     private _lastCharX: number = 0;
     private _stops: TabStop[] = [];
     private _nums: any = {};
+    private _obstacles: Box[] = [];
 
     public static fromSection(section: Section | undefined): VirtualFlow {
         const flow = new VirtualFlow(40, 700 - 40);
@@ -45,7 +47,19 @@ export class VirtualFlow {
     }
 
     public getX(): number {
-        return this._xMin;
+        let x = this._xMin;
+        const obstacle = this._getApplicableObstacle();
+        if (obstacle !== undefined) {
+            // Is obstacle all the width?
+            const isWide = obstacle.width >= (this._xMax - this._xMin);
+            if (isWide) {
+                this.advancePosition(obstacle.height);
+            } else {
+                // TODO: Remove assumption that obstacle is to the left of the page
+                x = obstacle.right;
+            }
+        }
+        return x;
     }
 
     public getReferenceX(reference: ShapePositionReference): number {
@@ -83,7 +97,16 @@ export class VirtualFlow {
     }
 
     public getWidth(): number {
-        return this._xMax - this._xMin;
+        let width = this._xMax - this._xMin;
+        const obstacle = this._getApplicableObstacle();
+        if (obstacle !== undefined) {
+            width -= obstacle.width;
+        }
+        return width;
+    }
+
+    public addObstacle(bounds: Box): void {
+        this._obstacles.push(bounds);
     }
 
     public advanceX(startDelta: number, endDelta: number): VirtualFlow {
@@ -136,6 +159,18 @@ export class VirtualFlow {
         const cloned = new VirtualFlow(this._xMin, this._xMax, this._pos);
         cloned._stops = this._stops;
         cloned._nums = this._nums;
+        cloned._obstacles = this._obstacles;
         return cloned;
+    }
+
+    private _getApplicableObstacle(): Box | undefined {
+        let found: Box | undefined = undefined;
+        for (let i = 0; i < this._obstacles.length; i++) {
+            if (this._obstacles[i].intersectY(this._pos)) {
+                found = this._obstacles[i];
+                break;
+            }
+        }
+        return found;
     }
 }

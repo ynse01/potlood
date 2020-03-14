@@ -98,6 +98,18 @@ export class Box {
         return new Box(this.x, this.y, width, height);
     }
 
+    public intersectX(x: number): boolean {
+        return this.left <= x && this.right >= x;
+    }
+
+    public intersectY(y: number): boolean {
+        return this.top <= y && this.bottom >= y;
+    }
+
+    public intersectPoint(point: Point): boolean {
+        return this.intersectX(point.x) && this.intersectY(point.y);
+    }
+
     public clone(): Box {
         return new Box(this.x, this.y, this.width, this.height);
     }
