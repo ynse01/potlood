@@ -176,6 +176,7 @@ export class Picture implements ILayoutable {
 
     private _getImageUrlForEmf(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            EMFJS.loggingEnabled(false);
             this._pack.loadPartAsBinary(this._name).then(buff => {
                 const width = this.bounds?.width;
                 const height = this.bounds?.height;
@@ -205,6 +206,7 @@ export class Picture implements ILayoutable {
 
     private _getImageUrlForWmf(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            WMFJS.loggingEnabled(false);
             this._pack.loadPartAsBinary(this._name).then(buff => {
                 const width = this.bounds?.width;
                 const height = this.bounds?.height;
