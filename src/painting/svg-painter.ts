@@ -84,15 +84,25 @@ export class SvgPainter implements IPainter {
 
     public paintPicture(x: number, y: number, width: number, height: number, pic: Picture): void {
         if (pic !== undefined) {
-            const rect = document.createElementNS(SvgPainter.svgNS, "image");
-            rect.setAttribute("x", `${x}`);
-            rect.setAttribute("y", `${y}`);
-            rect.setAttribute("width", `${width}`);
-            rect.setAttribute("height", `${height}`);
-            this.svg.appendChild(rect);
             pic.getImageUrl().then(url => {
-                rect.setAttribute("xlink:href", `${url}`);
-                rect.setAttribute("href", `${url}`);
+                if (url instanceof SVGElement) {
+                    const g = document.createElementNS(SvgPainter.svgNS, "g");
+                    url.setAttribute("x", `${x}`);
+                    url.setAttribute("y", `${y}`);
+                    url.setAttribute("width", `${width}`);
+                    url.setAttribute("height", `${height}`);
+                    this.svg.appendChild(g);
+                    g.appendChild(url);
+                } else {
+                    const image = document.createElementNS(SvgPainter.svgNS, "image");
+                    image.setAttribute("x", `${x}`);
+                    image.setAttribute("y", `${y}`);
+                    image.setAttribute("width", `${width}`);
+                    image.setAttribute("height", `${height}`);
+                    this.svg.appendChild(image);
+                    image.setAttribute("xlink:href", `${url}`);
+                    image.setAttribute("href", `${url}`);
+                }
             }).catch(error => {
                 console.log(`ERROR during rendering: ${error}`);
             })

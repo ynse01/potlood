@@ -6,11 +6,13 @@ import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 
 declare var UTIF: any;
+declare var WMFJS: any;
+declare var EMFJS: any;
 
 export class Picture implements ILayoutable {
     private _pack: Package;
     private _name: string;
-    private _imageUrl: string | undefined;
+    private _imageUrl: string | SVGElement | undefined;
     public bounds: Box | undefined;
 
     public static fromPicNode(picNode: ChildNode, docx: DocumentX): Picture | undefined {
@@ -35,8 +37,8 @@ export class Picture implements ILayoutable {
         this._name = name;
     }
 
-    public getImageUrl(): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
+    public getImageUrl(): Promise<string | SVGElement> {
+        return new Promise<string | SVGElement>((resolve, reject) => {
             if (this._imageUrl !== undefined) {
                 resolve(this._imageUrl);
             } else {
@@ -58,6 +60,18 @@ export class Picture implements ILayoutable {
                     }).catch((err: any) => {
                         reject(err);
                     });
+                } else if (this.isWmf) {
+                    this._getImageUrlForWmf().then(() => {
+                        resolve(this._imageUrl);
+                    }).catch((err: any) => {
+                        reject(err);
+                    });
+                } else if (this.isEmf) {
+                    this._getImageUrlForEmf().then(() => {
+                        resolve(this._imageUrl);
+                    }).catch((err: any) => {
+                        reject(err);
+                    });
                 } else {
                     reject(`Unknown image at: ${this._name}`);
                 }
@@ -75,6 +89,14 @@ export class Picture implements ILayoutable {
 
     public get isTiff(): boolean {
         return this._name.endsWith('.tif') || this._name.endsWith('.tiff');
+    }
+
+    public get isWmf(): boolean {
+        return this._name.endsWith('.wmf');
+    }
+
+    public get isEmf(): boolean {
+        return this._name.endsWith('.emf');
     }
 
     public performLayout(_flow: VirtualFlow): void {
@@ -145,6 +167,61 @@ export class Picture implements ILayoutable {
                     resolve();
                 } else {
                     reject("Unable to create offscreen Canvas element");
+                }
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
+    private _getImageUrlForEmf(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this._pack.loadPartAsBinary(this._name).then(buff => {
+                const width = this.bounds?.width;
+                const height = this.bounds?.height;
+                const settings = {
+                    width: width + "px",
+                    height: height + "px",
+                    xExt: width,
+                    yExt: height,
+                    mapMode: 8
+                }
+                const renderer = new EMFJS.Renderer(buff);
+                renderer.render(settings).then((svg: SVGElement) => {
+                    this._imageUrl = svg;
+                    resolve();
+                }).catch((error: any) => {
+                    if (error instanceof WMFJS.Error) {
+                        reject(`Error during WMF parsing: ${error.message}`);
+                    } else {
+                        reject(error);
+                    }  
+                });
+            }).catch(error => {
+                reject(error);
+            });
+        });
+    }
+
+    private _getImageUrlForWmf(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this._pack.loadPartAsBinary(this._name).then(buff => {
+                const width = this.bounds?.width;
+                const height = this.bounds?.height;
+                const settings = {
+                    width: width + "px",
+                    height: height + "px",
+                    xExt: width,
+                    yExt: height,
+                    mapMode: 8
+                }
+                const renderer = new WMFJS.Renderer(buff);
+                const result = renderer.render(settings)
+                if (result[0] !== undefined) {
+                    this._imageUrl = result[0];
+                    resolve();
+                } else {
+                    reject("Error during WMF parsing.");  
                 }
             }).catch(error => {
                 reject(error);

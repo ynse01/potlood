@@ -68,10 +68,14 @@ export class CanvasPainter implements IPainter {
 
     public paintPicture(x: number, y: number, _width: number, _height: number, pic: Picture): void {
         pic.getImageUrl().then(url => {
-            const img = document.createElement("img");
-            img.src = url;
-            this._invisible.appendChild(img);
-            this._context.drawImage(img, x, y);
+            if (url instanceof SVGElement) {
+                throw("Canvas can't render SVG");
+            } else {
+                const img = document.createElement("img");
+                img.src = url;
+                this._invisible.appendChild(img);
+                this._context.drawImage(img, x, y);
+            }
         })
     }
 
