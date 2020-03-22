@@ -110,7 +110,7 @@ export class TableReader {
                     cellStyle.margins = this.readCellMargins(child);
                     break;
                 case "w:shd":
-                    const shading = Xml.getAttribute(child, "fill");
+                    const shading = Xml.getAttribute(child, "w:fill");
                     if (shading !== undefined) {
                         cellStyle.shading = shading;
                     }

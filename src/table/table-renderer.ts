@@ -32,11 +32,12 @@ export class TableRenderer {
     private renderCellShading(cell: TableCell): void {
         const bounds = cell.bounds;
         if (cell.style.shading !== "" && bounds !== undefined) {
+            const y = bounds.y + (bounds.height / 2);
             this._painter.paintLine(
                 bounds.left,
-                bounds.y,
+                y,
                 bounds.right,
-                bounds.y,
+                y,
                 cell.style.shading,
                 bounds.height
             );
