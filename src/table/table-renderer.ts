@@ -198,6 +198,65 @@ export class TableRenderer {
                     { pos: 10.5 * relativeSize, width: relativeSize}
                 ]);
                 break;
+            case TableBorderType.ThickThinMediumGap:
+                relativeSize /= 10;
+                this._renderBorderSubLines(line, [
+                    { pos: 2.5 * relativeSize, width: 5 * relativeSize},
+                    { pos: 8.5 * relativeSize, width: relativeSize}
+                ]);
+                break;
+            case TableBorderType.ThickThinSmallGap:
+                relativeSize /= 8;
+                this._renderBorderSubLines(line, [
+                    { pos: 2.5 * relativeSize, width: 5 * relativeSize},
+                    { pos: 6.5 * relativeSize, width: relativeSize}
+                ]);
+                break;
+            case TableBorderType.ThinThickLargeGap:
+                relativeSize /= 12;
+                this._renderBorderSubLines(line, [
+                    { pos: 0.5 * relativeSize, width: relativeSize},
+                    { pos: 8.5 * relativeSize, width: 5 * relativeSize}
+                ]);
+                break;
+            case TableBorderType.ThinThickMediumGap:
+                relativeSize /= 10;
+                this._renderBorderSubLines(line, [
+                    { pos: 0.5 * relativeSize, width: relativeSize},
+                    { pos: 6.5 * relativeSize, width: 5 * relativeSize}
+                ]);
+                break;
+            case TableBorderType.ThinThickSmallGap:
+                relativeSize /= 8;
+                this._renderBorderSubLines(line, [
+                    { pos: 0.5 * relativeSize, width: relativeSize},
+                    { pos: 4.5 * relativeSize, width: 5 * relativeSize}
+                ]);
+                break;
+            case TableBorderType.ThinThickThinLargeGap:
+                relativeSize /= 18;
+                this._renderBorderSubLines(line, [
+                    { pos: 0.5 * relativeSize, width: relativeSize},
+                    { pos: 8.5 * relativeSize, width: 5 * relativeSize},
+                    { pos: 16.5 * relativeSize, width: relativeSize}
+                ]);
+                break;
+            case TableBorderType.ThinThickThinMediumGap:
+                relativeSize /= 14;
+                this._renderBorderSubLines(line, [
+                    { pos: 0.5 * relativeSize, width: relativeSize},
+                    { pos: 2.5 * relativeSize, width: 5 * relativeSize},
+                    { pos: 12.5 * relativeSize, width: relativeSize}
+                ]);
+                break;
+            case TableBorderType.ThinThickThinSmallGap:
+                relativeSize /= 10;
+                this._renderBorderSubLines(line, [
+                    { pos: 0.5 * relativeSize, width: relativeSize},
+                    { pos: 4.5 * relativeSize, width: 5 * relativeSize},
+                    { pos: 8.5 * relativeSize, width: relativeSize}
+                ]);
+                break;
             case TableBorderType.Single:
             default:
                 this._renderBorderSubLines(line, [{pos: 0, width: size}]);
