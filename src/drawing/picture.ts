@@ -176,58 +176,66 @@ export class Picture implements ILayoutable {
 
     private _getImageUrlForEmf(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            EMFJS.loggingEnabled(false);
-            this._pack.loadPartAsBinary(this._name).then(buff => {
-                const width = this.bounds?.width;
-                const height = this.bounds?.height;
-                const settings = {
-                    width: width + "px",
-                    height: height + "px",
-                    xExt: width,
-                    yExt: height,
-                    mapMode: 8
-                }
-                const renderer = new EMFJS.Renderer(buff);
-                renderer.render(settings).then((svg: SVGElement) => {
-                    this._imageUrl = svg;
-                    resolve();
-                }).catch((error: any) => {
-                    if (error instanceof WMFJS.Error) {
-                        reject(`Error during WMF parsing: ${error.message}`);
-                    } else {
-                        reject(error);
-                    }  
+            if (EMFJS == undefined) {
+                reject("EMFJS library not loaded, unable to read EMF image");
+            } else {
+                EMFJS.loggingEnabled(false);
+                this._pack.loadPartAsBinary(this._name).then(buff => {
+                    const width = this.bounds?.width;
+                    const height = this.bounds?.height;
+                    const settings = {
+                        width: width + "px",
+                        height: height + "px",
+                        xExt: width,
+                        yExt: height,
+                        mapMode: 8
+                    }
+                    const renderer = new EMFJS.Renderer(buff);
+                    renderer.render(settings).then((svg: SVGElement) => {
+                        this._imageUrl = svg;
+                        resolve();
+                    }).catch((error: any) => {
+                        if (error instanceof WMFJS.Error) {
+                            reject(`Error during WMF parsing: ${error.message}`);
+                        } else {
+                            reject(error);
+                        }  
+                    });
+                }).catch(error => {
+                    reject(error);
                 });
-            }).catch(error => {
-                reject(error);
-            });
+            }
         });
     }
 
     private _getImageUrlForWmf(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            WMFJS.loggingEnabled(false);
-            this._pack.loadPartAsBinary(this._name).then(buff => {
-                const width = this.bounds?.width;
-                const height = this.bounds?.height;
-                const settings = {
-                    width: width + "px",
-                    height: height + "px",
-                    xExt: width,
-                    yExt: height,
-                    mapMode: 8
-                }
-                const renderer = new WMFJS.Renderer(buff);
-                const result = renderer.render(settings)
-                if (result[0] !== undefined) {
-                    this._imageUrl = result[0];
-                    resolve();
-                } else {
-                    reject("Error during WMF parsing.");  
-                }
-            }).catch(error => {
-                reject(error);
-            });
+            if (WMFJS == undefined) {
+                reject("WMFJS library not loaded, unable to read WMF image");
+            } else {
+                WMFJS.loggingEnabled(false);
+                this._pack.loadPartAsBinary(this._name).then(buff => {
+                    const width = this.bounds?.width;
+                    const height = this.bounds?.height;
+                    const settings = {
+                        width: width + "px",
+                        height: height + "px",
+                        xExt: width,
+                        yExt: height,
+                        mapMode: 8
+                    }
+                    const renderer = new WMFJS.Renderer(buff);
+                    const result = renderer.render(settings)
+                    if (result[0] !== undefined) {
+                        this._imageUrl = result[0];
+                        resolve();
+                    } else {
+                        reject("Error during WMF parsing.");  
+                    }
+                }).catch(error => {
+                    reject(error);
+                });
+            }
         });
     }
 }
