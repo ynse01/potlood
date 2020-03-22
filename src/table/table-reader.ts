@@ -139,18 +139,10 @@ export class TableReader {
             const name = node.nodeName;
             switch (name) {
                 case "w:left":
-                    if (borders.borderStart === undefined) {
-                        borders.borderStart = this.readTableBorder(node);
-                    }
-                    break;
                 case "w:start":
                     borders.borderStart = this.readTableBorder(node);
                     break;
                 case "w:right":
-                    if (borders.borderEnd === undefined) {
-                        borders.borderEnd = this.readTableBorder(node);
-                    }
-                    break;
                 case "w:end":
                     borders.borderEnd = this.readTableBorder(node);
                     break;
@@ -228,7 +220,7 @@ export class TableReader {
         const border = new TableBorder();
         const val = Xml.getAttribute(borderNode, "w:val");
         if (val !== undefined) {
-            border.type = TableBorderType[val as keyof typeof TableBorderType];
+            border.type = this.parseTableBorderType(val);
         }
         const sz = Xml.getAttribute(borderNode, "w:sz");
         if (sz !== undefined) {
@@ -244,6 +236,93 @@ export class TableReader {
             border.color = color;
         }
         return border;
+    }
+
+    private static parseTableBorderType(input: string): TableBorderType {
+        let borderType = TableBorderType.None;
+        switch(input) {
+            case "single":
+                borderType = TableBorderType.Single;
+                break;
+            case "dashDotStroked":
+                borderType = TableBorderType.DashDotStroked;
+                break;
+            case "dashed":
+                borderType = TableBorderType.Dashed;
+                break;
+            case "dashSmallGap":
+                borderType = TableBorderType.DashSmallGap;
+                break;
+            case "dotDash":
+                borderType = TableBorderType.DotDash;
+                break;
+            case "dotDotDash":
+                borderType = TableBorderType.DotDotDash;
+                break;
+            case "dotted":
+                borderType = TableBorderType.Dotted;
+                break;
+            case "double":
+                borderType = TableBorderType.Double;
+                break;
+            case "doubleWave":
+                borderType = TableBorderType.DoubleWave;
+                break;
+            case "inset":
+                borderType = TableBorderType.Inset;
+                break;
+            case "outset":
+                borderType = TableBorderType.Outset;
+                break;
+            case "thick":
+                borderType = TableBorderType.Thick;
+                break;
+            case "thickThinLargeGap":
+                borderType = TableBorderType.ThickThinLargeGap;
+                break;
+            case "thickThinMediumGap":
+                borderType = TableBorderType.ThickThinMediumGap;
+                break;
+            case "thickThinSmallGap":
+                borderType = TableBorderType.ThickThinSmallGap;
+                break;
+            case "thinThickLargeGap":
+                borderType = TableBorderType.ThinThickLargeGap;
+                break;
+            case "thinThickMediumGap":
+                borderType = TableBorderType.ThinThickMediumGap;
+                break;
+            case "thinThickSmallGap":
+                borderType = TableBorderType.ThinThickSmallGap;
+                break;
+            case "thinThickThinLargeGap":
+                borderType = TableBorderType.ThinThickThinLargeGap;
+                break;
+            case "thinThickThinMediumGap":
+                borderType = TableBorderType.ThinThickThinMediumGap;
+                break;
+            case "thinThickThinSmallGap":
+                borderType = TableBorderType.ThinThickThinSmallGap;
+                break;
+            case "threeDEmboss":
+                borderType = TableBorderType.Emboss3D;
+                break;
+            case "threeDEngrave":
+                borderType = TableBorderType.Engrave3D;
+                break;
+            case "triple":
+                borderType = TableBorderType.Triple;
+                break;
+            case "wave":
+                borderType = TableBorderType.Wave;
+                break;
+            case "none":
+            case "nil":
+            default:
+                borderType = TableBorderType.None;
+                break;
+        }
+        return borderType;
     }
 
     private static readTableStyle(tblPrNode: ChildNode): TableStyle {

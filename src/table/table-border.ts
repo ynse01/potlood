@@ -1,32 +1,31 @@
 
 export enum TableBorderType {
-    none = "none",
-    single = "single",
-    dashDotStroked = "dashDotStroked",
-    dashed = "dashed",
-    dashSmallGap = "dashSmallGap",
-    dotDash = "dotDash",
-    dotDotDash = "dotDotDash",
-    dotted = "dotted",
-    double = "double",
-    doubleWave = "doubleWave",
-    inset = "inset",
-    nil = "nil",
-    outset = "outset",
-    thick = "thick",
-    thickThinLargeGap = "thickThinLargeGap",
-    thickThinMediumGap = "thickThinMediumGap",
-    thickThinSmallGap = "thickThinSmallGap",
-    thinThickLargeGap = "thinThickLargeGap",
-    thinThickMediumGap = "thinThickMediumGap",
-    thinThickSmallGap = "thinThickSmallGap",
-    thinThickThinLargeGap = "thinThickThinLargeGap",
-    thinThickThinMediumGap = "thinThickThinMediumGap",
-    thinThickThinSmallGap = "thinThickThinSmallGap",
-    threeDEmboss = "threeDEmboss",
-    threeDEngrave = "threeDEngrave",
-    triple = "triple",
-    wave = "wave"
+    None,
+    Single,
+    DashDotStroked,
+    Dashed,
+    DashSmallGap,
+    DotDash,
+    DotDotDash,
+    Dotted,
+    Double,
+    DoubleWave,
+    Inset,
+    Outset,
+    Thick,
+    ThickThinLargeGap,
+    ThickThinMediumGap,
+    ThickThinSmallGap,
+    ThinThickLargeGap,
+    ThinThickMediumGap,
+    ThinThickSmallGap,
+    ThinThickThinLargeGap,
+    ThinThickThinMediumGap,
+    ThinThickThinSmallGap,
+    Emboss3D,
+    Engrave3D,
+    Triple,
+    Wave
 }
 
 export class TableBorder {
@@ -36,7 +35,7 @@ export class TableBorder {
     public color: string;
 
     constructor() {
-        this.type = TableBorderType.single;
+        this.type = TableBorderType.None;
         this.size = 1;
         this.spacing = 0;
         this.color = "000000";

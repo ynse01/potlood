@@ -4,6 +4,7 @@ import { TableStyle } from "./table-style.js";
 import { IPainter } from "../painting/i-painter.js";
 import { ParagraphRenderer } from "../paragraph/paragraph-renderer.js";
 import { TableBorderSet } from "./table-border-set.js";
+import { TableBorderType } from "./table-border.js";
 
 export class TableRenderer {
     private _parRenderer: ParagraphRenderer;
@@ -49,33 +50,38 @@ export class TableRenderer {
         }
         if (outerBorders !== undefined) {
             if (outerBorders.borderTop !== undefined) {
-                this._painter.paintLine(bounds.left, bounds.top, bounds.right, bounds.top, outerBorders.borderTop.color, outerBorders.borderTop.size);
+                this._renderBorderPart(outerBorders.borderTop.type, bounds.left, bounds.top, bounds.right, bounds.top, outerBorders.borderTop.color, outerBorders.borderTop.size);
             }
             if (outerBorders.borderBottom !== undefined) {
-                this._painter.paintLine(bounds.left, bounds.bottom, bounds.right, bounds.bottom, outerBorders.borderBottom.color, outerBorders.borderBottom.size);
+                this._renderBorderPart(outerBorders.borderBottom.type, bounds.left, bounds.bottom, bounds.right, bounds.bottom, outerBorders.borderBottom.color, outerBorders.borderBottom.size);
             }
             if (outerBorders.borderStart !== undefined) {
-                this._painter.paintLine(bounds.x, bounds.top, bounds.x, bounds.bottom, outerBorders.borderStart.color, outerBorders.borderStart.size);
+                this._renderBorderPart(outerBorders.borderStart.type, bounds.x, bounds.top, bounds.x, bounds.bottom, outerBorders.borderStart.color, outerBorders.borderStart.size);
             }
             if (outerBorders.borderEnd !== undefined) {
-                this._painter.paintLine(bounds.right, bounds.top, bounds.right, bounds.bottom, outerBorders.borderEnd.color, outerBorders.borderEnd.size);
+                this._renderBorderPart(outerBorders.borderEnd.type, bounds.right, bounds.top, bounds.right, bounds.bottom, outerBorders.borderEnd.color, outerBorders.borderEnd.size);
             }
         }
         if (innerBorders !== undefined) {
             bounds.subtractSpacing(style.cellSpacing);
             if (innerBorders.borderTop !== undefined) {
-                this._painter.paintLine(bounds.left, bounds.top, bounds.right, bounds.top, innerBorders.borderTop.color, innerBorders.borderTop.size);
+                this._renderBorderPart(innerBorders.borderTop.type, bounds.left, bounds.top, bounds.right, bounds.top, innerBorders.borderTop.color, innerBorders.borderTop.size);
             }
             if (innerBorders.borderBottom !== undefined) {
-                this._painter.paintLine(bounds.left, bounds.bottom, bounds.right, bounds.bottom, innerBorders.borderBottom.color, innerBorders.borderBottom.size);
+                this._renderBorderPart(innerBorders.borderBottom.type, bounds.left, bounds.bottom, bounds.right, bounds.bottom, innerBorders.borderBottom.color, innerBorders.borderBottom.size);
             }
             if (innerBorders.borderStart !== undefined) {
-                this._painter.paintLine(bounds.x, bounds.top, bounds.x, bounds.bottom, innerBorders.borderStart.color, innerBorders.borderStart.size);
+                this._renderBorderPart(innerBorders.borderStart.type, bounds.x, bounds.top, bounds.x, bounds.bottom, innerBorders.borderStart.color, innerBorders.borderStart.size);
             }
             if (innerBorders.borderEnd !== undefined) {
-                this._painter.paintLine(bounds.right, bounds.top, bounds.right, bounds.bottom, innerBorders.borderEnd.color, innerBorders.borderEnd.size);
+                this._renderBorderPart(innerBorders.borderEnd.type, bounds.right, bounds.top, bounds.right, bounds.bottom, innerBorders.borderEnd.color, innerBorders.borderEnd.size);
             }
         }
     }
-      
+    
+    private _renderBorderPart(type: TableBorderType, x1: number, y1: number, x2: number, y2: number, color: string, size: number): void {
+        if (type !== TableBorderType.None) {
+            this._painter.paintLine(x1, y1, x2, y2, color, size);
+        }
+    }
 }
