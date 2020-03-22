@@ -55,6 +55,7 @@ export class TabStop {
                 alignment = TabAlignment.Left;
                 break;
             case "right":
+            case "decimal":
                 alignment = TabAlignment.Right;
                 break;
             default:
