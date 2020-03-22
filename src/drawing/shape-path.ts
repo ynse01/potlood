@@ -230,17 +230,18 @@ export class ShapePath {
             this._path = "";
             this._guide.evaluate();
             let currentPoint: Point = new Point(0, 0);
-            this.segments.forEach((segment => {
+            this.segments.forEach(segment => {
                 this._path += segment.buildPath(this._guide, currentPoint);
                 currentPoint = segment.getEndPoint(this._guide, currentPoint);
-            }));
+            });
+            this._path = this._path.substr(1);
         }
         return this._path;
     }
 
     public clone(): ShapePath {
         const clone = new ShapePath(this._guide);
-        clone.segments = this.segments.map((segment) => segment.clone());
+        clone.segments = this.segments.map(segment => segment.clone());
         return clone;
     }
 }
