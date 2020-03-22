@@ -4,7 +4,6 @@ Potlood is Dutch for Pencil.
 
 ## TODO 
 
-- Anchoring modes of Drawing
 - Underline modes
 - Table border modes
 - Page visualization
