@@ -5,7 +5,7 @@ import { IPositionedTextLine } from "./positioned-text-line.js";
 import { TextFitter } from "./text-fitter.js";
 import { Metrics } from "../utils/metrics.js";
 import { ParagraphType, IRun } from "../paragraph/paragraph.js";
-import { Size } from "../utils/math/size.js";
+import { Size } from "../utils/geometry/size.js";
 
 export class TextRun implements IRun {
     public texts: string[];

@@ -2,7 +2,7 @@ import { MathObject } from "./math-object.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { IPainter } from "../painting/i-painter.js";
 import { FunctionStyle } from "./function-style.js";
-import { Size } from "../utils/math/size.js";
+import { Size } from "../utils/geometry/size.js";
 
 export class FunctionObject extends MathObject {
     private _functionName: MathObject | undefined;

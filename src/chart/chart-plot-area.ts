@@ -1,6 +1,6 @@
 import { ChartAxis } from "./chart-axis.js";
 import { ChartStyle } from "./chart-style.js";
-import { Box } from "../utils/math/box.js";
+import { Box } from "../utils/geometry/box.js";
 import { ChartSpace } from "./chart-space.js";
 
 export class ChartPlotArea {

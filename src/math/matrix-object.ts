@@ -2,7 +2,7 @@ import { MathObject, MathObjectList } from "./math-object.js";
 import { IPainter } from "../painting/i-painter.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { MatrixStyle } from "./matrix-style.js";
-import { Size } from "../utils/math/size.js";
+import { Size } from "../utils/geometry/size.js";
 
 export class MatrixObject extends MathObject {
     public rows: MathObjectList;

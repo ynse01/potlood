@@ -5,7 +5,7 @@ import { VirtualFlow } from "../utils/virtual-flow.js";
 import { Style } from "../text/style.js";
 import { IPainter } from "../painting/i-painter.js";
 import { TextRenderer } from "../text/text-renderer.js";
-import { Size } from "../utils/math/size.js";
+import { Size } from "../utils/geometry/size.js";
 import { InSequence } from "../utils/in-sequence.js";
 
 export class RunObject extends MathObject {

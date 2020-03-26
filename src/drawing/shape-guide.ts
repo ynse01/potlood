@@ -1,5 +1,5 @@
 import { Shape } from "./shape.js";
-import { Angle } from "../utils/math/angle.js";
+import { Angle } from "../utils/geometry/angle.js";
 
 interface IFormula {
     readonly name: string;

@@ -4,7 +4,7 @@ import { VirtualFlow } from "../utils/virtual-flow.js";
 import { ChartSpace } from "../chart/chart-space.js";
 import { Shape } from "./shape.js";
 import { IRun } from "../paragraph/paragraph.js";
-import { Box } from "../utils/math/box.js";
+import { Box } from "../utils/geometry/box.js";
 
 export enum WrapMode {
     None,

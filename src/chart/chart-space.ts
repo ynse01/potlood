@@ -4,7 +4,7 @@ import { ChartPlotArea } from "./chart-plot-area.js";
 import { ChartLegend } from "./chart-legend.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Box } from "../utils/math/box.js";
+import { Box } from "../utils/geometry/box.js";
 import { Style } from "../text/style.js";
 import { ChartAxisPosition, ChartAxis } from "./chart-axis.js";
 import { BaseChart } from "./base-chart.js";

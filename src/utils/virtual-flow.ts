@@ -1,7 +1,7 @@
 import { Section } from "../section.js";
 import { ShapePositionReference } from "../drawing/shape-bounds.js";
 import { TabStop } from "../paragraph/tab-stop.js";
-import { Box } from "./math/box.js";
+import { Box } from "./geometry/box.js";
 
 export class VirtualFlow {
     // private _width: number;

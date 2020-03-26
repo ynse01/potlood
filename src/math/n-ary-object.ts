@@ -2,7 +2,7 @@ import { VirtualFlow } from "../utils/virtual-flow.js";
 import { MathObject } from "./math-object.js";
 import { NAryStyle } from "./n-ary-style.js";
 import { IPainter } from "../painting/i-painter.js";
-import { Size } from "../utils/math/size.js";
+import { Size } from "../utils/geometry/size.js";
 import { CharacterObject } from "./character-object.js";
 import { Style } from "../text/style.js";
 

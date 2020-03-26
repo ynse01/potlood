@@ -2,7 +2,7 @@ import { MathObject } from "./math-object.js";
 import { IPainter } from "../painting/i-painter.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { FractionStyle } from "./fraction-style.js";
-import { Size } from "../utils/math/size.js";
+import { Size } from "../utils/geometry/size.js";
 
 export class FractionObject extends MathObject {
     private _numerator: MathObject | undefined;

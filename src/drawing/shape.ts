@@ -1,5 +1,5 @@
-import { Point } from "../utils/math/point.js";
-import { Box } from "../utils/math/box.js";
+import { Point } from "../utils/geometry/point.js";
+import { Box } from "../utils/geometry/box.js";
 import { ShapeGuide } from "./shape-guide.js";
 import { PointGuide } from "./point-guide.js";
 import { ShapePath } from "./shape-path.js";

@@ -1,8 +1,8 @@
 import { MathObject } from "./math-object.js";
 import { IPainter } from "../painting/i-painter.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Size } from "../utils/math/size.js";
-import { Point } from "../utils/math/point.js";
+import { Size } from "../utils/geometry/size.js";
+import { Point } from "../utils/geometry/point.js";
 import { Style } from "../text/style.js";
 import { FontMetrics } from "../utils/font-metrics.js";
 import { Justification } from "../paragraph/par-style.js";

@@ -1,7 +1,7 @@
 import { DocumentX } from "../document-x.js";
 import { Package } from "../package/package.js";
 import { Xml } from "../utils/xml.js";
-import { Box } from "../utils/math/box.js";
+import { Box } from "../utils/geometry/box.js";
 import { ILayoutable } from "../utils/i-layoutable.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 

@@ -1,6 +1,6 @@
-import { Box } from "../utils/math/box.js";
+import { Box } from "../utils/geometry/box.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Point } from "../utils/math/point.js";
+import { Point } from "../utils/geometry/point.js";
 
 export enum ShapeAnchorMode {
     /** Inline with the text */
