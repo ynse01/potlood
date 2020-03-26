@@ -1,5 +1,5 @@
 import { DrawingRun } from "./drawing-run.js";
-import { IPainter } from "../painting/i-painter.js";
+import { IPainter, DashMode } from "../painting/i-painter.js";
 import { ChartRenderer } from "../chart/chart-renderer.js";
 
 export class DrawingRenderer {
@@ -29,7 +29,7 @@ export class DrawingRenderer {
                 const g = path.buildPath();
                 const fillColor = (path.filledIn) ? shape.fillColor : undefined;
                 const lineColor = (path.stroked) ? shape.lineColor : undefined;
-                this._painter.paintPolygon(g, fillColor, lineColor, 1);    
+                this._painter.paintPolygon(g, fillColor, lineColor, 1, DashMode.Solid);    
             });
         }
     }

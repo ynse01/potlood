@@ -1,5 +1,5 @@
 import { BarChart } from "./bar-chart.js";
-import { IPainter } from "../painting/i-painter.js";
+import { IPainter, DashMode } from "../painting/i-painter.js";
 import { ChartSpace, ChartType } from "./chart-space.js";
 import { ChartStyle } from "./chart-style.js";
 import { Box } from "../utils/geometry/box.js";
@@ -62,16 +62,16 @@ export class ChartRenderer {
         const lineColor = style.lineColor;
         if (lineColor !== undefined) {
             const thickness = style.lineThickness;
-            this._painter.paintLine(x, y, xMax, y, lineColor, thickness);
-            this._painter.paintLine(xMax, y, xMax, yMax, lineColor, thickness);
-            this._painter.paintLine(x, yMax, xMax, yMax, lineColor, thickness);
-            this._painter.paintLine(x, y, x, yMax, lineColor, thickness);
+            this._painter.paintLine(x, y, xMax, y, lineColor, thickness, DashMode.Solid);
+            this._painter.paintLine(xMax, y, xMax, yMax, lineColor, thickness, DashMode.Solid);
+            this._painter.paintLine(x, yMax, xMax, yMax, lineColor, thickness, DashMode.Solid);
+            this._painter.paintLine(x, y, x, yMax, lineColor, thickness, DashMode.Solid);
             spacing = thickness;
         }
         const shading = style.fillColor;
         if (shading !== undefined) {
             const yMid = y + (bounds.height / 2);
-            this._painter.paintLine(x, yMid, xMax, yMid, shading, bounds.height);
+            this._painter.paintLine(x, yMid, xMax, yMid, shading, bounds.height, DashMode.Solid);
         }
         return bounds.subtractSpacing(spacing);
     }
@@ -83,7 +83,7 @@ export class ChartRenderer {
         legend.getLines().forEach((line, index) => {
             const widgetX = line.x - widgetSize - legend.widgetSpacing;
             const widgetY = line.y - 3;
-            this._painter.paintLine(widgetX, widgetY, widgetX + widgetSize, widgetY, colors[index], widgetSize);
+            this._painter.paintLine(widgetX, widgetY, widgetX + widgetSize, widgetY, colors[index], widgetSize, DashMode.Solid);
             this._painter.paintText(line.x, line.y, line.width, line.stretched, line.text, line.color, line.justification!, line.fontFamily, line.fontSize, false, false);
         });
     }
@@ -98,7 +98,7 @@ export class ChartRenderer {
             const lineColor = axis.style.lineColor;
             const thickness = axis.style.lineThickness;
             axis.positionedLines.forEach(line => {
-                this._painter.paintLine(line.x1, line.y1, line.x2, line.y2, lineColor, thickness);
+                this._painter.paintLine(line.x1, line.y1, line.x2, line.y2, lineColor, thickness, DashMode.Solid);
             });
         }
     }
@@ -127,7 +127,7 @@ export class ChartRenderer {
             shape.addSegmentLine(PointGuide.fromPoint(bounds.bottomRight));
             shape.addSegmentLine(PointGuide.fromPoint(bounds.bottomLeft));
             const path = shape.paths[0].buildPath();
-            this._painter.paintPolygon(path, style.fillColor, style.lineColor, style.lineThickness);
+            this._painter.paintPolygon(path, style.fillColor, style.lineColor, style.lineThickness, DashMode.Solid);
         }
     }
 
@@ -147,7 +147,7 @@ export class ChartRenderer {
                 const y1 = bottomY - (bottomY - topY) * previousVal;
                 const x2 = flowX + catIndex * catSpacing;
                 const y2 = bottomY - (bottomY - topY) * val;
-                this._painter.paintLine(x1, y1, x2, y2, style.lineColor || "000000", style.lineThickness);
+                this._painter.paintLine(x1, y1, x2, y2, style.lineColor || "000000", style.lineThickness, DashMode.Solid);
                 previousVal = val;
             }
         }
@@ -167,7 +167,7 @@ export class ChartRenderer {
                 const val = this._normalizeValue(barChart.getValue(catIndex, seriesIndex), range);
                 const x = flowX + catIndex * catSpacing + seriesIndex * seriesSpacing;
                 const y = bottomY - (bottomY - topY) * val;
-                this._painter.paintLine(x, bottomY, x, y, color, seriesSpacing);
+                this._painter.paintLine(x, bottomY, x, y, color, seriesSpacing, DashMode.Solid);
             }
         }
     }
@@ -189,7 +189,7 @@ export class ChartRenderer {
             path.addSegmentLine(PointGuide.fromPoint(circle.pointAtAngle(previousAngle)));
             path.addSegmentArc((val.toRotation()).toString(), (previousAngle.toRotation()).toString(), radius.toString(), radius.toString());
             path.addSegmentLine(PointGuide.fromPoint(middle));
-            this._painter.paintPolygon(path.paths[0].buildPath(), color, undefined, undefined);
+            this._painter.paintPolygon(path.paths[0].buildPath(), color, undefined, undefined, DashMode.Solid);
             previousAngle = previousAngle.add(val);
         }
     }

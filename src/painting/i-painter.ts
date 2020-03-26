@@ -8,6 +8,12 @@ export interface IRectangle {
     height: number;
 }
 
+export enum DashMode {
+    Solid,
+    Dashed,
+    Dotted
+}
+
 export interface IPainter {
     paintText(x: number, y: number, width: number, stretched: boolean, text: string, color: string, justification: Justification, fontFamily: string, fontSize: number, bold: boolean, italic: boolean): void;
 
@@ -19,9 +25,9 @@ export interface IPainter {
     
     ensureHeight(height: number): void;
 
-    paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void;
+    paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number, dashing: DashMode): void;
 
-    paintPolygon(path: string, fillColor: string | undefined, strokeColor: string | undefined, strokeThickness: number | undefined): void;
+    paintPolygon(path: string, fillColor: string | undefined, strokeColor: string | undefined, strokeThickness: number | undefined, dashing: DashMode): void;
 
     paintPicture(x: number, y: number, width: number, height: number, pic: Picture): void;
 

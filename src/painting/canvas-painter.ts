@@ -1,4 +1,4 @@
-import { IPainter, IRectangle } from "./i-painter.js";
+import { IPainter, IRectangle, DashMode } from "./i-painter.js";
 import { Justification } from "../paragraph/par-style.js";
 import { Picture } from "../drawing/picture.js";
 
@@ -42,7 +42,7 @@ export class CanvasPainter implements IPainter {
         }
     }
 
-    public paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void {
+    public paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number, _dashing: DashMode): void {
         this._context.lineWidth = thickness;
         this._context.strokeStyle = `#${color}`;
         this._context.beginPath();

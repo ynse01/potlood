@@ -1,7 +1,7 @@
 import { TextRun } from "./text-run.js";
 import { IPositionedTextLine, Emphasis } from "./positioned-text-line.js";
 import { UnderlineMode } from "./run-style.js";
-import { IPainter } from "../painting/i-painter.js";
+import { IPainter, DashMode } from "../painting/i-painter.js";
 import { Style } from "./style.js";
 import { FontMetrics } from "../utils/font-metrics.js";
 
@@ -30,7 +30,7 @@ export class TextRenderer {
         if (style.shadingColor !== "000000") {
             const lineSpacing = style.lineSpacing;
             const y = line.y - FontMetrics.getTopToBaseline(style) + lineSpacing / 2;
-            this._painter.paintLine(x, y, x + line.width, y, style.shadingColor, lineSpacing);
+            this._painter.paintLine(x, y, x + line.width, y, style.shadingColor, lineSpacing, DashMode.Solid);
         }
         const justification = (line.justification !== undefined) ? line.justification : style.justification;
         const isBold = Boolean(line.emphasis & Emphasis.Bold);
@@ -50,23 +50,23 @@ export class TextRenderer {
         const color = (style.color === "auto") ? "000000" : style.color;
         switch(style.underlineMode) {
             case UnderlineMode.double:
-                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, 1);
-                this._painter.paintLine(textRect.x, y + fontSize / 10, textRect.x + textRect.width, y + fontSize / 10, color, 1);
+                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, 1, DashMode.Solid);
+                this._painter.paintLine(textRect.x, y + fontSize / 10, textRect.x + textRect.width, y + fontSize / 10, color, 1, DashMode.Solid);
                 break;
             case UnderlineMode.none:
                 // Nothing to be done
                 break;
             default:
             case UnderlineMode.single:
-                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, 1);
+                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, 1, DashMode.Solid);
                 break;
         }
         if (style.strike) {
-            this._painter.paintLine(textRect.x, y - fontSize / 2, textRect.x + textRect.width, y - fontSize / 2, color, 1);
+            this._painter.paintLine(textRect.x, y - fontSize / 2, textRect.x + textRect.width, y - fontSize / 2, color, 1, DashMode.Solid);
         }
         if (style.doubleStrike) {
-            this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y - (fontSize / 2) - 1, color, 1);
-            this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y - (fontSize / 2) + 2, color, 1);
+            this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y - (fontSize / 2) - 1, color, 1, DashMode.Solid);
+            this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y - (fontSize / 2) + 2, color, 1, DashMode.Solid);
         }
     }
 

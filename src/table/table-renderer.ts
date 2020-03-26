@@ -1,7 +1,7 @@
 import { Table } from "./table.js";
 import { TableCell } from "./table-cell.js";
 import { TableStyle } from "./table-style.js";
-import { IPainter } from "../painting/i-painter.js";
+import { IPainter, DashMode } from "../painting/i-painter.js";
 import { ParagraphRenderer } from "../paragraph/paragraph-renderer.js";
 import { TableBorderSet } from "./table-border-set.js";
 import { TableBorderType } from "./table-border.js";
@@ -12,6 +12,7 @@ interface IColoredLine {
     x2: number;
     y2: number;
     color: string;
+    dashing: DashMode;
 }
 
 interface ISubLine {
@@ -52,7 +53,8 @@ export class TableRenderer {
                 bounds.right,
                 y,
                 cell.style.shading,
-                bounds.height
+                bounds.height,
+                DashMode.Solid
             );
         }
     }
@@ -78,7 +80,8 @@ export class TableRenderer {
                         y1: bounds.top,
                         x2: bounds.right,
                         y2: bounds.top,
-                        color: outerBorders.borderTop.color
+                        color: outerBorders.borderTop.color,
+                        dashing: DashMode.Solid
                     },
                     outerBorders.borderTop.size
                 );
@@ -91,7 +94,8 @@ export class TableRenderer {
                         y1: bounds.bottom,
                         x2: bounds.left,
                         y2: bounds.bottom,
-                        color: outerBorders.borderBottom.color
+                        color: outerBorders.borderBottom.color,
+                        dashing: DashMode.Solid
                     },
                     outerBorders.borderBottom.size
                 );
@@ -104,7 +108,8 @@ export class TableRenderer {
                         y1: bounds.bottom,
                         x2: bounds.x,
                         y2: bounds.top,
-                        color: outerBorders.borderStart.color
+                        color: outerBorders.borderStart.color,
+                        dashing: DashMode.Solid
                     },
                     outerBorders.borderStart.size
                 );
@@ -117,7 +122,8 @@ export class TableRenderer {
                         y1: bounds.top,
                         x2: bounds.right,
                         y2: bounds.bottom,
-                        color: outerBorders.borderEnd.color
+                        color: outerBorders.borderEnd.color,
+                        dashing: DashMode.Solid
                     },
                     outerBorders.borderEnd.size
                 );
@@ -133,7 +139,8 @@ export class TableRenderer {
                         y1: bounds.top,
                         x2: bounds.right,
                         y2: bounds.top,
-                        color: innerBorders.borderTop.color
+                        color: innerBorders.borderTop.color,
+                        dashing: DashMode.Solid
                     },
                     innerBorders.borderTop.size
                 );
@@ -146,7 +153,8 @@ export class TableRenderer {
                         y1: bounds.bottom,
                         x2: bounds.left,
                         y2: bounds.bottom,
-                        color: innerBorders.borderBottom.color
+                        color: innerBorders.borderBottom.color,
+                        dashing: DashMode.Solid
                     },
                     innerBorders.borderBottom.size
                 );
@@ -159,7 +167,8 @@ export class TableRenderer {
                         y1: bounds.bottom,
                         x2: bounds.x,
                         y2: bounds.top,
-                        color: innerBorders.borderStart.color
+                        color: innerBorders.borderStart.color,
+                        dashing: DashMode.Solid
                     },
                     innerBorders.borderStart.size
                 );
@@ -172,7 +181,8 @@ export class TableRenderer {
                         y1: bounds.top,
                         x2: bounds.right,
                         y2: bounds.bottom,
-                        color: innerBorders.borderEnd.color
+                        color: innerBorders.borderEnd.color,
+                        dashing: DashMode.Solid
                     },
                     innerBorders.borderEnd.size
                 );
@@ -274,7 +284,8 @@ export class TableRenderer {
                 line.x2 + xDirection * sub.pos,
                 line.y2 + yDirection * sub.pos,
                 line.color,
-                sub.width
+                sub.width,
+                DashMode.Solid
             );
         });
     }

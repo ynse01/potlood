@@ -1,4 +1,4 @@
-import { IPainter, IRectangle } from "./i-painter.js";
+import { IPainter, IRectangle, DashMode } from "./i-painter.js";
 import { Justification } from "../paragraph/par-style.js";
 import { Picture } from "../drawing/picture.js";
 import { Xml } from "../utils/xml.js";
@@ -58,7 +58,7 @@ export class SvgPainter implements IPainter {
         return rect;
     }
 
-    public paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number): void {
+    public paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number, dashing: DashMode): void {
         const line = document.createElementNS(SvgPainter.svgNS, "line");
         line.setAttribute("x1", x1.toString());
         line.setAttribute("y1", y1.toString());
@@ -66,10 +66,11 @@ export class SvgPainter implements IPainter {
         line.setAttribute("y2", y2.toString());
         line.setAttribute("stroke", `#${color}`);
         line.setAttribute("stroke-width", thickness.toString());
+        this._setDashing(line, dashing);
         this._svg.appendChild(line);
     }
 
-    public paintPolygon(path: string, fillColor: string | undefined, strokeColor: string | undefined, strokeThickness: number | undefined): void {
+    public paintPolygon(path: string, fillColor: string | undefined, strokeColor: string | undefined, strokeThickness: number | undefined, dashing: DashMode): void {
         const element = document.createElementNS(SvgPainter.svgNS, "path");
         element.setAttribute("d", path);
         if (fillColor !== undefined) {
@@ -79,6 +80,7 @@ export class SvgPainter implements IPainter {
             element.setAttribute("stroke", `#${strokeColor}`);
         }
         element.setAttribute("stroke-width", `${strokeThickness}`);
+        this._setDashing(element, dashing);
         this._svg.appendChild(element);
     }
 
@@ -169,6 +171,17 @@ export class SvgPainter implements IPainter {
         textNode.setAttribute('fill', `#${color}`);
     }
     
+    private _setDashing(node: Element, dashing: DashMode): void {
+        switch(dashing) {
+            case DashMode.Dashed:
+                node.setAttribute("stroke-dasharray", "4");
+                break;
+            case DashMode.Dotted:
+                node.setAttribute("stroke-dasharray", "1");
+                break;
+        }
+    }
+
     private _setHorizontalAlignment(textNode: Element, x: number, width: number, justification: Justification, stretched: boolean): void {
         switch(justification) {
             case Justification.both:
