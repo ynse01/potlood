@@ -11,7 +11,8 @@ export interface IRectangle {
 export enum DashMode {
     Solid,
     Dashed,
-    Dotted
+    Dotted,
+    DashedSmallGap
 }
 
 export interface IPainter {

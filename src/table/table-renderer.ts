@@ -4,7 +4,7 @@ import { TableStyle } from "./table-style.js";
 import { IPainter, DashMode } from "../painting/i-painter.js";
 import { ParagraphRenderer } from "../paragraph/paragraph-renderer.js";
 import { TableBorderSet } from "./table-border-set.js";
-import { TableBorderType } from "./table-border.js";
+import { TableBorderType, TableBorder } from "./table-border.js";
 
 interface IColoredLine {
     x1: number;
@@ -12,12 +12,12 @@ interface IColoredLine {
     x2: number;
     y2: number;
     color: string;
-    dashing: DashMode;
 }
 
 interface ISubLine {
     pos: number;
     width: number;
+    dashing: DashMode;
 }
 
 export class TableRenderer {
@@ -74,58 +74,50 @@ export class TableRenderer {
         if (outerBorders !== undefined) {
             if (outerBorders.borderTop !== undefined) {
                 this._renderBorderPart(
-                    outerBorders.borderTop.type,
+                    outerBorders.borderTop,
                     {
                         x1: bounds.left,
                         y1: bounds.top,
                         x2: bounds.right,
                         y2: bounds.top,
-                        color: outerBorders.borderTop.color,
-                        dashing: DashMode.Solid
-                    },
-                    outerBorders.borderTop.size
+                        color: outerBorders.borderTop.color
+                    }
                 );
             }
             if (outerBorders.borderBottom !== undefined) {
                 this._renderBorderPart(
-                    outerBorders.borderBottom.type,
+                    outerBorders.borderBottom,
                     {
                         x1: bounds.right,
                         y1: bounds.bottom,
                         x2: bounds.left,
                         y2: bounds.bottom,
-                        color: outerBorders.borderBottom.color,
-                        dashing: DashMode.Solid
-                    },
-                    outerBorders.borderBottom.size
+                        color: outerBorders.borderBottom.color
+                    }
                 );
             }
             if (outerBorders.borderStart !== undefined) {
                 this._renderBorderPart(
-                    outerBorders.borderStart.type,
+                    outerBorders.borderStart,
                     {
                         x1: bounds.x,
                         y1: bounds.bottom,
                         x2: bounds.x,
                         y2: bounds.top,
-                        color: outerBorders.borderStart.color,
-                        dashing: DashMode.Solid
-                    },
-                    outerBorders.borderStart.size
+                        color: outerBorders.borderStart.color
+                    }
                 );
             }
             if (outerBorders.borderEnd !== undefined) {
                 this._renderBorderPart(
-                    outerBorders.borderEnd.type,
+                    outerBorders.borderEnd,
                     {
                         x1: bounds.right,
                         y1: bounds.top,
                         x2: bounds.right,
                         y2: bounds.bottom,
-                        color: outerBorders.borderEnd.color,
-                        dashing: DashMode.Solid
-                    },
-                    outerBorders.borderEnd.size
+                        color: outerBorders.borderEnd.color
+                    }
                 );
             }
         }
@@ -133,143 +125,166 @@ export class TableRenderer {
             bounds.subtractSpacing(style.cellSpacing);
             if (innerBorders.borderTop !== undefined) {
                 this._renderBorderPart(
-                    innerBorders.borderTop.type,
+                    innerBorders.borderTop,
                     {
                         x1: bounds.left,
                         y1: bounds.top,
                         x2: bounds.right,
                         y2: bounds.top,
-                        color: innerBorders.borderTop.color,
-                        dashing: DashMode.Solid
-                    },
-                    innerBorders.borderTop.size
+                        color: innerBorders.borderTop.color
+                    }
                 );
             }
             if (innerBorders.borderBottom !== undefined) {
                 this._renderBorderPart(
-                    innerBorders.borderBottom.type,
+                    innerBorders.borderBottom,
                     {
                         x1: bounds.right,
                         y1: bounds.bottom,
                         x2: bounds.left,
                         y2: bounds.bottom,
-                        color: innerBorders.borderBottom.color,
-                        dashing: DashMode.Solid
-                    },
-                    innerBorders.borderBottom.size
+                        color: innerBorders.borderBottom.color
+                    }
                 );
             }
             if (innerBorders.borderStart !== undefined) {
                 this._renderBorderPart(
-                    innerBorders.borderStart.type,
+                    innerBorders.borderStart,
                     {
                         x1: bounds.x,
                         y1: bounds.bottom,
                         x2: bounds.x,
                         y2: bounds.top,
-                        color: innerBorders.borderStart.color,
-                        dashing: DashMode.Solid
-                    },
-                    innerBorders.borderStart.size
+                        color: innerBorders.borderStart.color
+                    }
                 );
             }
             if (innerBorders.borderEnd !== undefined) {
                 this._renderBorderPart(
-                    innerBorders.borderEnd.type,
+                    innerBorders.borderEnd,
                     {
                         x1: bounds.right,
                         y1: bounds.top,
                         x2: bounds.right,
                         y2: bounds.bottom,
-                        color: innerBorders.borderEnd.color,
-                        dashing: DashMode.Solid
-                    },
-                    innerBorders.borderEnd.size
+                        color: innerBorders.borderEnd.color
+                    }
                 );
             }
         }
     }
     
-    private _renderBorderPart(borderType: TableBorderType, line: IColoredLine, size: number): void {
-        let relativeSize = size;
-        switch (borderType) {
+    private _renderBorderPart(border: TableBorder, line: IColoredLine): void {
+        let relativeSize = border.size;
+        switch (border.type) {
             case TableBorderType.None:
                 break;
             case TableBorderType.Double:
-                this._renderBorderSubLines(line, [{ pos: 0, width: size * 2}]);
+                this._renderBorderSubLines(line, [{ pos: 0, width: border.size * 2, dashing: DashMode.Solid}]);
                 break;
             case TableBorderType.Triple:
-                this._renderBorderSubLines(line, [{ pos: 0, width: size * 3}]);
+                this._renderBorderSubLines(line, [{ pos: 0, width: border.size * 3, dashing: DashMode.Solid}]);
                 break;
             case TableBorderType.ThickThinLargeGap:
                 relativeSize /= 12;
                 this._renderBorderSubLines(line, [
-                    { pos: 2.5 * relativeSize, width: 5 * relativeSize},
-                    { pos: 10.5 * relativeSize, width: relativeSize}
+                    { pos: 2.5 * relativeSize, width: 5 * relativeSize, dashing: DashMode.Solid},
+                    { pos: 10.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid}
                 ]);
                 break;
             case TableBorderType.ThickThinMediumGap:
                 relativeSize /= 10;
                 this._renderBorderSubLines(line, [
-                    { pos: 2.5 * relativeSize, width: 5 * relativeSize},
-                    { pos: 8.5 * relativeSize, width: relativeSize}
+                    { pos: 2.5 * relativeSize, width: 5 * relativeSize, dashing: DashMode.Solid},
+                    { pos: 8.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid}
                 ]);
                 break;
             case TableBorderType.ThickThinSmallGap:
                 relativeSize /= 8;
                 this._renderBorderSubLines(line, [
-                    { pos: 2.5 * relativeSize, width: 5 * relativeSize},
-                    { pos: 6.5 * relativeSize, width: relativeSize}
+                    { pos: 2.5 * relativeSize, width: 5 * relativeSize, dashing: DashMode.Solid},
+                    { pos: 6.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid}
                 ]);
                 break;
             case TableBorderType.ThinThickLargeGap:
                 relativeSize /= 12;
                 this._renderBorderSubLines(line, [
-                    { pos: 0.5 * relativeSize, width: relativeSize},
-                    { pos: 8.5 * relativeSize, width: 5 * relativeSize}
+                    { pos: 0.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid},
+                    { pos: 8.5 * relativeSize, width: 5 * relativeSize, dashing: DashMode.Solid}
                 ]);
                 break;
             case TableBorderType.ThinThickMediumGap:
                 relativeSize /= 10;
                 this._renderBorderSubLines(line, [
-                    { pos: 0.5 * relativeSize, width: relativeSize},
-                    { pos: 6.5 * relativeSize, width: 5 * relativeSize}
+                    { pos: 0.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid},
+                    { pos: 6.5 * relativeSize, width: 5 * relativeSize, dashing: DashMode.Solid}
                 ]);
                 break;
             case TableBorderType.ThinThickSmallGap:
                 relativeSize /= 8;
                 this._renderBorderSubLines(line, [
-                    { pos: 0.5 * relativeSize, width: relativeSize},
-                    { pos: 4.5 * relativeSize, width: 5 * relativeSize}
+                    { pos: 0.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid},
+                    { pos: 4.5 * relativeSize, width: 5 * relativeSize, dashing: DashMode.Solid}
                 ]);
                 break;
             case TableBorderType.ThinThickThinLargeGap:
                 relativeSize /= 18;
                 this._renderBorderSubLines(line, [
-                    { pos: 0.5 * relativeSize, width: relativeSize},
-                    { pos: 8.5 * relativeSize, width: 5 * relativeSize},
-                    { pos: 16.5 * relativeSize, width: relativeSize}
+                    { pos: 0.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid},
+                    { pos: 8.5 * relativeSize, width: 5 * relativeSize, dashing: DashMode.Solid},
+                    { pos: 16.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid}
                 ]);
                 break;
             case TableBorderType.ThinThickThinMediumGap:
                 relativeSize /= 14;
                 this._renderBorderSubLines(line, [
-                    { pos: 0.5 * relativeSize, width: relativeSize},
-                    { pos: 2.5 * relativeSize, width: 5 * relativeSize},
-                    { pos: 12.5 * relativeSize, width: relativeSize}
+                    { pos: 0.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid},
+                    { pos: 2.5 * relativeSize, width: 5 * relativeSize, dashing: DashMode.Solid},
+                    { pos: 12.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid}
                 ]);
                 break;
             case TableBorderType.ThinThickThinSmallGap:
                 relativeSize /= 10;
                 this._renderBorderSubLines(line, [
-                    { pos: 0.5 * relativeSize, width: relativeSize},
-                    { pos: 4.5 * relativeSize, width: 5 * relativeSize},
-                    { pos: 8.5 * relativeSize, width: relativeSize}
+                    { pos: 0.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid},
+                    { pos: 4.5 * relativeSize, width: 5 * relativeSize, dashing: DashMode.Solid},
+                    { pos: 8.5 * relativeSize, width: relativeSize, dashing: DashMode.Solid}
                 ]);
+                break;
+            case TableBorderType.DashDotStroked:
+                relativeSize /= 3;
+                this._renderBorderSubLines(line, [
+                    {pos: 0.5 * relativeSize, width: relativeSize, dashing: DashMode.Dashed},
+                    {pos: 2.5 * relativeSize, width: relativeSize, dashing: DashMode.Dotted}
+                ]);
+                break;
+            case TableBorderType.Dashed:
+                this._renderBorderSubLines(line, [{pos: 0, width: border.size, dashing: DashMode.Dashed}]);
+                break;
+            case TableBorderType.DashSmallGap:
+                this._renderBorderSubLines(line, [{pos: 0, width: border.size, dashing: DashMode.DashedSmallGap}]);
+                break;
+            case TableBorderType.DotDash:
+                relativeSize /= 3;
+                this._renderBorderSubLines(line, [
+                    {pos: 0.5 * relativeSize, width: relativeSize, dashing: DashMode.Dotted},
+                    {pos: 2.5 * relativeSize, width: relativeSize, dashing: DashMode.Dashed}
+                ]);
+                break;
+            case TableBorderType.DotDotDash:
+                relativeSize /= 5;
+                this._renderBorderSubLines(line, [
+                    {pos: 0.5 * relativeSize, width: relativeSize, dashing: DashMode.Dotted},
+                    {pos: 2.5 * relativeSize, width: relativeSize, dashing: DashMode.Dotted},
+                    {pos: 4.5 * relativeSize, width: relativeSize, dashing: DashMode.Dashed}
+                ]);
+                break;
+            case TableBorderType.Dotted:
+                this._renderBorderSubLines(line, [{pos: 0, width: border.size, dashing: DashMode.Dotted}]);
                 break;
             case TableBorderType.Single:
             default:
-                this._renderBorderSubLines(line, [{pos: 0, width: size}]);
+                this._renderBorderSubLines(line, [{pos: 0, width: border.size, dashing: DashMode.Solid}]);
                 break;
         }
     }
@@ -285,7 +300,7 @@ export class TableRenderer {
                 line.y2 + yDirection * sub.pos,
                 line.color,
                 sub.width,
-                DashMode.Solid
+                sub.dashing
             );
         });
     }

@@ -179,6 +179,9 @@ export class SvgPainter implements IPainter {
             case DashMode.Dotted:
                 node.setAttribute("stroke-dasharray", "1");
                 break;
+            case DashMode.DashedSmallGap:
+                node.setAttribute("stroke-dasharray", "4 2");
+                break;
         }
     }
 
