@@ -42,18 +42,20 @@ export class CanvasPainter implements IPainter {
         }
     }
 
-    public paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number, _dashing: DashMode): void {
+    public paintLine(x1: number, y1: number, x2: number, y2: number, color: string, thickness: number, dashing: DashMode): void {
         this._context.lineWidth = thickness;
         this._context.strokeStyle = `#${color}`;
         this._context.beginPath();
         this._context.moveTo(x1, y1);
         this._context.lineTo(x2, y2);
+        this._setDashing(dashing);
         this._context.stroke();
     }
 
-    public paintPolygon(path: string, fillColor: string | undefined, strokeColor: string | undefined, strokeThickness: number | undefined): void {
+    public paintPolygon(path: string, fillColor: string | undefined, strokeColor: string | undefined, strokeThickness: number | undefined, dashing: DashMode): void {
         const path2d = new Path2D(path);
         if (strokeColor !== undefined) {
+            this._setDashing(dashing);
             this._context.strokeStyle = strokeColor;
             if (strokeThickness !== undefined) {
                 this._context.lineWidth = strokeThickness;
@@ -95,5 +97,22 @@ export class CanvasPainter implements IPainter {
     }
 
     public endLink(): void {
+    }
+
+    private _setDashing(dashing: DashMode): void {
+        switch (dashing) {
+            case DashMode.Solid:
+                this._context.setLineDash([]);
+                break;
+            case DashMode.Dashed:
+                this._context.setLineDash([4]);
+                break;
+            case DashMode.DashedSmallGap:
+                this._context.setLineDash([4, 2]);
+                break;
+            case DashMode.Dotted:
+                this._context.setLineDash([1]);
+                break;
+        }
     }
 }
