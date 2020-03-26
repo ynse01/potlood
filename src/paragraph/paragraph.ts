@@ -94,8 +94,8 @@ export class Paragraph implements ILayoutable {
         if (this.style !== undefined) {
             flow.advancePosition(this.style.spacingBefore);
         }
-        if (this.style._tabStops !== undefined) {
-            this.style._tabStops.forEach(stop => {
+        if (this.style.tabStops !== undefined) {
+            this.style.tabStops.forEach(stop => {
                 stop.performLayout(flow);
                 if (stop.isClear) {
                     flow.removeTabStop();

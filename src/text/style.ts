@@ -1,9 +1,8 @@
 import { NamedStyles } from "./named-styles.js";
-import { ParStyle, Justification, LineRule } from "../paragraph/par-style.js";
+import { ParStyle, Justification } from "../paragraph/par-style.js";
 import { RunStyle, UnderlineMode } from "./run-style.js";
 import { Xml } from "../utils/xml.js";
 import { InSequence } from "../utils/in-sequence.js";
-import { Metrics } from "../utils/metrics.js";
 import { TableStyle } from "../table/table-style.js";
 import { Emphasis } from "./positioned-text-line.js";
 
@@ -142,22 +141,7 @@ export class Style {
         let complexSpacing = this.getValue(
             undefined,
             (parStyle) => {
-                let spacing = parStyle._lineSpacing;
-                if (spacing !== undefined) {
-                    const lineRule = parStyle._lineRule;
-                    switch(lineRule) {
-                        case LineRule.auto:
-                            // Line Spacing is interpreted as 1/240th of a line.
-                            const lineSize = style.fontSize * 1.08;
-                            spacing = lineSize * spacing / 240; 
-                        break;
-                        default:
-                            // Line spacing is interpreted as 1/20th of a point.
-                            spacing = Metrics.convertTwipsToPixels(spacing);
-                            break
-                    }
-                }
-                return spacing;
+                return parStyle.getLineSpacing(style);
             },
             undefined
         );
@@ -168,16 +152,16 @@ export class Style {
     }
 
     public get shadingColor(): string {
-        return this.getValue("000000", (parStyle) => parStyle._shadingColor, (runStyle) => runStyle._shadingColor);
+        return this.getValue("000000", (parStyle) => parStyle.shadingColor, (runStyle) => runStyle._shadingColor);
     }
 
     public getIndentation(inRun: InSequence, inParagaph: InSequence): number {
-        let identation = this.getValue(0, (parStyle) => parStyle._indentation, undefined);
+        let identation = this.getValue(0, (parStyle) => parStyle.indentation, undefined);
         if (
             (inParagaph === InSequence.First || inParagaph === InSequence.Only) &&
             (inRun === InSequence.First || inRun === InSequence.Only)
         ) {
-            const hanging = this.getValue(undefined, (parStyle) => parStyle._hanging, undefined);
+            const hanging = this.getValue(undefined, (parStyle) => parStyle.hanging, undefined);
             if (hanging !== undefined) {
                 identation -= hanging;
             }
@@ -198,7 +182,7 @@ export class Style {
     }
 
     public get justification(): Justification {
-        return this.getValue(Justification.left, (parStyle) => parStyle._justification, undefined);
+        return this.getValue(Justification.left, (parStyle) => parStyle.justification, undefined);
     }
 
     public get invisible(): boolean {
@@ -291,20 +275,20 @@ export class Style {
                         val = localPar;
                     }
                 }
-                const parRunStyle = this.parStyle._runStyle;
+                const parRunStyle = this.parStyle.runStyle;
                 if (val === undefined && runCb !== undefined && parRunStyle !== undefined) {
                     val = runCb(parRunStyle);
                 }
-                if (val === undefined && this.parStyle._numStyle !== undefined) {
+                if (val === undefined && this.parStyle.numStyle !== undefined) {
                     // Fourthly look at the numbering style.
-                    const numStyle = this.parStyle._numStyle.style;
+                    const numStyle = this.parStyle.numStyle.style;
                     if (numStyle !== undefined) {
                         val = numStyle.getRecursive<T>(parCb, runCb);
                     }
                 }
-                if (val === undefined && this.parStyle._basedOn !== undefined) {
+                if (val === undefined && this.parStyle.basedOn !== undefined) {
                     // Fifthly look at the base styles of the PARAGRAPH style.
-                    val = this.parStyle._basedOn.getRecursive<T>(parCb, runCb);
+                    val = this.parStyle.basedOn.getRecursive<T>(parCb, runCb);
                 }
             }
         }

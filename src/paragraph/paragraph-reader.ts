@@ -33,11 +33,11 @@ export class ParagraphReader {
         let linkTarget: string | undefined = undefined;
         const runs: IRun[] = [];
         const parStyle = this.readStyle(docx, pNode);
-        if (parStyle !== undefined && parStyle._numStyle !== undefined) {
-            numberingRun = new NumberingRun(parStyle._numStyle);
+        if (parStyle !== undefined && parStyle.numStyle !== undefined) {
+            numberingRun = new NumberingRun(parStyle.numStyle);
         }
         const textStyle = parStyle.clone();
-        textStyle._numStyle = undefined;
+        textStyle.numStyle = undefined;
         pNode.childNodes.forEach(node => {
             linkTarget = undefined;
             if (node.nodeName === "w:hyperlink") {

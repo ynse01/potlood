@@ -21,23 +21,23 @@ export enum LineRule {
 }
 
 export class ParStyle {
-    public _basedOn: Style | undefined;
+    public basedOn: Style | undefined;
     private _basedOnId: string | undefined;
-    public _justification: Justification | undefined = undefined;
-    public _indentation: number | undefined;
-    public _hanging: number | undefined;
-    public _lineSpacing: number | undefined;
-    public _lineRule: LineRule | undefined;
-    public _numStyle: NumberingStyle | undefined;
-    public _shadingColor: string | undefined;
-    public _parSpacingBefore: number | undefined;
-    public _parSpacingAfter: number | undefined;
-    public _parLinesBefore: number | undefined;
-    public _parLinesAfter: number | undefined;
-    public _parAutoSpacingBefore: boolean | undefined;
-    public _parAutoSpacingAfter: boolean | undefined;
-    public _tabStops: TabStop[] | undefined;
-    public _runStyle: RunStyle | undefined;
+    public justification: Justification | undefined = undefined;
+    public indentation: number | undefined;
+    public hanging: number | undefined;
+    private _lineSpacing: number | undefined;
+    private _lineRule: LineRule | undefined;
+    public numStyle: NumberingStyle | undefined;
+    public shadingColor: string | undefined;
+    private _parSpacingBefore: number | undefined;
+    private _parSpacingAfter: number | undefined;
+    private _parLinesBefore: number | undefined;
+    private _parLinesAfter: number | undefined;
+    private _parAutoSpacingBefore: boolean | undefined;
+    private _parAutoSpacingAfter: boolean | undefined;
+    public tabStops: TabStop[] | undefined;
+    public runStyle: RunStyle | undefined;
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
         const parStyle = new ParStyle();
@@ -49,34 +49,34 @@ export class ParStyle {
                 case "w:jc":
                     const justification = Xml.getStringValue(child);
                     if (justification !== undefined) {
-                        parStyle._justification = Justification[justification as keyof typeof Justification];
+                        parStyle.justification = Justification[justification as keyof typeof Justification];
                     }
                     break;
                 case "w:ind":
                     const hangingAttr = Xml.getAttribute(child, "w:hanging");
                     if (hangingAttr !== undefined) {
-                        parStyle._hanging = Metrics.convertTwipsToPixels(parseInt(hangingAttr, 10));
+                        parStyle.hanging = Metrics.convertTwipsToPixels(parseInt(hangingAttr, 10));
                     }
                     const leftAttr = Xml.getAttribute(child, "w:left");
                     if (leftAttr !== undefined) {
-                        parStyle._indentation = Metrics.convertTwipsToPixels(parseInt(leftAttr, 10));
+                        parStyle.indentation = Metrics.convertTwipsToPixels(parseInt(leftAttr, 10));
                     }
                     break;
                 case "w:numPr":
-                    parStyle._numStyle = NumberingStyle.fromNumPresentationNode(child);
+                    parStyle.numStyle = NumberingStyle.fromNumPresentationNode(child);
                     break;
                 case "w:spacing":
                     parStyle.setLineSpacingFromNode(child);
                     parStyle.setParSpacingFromNode(child);
                     break;
                 case "w:shd":
-                    parStyle._shadingColor = Style.readShading(child);
+                    parStyle.shadingColor = Style.readShading(child);
                     break;
                 case "w:tabs":
-                    parStyle._tabStops = TabStop.fromTabsNode(child);
+                    parStyle.tabStops = TabStop.fromTabsNode(child);
                     break;
                 case "w:rPr":
-                    parStyle._runStyle = RunStyle.fromPresentationNode(child);
+                    parStyle.runStyle = RunStyle.fromPresentationNode(child);
                     break;
                 case "w:widowControl":
                 case "w:snapToGrid":
@@ -97,6 +97,30 @@ export class ParStyle {
             }
         });
         return parStyle;
+    }
+
+    public getLineSpacing(style: Style): number | undefined {
+        let spacing = this._lineSpacing;
+        if (spacing !== undefined) {
+            const lineRule = this._lineRule;
+            switch(lineRule) {
+                case LineRule.auto:
+                    // Line Spacing is interpreted as 1/240th of a line.
+                    const lineSize = style.fontSize * 1.08;
+                    spacing = lineSize * spacing / 240; 
+                break;
+                default:
+                    // Line spacing is interpreted as 1/20th of a point.
+                    spacing = Metrics.convertTwipsToPixels(spacing);
+                    break
+            }
+        }
+        return spacing;        
+    }
+
+    public setLineSpacing(spacing: number): void {
+        this._lineSpacing = spacing;
+        this._lineRule = LineRule.atLeast;
     }
 
     public get spacingBefore(): number {
@@ -127,42 +151,42 @@ export class ParStyle {
         if (this._basedOnId !== undefined && namedStyles !== undefined) {
             const baseStyle = namedStyles.getNamedStyle(this._basedOnId);
             if (baseStyle !== undefined) {
-                this._basedOn = baseStyle;
+                this.basedOn = baseStyle;
             }
         }
     }
 
     public applyNumberings(numberings: AbstractNumberings | undefined): void {
-        if (this._numStyle !== undefined) {
-            this._numStyle.applyNumberings(numberings);
+        if (this.numStyle !== undefined) {
+            this.numStyle.applyNumberings(numberings);
         }
     }
 
     public clone(): ParStyle {
         const cloned = new ParStyle();
-        cloned._basedOn = this._basedOn;
+        cloned.basedOn = this.basedOn;
         cloned._basedOnId = this._basedOnId;
-        cloned._justification = this._justification;
-        cloned._indentation = this._indentation;
-        cloned._hanging = this._hanging;
+        cloned.justification = this.justification;
+        cloned.indentation = this.indentation;
+        cloned.hanging = this.hanging;
         cloned._lineSpacing = this._lineSpacing;
         cloned._lineRule = this._lineRule;
-        cloned._numStyle = this._numStyle;
-        cloned._shadingColor = this._shadingColor;
+        cloned.numStyle = this.numStyle;
+        cloned.shadingColor = this.shadingColor;
         cloned._parSpacingBefore = this._parSpacingBefore;
         cloned._parSpacingAfter = this._parSpacingAfter;
         cloned._parLinesBefore = this._parLinesBefore;
         cloned._parLinesAfter = this._parLinesAfter;
         cloned._parAutoSpacingBefore = this._parAutoSpacingBefore;
         cloned._parAutoSpacingAfter = this._parAutoSpacingAfter;
-        cloned._tabStops = this._tabStops;
+        cloned.tabStops = this.tabStops;
         return cloned;
     }
 
     public toString(): string {
         const baseText = (this._basedOnId !== undefined) ? `base=${this._basedOnId}` : "";
-        const justText = (this._justification !== undefined) ? `jc=${this._justification.toString()}` : "";
-        const indText = (this._indentation !== undefined) ? `ind=${this._indentation.toString()}` : "";
+        const justText = (this.justification !== undefined) ? `jc=${this.justification.toString()}` : "";
+        const indText = (this.indentation !== undefined) ? `ind=${this.indentation.toString()}` : "";
         const lineText = (this._lineSpacing !== undefined) ? `line=${this._lineSpacing.toString()}` : "";
         return `ParStyle: ${baseText} ${justText} ${indText} ${lineText}`;
     }

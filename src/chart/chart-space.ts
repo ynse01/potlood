@@ -7,7 +7,6 @@ import { VirtualFlow } from "../utils/virtual-flow.js";
 import { Box } from "../utils/math/box.js";
 import { Style } from "../text/style.js";
 import { ChartAxisPosition, ChartAxis } from "./chart-axis.js";
-import { LineRule } from "../paragraph/par-style.js";
 import { BaseChart } from "./base-chart.js";
 import { LineChart } from "./line-chart.js";
 import { AreaChart } from "./area-chart.js";
@@ -33,8 +32,7 @@ export class ChartSpace implements ILayoutable {
     constructor() {
         // Hard coded text style.
         this.textStyle.runStyle.updateFont("Arial", false, 11);
-        this.textStyle.parStyle._lineSpacing = 240;
-        this.textStyle.parStyle._lineRule = LineRule.atLeast;
+        this.textStyle.parStyle.setLineSpacing(240);
         this.plotArea = new ChartPlotArea(this);
     }
 
