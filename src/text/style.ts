@@ -291,6 +291,10 @@ export class Style {
                         val = localPar;
                     }
                 }
+                const parRunStyle = this.parStyle._runStyle;
+                if (val === undefined && runCb !== undefined && parRunStyle !== undefined) {
+                    val = runCb(parRunStyle);
+                }
                 if (val === undefined && this.parStyle._numStyle !== undefined) {
                     // Fourthly look at the numbering style.
                     const numStyle = this.parStyle._numStyle.style;

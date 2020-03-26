@@ -5,6 +5,7 @@ import { Style } from "../text/style.js";
 import { NumberingStyle } from "../numbering/num-style.js";
 import { AbstractNumberings } from "../numbering/abstract-numberings.js";
 import { TabStop } from "./tab-stop.js";
+import { RunStyle } from "../text/run-style.js";
 
 export enum Justification {
     center = "center",
@@ -36,6 +37,7 @@ export class ParStyle {
     public _parAutoSpacingBefore: boolean | undefined;
     public _parAutoSpacingAfter: boolean | undefined;
     public _tabStops: TabStop[] | undefined;
+    public _runStyle: RunStyle | undefined;
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
         const parStyle = new ParStyle();
@@ -73,10 +75,12 @@ export class ParStyle {
                 case "w:tabs":
                     parStyle._tabStops = TabStop.fromTabsNode(child);
                     break;
+                case "w:rPr":
+                    parStyle._runStyle = RunStyle.fromPresentationNode(child);
+                    break;
                 case "w:widowControl":
                 case "w:snapToGrid":
                 case "w:sectPr":
-                case "w:rPr":
                 case "w:pBdr":
                 case "w:contextualSpacing":
                 case "w:keepLines":
