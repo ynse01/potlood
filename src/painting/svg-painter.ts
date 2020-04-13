@@ -174,13 +174,22 @@ export class SvgPainter implements IPainter {
     private _setDashing(node: Element, dashing: DashMode): void {
         switch(dashing) {
             case DashMode.Dashed:
-                node.setAttribute("stroke-dasharray", "4");
+                node.setAttribute("stroke-dasharray", "5 3");
+                break;
+            case DashMode.LongDash:
+                node.setAttribute("stroke-dasharray", "8 3");
                 break;
             case DashMode.Dotted:
                 node.setAttribute("stroke-dasharray", "1");
                 break;
             case DashMode.DashedSmallGap:
-                node.setAttribute("stroke-dasharray", "4 2");
+                node.setAttribute("stroke-dasharray", "5 2");
+                break;
+            case DashMode.DotDash:
+                node.setAttribute("stroke-dasharray", "6 2 2 2");
+                break;
+            case DashMode.DotDotDash:
+                node.setAttribute("stroke-dasharray", "6 2 2 2 2 2");
                 break;
         }
     }

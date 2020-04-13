@@ -12,7 +12,10 @@ export enum DashMode {
     Solid,
     Dashed,
     Dotted,
-    DashedSmallGap
+    DashedSmallGap,
+    DotDash,
+    DotDotDash,
+    LongDash
 }
 
 export interface IPainter {

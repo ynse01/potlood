@@ -4,7 +4,6 @@ Potlood is Dutch for Pencil.
 
 ## TODO 
 
-- Underline modes
 - Page visualization
 - Header and footer
 - Horizontal bar Chart

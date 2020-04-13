@@ -48,17 +48,52 @@ export class TextRenderer {
         const fontSize = style.fontSize;
         const y = textRect.y + fontSize;
         const color = (style.color === "auto") ? "000000" : style.color;
+        const thickness = fontSize / 24;
+        const heavy = 2 * thickness;
         switch(style.underlineMode) {
             case UnderlineMode.Double:
-                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, 1, DashMode.Solid);
-                this._painter.paintLine(textRect.x, y + fontSize / 10, textRect.x + textRect.width, y + fontSize / 10, color, 1, DashMode.Solid);
+                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, thickness, DashMode.Solid);
+                this._painter.paintLine(textRect.x, y + 3 * thickness, textRect.x + textRect.width, y + 3 * thickness, color, thickness, DashMode.Solid);
+                break;
+            case UnderlineMode.Thick:
+                this._painter.paintLine(textRect.x, y + thickness, textRect.x + textRect.width, y + thickness, color, heavy, DashMode.Solid);
+                break;
+            case UnderlineMode.Dotted:
+                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, thickness, DashMode.Dotted);
+                break;
+            case UnderlineMode.DottedHeavy:
+                this._painter.paintLine(textRect.x, y + thickness, textRect.x + textRect.width, y + thickness, color, heavy, DashMode.Dotted);
+                break;
+            case UnderlineMode.Dash:
+                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, thickness, DashMode.Dashed);
+                break;
+            case UnderlineMode.DashedHeavy:
+                this._painter.paintLine(textRect.x, y + thickness, textRect.x + textRect.width, y + thickness, color, heavy, DashMode.Dashed);
+                break;
+            case UnderlineMode.DotDash:
+                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, thickness, DashMode.DotDash);
+                break;
+            case UnderlineMode.DashDotHeavy:
+                this._painter.paintLine(textRect.x, y + thickness, textRect.x + textRect.width, y + thickness, color, heavy, DashMode.DotDash);
+                break;
+            case UnderlineMode.DotDotDash:
+                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, thickness, DashMode.DotDotDash);
+                break;
+            case UnderlineMode.DashDotDotHeavy:
+                this._painter.paintLine(textRect.x, y + thickness, textRect.x + textRect.width, y + thickness, color, heavy, DashMode.DotDotDash);
+                break;
+            case UnderlineMode.DashLong:
+                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, thickness, DashMode.LongDash);
+                break;
+            case UnderlineMode.DashLongHeavy:
+                this._painter.paintLine(textRect.x, y + thickness, textRect.x + textRect.width, y + thickness, color, heavy, DashMode.LongDash);
                 break;
             case UnderlineMode.None:
                 // Nothing to be done
                 break;
             default:
             case UnderlineMode.Single:
-                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, 1, DashMode.Solid);
+                this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, thickness, DashMode.Solid);
                 break;
         }
         if (style.strike) {
