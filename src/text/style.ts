@@ -109,7 +109,7 @@ export class Style {
     }
 
     public get underlineMode(): UnderlineMode {
-        return this.getValue(UnderlineMode.none, undefined, (runStyle) => runStyle._underlineMode);
+        return this.getValue(UnderlineMode.None, undefined, (runStyle) => runStyle._underlineMode);
     }
 
     public get strike(): boolean {

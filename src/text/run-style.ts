@@ -5,24 +5,24 @@ import { Style } from "./style.js";
 import { NamedStyles } from "./named-styles.js";
 
 export enum UnderlineMode {
-    none = "none",
-    dash = "dash",
-    dashDotDotHeavy = "dashDotDotHeavy",
-    dashDotHeavy = "dashDotHeavy",
-    dashedHeavy = "dashedHeavy",
-    dashLong = "dashLong",
-    dashLongHeavy = "dashLongHeavy",
-    dotDash = "dotDash",
-    dotDotDash = "dotDotDash",
-    dotted = "dotted",
-    dottedHeavy = "dottedHeavy",
-    double = "double",
-    single = "single",
-    thick = "thick",
-    wave = "wave",
-    wavyDouble = "wavyDouble",
-    wavyHeavy = "wavyHeavy",
-    words = "words"
+    None,
+    Dash,
+    DashDotDotHeavy,
+    DashDotHeavy,
+    DashedHeavy,
+    DashLong,
+    DashLongHeavy,
+    DotDash,
+    DotDotDash,
+    Dotted,
+    DottedHeavy,
+    Double,
+    Single,
+    Thick,
+    Wave,
+    WavyDouble,
+    WavyHeavy,
+    Words
 }
 
 export class RunStyle {
@@ -67,7 +67,7 @@ export class RunStyle {
                 case "w:u":
                     const underlineMode = Xml.getStringValue(child);
                     if (underlineMode !== undefined) {
-                        style._underlineMode = UnderlineMode[underlineMode as keyof typeof UnderlineMode];
+                        style._underlineMode = RunStyle.readUnderlineMode(underlineMode);
                     }
                     break;
                 case "w:strike":
@@ -180,5 +180,67 @@ export class RunStyle {
     private static readFontSize(sizeNode: ChildNode): number | undefined {
         const sizeInPoints = Xml.getNumberValue(sizeNode);
         return (sizeInPoints !== undefined) ? Metrics.convertPointToFontSize(sizeInPoints) : undefined;
+    }
+
+    private static readUnderlineMode(underlineStr: string): UnderlineMode {
+        let underlineMode: UnderlineMode;
+        switch(underlineStr) {
+            case "dash":
+                underlineMode = UnderlineMode.Dash;
+                break;
+            case "dashDotDotHeavy":
+                underlineMode = UnderlineMode.DashDotDotHeavy;
+                break;
+            case "dashDotHeavy":
+                underlineMode = UnderlineMode.DashDotHeavy;
+                break;
+            case "dashedHeavy":
+                underlineMode = UnderlineMode.DashedHeavy;
+                break;
+            case "dashLong":
+                underlineMode = UnderlineMode.DashLong;
+                break;
+            case "dashLongHeavy":
+                underlineMode = UnderlineMode.DashLongHeavy;
+                break;
+            case "dotDash":
+                underlineMode = UnderlineMode.DotDash;
+                break;
+            case "dotDotDash":
+                underlineMode = UnderlineMode.DotDotDash;
+                break;
+            case "dotted":
+                underlineMode = UnderlineMode.Dotted;
+                break;
+            case "dottedHeavy":
+                underlineMode = UnderlineMode.DottedHeavy;
+                break;
+            case "double":
+                underlineMode = UnderlineMode.Double;
+                break;
+            case "single":
+                underlineMode = UnderlineMode.Single;
+                break;
+            case "thick":
+                underlineMode = UnderlineMode.Thick;
+                break;
+            case "wave":
+                underlineMode = UnderlineMode.Wave;
+                break;
+            case "wavyDouble":
+                underlineMode = UnderlineMode.WavyDouble;
+                break;
+            case "wavyHeavy":
+                underlineMode = UnderlineMode.WavyHeavy;
+                break;
+            case "words":
+                underlineMode = UnderlineMode.Words;
+                break;
+            case "none":
+            default:
+                underlineMode = UnderlineMode.None;
+                break;
+        }
+        return underlineMode;
     }
 }

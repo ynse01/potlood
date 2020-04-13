@@ -36,7 +36,7 @@ export class TextRenderer {
         const isBold = Boolean(line.emphasis & Emphasis.Bold);
         const isItalic = Boolean(line.emphasis & Emphasis.Italic);
         this._painter.paintText(x, line.y, line.width, line.stretched, line.text, line.color, justification, line.fontFamily, line.fontSize, isBold, isItalic);
-        if (style.underlineMode !== UnderlineMode.none || style.strike || style.doubleStrike) {
+        if (style.underlineMode !== UnderlineMode.None || style.strike || style.doubleStrike) {
             // Render underline after adding text to DOM.
             this._renderUnderline(style);
         }
@@ -49,15 +49,15 @@ export class TextRenderer {
         const y = textRect.y + fontSize;
         const color = (style.color === "auto") ? "000000" : style.color;
         switch(style.underlineMode) {
-            case UnderlineMode.double:
+            case UnderlineMode.Double:
                 this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, 1, DashMode.Solid);
                 this._painter.paintLine(textRect.x, y + fontSize / 10, textRect.x + textRect.width, y + fontSize / 10, color, 1, DashMode.Solid);
                 break;
-            case UnderlineMode.none:
+            case UnderlineMode.None:
                 // Nothing to be done
                 break;
             default:
-            case UnderlineMode.single:
+            case UnderlineMode.Single:
                 this._painter.paintLine(textRect.x, y, textRect.x + textRect.width, y, color, 1, DashMode.Solid);
                 break;
         }
