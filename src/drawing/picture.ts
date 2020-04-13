@@ -177,30 +177,18 @@ export class Picture implements ILayoutable {
     private _getImageUrlForEmf(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (EMFJS == undefined) {
-                reject("EMFJS library not loaded, unable to read EMF image");
+                reject("EMFJS library not loaded, unable to read EMF images");
             } else {
                 EMFJS.loggingEnabled(false);
-                this._pack.loadPartAsBinary(this._name).then(buff => {
-                    const width = this.bounds?.width;
-                    const height = this.bounds?.height;
-                    const settings = {
-                        width: width + "px",
-                        height: height + "px",
-                        xExt: width,
-                        yExt: height,
-                        mapMode: 8
-                    }
-                    const renderer = new EMFJS.Renderer(buff);
-                    renderer.render(settings).then((svg: SVGElement) => {
-                        this._imageUrl = svg;
+                this._pack.loadPartAsBinary(this._name).then(buffer => {
+                    const renderer = new EMFJS.Renderer(buffer);
+                    const result = this._renderMF(renderer, this.bounds!);
+                    if (result !== undefined) {
+                        this._imageUrl = result;
                         resolve();
-                    }).catch((error: any) => {
-                        if (error instanceof WMFJS.Error) {
-                            reject(`Error during WMF parsing: ${error.message}`);
-                        } else {
-                            reject(error);
-                        }  
-                    });
+                    } else {
+                        reject("Error during WMF parsing.");  
+                    }
                 }).catch(error => {
                     reject(error);
                 });
@@ -211,23 +199,14 @@ export class Picture implements ILayoutable {
     private _getImageUrlForWmf(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             if (WMFJS == undefined) {
-                reject("WMFJS library not loaded, unable to read WMF image");
+                reject("WMFJS library not loaded, unable to read WMF images");
             } else {
                 WMFJS.loggingEnabled(false);
-                this._pack.loadPartAsBinary(this._name).then(buff => {
-                    const width = this.bounds?.width;
-                    const height = this.bounds?.height;
-                    const settings = {
-                        width: width + "px",
-                        height: height + "px",
-                        xExt: width,
-                        yExt: height,
-                        mapMode: 8
-                    }
-                    const renderer = new WMFJS.Renderer(buff);
-                    const result = renderer.render(settings)
-                    if (result[0] !== undefined) {
-                        this._imageUrl = result[0];
+                this._pack.loadPartAsBinary(this._name).then(buffer => {
+                    const renderer = new WMFJS.Renderer(buffer);
+                    const result = this._renderMF(renderer, this.bounds!);
+                    if (result !== undefined) {
+                        this._imageUrl = result;
                         resolve();
                     } else {
                         reject("Error during WMF parsing.");  
@@ -237,5 +216,19 @@ export class Picture implements ILayoutable {
                 });
             }
         });
+    }
+
+    private _renderMF(renderer: any, bounds: Box): string {
+        const width = bounds.width;
+        const height = bounds.height;
+        const settings = {
+            width: width + "px",
+            height: height + "px",
+            xExt: width,
+            yExt: height,
+            mapMode: 8
+        }
+        const result = renderer.render(settings)
+        return result;
     }
 }
