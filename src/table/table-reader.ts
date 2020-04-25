@@ -121,7 +121,7 @@ export class TableReader {
                     if (vMerge !== undefined && vMerge === "restart") {
                         rowSpan = InSequence.First;
                     }
-                    cellStyle.rowSpan = rowSpan;
+                    cellStyle.rowSpanOrder = rowSpan;
                     break;
                 case "w:vAlign":
                     // TODO: Implement.

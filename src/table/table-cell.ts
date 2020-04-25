@@ -45,7 +45,7 @@ export class TableCell {
         if (bottomBorder !== undefined) {
             flow.advancePosition(bottomBorder.size);
         }
-        let height = flow.getY() - y;
+        let height = flow.getMaxY() - y;
         this.bounds = new Box(x, y, this._getWidth(), height);
     }
 

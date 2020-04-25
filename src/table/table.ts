@@ -40,7 +40,7 @@ export class Table implements ILayoutable {
         // Update row span
         this.rows.forEach((row, rowIndex) => {
             row.cells.forEach((cell, columnIndex) => {
-                if (cell.style.rowSpan === InSequence.First) {
+                if (cell.style.rowSpanOrder === InSequence.First) {
                     this._updateRowSpan(columnIndex, rowIndex);
                 }
             });
@@ -63,9 +63,9 @@ export class Table implements ILayoutable {
         let numRows = 1;
         for (let i = startRowIndex; i < this.rows.length; i++) {
             const currentRow = this.rows[i + 1];
-            if (currentRow === undefined || currentRow.cells[cellIndex].style.rowSpan !== InSequence.Middle) {
+            if (currentRow === undefined || currentRow.cells[cellIndex].style.rowSpanOrder !== InSequence.Middle) {
                 // Past the last row of the span, set previous as last of the span.
-                this.rows[i].cells[cellIndex].style.rowSpan = InSequence.Last;
+                this.rows[i].cells[cellIndex].style.rowSpanOrder = InSequence.Last;
                 break;
             }
             currentRow.cells[cellIndex].numRowsInSpan = 0;

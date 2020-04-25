@@ -222,8 +222,8 @@ export class Picture implements ILayoutable {
         const width = bounds.width;
         const height = bounds.height;
         const settings = {
-            width: width + "px",
-            height: height + "px",
+            width: width + "pt",
+            height: height + "pt",
             xExt: width,
             yExt: height,
             mapMode: 8

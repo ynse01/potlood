@@ -67,11 +67,11 @@ export class TableStyle {
         this._columnSpan = columnSpan;
     }
 
-    public get rowSpan(): InSequence {
+    public get rowSpanOrder(): InSequence {
         return this._getValue(InSequence.Only, (style) => style._rowSpan);
     }
 
-    public set rowSpan(rowSpan: InSequence) {
+    public set rowSpanOrder(rowSpan: InSequence) {
         this._rowSpan = rowSpan;
     }
 

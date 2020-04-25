@@ -27,14 +27,15 @@ export class TableRow {
         this.cells.forEach(cell => {
             const cellFlow = cell.getCellFlow(flow);
             cell.performLayout(cellFlow);
-            if (cell.style.rowSpan === InSequence.Only) {
-                maxY = Math.max(cellFlow.getY(), maxY);
+            if (cell.style.rowSpanOrder === InSequence.Only) {
+                const cellY = cellFlow.getMaxY();
+                maxY = Math.max(cellY, maxY);
             }
         });
         const maxHeight = maxY - startY;
         // Set the max height as height for all cells.
         this.cells.forEach(cell => {
-            if (cell.style.rowSpan === InSequence.Only) {
+            if (cell.style.rowSpanOrder === InSequence.Only) {
                 cell.bounds!.height = maxHeight;
             }
         });
