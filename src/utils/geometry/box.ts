@@ -56,7 +56,7 @@ export class Box {
         return new Box(this.x - left, this.y - top, this.width + left + right, this.height + top + bottom);
     }
 
-    public addBordersAndMargins(set: TableBorderSet, margins: TableMarginSet, _horizontalOrder: InSequence, _verticalOrder: InSequence): Box {
+    public addBordersAndMargins(set: TableBorderSet, margins: TableMarginSet, _rowOrder: InSequence, _columnOrder: InSequence): Box {
         const start = ((set.borderStart !== undefined) ? set.borderStart.size : 0) + margins.cellMarginStart;
         const end = ((set.borderEnd !== undefined) ? set.borderEnd.size : 0) + margins.cellMarginEnd;
         const top = ((set.borderTop !== undefined) ? set.borderTop.size : 0) + margins.cellMarginTop;
@@ -72,7 +72,7 @@ export class Box {
         return new Box(this.x + left, this.y + top, this.width - left - right, this.height - top - bottom);
     }
 
-    public subtractBordersAndMargins(set: TableBorderSet, margins: TableMarginSet, _horizontalOrder: InSequence, _verticalOrder: InSequence): Box {
+    public subtractBordersAndMargins(set: TableBorderSet, margins: TableMarginSet, _rowOrder: InSequence, _columnOrder: InSequence): Box {
         const start = ((set.borderStart !== undefined) ? set.borderStart.size : 0) + margins.cellMarginStart;
         const end = ((set.borderEnd !== undefined) ? set.borderEnd.size : 0) + margins.cellMarginEnd;
         const top = ((set.borderTop !== undefined) ? set.borderTop.size : 0) + margins.cellMarginTop;

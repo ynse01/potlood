@@ -11,6 +11,7 @@ export class TableCell {
     public style: TableStyle;
     public bounds: Box | undefined;
     public numRowsInSpan: number = 1;
+    public rowOrder: InSequence | undefined;
     private _allColumns: TableColumn[];
     private _startColumnIndex: number;
     private _columns: TableColumn[] | undefined = undefined;
@@ -28,10 +29,12 @@ export class TableCell {
         const margins = this.style.margins;
         const borders = this.style.borders;
         this.bounds = new Box(x, y, this._getWidth(), 0);
-        this._contentBounds = this.bounds.clone().subtractBordersAndMargins(borders, margins, InSequence.Middle, InSequence.Middle);
-        const contentHeight = this._performInnerLayout();
+        const rowOrder = (this.rowOrder === undefined) ? InSequence.Only : this.rowOrder;
+        const columnOrder = this._getColumnOrder();
+        this._contentBounds = this.bounds.clone().subtractBordersAndMargins(borders, margins, rowOrder, columnOrder);
+        const contentHeight = this._performInnerLayout(this._contentBounds);
         this._contentBounds.height = contentHeight;
-        this.bounds = this._contentBounds.addBordersAndMargins(borders, margins, InSequence.Middle, InSequence.Middle);
+        this.bounds = this._contentBounds.addBordersAndMargins(borders, margins, rowOrder, columnOrder);
     }
 
     public get numColumns(): number {
@@ -54,12 +57,24 @@ export class TableCell {
         return width;
     }
 
-    private _performInnerLayout(): number {
-        const bounds = this._contentBounds!;
+    private _performInnerLayout(bounds: Box): number {
         const cellFlow = new VirtualFlow(bounds.left, bounds.right, bounds.top);
         this.pars.forEach(par => {
             par.performLayout(cellFlow);
         });
         return cellFlow.getMaxY() - bounds.top;
+    }
+
+    private _getColumnOrder(): InSequence {
+        let order = InSequence.Middle;
+        const numAllColumns = this._allColumns.length;
+        if (numAllColumns === 1) {
+            order = InSequence.Only;
+        } else if (this._startColumnIndex === 0) {
+            order = InSequence.First;
+        } else if (this._startColumnIndex + this.numColumns === numAllColumns) {
+            order = InSequence.Last;
+        }
+        return order;
     }
 }

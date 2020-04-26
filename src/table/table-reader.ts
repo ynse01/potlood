@@ -17,11 +17,14 @@ import { InSequence } from "../utils/in-sequence.js";
 export class TableReader {
     public static readTable(docx: DocumentX, tableNode: ChildNode): Table {
         const table = new Table(docx);
+        let rowOrder = InSequence.First;
         tableNode.childNodes.forEach(child => {
             switch(child.nodeName) {
                 case "w:tr":
                     const row = this.readTableRow(child, table);
+                    row.setOrder(rowOrder);
                     table.rows.push(row);
+                    rowOrder = InSequence.Middle;
                     break;
                 case "w:tblPr":
                     table.style = this.readTableStyle(child);
@@ -44,6 +47,11 @@ export class TableReader {
                     break;
             }
         });
+        if (table.rows.length === 1) {
+            table.rows[0].setOrder(InSequence.Only);
+        } else {
+            table.rows[table.rows.length - 1].setOrder(InSequence.Last);
+        }
         return table;
     }
 

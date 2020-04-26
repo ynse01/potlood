@@ -13,6 +13,10 @@ export class TableRow {
         this.table = table;
     }
 
+    public setOrder(order: InSequence) {
+        this.cells.forEach(cell => cell.rowOrder = order);
+    }
+
     public getPars(): Paragraph[] {
         const pars: Paragraph[] = [];
         this.cells.forEach(cell => {
