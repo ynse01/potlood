@@ -24,8 +24,7 @@ export class TableRow {
     public performLayout(flow: VirtualFlow): void {
         let maxHeight = 0;
         this.cells.forEach(cell => {
-            const cellFlow = cell.getCellFlow(flow);
-            cell.performLayout(cellFlow);
+            cell.performLayout(flow);
             if (cell.style.rowSpanOrder === InSequence.Only) {
                 const cellHeight = cell.bounds!.height;
                 maxHeight = Math.max(cellHeight, maxHeight);

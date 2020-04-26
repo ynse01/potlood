@@ -3,6 +3,7 @@ import { Paragraph } from "../paragraph/paragraph.js";
 import { TableStyle } from "./table-style.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { Box } from "../utils/geometry/box.js";
+import { InSequence } from "../utils/in-sequence.js";
 
 export class TableCell {
     public id: string | undefined = undefined;
@@ -13,48 +14,31 @@ export class TableCell {
     private _allColumns: TableColumn[];
     private _startColumnIndex: number;
     private _columns: TableColumn[] | undefined = undefined;
+    private _contentBounds: Box | undefined;
 
-    constructor(columns: TableColumn[], style: TableStyle, startIndex: number) {
+    constructor(columns: TableColumn[], style: TableStyle, startColumnIndex: number) {
         this.style = style;
         this._allColumns = columns;
-        this._startColumnIndex = startIndex;
+        this._startColumnIndex = startColumnIndex;
     }
 
     public performLayout(flow: VirtualFlow): void {
-        const x = flow.getX();
+        const x = flow.getX() + this._getColumns()[0].start;
         const y = flow.getY();
         const margins = this.style.margins;
         const borders = this.style.borders;
-        flow.advancePosition(margins.cellMarginTop);
-        const topBorder = borders.borderTop;
-        if (topBorder !== undefined) {
-            flow.advancePosition(topBorder.size);
-        }
-        flow.advanceX(margins.cellMarginStart, margins.cellMarginEnd);
-        const startBorder = borders.borderStart;
-        const endBorder = borders.borderEnd;
-        // TODO: Handle horizontal border also
-        if (startBorder !== undefined && endBorder !== undefined) {
-            flow.advanceX(startBorder.size, endBorder.size);
-        }
-        this.pars.forEach(par => {
-            par.performLayout(flow);
-        });
-        flow.advancePosition(margins.cellMarginBottom);
-        const bottomBorder = borders.borderBottom;
-        if (bottomBorder !== undefined) {
-            flow.advancePosition(bottomBorder.size);
-        }
-        let height = flow.getMaxY() - y;
-        this.bounds = new Box(x, y, this._getWidth(), height);
+        this.bounds = new Box(x, y, this._getWidth(), 0);
+        this._contentBounds = this.bounds.clone().subtractBordersAndMargins(borders, margins, InSequence.Middle, InSequence.Middle);
+        const contentHeight = this._performInnerLayout();
+        this._contentBounds.height = contentHeight;
+        this.bounds = this._contentBounds.addBordersAndMargins(borders, margins, InSequence.Middle, InSequence.Middle);
     }
 
-    public getCellFlow(flow: VirtualFlow): VirtualFlow {
-        const x = flow.getX() + this.columns[0].start;
-        return new VirtualFlow(x, x + this._getWidth(), flow.getY());
+    public get numColumns(): number {
+        return this._getColumns().length;
     }
 
-    public get columns(): TableColumn[] {
+    private _getColumns(): TableColumn[] {
         if (this._columns === undefined) {
             const columnSpan = this.style.columnSpan;
             this._columns = this._allColumns.slice(this._startColumnIndex, this._startColumnIndex + columnSpan);
@@ -64,9 +48,18 @@ export class TableCell {
 
     private _getWidth(): number {
         let width = 0;
-        this.columns.forEach(col => {
+        this._getColumns().forEach(col => {
             width += col.width;
         });
         return width;
+    }
+
+    private _performInnerLayout(): number {
+        const bounds = this._contentBounds!;
+        const cellFlow = new VirtualFlow(bounds.left, bounds.right, bounds.top);
+        this.pars.forEach(par => {
+            par.performLayout(cellFlow);
+        });
+        return cellFlow.getMaxY() - bounds.top;
     }
 }

@@ -55,7 +55,7 @@ export class TableReader {
         rowNode.childNodes.forEach(cellNode => {
             if (cellNode.nodeName === "w:tc") {
                 const cell = this.readTableCell(cellNode, table, rowStyle, colIndex);
-                colIndex += cell.columns.length;
+                colIndex += cell.numColumns;
                 row.cells.push(cell);
             }
         });

@@ -1,5 +1,7 @@
 import { InSequence } from "../in-sequence.js";
 import { Point } from "./point.js";
+import { TableBorderSet } from "../../table/table-border-set.js";
+import { TableMarginSet } from "../../table/table-margin-set.js";
 
 export class Box {
     public x: number;
@@ -50,8 +52,32 @@ export class Box {
         return new Box(this.x + x, this.y + y, this.width, this.height);
     }
 
+    public addBorder(left: number, top: number, right: number, bottom: number): Box {
+        return new Box(this.x - left, this.y - top, this.width + left + right, this.height + top + bottom);
+    }
+
+    public addBordersAndMargins(set: TableBorderSet, margins: TableMarginSet, _horizontalOrder: InSequence, _verticalOrder: InSequence): Box {
+        const start = ((set.borderStart !== undefined) ? set.borderStart.size : 0) + margins.cellMarginStart;
+        const end = ((set.borderEnd !== undefined) ? set.borderEnd.size : 0) + margins.cellMarginEnd;
+        const top = ((set.borderTop !== undefined) ? set.borderTop.size : 0) + margins.cellMarginTop;
+        const bottom = ((set.borderBottom !== undefined) ? set.borderBottom.size : 0) + margins.cellMarginBottom;
+        return this.addBorder(start, top, end, bottom);
+    }
+
+    public addSpacing(spacing: number): Box {
+        return this.addBorder(spacing, spacing, spacing, spacing);
+    }
+
     public subtractBorder(left: number, top: number, right: number, bottom: number): Box {
         return new Box(this.x + left, this.y + top, this.width - left - right, this.height - top - bottom);
+    }
+
+    public subtractBordersAndMargins(set: TableBorderSet, margins: TableMarginSet, _horizontalOrder: InSequence, _verticalOrder: InSequence): Box {
+        const start = ((set.borderStart !== undefined) ? set.borderStart.size : 0) + margins.cellMarginStart;
+        const end = ((set.borderEnd !== undefined) ? set.borderEnd.size : 0) + margins.cellMarginEnd;
+        const top = ((set.borderTop !== undefined) ? set.borderTop.size : 0) + margins.cellMarginTop;
+        const bottom = ((set.borderBottom !== undefined) ? set.borderBottom.size : 0) + margins.cellMarginBottom;
+        return this.subtractBorder(start, top, end, bottom);
     }
 
     public subtractSpacing(spacing: number): Box {
