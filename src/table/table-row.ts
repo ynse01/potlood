@@ -22,17 +22,15 @@ export class TableRow {
     }
 
     public performLayout(flow: VirtualFlow): void {
-        const startY = flow.getY();
-        let maxY = 0;
+        let maxHeight = 0;
         this.cells.forEach(cell => {
             const cellFlow = cell.getCellFlow(flow);
             cell.performLayout(cellFlow);
             if (cell.style.rowSpanOrder === InSequence.Only) {
-                const cellY = cellFlow.getMaxY();
-                maxY = Math.max(cellY, maxY);
+                const cellHeight = cell.bounds!.height;
+                maxHeight = Math.max(cellHeight, maxHeight);
             }
         });
-        const maxHeight = maxY - startY;
         // Set the max height as height for all cells.
         this.cells.forEach(cell => {
             if (cell.style.rowSpanOrder === InSequence.Only) {
