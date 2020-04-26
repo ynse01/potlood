@@ -42,193 +42,172 @@ export class Picture implements ILayoutable {
             if (this._imageUrl !== undefined) {
                 resolve(this._imageUrl);
             } else {
-                if (this.isJpeg) {
-                    this._getImageUrlForJpeg().then(() => {
+                const fileParts = this._name.split('.');
+                const fileExtension = fileParts[fileParts.length - 1];
+                let binaryProc: ((buffer: ArrayBuffer, bounds: Box) => Promise<string | SVGElement>) | undefined = undefined;
+                let mimeType: string | undefined = undefined;
+                switch(fileExtension) {
+                    case "jpg":
+                    case "jpeg":
+                        mimeType = 'image/jpeg';
+                        break;
+                    case "png":
+                        mimeType = 'image/png';
+                        break;
+                    case "gif":
+                        mimeType = 'image/gif';
+                        break;
+                    case "bmp":
+                        mimeType = 'image/bmp';
+                        break;
+                    case "webp":
+                        mimeType = 'image/webp';
+                        break;
+                    case "tif":
+                    case "tiff":
+                        if (this._hasTiffSupport) {
+                            binaryProc = this._getImageUrlForTiff;
+                        }
+                        break;
+                    case "wmf":
+                        if (this._hasWmfSupport) {
+                            binaryProc = this._getImageUrlForWmf;
+                        }
+                        break;
+                    case "wmz":
+                        // TODO: Implement decompression to WMF
+                        break;
+                    case "emf":
+                        if (this._hasEmfSupport) {
+                            binaryProc = this._getImageUrlForEmf;
+                        }
+                        break;
+                    case "emz":
+                        // TODO: Implement decompression to EMF
+                        break;
+                }
+                if (mimeType !== undefined) {
+                    this._pack.loadPartAsBase64(this._name).then(content => {
+                        this._imageUrl = `data:${mimeType};base64,${content}`;
                         resolve(this._imageUrl);
-                    }).catch((err: any) => {
-                        reject(err);
+                    }).catch(error => {
+                        reject(error);
                     });
-                } else if (this.isPng) {
-                    this._getImageUrlForPng().then(() => {
-                        resolve(this._imageUrl);
-                    }).catch((err: any) => {
-                        reject(err);
+                } else if (binaryProc !== undefined && this.bounds !== undefined) {
+                    const bounds = this.bounds;
+                    this._pack.loadPartAsBinary(this._name).then(buffer => {
+                        binaryProc!(buffer, bounds).then((url) => {
+                            this._imageUrl = url;
+                            resolve(this._imageUrl);
+                        }).catch((err: any) => {
+                            reject(err);
+                        });
                     });
-                } else if (this.isTiff) {
-                    this._getImageUrlForTiff().then(() => {
-                        resolve(this._imageUrl);
-                    }).catch((err: any) => {
-                        reject(err);
-                    });
-                } else if (this.isWmf) {
-                    this._getImageUrlForWmf().then(() => {
-                        resolve(this._imageUrl);
-                    }).catch((err: any) => {
-                        reject(err);
-                    });
-                } else if (this.isEmf) {
-                    this._getImageUrlForEmf().then(() => {
-                        resolve(this._imageUrl);
-                    }).catch((err: any) => {
-                        reject(err);
-                    });
-                } else {
-                    reject(`Unknown image at: ${this._name}`);
                 }
             }
         });
     }
 
-    public get isJpeg(): boolean {
-        return this._name.endsWith('.jpg') || this._name.endsWith('.jpeg');
-    }
-
-    public get isPng(): boolean {
-        return this._name.endsWith('.png');
-    }
-
-    public get isTiff(): boolean {
-        return this._name.endsWith('.tif') || this._name.endsWith('.tiff');
-    }
-
-    public get isWmf(): boolean {
-        return this._name.endsWith('.wmf');
-    }
-
-    public get isEmf(): boolean {
-        return this._name.endsWith('.emf');
-    }
 
     public performLayout(_flow: VirtualFlow): void {
     }
 
-    private _getImageUrlForJpeg(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this._pack.loadPartAsBase64(this._name).then(content => {
-                const mimeType = 'image/jpeg';
-                this._imageUrl = `data:${mimeType};base64,${content}`;
-                resolve();
-            }).catch(error => {
-                reject(error);
-            });
-        });
+    private get _hasTiffSupport(): boolean {
+        return UTIF !== undefined;
     }
 
-    private _getImageUrlForPng(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this._pack.loadPartAsBase64(this._name).then(content => {
-                const mimeType = 'image/png';
-                this._imageUrl = `data:${mimeType};base64,${content}`;
-                resolve();
-            }).catch(error => {
-                reject(error);
-            });
-        });
-    }
-
-    private _getImageUrlForTiff(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this._pack.loadPartAsBinary(this._name).then(buff => {
-                const ifds = UTIF.decode(buff);
-                let vsns = ifds;
-                let ma = 0;
-                let page = vsns[0];
-                if (ifds[0].subIFD) {
-                    vsns = vsns.concat(ifds[0].subIFD);
+    private _getImageUrlForTiff(buffer: ArrayBuffer, _bounds: Box): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            const ifds = UTIF.decode(buffer);
+            let vsns = ifds;
+            let ma = 0;
+            let page = vsns[0];
+            if (ifds[0].subIFD) {
+                vsns = vsns.concat(ifds[0].subIFD);
+            }
+            for (let i = 0; i < vsns.length; i++) {
+                const img = vsns[i];
+                if (img["t258"] === null || img["t258"].length < 3) {
+                    continue;
                 }
-                for (let i = 0; i < vsns.length; i++) {
-                    const img = vsns[i];
-                    if (img["t258"] === null || img["t258"].length < 3) {
-                        continue;
-                    }
-                    const ar = img["t256"] * img["t257"];
-                    if (ar > ma) {
-                        ma = ar;
-                        page = img;
-                    }
+                const ar = img["t256"] * img["t257"];
+                if (ar > ma) {
+                    ma = ar;
+                    page = img;
                 }
-                UTIF.decodeImage(buff, page, ifds);
-                const rgba = UTIF.toRGBA8(page)
-                const width = page.width
-                const height = page.height;
-                const ind = 0; // TODO: Should we check for index??
-                UTIF._xhrs.splice(ind, 1);
-                var canvas = document.createElement("canvas");
-                canvas.width = width;
-                canvas.height = height;
-                const context = canvas.getContext("2d");
-                if (context !== null) {
-                    const imgd = context.createImageData(width, height);
-                    for (let i = 0; i < rgba.length; i++) {
-                        imgd.data[i] = rgba[i];
-                    }
-                    context.putImageData(imgd, 0, 0);
-                    this._imageUrl = canvas.toDataURL();
-                    resolve();
-                } else {
-                    reject("Unable to create offscreen Canvas element");
+            }
+            UTIF.decodeImage(buffer, page, ifds);
+            const rgba = UTIF.toRGBA8(page)
+            const width = page.width
+            const height = page.height;
+            const ind = 0; // TODO: Should we check for index??
+            UTIF._xhrs.splice(ind, 1);
+            var canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const context = canvas.getContext("2d");
+            if (context !== null) {
+                const imgd = context.createImageData(width, height);
+                for (let i = 0; i < rgba.length; i++) {
+                    imgd.data[i] = rgba[i];
                 }
-            }).catch(error => {
-                reject(error);
-            });
-        });
-    }
-
-    private _getImageUrlForEmf(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            if (EMFJS == undefined) {
-                reject("EMFJS library not loaded, unable to read EMF images");
+                context.putImageData(imgd, 0, 0);
+                resolve(canvas.toDataURL());
             } else {
-                EMFJS.loggingEnabled(false);
-                this._pack.loadPartAsBinary(this._name).then(buffer => {
-                    const renderer = new EMFJS.Renderer(buffer);
-                    const result = this._renderMF(renderer, this.bounds!);
-                    if (result !== undefined) {
-                        this._imageUrl = result;
-                        resolve();
-                    } else {
-                        reject("Error during WMF parsing.");  
-                    }
-                }).catch(error => {
-                    reject(error);
-                });
+                reject("Unable to create offscreen Canvas element");
             }
         });
     }
 
-    private _getImageUrlForWmf(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            if (WMFJS == undefined) {
-                reject("WMFJS library not loaded, unable to read WMF images");
+    private get _hasEmfSupport(): boolean {
+        return EMFJS !== undefined;
+    }
+
+    private _getImageUrlForEmf(buffer: ArrayBuffer, bounds: Box): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            EMFJS.loggingEnabled(false);
+            const renderer = new EMFJS.Renderer(buffer);
+            const width = bounds.width;
+            const height = bounds.height;
+            const settings = {
+                width: width + "pt",
+                height: height + "pt",
+                xExt: width,
+                yExt: height,
+                mapMode: 8
+            }
+            const result = renderer.render(settings);
+            if (result !== undefined) {
+                resolve(result);
             } else {
-                WMFJS.loggingEnabled(false);
-                this._pack.loadPartAsBinary(this._name).then(buffer => {
-                    const renderer = new WMFJS.Renderer(buffer);
-                    const result = this._renderMF(renderer, this.bounds!);
-                    if (result !== undefined) {
-                        this._imageUrl = result;
-                        resolve();
-                    } else {
-                        reject("Error during WMF parsing.");  
-                    }
-                }).catch(error => {
-                    reject(error);
-                });
+                reject("Error during WMF parsing.");  
             }
         });
     }
 
-    private _renderMF(renderer: any, bounds: Box): string {
-        const width = bounds.width;
-        const height = bounds.height;
-        const settings = {
-            width: width + "pt",
-            height: height + "pt",
-            xExt: width,
-            yExt: height,
-            mapMode: 8
-        }
-        const result = renderer.render(settings)
-        return result;
+    private get _hasWmfSupport(): boolean {
+        return WMFJS !== undefined;
+    }
+
+    private _getImageUrlForWmf(buffer: ArrayBuffer, bounds: Box): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            WMFJS.loggingEnabled(false);
+            const renderer = new WMFJS.Renderer(buffer);
+            const width = bounds.width;
+            const height = bounds.height;
+            const settings = {
+                width: width + "pt",
+                height: height + "pt",
+                xExt: width,
+                yExt: height,
+                mapMode: 8
+            }
+            const result = renderer.render(settings);
+            if (result !== undefined) {
+                resolve(result);
+            } else {
+                reject("Error during WMF parsing.");  
+            }
+        });
     }
 }
