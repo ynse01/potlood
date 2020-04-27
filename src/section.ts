@@ -86,7 +86,8 @@ export class Section {
                     case "w:headerReference":
                     case "w:footerReference":
                     case "w:titlePg":
-                        // Ignore
+                    case "w:cols":
+                        // TODO: Implement
                         break;
                     default:
                         console.log(`Don't know how to parse ${child.nodeName} during Section reading.`);
