@@ -3,6 +3,16 @@ import { ShapePositionReference } from "../drawing/shape-bounds.js";
 import { TabStop } from "../paragraph/tab-stop.js";
 import { Box } from "./geometry/box.js";
 
+class Obstacle {
+    public bounds: Box;
+    public isFloating: boolean;
+
+    constructor(bounds: Box, isFloating: boolean = false) {
+        this.bounds = bounds;
+        this.isFloating = isFloating;
+    }
+}
+
 export class VirtualFlow {
     // private _width: number;
     private _xMin: number;
@@ -13,7 +23,7 @@ export class VirtualFlow {
     private _lastCharX: number = 0;
     private _stops: TabStop[] = [];
     private _nums: any = {};
-    private _obstacles: Box[] = [];
+    private _obstacles: Obstacle[] = [];
 
     public static fromSection(section: Section | undefined): VirtualFlow {
         const flow = new VirtualFlow(40, 700 - 40);
@@ -51,12 +61,12 @@ export class VirtualFlow {
         const obstacle = this._getApplicableObstacle();
         if (obstacle !== undefined) {
             // Is obstacle all the width?
-            const isWide = obstacle.width >= ((this._xMax - this._xMin) - needsWidth);
+            const isWide = obstacle.bounds.width >= ((this._xMax - this._xMin) - needsWidth);
             if (isWide) {
-                this.advancePosition(obstacle.height);
+                this.advancePosition(obstacle.bounds.height);
             } else {
                 // TODO: Remove assumption that obstacle is to the left of the page
-                x = obstacle.right;
+                x = obstacle.bounds.right;
             }
         }
         return x;
@@ -82,10 +92,12 @@ export class VirtualFlow {
         return this._pos;
     }
 
-    public getMaxY(): number {
+    public getMaxY(includeFloating: boolean): number {
         let maxY = this._pos;
-        this._obstacles.forEach(bounds => {
-            maxY = Math.max(maxY, bounds.bottom);
+        this._obstacles.forEach(obstacle => {
+            if (!obstacle.isFloating || (includeFloating && obstacle.isFloating)) {
+                maxY = Math.max(maxY, obstacle.bounds.bottom);
+            }
         });
         return maxY;
     }
@@ -108,13 +120,19 @@ export class VirtualFlow {
         let width = this._xMax - this._xMin;
         const obstacle = this._getApplicableObstacle();
         if (obstacle !== undefined) {
-            width -= obstacle.width;
+            width -= obstacle.bounds.width;
         }
         return width;
     }
 
-    public addObstacle(bounds: Box): void {
-        this._obstacles.push(bounds);
+    public addObstacle(bounds: Box, isFloating: boolean): void {
+        this._obstacles.push(new Obstacle(bounds, isFloating));
+    }
+
+    public copyObstaclesFrom(other: VirtualFlow): void {
+        other._obstacles.forEach(obstacle => {
+            return this.addObstacle(obstacle.bounds, obstacle.isFloating);
+        });
     }
 
     public advanceX(startDelta: number, endDelta: number): VirtualFlow {
@@ -171,10 +189,10 @@ export class VirtualFlow {
         return cloned;
     }
 
-    private _getApplicableObstacle(): Box | undefined {
-        let found: Box | undefined = undefined;
+    private _getApplicableObstacle(): Obstacle | undefined {
+        let found: Obstacle | undefined = undefined;
         for (let i = 0; i < this._obstacles.length; i++) {
-            if (this._obstacles[i].intersectY(this._pos)) {
+            if (this._obstacles[i].bounds.intersectY(this._pos)) {
                 found = this._obstacles[i];
                 break;
             }

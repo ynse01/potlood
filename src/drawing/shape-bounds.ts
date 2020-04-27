@@ -5,7 +5,7 @@ import { Point } from "../utils/geometry/point.js";
 export enum ShapeAnchorMode {
     /** Inline with the text */
     Inline,
-    /** Floating on top os text */
+    /** Floating on top of text */
     Floating
 }
 

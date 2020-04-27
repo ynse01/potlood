@@ -32,7 +32,7 @@ export class TableCell {
         const rowOrder = (this.rowOrder === undefined) ? InSequence.Only : this.rowOrder;
         const columnOrder = this._getColumnOrder();
         this._contentBounds = this.bounds.clone().subtractBordersAndMargins(borders, margins, rowOrder, columnOrder);
-        const contentHeight = this._performInnerLayout(this._contentBounds);
+        const contentHeight = this._performInnerLayout(flow, this._contentBounds);
         this._contentBounds.height = contentHeight;
         this.bounds = this._contentBounds.addBordersAndMargins(borders, margins, rowOrder, columnOrder);
     }
@@ -57,12 +57,13 @@ export class TableCell {
         return width;
     }
 
-    private _performInnerLayout(bounds: Box): number {
+    private _performInnerLayout(flow: VirtualFlow, bounds: Box): number {
         const cellFlow = new VirtualFlow(bounds.left, bounds.right, bounds.top);
         this.pars.forEach(par => {
             par.performLayout(cellFlow);
         });
-        return cellFlow.getMaxY() - bounds.top;
+        flow.copyObstaclesFrom(cellFlow);
+        return cellFlow.getMaxY(false) - bounds.top;
     }
 
     private _getColumnOrder(): InSequence {

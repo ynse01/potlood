@@ -1,4 +1,4 @@
-import { ShapeBounds } from "./shape-bounds.js";
+import { ShapeBounds, ShapeAnchorMode } from "./shape-bounds.js";
 import { Picture } from "./picture.js";
 import { VirtualFlow } from "../utils/virtual-flow.js";
 import { ChartSpace } from "../chart/chart-space.js";
@@ -38,6 +38,7 @@ export class DrawingRun implements IRun {
 
     public performLayout(flow: VirtualFlow): void {
         const bounds = this.bounds.getBox(flow);
+        const isFloating = this.bounds.anchor === ShapeAnchorMode.Floating;
         if (this.picture !== undefined) {
             this.picture.bounds = bounds;
             this.picture.performLayout(flow);
@@ -50,14 +51,14 @@ export class DrawingRun implements IRun {
             this.shape.performLayout(bounds);
         }
         this.lastXPos = 0;
-        this._addObstacle(flow, bounds);
+        this._addObstacle(flow, bounds, isFloating);
     }
 
-    private _addObstacle(flow: VirtualFlow, bounds: Box): void {
+    private _addObstacle(flow: VirtualFlow, bounds: Box, isFloating: boolean): void {
         const box = bounds.clone();
         if (this.wrapping === WrapMode.TopAndBottom) {
             box.width = flow.getWidth();
         }
-        flow.addObstacle(box);
+        flow.addObstacle(box, isFloating);
     }
 }
