@@ -14,6 +14,26 @@ export class Style {
     public parStyle: ParStyle;
     public tableStyle: TableStyle | undefined;
 
+    public static fromDocDefaultsNode(docDefaultsNode: ChildNode): Style {
+        let parStyle: ParStyle | undefined = undefined;
+        let runStyle: RunStyle | undefined = undefined;
+        const runDefaults = Xml.getFirstChildOfName(docDefaultsNode, "w:rPrDefault");
+        if (runDefaults !== undefined) {
+            const runStyleNode = Xml.getFirstChildOfName(runDefaults, "w:rPr");
+            if (runStyleNode !== undefined) {
+                runStyle = RunStyle.fromPresentationNode(runStyleNode);
+            }
+        }
+        const parDefaults = Xml.getFirstChildOfName(docDefaultsNode, "w:pPrDefault");
+        if (parDefaults !== undefined) {
+            const parStyleNode = Xml.getFirstChildOfName(parDefaults, "w:pPr");
+            if (parStyleNode !== undefined) {
+                parStyle = ParStyle.fromParPresentationNode(parStyleNode);
+            }
+        }
+        return new Style(parStyle, runStyle);
+    }
+
     public static fromStyleNode(styleNode: ChildNode): Style {
         let parStyle: ParStyle | undefined = undefined;
         let runStyle: RunStyle | undefined = undefined;
@@ -261,9 +281,10 @@ export class Style {
                     val = localRun;
                 }
             }
-            if (val === undefined && this.runStyle._basedOn !== undefined) {
+            const runParent = this.runStyle.parent;
+            if (val === undefined && runParent !== undefined) {
                 // Secondly look at the base styles of the RUN style.
-                val = this.runStyle._basedOn.getRecursive<T>(parCb, runCb);
+                val = runParent.getRecursive<T>(parCb, runCb);
             }
         }
         // Thirdly look at local PARAGRAPH presentation.
@@ -286,9 +307,10 @@ export class Style {
                         val = numStyle.getRecursive<T>(parCb, runCb);
                     }
                 }
-                if (val === undefined && this.parStyle.basedOn !== undefined) {
+                const parParent = this.parStyle.parent;
+                if (val === undefined && parParent !== undefined) {
                     // Fifthly look at the base styles of the PARAGRAPH style.
-                    val = this.parStyle.basedOn.getRecursive<T>(parCb, runCb);
+                    val = parParent.getRecursive<T>(parCb, runCb);
                 }
             }
         }

@@ -21,8 +21,6 @@ export enum LineRule {
 }
 
 export class ParStyle {
-    public basedOn: Style | undefined;
-    private _basedOnId: string | undefined;
     public justification: Justification | undefined = undefined;
     public indentation: number | undefined;
     public hanging: number | undefined;
@@ -38,6 +36,9 @@ export class ParStyle {
     private _parAutoSpacingAfter: boolean | undefined;
     public tabStops: TabStop[] | undefined;
     public runStyle: RunStyle | undefined;
+    private _basedOn: Style | undefined;
+    private _basedOnId: string | undefined;
+    private _docDefaults: Style | undefined;
 
     public static fromParPresentationNode(parPresentationNode: ChildNode): ParStyle {
         const parStyle = new ParStyle();
@@ -99,6 +100,10 @@ export class ParStyle {
         return parStyle;
     }
 
+    public get parent(): Style | undefined {
+        return this._basedOn || this._docDefaults;
+    }
+
     public getLineSpacing(style: Style): number | undefined {
         let spacing = this._lineSpacing;
         if (spacing !== undefined) {
@@ -148,10 +153,13 @@ export class ParStyle {
     }
 
     public applyNamedStyles(namedStyles: NamedStyles | undefined): void {
-        if (this._basedOnId !== undefined && namedStyles !== undefined) {
-            const baseStyle = namedStyles.getNamedStyle(this._basedOnId);
-            if (baseStyle !== undefined) {
-                this.basedOn = baseStyle;
+        if (namedStyles !== undefined) {
+            this._docDefaults = namedStyles.docDefaults;
+            if (this._basedOnId !== undefined) {
+                const baseStyle = namedStyles.getNamedStyle(this._basedOnId);
+                if (baseStyle !== undefined) {
+                    this._basedOn = baseStyle;
+                }
             }
         }
     }
@@ -164,7 +172,8 @@ export class ParStyle {
 
     public clone(): ParStyle {
         const cloned = new ParStyle();
-        cloned.basedOn = this.basedOn;
+        cloned._docDefaults = this._docDefaults;
+        cloned._basedOn = this._basedOn;
         cloned._basedOnId = this._basedOnId;
         cloned.justification = this.justification;
         cloned.indentation = this.indentation;

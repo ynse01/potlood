@@ -26,8 +26,6 @@ export enum UnderlineMode {
 }
 
 export class RunStyle {
-    public _basedOn: Style | undefined;
-    private _basedOnId: string | undefined;
     public _italic: boolean | undefined;
     public _bold: boolean | undefined;
     public _underlineMode: UnderlineMode | undefined;
@@ -42,7 +40,10 @@ export class RunStyle {
     public _smallCaps: boolean | undefined;
     public _shadingColor: string | undefined;
     public _invisible: boolean | undefined;
-
+    private _basedOn: Style | undefined;
+    private _basedOnId: string | undefined;
+    private _docDefaults: Style | undefined;
+    
     public static fromPresentationNode(runPresentationNode: ChildNode): RunStyle {
         // TODO: Handle themeShade, themeTint, em, emboss, fitText, imprint, outline, position, shadow, vanish, vertAlign
         const style = new RunStyle();
@@ -134,11 +135,18 @@ export class RunStyle {
         return style;
     }
 
+    public get parent(): Style | undefined {
+        return this._basedOn || this._docDefaults;
+    }
+
     public applyNamedStyles(namedStyles: NamedStyles | undefined): void {
-        if (this._basedOnId !== undefined && namedStyles !== undefined) {
-            const baseStyle = namedStyles.getNamedStyle(this._basedOnId);
-            if (baseStyle !== undefined) {
-                this._basedOn = baseStyle;
+        if (namedStyles !== undefined) {
+            this._docDefaults = namedStyles.docDefaults;
+            if (this._basedOnId !== undefined) {
+                const baseStyle = namedStyles.getNamedStyle(this._basedOnId);
+                if (baseStyle !== undefined) {
+                    this._basedOn = baseStyle;
+                }
             }
         }
     }
