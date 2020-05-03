@@ -1,11 +1,11 @@
 {
-  "name": "potlood",
+  "name": "@potlood/potlood",
   "version": "1.0.0",
   "description": "Potlood",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
-  "repository": "https://github.com/ynse01/potlood.git",
+  "repository": "https://github.com/potlood/potlood.git",
   "license": "MIT",
   "keywords": [],
   "scripts": {
@@ -14,8 +14,7 @@
     "build": "webpack --config webpack/dev.config.js --progress",
     "build:prod": "webpack --config webpack/prod.config.js --progress",
     "doc": "cpx \"dist/potlood.min.js\" ../potlood.github.io/lib -p",
-    "reset": "git clean -dfx && git reset --hard && npm i",
-    "clean": "trash build test"
+    "clean": "trash dist test"
   },
   "scripts-info": {
     "info": "Displays usage information of the package scripts",
@@ -54,6 +53,7 @@
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "ava": {
     "failFast": true,
     "files": [

@@ -41,17 +41,46 @@
         </style>
         <script src="../node_modules/jszip/dist/jszip.min.js"></script>
         <script src="../node_modules/utif/UTIF.js"></script>
+        <script src="../node_modules/rtf.js/dist/EMFJS.bundle.min.js"></script>
+        <script src="../node_modules/rtf.js/dist/WMFJS.bundle.min.js"></script>
+        <script src="../dist/potlood.js"></script>
         <script>
-            import('../build/module/potlood.js').then(module => {
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight(e) {
+                var dropArea = document.getElementById("drop-area");
+                dropArea.classList.add('highlight');
+            }
+
+            function unHighlight(e) {
+                var dropArea = document.getElementById("drop-area");
+                dropArea.classList.remove('highlight');
+            }
+
+            function handleFiles(files) {
+                var dropArea = document.getElementById("drop-area");
+                var content = document.getElementById("content");
+                var potlood = new Potlood.Potlood(content);
+                var docName = files[0].name;
+                potlood.loadDocxFromFiles(files);
+                dropArea.classList.add('hide');
+                document.title = docName + " - Potlood";
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+
+            function init() {
                 var dropArea = document.getElementById("drop-area");
                 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                     dropArea.addEventListener(eventName, preventDefaults, false);
                 });
-
-                function preventDefaults(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
 
                 ['dragenter', 'dragover'].forEach(eventName => {
                     dropArea.addEventListener(eventName, highlight, false);
@@ -60,34 +89,11 @@
                     dropArea.addEventListener(eventName, unHighlight, false);
                 });
 
-                function highlight(e) {
-                    dropArea.classList.add('highlight');
-                }
-
-                function unHighlight(e) {
-                    dropArea.classList.remove('highlight');
-                }
-
                 dropArea.addEventListener('drop', handleDrop, false);
-
-                function handleDrop(e) {
-                    const dt = e.dataTransfer;
-                    const files = dt.files;
-                    dropArea.classList.add('hide');
-                    handleFiles(files);
-                }
-
-                function handleFiles(files) {
-                    var content = document.getElementById("content");
-                    var potlood = new module.Potlood(content);
-                    var docName = files[0].name;
-                    potlood.loadDocxFromFiles(files);
-                    document.title = docName + " - Potlood";
-                }
-            });            
+            }
         </script>
     </head>
-    <body style="background-color: #8a8a8a;">
+    <body style="background-color: #8a8a8a;" onload="init()">
         <div id="drop-area">
             <form class="my-form">
                 <p>Upload your docx files by dragging them in this region</p>
