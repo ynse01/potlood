@@ -2,6 +2,7 @@ node_modules
 dist
 src/**.js
 .idea/*
+.vscode/*
 
 coverage
 .nyc_output
@@ -9,5 +10,4 @@ coverage
 
 yarn.lock
 
-demo/uitgepakt/*
 *.docx#
