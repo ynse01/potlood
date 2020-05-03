@@ -5,8 +5,9 @@ Library to visualize .docx files in a browser, without the use of plugins or ser
 The specification is not always interprested the same by the different editors out there. For this reason, expect slight deviations here from the layout in your editor. 
 
 ## Functionality
-Most of the basic functionality is present:
-Supported are:
+Most of the basic functionality is present. This will make it usable to show most docx document out there. If not, feel free to file an issue.
+
+Supported are the following features:
 - Paragraphs
 - Numberings
 - Tables
