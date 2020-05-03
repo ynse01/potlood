@@ -1,6 +1,6 @@
 # Potlood
 
-Library to visualize .docx files in a browser, without the use of plugins or server side components.
+Potlood is a library to visualize .docx files in a browser, without the use of plugins or server side components.
 
 The specification is not always interprested the same by the different editors out there. For this reason, expect slight deviations here from the layout in your editor. 
 
@@ -12,7 +12,13 @@ Supported are the following features:
 - Numberings
 - Tables
 - Charts
-- Images
+- Images, in the following formats:
+  - PNG
+  - JPEG
+  - GIF
+  - TIFF
+  - WMF
+  - EMF
 - Drawings
 - Equations
 - Tab stops
