@@ -11,10 +11,9 @@
   "scripts": {
     "info": "npm-scripts-info",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "build:main": "tsc -p tsconfig.json",
-    "build:module": "tsc -p tsconfig.module.json",
-    "doc": "cpx \"build/module/**/*.js\" ../potlood.github.io/lib -p",
+    "build": "webpack --config webpack/dev.config.js --progress",
+    "build:prod": "webpack --config webpack/prod.config.js --progress",
+    "doc": "cpx \"dist/potlood.min.js\" ../potlood.github.io/lib -p",
     "reset": "git clean -dfx && git reset --hard && npm i",
     "clean": "trash build test"
   },

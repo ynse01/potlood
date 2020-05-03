@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: './src/potlood.ts',
     devtool: 'source-map',
     module: {
@@ -21,9 +21,12 @@ module.exports = {
     resolve: {
         extensions: [ '.ts', '.js']
     },
+    optimization: {
+        minimize: true
+    },
     output: {
-        filename: 'potlood.js',
-        path: path.resolve(__dirname, 'dist'),
+        filename: 'potlood.min.js',
+        path: path.resolve(__dirname, '../dist'),
         library: 'Potlood',
         libraryTarget: 'umd',
         globalObject: 'this'
