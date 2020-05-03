@@ -1,6 +1,6 @@
-import { Style } from "./style.js";
-import { Xml } from "../utils/xml.js";
-import { XmlPart } from "../package/xml-part.js";
+import { Style } from "./style";
+import { Xml } from "../utils/xml";
+import { XmlPart } from "../package/xml-part";
 
 export class NamedStyles {
     private doc: Document;

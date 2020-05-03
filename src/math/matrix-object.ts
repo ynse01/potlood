@@ -1,8 +1,8 @@
-import { MathObject, MathObjectList } from "./math-object.js";
-import { IPainter } from "../painting/i-painter.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { MatrixStyle } from "./matrix-style.js";
-import { Size } from "../utils/geometry/size.js";
+import { MathObject, MathObjectList } from "./math-object";
+import { IPainter } from "../painting/i-painter";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { MatrixStyle } from "./matrix-style";
+import { Size } from "../utils/geometry/size";
 
 export class MatrixObject extends MathObject {
     public rows: MathObjectList;

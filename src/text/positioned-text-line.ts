@@ -1,4 +1,4 @@
-import { Justification } from "../paragraph/par-style.js";
+import { Justification } from "../paragraph/par-style";
 
 /**
  * Bit flags for empasis of fonts (bold, italic, small caps).

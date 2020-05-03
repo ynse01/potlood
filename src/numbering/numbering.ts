@@ -1,5 +1,5 @@
-import { NamedStyles } from "../text/named-styles.js";
-import { NumberingLevel } from "./numbering-level.js";
+import { NamedStyles } from "../text/named-styles";
+import { NumberingLevel } from "./numbering-level";
 
 export class Numbering {
     private _levels: NumberingLevel[] = [];

@@ -1,13 +1,13 @@
-import { DocumentX } from "../document-x.js";
-import { DrawingRun, WrapMode } from "./drawing-run.js";
-import { ShapeBounds } from "./shape-bounds.js";
-import { Xml } from "../utils/xml.js";
-import { Picture } from "./picture.js";
-import { ChartSpace } from "../chart/chart-space.js";
-import { XmlPart } from "../package/xml-part.js";
-import { ChartReader } from "../chart/chart-reader.js";
-import { ShapeReader } from "./shape-reader.js";
-import { ShapeBoundsReader } from "./shape-bounds-reader.js";
+import { DocumentX } from "../document-x";
+import { DrawingRun, WrapMode } from "./drawing-run";
+import { ShapeBounds } from "./shape-bounds";
+import { Xml } from "../utils/xml";
+import { Picture } from "./picture";
+import { ChartSpace } from "../chart/chart-space";
+import { XmlPart } from "../package/xml-part";
+import { ChartReader } from "../chart/chart-reader";
+import { ShapeReader } from "./shape-reader";
+import { ShapeBoundsReader } from "./shape-bounds-reader";
 
 export class DrawingReader {
     private static shapeReader = new ShapeReader();

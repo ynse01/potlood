@@ -1,13 +1,13 @@
-import { IPositionedTextLine } from "./positioned-text-line.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { InSequence } from "../utils/in-sequence.js";
-import { TextRun } from "./text-run.js";
-import { Metrics } from "../utils/metrics.js";
-import { FontMetrics } from "../utils/font-metrics.js";
-import { Style } from "./style.js";
-import { Justification } from "../paragraph/par-style.js";
-import { WordSplitter, WordSeperator } from "./word-splitter.js";
-import { ParagraphType } from "../paragraph/paragraph.js";
+import { IPositionedTextLine } from "./positioned-text-line";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { InSequence } from "../utils/in-sequence";
+import { TextRun } from "./text-run";
+import { Metrics } from "../utils/metrics";
+import { FontMetrics } from "../utils/font-metrics";
+import { Style } from "./style";
+import { Justification } from "../paragraph/par-style";
+import { WordSplitter, WordSeperator } from "./word-splitter";
+import { ParagraphType } from "../paragraph/paragraph";
 
 export class TextFitter {
     public lines: IPositionedTextLine[];

@@ -1,17 +1,17 @@
-import { XmlPart } from "./package/xml-part.js";
-import { Xml } from "./utils/xml.js";
-import { Paragraph } from "./paragraph/paragraph.js";
-import { NamedStyles } from "./text/named-styles.js";
-import { Section } from "./section.js";
-import { AbstractNumberings } from "./numbering/abstract-numberings.js";
-import { Table } from "./table/table.js";
-import { Relationships } from "./package/relationships.js";
-import { Package } from "./package/package.js";
-import { ILayoutable } from "./utils/i-layoutable.js";
-import { VirtualFlow } from "./utils/virtual-flow.js";
-import { TableReader } from "./table/table-reader.js";
-import { ParagraphReader } from "./paragraph/paragraph-reader.js";
-import { CoreProperties } from "./fields/core-properties.js";
+import { XmlPart } from "./package/xml-part";
+import { Xml } from "./utils/xml";
+import { Paragraph } from "./paragraph/paragraph";
+import { NamedStyles } from "./text/named-styles";
+import { Section } from "./section";
+import { AbstractNumberings } from "./numbering/abstract-numberings";
+import { Table } from "./table/table";
+import { Relationships } from "./package/relationships";
+import { Package } from "./package/package";
+import { ILayoutable } from "./utils/i-layoutable";
+import { VirtualFlow } from "./utils/virtual-flow";
+import { TableReader } from "./table/table-reader";
+import { ParagraphReader } from "./paragraph/paragraph-reader";
+import { CoreProperties } from "./fields/core-properties";
 
 export class DocumentX implements ILayoutable {
     private part: XmlPart;

@@ -1,15 +1,15 @@
-import { Xml } from "../utils/xml.js";
-import { ChartSpace, ChartType } from "./chart-space.js";
-import { BarChart } from "./bar-chart.js";
-import { ChartSeries } from "./chart-series.js";
-import { ChartValue } from "./chart-value.js";
-import { ChartAxis, ChartAxisPosition, ChartAxisTickMode, ChartAxisLabelAlignment, ChartAxisCrossMode } from "./chart-axis.js";
-import { ChartStyle } from "./chart-style.js";
-import { Metrics } from "../utils/metrics.js";
-import { ChartLegend } from "./chart-legend.js";
-import { LineChart } from "./line-chart.js";
-import { AreaChart } from "./area-chart.js";
-import { PieChart } from "./pie-chart.js";
+import { Xml } from "../utils/xml";
+import { ChartSpace, ChartType } from "./chart-space";
+import { BarChart } from "./bar-chart";
+import { ChartSeries } from "./chart-series";
+import { ChartValue } from "./chart-value";
+import { ChartAxis, ChartAxisPosition, ChartAxisTickMode, ChartAxisLabelAlignment, ChartAxisCrossMode } from "./chart-axis";
+import { ChartStyle } from "./chart-style";
+import { Metrics } from "../utils/metrics";
+import { ChartLegend } from "./chart-legend";
+import { LineChart } from "./line-chart";
+import { AreaChart } from "./area-chart";
+import { PieChart } from "./pie-chart";
 
 export class ChartReader {
     public static readChartFromNode(chartSpaceNode: Node, space: ChartSpace): ChartSpace {

@@ -1,12 +1,12 @@
-import { MathObject } from "./math-object.js";
-import { TextRun } from "../text/text-run.js";
-import { RunStyle } from "../text/run-style.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Style } from "../text/style.js";
-import { IPainter } from "../painting/i-painter.js";
-import { TextRenderer } from "../text/text-renderer.js";
-import { Size } from "../utils/geometry/size.js";
-import { InSequence } from "../utils/in-sequence.js";
+import { MathObject } from "./math-object";
+import { TextRun } from "../text/text-run";
+import { RunStyle } from "../text/run-style";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { Style } from "../text/style";
+import { IPainter } from "../painting/i-painter";
+import { TextRenderer } from "../text/text-renderer";
+import { Size } from "../utils/geometry/size";
+import { InSequence } from "../utils/in-sequence";
 
 export class RunObject extends MathObject {
     private _run: TextRun;

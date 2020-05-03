@@ -1,10 +1,10 @@
-import { Table } from "./table.js";
-import { TableCell } from "./table-cell.js";
-import { TableStyle } from "./table-style.js";
-import { IPainter, DashMode } from "../painting/i-painter.js";
-import { ParagraphRenderer } from "../paragraph/paragraph-renderer.js";
-import { TableBorderSet } from "./table-border-set.js";
-import { TableBorderType, TableBorder } from "./table-border.js";
+import { Table } from "./table";
+import { TableCell } from "./table-cell";
+import { TableStyle } from "./table-style";
+import { IPainter, DashMode } from "../painting/i-painter";
+import { ParagraphRenderer } from "../paragraph/paragraph-renderer";
+import { TableBorderSet } from "./table-border-set";
+import { TableBorderType, TableBorder } from "./table-border";
 
 interface IColoredLine {
     x1: number;

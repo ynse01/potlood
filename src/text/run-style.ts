@@ -1,8 +1,8 @@
-import { Xml } from "../utils/xml.js";
-import { Fonts } from "../utils/fonts.js";
-import { Metrics } from "../utils/metrics.js";
-import { Style } from "./style.js";
-import { NamedStyles } from "./named-styles.js";
+import { Xml } from "../utils/xml";
+import { Fonts } from "../utils/fonts";
+import { Metrics } from "../utils/metrics";
+import { Style } from "./style";
+import { NamedStyles } from "./named-styles";
 
 export enum UnderlineMode {
     None,

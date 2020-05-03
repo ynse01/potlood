@@ -1,13 +1,13 @@
-import { Xml } from "../utils/xml.js";
-import { Paragraph, IRun } from "./paragraph.js";
-import { TextRun } from "../text/text-run.js";
-import { TextReader } from "../text/text-reader.js";
-import { DocumentX } from "../document-x.js";
-import { ParStyle } from "./par-style.js";
-import { DrawingReader } from "../drawing/drawing-reader.js";
-import { InSequence } from "../utils/in-sequence.js";
-import { NumberingRun } from "../numbering/numbering-run.js";
-import { MathReader } from "../math/math-reader.js";
+import { Xml } from "../utils/xml";
+import { Paragraph, IRun } from "./paragraph";
+import { TextRun } from "../text/text-run";
+import { TextReader } from "../text/text-reader";
+import { DocumentX } from "../document-x";
+import { ParStyle } from "./par-style";
+import { DrawingReader } from "../drawing/drawing-reader";
+import { InSequence } from "../utils/in-sequence";
+import { NumberingRun } from "../numbering/numbering-run";
+import { MathReader } from "../math/math-reader";
 
 export class ParagraphReader {
     public static readStructuredDocumentTag(docx: DocumentX, sdtNode: Node): Paragraph[] {

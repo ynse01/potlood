@@ -1,11 +1,11 @@
-import { Xml } from "../utils/xml.js";
-import { Metrics } from "../utils/metrics.js";
-import { NamedStyles } from "../text/named-styles.js";
-import { Style } from "../text/style.js";
-import { NumberingStyle } from "../numbering/num-style.js";
-import { AbstractNumberings } from "../numbering/abstract-numberings.js";
-import { TabStop } from "./tab-stop.js";
-import { RunStyle } from "../text/run-style.js";
+import { Xml } from "../utils/xml";
+import { Metrics } from "../utils/metrics";
+import { NamedStyles } from "../text/named-styles";
+import { Style } from "../text/style";
+import { NumberingStyle } from "../numbering/num-style";
+import { AbstractNumberings } from "../numbering/abstract-numberings";
+import { TabStop } from "./tab-stop";
+import { RunStyle } from "../text/run-style";
 
 export enum Justification {
     center = "center",

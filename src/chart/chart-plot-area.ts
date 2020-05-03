@@ -1,7 +1,7 @@
-import { ChartAxis } from "./chart-axis.js";
-import { ChartStyle } from "./chart-style.js";
-import { Box } from "../utils/geometry/box.js";
-import { ChartSpace } from "./chart-space.js";
+import { ChartAxis } from "./chart-axis";
+import { ChartStyle } from "./chart-style";
+import { Box } from "../utils/geometry/box";
+import { ChartSpace } from "./chart-space";
 
 export class ChartPlotArea {
     public space: ChartSpace;

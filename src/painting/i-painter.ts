@@ -1,5 +1,5 @@
-import { Justification } from "../paragraph/par-style.js";
-import { Picture } from "../drawing/picture.js";
+import { Justification } from "../paragraph/par-style";
+import { Picture } from "../drawing/picture";
 
 export interface IRectangle {
     x: number;

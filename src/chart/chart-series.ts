@@ -1,5 +1,5 @@
-import { ChartValue } from "./chart-value.js";
-import { ChartStyle } from "./chart-style.js";
+import { ChartValue } from "./chart-value";
+import { ChartStyle } from "./chart-style";
 
 export class ChartSeries {
     public categories: ChartValue[] = [];

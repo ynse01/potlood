@@ -1,4 +1,4 @@
-import { ChartStyle } from "./chart-style.js";
+import { ChartStyle } from "./chart-style";
 
 export class ChartValue {
     public numeric: number | undefined = undefined;

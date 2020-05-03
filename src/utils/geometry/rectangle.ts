@@ -1,5 +1,5 @@
-import { Box } from "./box.js";
-import { Point } from "./point.js";
+import { Box } from "./box";
+import { Point } from "./point";
 
 export class Rectangle {
     public x: number;

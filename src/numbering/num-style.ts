@@ -1,7 +1,7 @@
-import { AbstractNumberings } from "./abstract-numberings.js";
-import { Xml } from "../utils/xml.js";
-import { NumberingLevel } from "./numbering-level.js";
-import { Style } from "../text/style.js";
+import { AbstractNumberings } from "./abstract-numberings";
+import { Xml } from "../utils/xml";
+import { NumberingLevel } from "./numbering-level";
+import { Style } from "../text/style";
 
 export class NumberingStyle {
     public numId: number; 

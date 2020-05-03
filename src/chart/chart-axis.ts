@@ -1,8 +1,8 @@
-import { ChartSpace, ChartType } from "./chart-space.js";
-import { FontMetrics } from "../utils/font-metrics.js";
-import { ChartStyle } from "./chart-style.js";
-import { IPositionedTextLine, IPositionedLine } from "../text/positioned-text-line.js";
-import { Justification } from "../paragraph/par-style.js";
+import { ChartSpace, ChartType } from "./chart-space";
+import { FontMetrics } from "../utils/font-metrics";
+import { ChartStyle } from "./chart-style";
+import { IPositionedTextLine, IPositionedLine } from "../text/positioned-text-line";
+import { Justification } from "../paragraph/par-style";
 
 export enum ChartAxisPosition {
     Top,

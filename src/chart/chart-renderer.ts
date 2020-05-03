@@ -1,19 +1,19 @@
-import { BarChart } from "./bar-chart.js";
-import { IPainter, DashMode } from "../painting/i-painter.js";
-import { ChartSpace, ChartType } from "./chart-space.js";
-import { ChartStyle } from "./chart-style.js";
-import { Box } from "../utils/geometry/box.js";
-import { ChartLegend } from "./chart-legend.js";
-import { ChartAxis } from "./chart-axis.js";
-import { LineChart } from "./line-chart.js";
-import { ChartValue } from "./chart-value.js";
-import { AreaChart } from "./area-chart.js";
-import { Point } from "../utils/geometry/point.js";
-import { Shape } from "../drawing/shape.js";
-import { PieChart } from "./pie-chart.js";
-import { Ellipse } from "../utils/geometry/ellipse.js";
-import { PointGuide } from "../drawing/point-guide.js";
-import { Angle } from "../utils/geometry/angle.js";
+import { BarChart } from "./bar-chart";
+import { IPainter, DashMode } from "../painting/i-painter";
+import { ChartSpace, ChartType } from "./chart-space";
+import { ChartStyle } from "./chart-style";
+import { Box } from "../utils/geometry/box";
+import { ChartLegend } from "./chart-legend";
+import { ChartAxis } from "./chart-axis";
+import { LineChart } from "./line-chart";
+import { ChartValue } from "./chart-value";
+import { AreaChart } from "./area-chart";
+import { Point } from "../utils/geometry/point";
+import { Shape } from "../drawing/shape";
+import { PieChart } from "./pie-chart";
+import { Ellipse } from "../utils/geometry/ellipse";
+import { PointGuide } from "../drawing/point-guide";
+import { Angle } from "../utils/geometry/angle";
 
 export class ChartRenderer {
     private _painter: IPainter;

@@ -1,16 +1,16 @@
-import { BarChart } from "./bar-chart.js";
-import { ChartStyle } from "./chart-style.js";
-import { ChartPlotArea } from "./chart-plot-area.js";
-import { ChartLegend } from "./chart-legend.js";
-import { ILayoutable } from "../utils/i-layoutable.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Box } from "../utils/geometry/box.js";
-import { Style } from "../text/style.js";
-import { ChartAxisPosition, ChartAxis } from "./chart-axis.js";
-import { BaseChart } from "./base-chart.js";
-import { LineChart } from "./line-chart.js";
-import { AreaChart } from "./area-chart.js";
-import { PieChart } from "./pie-chart.js";
+import { BarChart } from "./bar-chart";
+import { ChartStyle } from "./chart-style";
+import { ChartPlotArea } from "./chart-plot-area";
+import { ChartLegend } from "./chart-legend";
+import { ILayoutable } from "../utils/i-layoutable";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { Box } from "../utils/geometry/box";
+import { Style } from "../text/style";
+import { ChartAxisPosition, ChartAxis } from "./chart-axis";
+import { BaseChart } from "./base-chart";
+import { LineChart } from "./line-chart";
+import { AreaChart } from "./area-chart";
+import { PieChart } from "./pie-chart";
 
 export enum ChartType {
     Bar,

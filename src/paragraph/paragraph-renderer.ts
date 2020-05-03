@@ -1,11 +1,11 @@
-import { Paragraph } from "./paragraph.js";
-import { TextRenderer } from "../text/text-renderer.js";
-import { DrawingRenderer } from "../drawing/drawing-renderer.js";
-import { IPainter } from "../painting/i-painter.js";
-import { TextRun } from "../text/text-run.js";
-import { DrawingRun } from "../drawing/drawing-run.js";
-import { MathRenderer } from "../math/math-renderer.js";
-import { MathRun } from "../math/math-run.js";
+import { Paragraph } from "./paragraph";
+import { TextRenderer } from "../text/text-renderer";
+import { DrawingRenderer } from "../drawing/drawing-renderer";
+import { IPainter } from "../painting/i-painter";
+import { TextRun } from "../text/text-run";
+import { DrawingRun } from "../drawing/drawing-run";
+import { MathRenderer } from "../math/math-renderer";
+import { MathRun } from "../math/math-run";
 
 export class ParagraphRenderer {
     private _textRenderer: TextRenderer;

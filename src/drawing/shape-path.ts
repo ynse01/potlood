@@ -1,8 +1,8 @@
-import { Point } from "../utils/geometry/point.js";
-import { ShapeGuide } from "./shape-guide.js";
-import { PointGuide } from "./point-guide.js";
-import { Ellipse } from "../utils/geometry/ellipse.js";
-import { Angle } from "../utils/geometry/angle.js";
+import { Point } from "../utils/geometry/point";
+import { ShapeGuide } from "./shape-guide";
+import { PointGuide } from "./point-guide";
+import { Ellipse } from "../utils/geometry/ellipse";
+import { Angle } from "../utils/geometry/angle";
 
 abstract class PathSegment {
     protected _offset: Point = new Point(0, 0);

@@ -1,10 +1,10 @@
-import { MathObject } from "./math-object.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { IPainter } from "../painting/i-painter.js";
-import { RadicalStyle } from "./radical-style.js";
-import { Size } from "../utils/geometry/size.js";
-import { CharacterObject } from "./character-object.js";
-import { Style } from "../text/style.js";
+import { MathObject } from "./math-object";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { IPainter } from "../painting/i-painter";
+import { RadicalStyle } from "./radical-style";
+import { Size } from "../utils/geometry/size";
+import { CharacterObject } from "./character-object";
+import { Style } from "../text/style";
 
 export class RadicalObject extends MathObject {
     private _degree: MathObject | undefined;

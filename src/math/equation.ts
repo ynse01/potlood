@@ -1,4 +1,4 @@
-import { MathObjectList } from "./math-object.js";
+import { MathObjectList } from "./math-object";
 
 export class Equation {
     public objects: MathObjectList;

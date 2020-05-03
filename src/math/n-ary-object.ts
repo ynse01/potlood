@@ -1,10 +1,10 @@
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { MathObject } from "./math-object.js";
-import { NAryStyle } from "./n-ary-style.js";
-import { IPainter } from "../painting/i-painter.js";
-import { Size } from "../utils/geometry/size.js";
-import { CharacterObject } from "./character-object.js";
-import { Style } from "../text/style.js";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { MathObject } from "./math-object";
+import { NAryStyle } from "./n-ary-style";
+import { IPainter } from "../painting/i-painter";
+import { Size } from "../utils/geometry/size";
+import { CharacterObject } from "./character-object";
+import { Style } from "../text/style";
 
 export class NAryObject extends MathObject {
     private _sub: MathObject | undefined;

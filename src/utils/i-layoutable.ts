@@ -1,4 +1,4 @@
-import { VirtualFlow } from "./virtual-flow.js";
+import { VirtualFlow } from "./virtual-flow";
 
 /**
  * Interface for objects that can be layed out on the screen.

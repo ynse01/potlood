@@ -1,7 +1,7 @@
-import { TextRun } from "../text/text-run.js";
-import { NumberingStyle } from "./num-style.js";
-import { Style } from "../text/style.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
+import { TextRun } from "../text/text-run";
+import { NumberingStyle } from "./num-style";
+import { Style } from "../text/style";
+import { VirtualFlow } from "../utils/virtual-flow";
 
 export class NumberingRun extends TextRun {
     private _style: NumberingStyle;

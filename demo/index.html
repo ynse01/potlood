@@ -7,10 +7,11 @@
         <script src="../node_modules/utif/UTIF.js"></script>
         <script src="../node_modules/rtf.js/dist/EMFJS.bundle.min.js"></script>
         <script src="../node_modules/rtf.js/dist/WMFJS.bundle.min.js"></script>
+        <script src="../dist/potlood.js"></script>
         <script>
-            import('../build/module/potlood.js').then(module => {
+            function loadFile() {
                 var content = document.getElementById("content");
-                var potlood = new module.Potlood(content);
+                var potlood = new Potlood.Potlood(content);
                 var url = '';
                 var docName = '';
                 if (location.search) {
@@ -23,10 +24,10 @@
                 }
                 potlood.loadDocxFromUrl(url);
                 document.title = docName + " - Potlood";
-            })
+            }
         </script>
     </head>
-    <body style="background-color: #8a8a8a;">
+    <body style="background-color: #8a8a8a;" onload="loadFile();">
         <div id="container" style="text-align: center">
             <div id="content" style="background-color: #ffffff; display: inline-block; text-align: left">
             </div>

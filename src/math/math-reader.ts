@@ -1,23 +1,23 @@
-import { Equation } from "./equation.js";
-import { MathRun } from "./math-run.js";
-import { RunStyle } from "../text/run-style.js";
-import { NAryStyle } from "./n-ary-style.js";
-import { MathObject, MathObjectList } from "./math-object.js";
-import { NAryObject } from "./n-ary-object.js";
-import { DelimiterObject } from "./delimiter-object.js";
-import { RunObject } from "./run-object.js";
-import { DelimiterStyle } from "./delimiter-style.js";
-import { Xml } from "../utils/xml.js";
-import { FractionObject } from "./fraction-object.js";
-import { FractionStyle } from "./fraction-style.js";
-import { MatrixStyle, MatrixSpacingRule } from "./matrix-style.js";
-import { MatrixObject } from "./matrix-object.js";
-import { FunctionStyle } from "./function-style.js";
-import { FunctionObject } from "./function-object.js";
-import { RadicalStyle } from "./radical-style.js";
-import { RadicalObject } from "./radical-object.js";
-import { MatrixColumnStyle } from "./matrix-column-style.js";
-import { Style } from "../text/style.js";
+import { Equation } from "./equation";
+import { MathRun } from "./math-run";
+import { RunStyle } from "../text/run-style";
+import { NAryStyle } from "./n-ary-style";
+import { MathObject, MathObjectList } from "./math-object";
+import { NAryObject } from "./n-ary-object";
+import { DelimiterObject } from "./delimiter-object";
+import { RunObject } from "./run-object";
+import { DelimiterStyle } from "./delimiter-style";
+import { Xml } from "../utils/xml";
+import { FractionObject } from "./fraction-object";
+import { FractionStyle } from "./fraction-style";
+import { MatrixStyle, MatrixSpacingRule } from "./matrix-style";
+import { MatrixObject } from "./matrix-object";
+import { FunctionStyle } from "./function-style";
+import { FunctionObject } from "./function-object";
+import { RadicalStyle } from "./radical-style";
+import { RadicalObject } from "./radical-object";
+import { MatrixColumnStyle } from "./matrix-column-style";
+import { Style } from "../text/style";
 
 export class MathReader {
 

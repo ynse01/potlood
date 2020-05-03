@@ -1,6 +1,6 @@
-import { IPainter, IRectangle, DashMode } from "./i-painter.js";
-import { Justification } from "../paragraph/par-style.js";
-import { Picture } from "../drawing/picture.js";
+import { IPainter, IRectangle, DashMode } from "./i-painter";
+import { Justification } from "../paragraph/par-style";
+import { Picture } from "../drawing/picture";
 
 export class CanvasPainter implements IPainter {
     private _canvas: HTMLCanvasElement;

@@ -1,8 +1,8 @@
-import { ChartSpace } from "./chart-space.js";
-import { ChartSeries } from "./chart-series.js";
-import { ChartValue } from "./chart-value.js";
-import { ChartAxisCrossMode } from "./chart-axis.js";
-import { ChartStyle } from "./chart-style.js";
+import { ChartSpace } from "./chart-space";
+import { ChartSeries } from "./chart-series";
+import { ChartValue } from "./chart-value";
+import { ChartAxisCrossMode } from "./chart-axis";
+import { ChartStyle } from "./chart-style";
 
 export abstract class BaseChart {
     public series: ChartSeries[] = [];

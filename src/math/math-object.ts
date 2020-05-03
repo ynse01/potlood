@@ -1,6 +1,6 @@
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { IPainter } from "../painting/i-painter.js";
-import { Size } from "../utils/geometry/size.js";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { IPainter } from "../painting/i-painter";
+import { Size } from "../utils/geometry/size";
 
 export abstract class MathObject {
 

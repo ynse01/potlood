@@ -1,7 +1,7 @@
-import { IRun } from "../paragraph/paragraph.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Equation } from "./equation.js";
-import { Size } from "../utils/geometry/size.js";
+import { IRun } from "../paragraph/paragraph";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { Equation } from "./equation";
+import { Size } from "../utils/geometry/size";
 
 export class MathRun implements IRun {
     public previousXPos: number | undefined;

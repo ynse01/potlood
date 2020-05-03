@@ -1,7 +1,7 @@
-import { Shape } from "./shape.js";
-import { Xml } from "../utils/xml.js";
-import { ShapeReader } from "./shape-reader.js";
-import { PresetShapeFactory } from "./preset-shape-factory.js";
+import { Shape } from "./shape";
+import { Xml } from "../utils/xml";
+import { ShapeReader } from "./shape-reader";
+import { PresetShapeFactory } from "./preset-shape-factory";
 
 
 export class PresetShapeReader {

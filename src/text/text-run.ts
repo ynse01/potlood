@@ -1,11 +1,11 @@
-import { Style } from "./style.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { InSequence } from "../utils/in-sequence.js";
-import { IPositionedTextLine } from "./positioned-text-line.js";
-import { TextFitter } from "./text-fitter.js";
-import { Metrics } from "../utils/metrics.js";
-import { ParagraphType, IRun } from "../paragraph/paragraph.js";
-import { Size } from "../utils/geometry/size.js";
+import { Style } from "./style";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { InSequence } from "../utils/in-sequence";
+import { IPositionedTextLine } from "./positioned-text-line";
+import { TextFitter } from "./text-fitter";
+import { Metrics } from "../utils/metrics";
+import { ParagraphType, IRun } from "../paragraph/paragraph";
+import { Size } from "../utils/geometry/size";
 
 export class TextRun implements IRun {
     public texts: string[];

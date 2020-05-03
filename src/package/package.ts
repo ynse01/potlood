@@ -1,5 +1,5 @@
-import { XmlPart } from './xml-part.js';
-import { Xml } from '../utils/xml.js';
+import { XmlPart } from "./xml-part";
+import { Xml } from "../utils/xml";
 
 declare var JSZip: any;
 

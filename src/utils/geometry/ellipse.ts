@@ -1,5 +1,5 @@
-import { Point } from "./point.js";
-import { Angle } from "./angle.js";
+import { Point } from "./point";
+import { Angle } from "./angle";
 
 export class Ellipse {
     public radiusX: number;

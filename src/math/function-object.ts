@@ -1,8 +1,8 @@
-import { MathObject } from "./math-object.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { IPainter } from "../painting/i-painter.js";
-import { FunctionStyle } from "./function-style.js";
-import { Size } from "../utils/geometry/size.js";
+import { MathObject } from "./math-object";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { IPainter } from "../painting/i-painter";
+import { FunctionStyle } from "./function-style";
+import { Size } from "../utils/geometry/size";
 
 export class FunctionObject extends MathObject {
     private _functionName: MathObject | undefined;

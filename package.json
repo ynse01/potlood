@@ -10,7 +10,8 @@
   "keywords": [],
   "scripts": {
     "info": "npm-scripts-info",
-    "build": "run-s clean && run-p build:*",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
     "build:main": "tsc -p tsconfig.json",
     "build:module": "tsc -p tsconfig.module.json",
     "doc": "cpx \"build/module/**/*.js\" ../potlood.github.io/lib -p",
@@ -45,11 +46,14 @@
     "prettier": "^1.19.1",
     "standard-version": "^4.4.0",
     "trash-cli": "^1.4.0",
+    "ts-loader": "^7.0.2",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-immutable": "^5.0.0",
     "typedoc": "^0.13.0",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.4",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
   },
   "ava": {
     "failFast": true,

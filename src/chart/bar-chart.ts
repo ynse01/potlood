@@ -1,5 +1,5 @@
-import { ChartSpace } from "./chart-space.js";
-import { BaseChart } from "./base-chart.js";
+import { ChartSpace } from "./chart-space";
+import { BaseChart } from "./base-chart";
 
 export enum ChartOrientation {
     Horizontal,

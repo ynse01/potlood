@@ -1,7 +1,7 @@
-import { Section } from "../section.js";
-import { ShapePositionReference } from "../drawing/shape-bounds.js";
-import { TabStop } from "../paragraph/tab-stop.js";
-import { Box } from "./geometry/box.js";
+import { Section } from "../section";
+import { ShapePositionReference } from "../drawing/shape-bounds";
+import { TabStop } from "../paragraph/tab-stop";
+import { Box } from "./geometry/box";
 
 class Obstacle {
     public bounds: Box;

@@ -1,6 +1,6 @@
-import { DocumentX } from "./document-x.js";
-import { Xml } from "./utils/xml.js";
-import { Metrics } from "./utils/metrics.js";
+import { DocumentX } from "./document-x";
+import { Xml } from "./utils/xml";
+import { Metrics } from "./utils/metrics";
 
 export class Section {
     private sectionNode: ChildNode;

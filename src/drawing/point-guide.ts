@@ -1,5 +1,5 @@
-import { Point } from "../utils/geometry/point.js";
-import { ShapeGuide } from "./shape-guide.js";
+import { Point } from "../utils/geometry/point";
+import { ShapeGuide } from "./shape-guide";
 
 export class PointGuide {
     public x: string;

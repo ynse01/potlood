@@ -1,10 +1,10 @@
-import { ChartStyle } from "./chart-style.js";
-import { ChartAxisPosition } from "./chart-axis.js";
-import { Box } from "../utils/geometry/box.js";
-import { ChartSpace } from "./chart-space.js";
-import { FontMetrics } from "../utils/font-metrics.js";
-import { InSequence } from "../utils/in-sequence.js";
-import { IPositionedTextLine } from "../text/positioned-text-line.js";
+import { ChartStyle } from "./chart-style";
+import { ChartAxisPosition } from "./chart-axis";
+import { Box } from "../utils/geometry/box";
+import { ChartSpace } from "./chart-space";
+import { FontMetrics } from "../utils/font-metrics";
+import { InSequence } from "../utils/in-sequence";
+import { IPositionedTextLine } from "../text/positioned-text-line";
 
 export class ChartLegend {
     public space: ChartSpace;

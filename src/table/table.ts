@@ -1,11 +1,11 @@
-import { Paragraph } from "../paragraph/paragraph.js";
-import { DocumentX } from "../document-x.js";
-import { TableStyle } from "./table-style.js";
-import { TableColumn } from "./table-column.js";
-import { TableRow } from "./table-row.js";
-import { ILayoutable } from "../utils/i-layoutable.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { InSequence } from "../utils/in-sequence.js";
+import { Paragraph } from "../paragraph/paragraph";
+import { DocumentX } from "../document-x";
+import { TableStyle } from "./table-style";
+import { TableColumn } from "./table-column";
+import { TableRow } from "./table-row";
+import { ILayoutable } from "../utils/i-layoutable";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { InSequence } from "../utils/in-sequence";
 
 export class Table implements ILayoutable {
     public columns: TableColumn[];

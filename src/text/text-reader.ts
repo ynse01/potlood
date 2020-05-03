@@ -1,9 +1,9 @@
-import { Xml } from "../utils/xml.js";
-import { Style } from "./style.js";
-import { TextRun } from "./text-run.js";
-import { RunStyle } from "./run-style.js";
-import { ParStyle } from "../paragraph/par-style.js";
-import { NamedStyles } from "./named-styles.js";
+import { Xml } from "../utils/xml";
+import { Style } from "./style";
+import { TextRun } from "./text-run";
+import { RunStyle } from "./run-style";
+import { ParStyle } from "../paragraph/par-style";
+import { NamedStyles } from "./named-styles";
 
 export class TextReader {
     public static readTextRun(runNode: ChildNode, parStyle: ParStyle | undefined, namedStyles: NamedStyles | undefined): TextRun {

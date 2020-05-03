@@ -1,8 +1,8 @@
-import { MathObject } from "./math-object.js";
-import { IPainter } from "../painting/i-painter.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { FractionStyle } from "./fraction-style.js";
-import { Size } from "../utils/geometry/size.js";
+import { MathObject } from "./math-object";
+import { IPainter } from "../painting/i-painter";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { FractionStyle } from "./fraction-style";
+import { Size } from "../utils/geometry/size";
 
 export class FractionObject extends MathObject {
     private _numerator: MathObject | undefined;

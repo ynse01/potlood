@@ -1,10 +1,10 @@
-import { NamedStyles } from "./named-styles.js";
-import { ParStyle, Justification } from "../paragraph/par-style.js";
-import { RunStyle, UnderlineMode } from "./run-style.js";
-import { Xml } from "../utils/xml.js";
-import { InSequence } from "../utils/in-sequence.js";
-import { TableStyle } from "../table/table-style.js";
-import { Emphasis } from "./positioned-text-line.js";
+import { NamedStyles } from "./named-styles";
+import { ParStyle, Justification } from "../paragraph/par-style";
+import { RunStyle, UnderlineMode } from "./run-style";
+import { Xml } from "../utils/xml";
+import { InSequence } from "../utils/in-sequence";
+import { TableStyle } from "../table/table-style";
+import { Emphasis } from "./positioned-text-line";
 
 export class Style {
     private _basedOn: Style | undefined;

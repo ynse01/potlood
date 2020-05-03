@@ -1,6 +1,6 @@
-import { Xml } from "../utils/xml.js";
-import { Metrics } from "../utils/metrics.js";
-import { ShapeBounds, ShapeAnchorMode, ShapePositionReference, ShapePositionAlignMode } from "./shape-bounds.js";
+import { Xml } from "../utils/xml";
+import { Metrics } from "../utils/metrics";
+import { ShapeBounds, ShapeAnchorMode, ShapePositionReference, ShapePositionAlignMode } from "./shape-bounds";
 
 export class ShapeBoundsReader {
 

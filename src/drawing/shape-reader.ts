@@ -1,7 +1,7 @@
-import { Shape } from "./shape.js";
-import { Xml } from "../utils/xml.js";
-import { PresetShapeFactory } from "./preset-shape-factory.js";
-import { PointGuide } from "./point-guide.js";
+import { Shape } from "./shape";
+import { Xml } from "../utils/xml";
+import { PresetShapeFactory } from "./preset-shape-factory";
+import { PointGuide } from "./point-guide";
 
 export class ShapeReader {
     private static _presetFactory = new PresetShapeFactory();

@@ -1,6 +1,6 @@
-import { DrawingRun } from "./drawing-run.js";
-import { IPainter, DashMode } from "../painting/i-painter.js";
-import { ChartRenderer } from "../chart/chart-renderer.js";
+import { DrawingRun } from "./drawing-run";
+import { IPainter, DashMode } from "../painting/i-painter";
+import { ChartRenderer } from "../chart/chart-renderer";
 
 export class DrawingRenderer {
     private _painter: IPainter;

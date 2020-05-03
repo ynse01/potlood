@@ -1,7 +1,7 @@
-import { Justification } from "../paragraph/par-style.js";
-import { TableBorderSet } from "./table-border-set.js";
-import { TableMarginSet } from "./table-margin-set.js";
-import { InSequence } from "../utils/in-sequence.js";
+import { Justification } from "../paragraph/par-style";
+import { TableBorderSet } from "./table-border-set";
+import { TableMarginSet } from "./table-margin-set";
+import { InSequence } from "../utils/in-sequence";
 
 export class TableStyle {
     public higherStyle: TableStyle | undefined;

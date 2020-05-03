@@ -1,5 +1,5 @@
-import { Metrics } from './metrics.js';
-import { Style } from '../text/style.js';
+import { Metrics } from "./metrics";
+import { Style } from "../text/style";
 
 export class Fonts {
   private static _initialized = false;

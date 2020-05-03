@@ -1,6 +1,6 @@
-import { Fonts } from "./fonts.js";
-import { Style } from "../text/style.js";
-import { Metrics } from "./metrics.js";
+import { Fonts } from "./fonts";
+import { Style } from "../text/style";
+import { Metrics } from "./metrics";
 
 export class FontMetrics {
     private static _fonts: { [key: string]: TextMetrics } = {};

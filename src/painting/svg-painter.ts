@@ -1,7 +1,7 @@
-import { IPainter, IRectangle, DashMode } from "./i-painter.js";
-import { Justification } from "../paragraph/par-style.js";
-import { Picture } from "../drawing/picture.js";
-import { Xml } from "../utils/xml.js";
+import { IPainter, IRectangle, DashMode } from "./i-painter";
+import { Justification } from "../paragraph/par-style";
+import { Picture } from "../drawing/picture";
+import { Xml } from "../utils/xml";
 
 export class SvgPainter implements IPainter {
     private static readonly svgNS = 'http://www.w3.org/2000/svg';

@@ -1,4 +1,4 @@
-import { TableBorder } from "./table-border.js";
+import { TableBorder } from "./table-border";
 
 export class TableBorderSet {
     public borderTop: TableBorder | undefined;

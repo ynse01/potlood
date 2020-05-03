@@ -1,8 +1,8 @@
-import { TextRun } from "../text/text-run.js";
-import { ILayoutable } from "../utils/i-layoutable.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { ParStyle } from "./par-style.js";
-import { FontMetrics } from "../utils/font-metrics.js";
+import { TextRun } from "../text/text-run";
+import { ILayoutable } from "../utils/i-layoutable";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { ParStyle } from "./par-style";
+import { FontMetrics } from "../utils/font-metrics";
 
 export enum ParagraphType {
     Text = 0,

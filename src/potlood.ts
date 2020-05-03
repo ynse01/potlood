@@ -1,13 +1,13 @@
-import { Renderer } from "./painting/renderer.js";
-import { Package } from "./package/package.js";
-import { NamedStyles } from "./text/named-styles.js";
-import { DocumentX } from "./document-x.js";
-import { AbstractNumberings } from "./numbering/abstract-numberings.js";
-import { Relationships } from "./package/relationships.js";
-import { Metrics } from "./utils/metrics.js";
-import { PresetShapeReader } from "./drawing/preset-shape-reader.js";
-import { Xml } from "./utils/xml.js";
-import { CoreProperties } from "./fields/core-properties.js";
+import { Renderer } from "./painting/renderer";
+import { Package } from "./package/package";
+import { NamedStyles } from "./text/named-styles";
+import { DocumentX } from "./document-x";
+import { AbstractNumberings } from "./numbering/abstract-numberings";
+import { Relationships } from "./package/relationships";
+import { Metrics } from "./utils/metrics";
+import { PresetShapeReader } from "./drawing/preset-shape-reader";
+import { Xml } from "./utils/xml";
+import { CoreProperties } from "./fields/core-properties";
 
 export class Potlood {
     private renderer: Renderer;

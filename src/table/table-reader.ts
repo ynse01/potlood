@@ -1,18 +1,18 @@
-import { DocumentX } from "../document-x.js";
-import { Table } from "./table.js";
-import { Xml } from "../utils/xml.js";
-import { Metrics } from "../utils/metrics.js";
-import { TableColumn } from "./table-column.js";
-import { TableRow } from "./table-row.js";
-import { TableStyle } from "./table-style.js";
-import { TableCell } from "./table-cell.js";
-import { ParagraphType } from "../paragraph/paragraph.js";
-import { TableBorder, TableBorderType } from "./table-border.js";
-import { Justification } from "../paragraph/par-style.js";
-import { ParagraphReader } from "../paragraph/paragraph-reader.js";
-import { TableBorderSet } from "./table-border-set.js";
-import { TableMarginSet } from "./table-margin-set.js";
-import { InSequence } from "../utils/in-sequence.js";
+import { DocumentX } from "../document-x";
+import { Table } from "./table";
+import { Xml } from "../utils/xml";
+import { Metrics } from "../utils/metrics";
+import { TableColumn } from "./table-column";
+import { TableRow } from "./table-row";
+import { TableStyle } from "./table-style";
+import { TableCell } from "./table-cell";
+import { ParagraphType } from "../paragraph/paragraph";
+import { TableBorder, TableBorderType } from "./table-border";
+import { Justification } from "../paragraph/par-style";
+import { ParagraphReader } from "../paragraph/paragraph-reader";
+import { TableBorderSet } from "./table-border-set";
+import { TableMarginSet } from "./table-margin-set";
+import { InSequence } from "../utils/in-sequence";
 
 export class TableReader {
     public static readTable(docx: DocumentX, tableNode: ChildNode): Table {

@@ -1,4 +1,4 @@
-import { Metrics } from "../utils/metrics.js";
+import { Metrics } from "../utils/metrics";
 
 export class TableMarginSet {
     public cellMarginTop: number;

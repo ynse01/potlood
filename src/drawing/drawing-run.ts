@@ -1,10 +1,10 @@
-import { ShapeBounds, ShapeAnchorMode } from "./shape-bounds.js";
-import { Picture } from "./picture.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { ChartSpace } from "../chart/chart-space.js";
-import { Shape } from "./shape.js";
-import { IRun } from "../paragraph/paragraph.js";
-import { Box } from "../utils/geometry/box.js";
+import { ShapeBounds, ShapeAnchorMode } from "./shape-bounds";
+import { Picture } from "./picture";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { ChartSpace } from "../chart/chart-space";
+import { Shape } from "./shape";
+import { IRun } from "../paragraph/paragraph";
+import { Box } from "../utils/geometry/box";
 
 export enum WrapMode {
     None,

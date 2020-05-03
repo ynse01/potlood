@@ -1,13 +1,12 @@
-import { DocumentX } from '../document-x.js';
-import { VirtualFlow } from '../utils/virtual-flow.js';
-import { Paragraph } from '../paragraph/paragraph.js';
-import { SvgPainter } from './svg-painter.js';
-import { IPainter } from './i-painter.js';
-import { TableRenderer } from '../table/table-renderer.js';
-import { ParagraphRenderer } from '../paragraph/paragraph-renderer.js';
+import { DocumentX } from '../document-x';
+import { VirtualFlow } from '../utils/virtual-flow';
+import { Paragraph } from '../paragraph/paragraph';
+import { SvgPainter } from './svg-painter';
+import { TableRenderer } from '../table/table-renderer';
+import { ParagraphRenderer } from '../paragraph/paragraph-renderer';
 
 export class Renderer {
-    private _painter: IPainter;
+    private _painter: SvgPainter;
     private _paragraphRenderer: ParagraphRenderer;
     private _tableRenderer: TableRenderer;
 

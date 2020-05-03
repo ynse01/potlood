@@ -1,8 +1,8 @@
-import { Paragraph } from "../paragraph/paragraph.js";
-import { TableCell } from "./table-cell.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Table } from "./table.js";
-import { InSequence } from "../utils/in-sequence.js";
+import { Paragraph } from "../paragraph/paragraph";
+import { TableCell } from "./table-cell";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { Table } from "./table";
+import { InSequence } from "../utils/in-sequence";
 
 export class TableRow {
     public table: Table;

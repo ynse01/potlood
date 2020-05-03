@@ -1,4 +1,4 @@
-import { MatrixColumnXAlign } from "./matrix-style.js";
+import { MatrixColumnXAlign } from "./matrix-style";
 
 export class MatrixColumnStyle {
     public count: number = 0;

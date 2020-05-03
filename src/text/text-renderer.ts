@@ -1,9 +1,9 @@
-import { TextRun } from "./text-run.js";
-import { IPositionedTextLine, Emphasis } from "./positioned-text-line.js";
-import { UnderlineMode } from "./run-style.js";
-import { IPainter, DashMode } from "../painting/i-painter.js";
-import { Style } from "./style.js";
-import { FontMetrics } from "../utils/font-metrics.js";
+import { TextRun } from "./text-run";
+import { IPositionedTextLine, Emphasis } from "./positioned-text-line";
+import { UnderlineMode } from "./run-style";
+import { IPainter, DashMode } from "../painting/i-painter";
+import { Style } from "./style";
+import { FontMetrics } from "../utils/font-metrics";
 
 export class TextRenderer {
     private _painter: IPainter;

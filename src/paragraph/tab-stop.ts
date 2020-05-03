@@ -1,7 +1,7 @@
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Xml } from "../utils/xml.js";
-import { Metrics } from "../utils/metrics.js";
-import { Justification } from "./par-style.js";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { Xml } from "../utils/xml";
+import { Metrics } from "../utils/metrics";
+import { Justification } from "./par-style";
 
 export enum TabLeader {
     None,

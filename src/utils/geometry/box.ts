@@ -1,7 +1,7 @@
-import { InSequence } from "../in-sequence.js";
-import { Point } from "./point.js";
-import { TableBorderSet } from "../../table/table-border-set.js";
-import { TableMarginSet } from "../../table/table-margin-set.js";
+import { InSequence } from "../in-sequence";
+import { Point } from "./point";
+import { TableBorderSet } from "../../table/table-border-set";
+import { TableMarginSet } from "../../table/table-margin-set";
 
 export class Box {
     public x: number;

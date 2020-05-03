@@ -1,8 +1,8 @@
-import { Point } from "../utils/geometry/point.js";
-import { Box } from "../utils/geometry/box.js";
-import { ShapeGuide } from "./shape-guide.js";
-import { PointGuide } from "./point-guide.js";
-import { ShapePath } from "./shape-path.js";
+import { Point } from "../utils/geometry/point";
+import { Box } from "../utils/geometry/box";
+import { ShapeGuide } from "./shape-guide";
+import { PointGuide } from "./point-guide";
+import { ShapePath } from "./shape-path";
 
 export class Shape {
     public width: number = 1;

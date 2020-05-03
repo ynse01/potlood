@@ -1,11 +1,11 @@
-import { MathObject } from "./math-object.js";
-import { IPainter } from "../painting/i-painter.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Size } from "../utils/geometry/size.js";
-import { Point } from "../utils/geometry/point.js";
-import { Style } from "../text/style.js";
-import { FontMetrics } from "../utils/font-metrics.js";
-import { Justification } from "../paragraph/par-style.js";
+import { MathObject } from "./math-object";
+import { IPainter } from "../painting/i-painter";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { Size } from "../utils/geometry/size";
+import { Point } from "../utils/geometry/point";
+import { Style } from "../text/style";
+import { FontMetrics } from "../utils/font-metrics";
+import { Justification } from "../paragraph/par-style";
 
 export class CharacterObject extends MathObject {
     private _char: string;

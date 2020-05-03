@@ -1,9 +1,9 @@
-import { TableColumn } from "./table-column.js";
-import { Paragraph } from "../paragraph/paragraph.js";
-import { TableStyle } from "./table-style.js";
-import { VirtualFlow } from "../utils/virtual-flow.js";
-import { Box } from "../utils/geometry/box.js";
-import { InSequence } from "../utils/in-sequence.js";
+import { TableColumn } from "./table-column";
+import { Paragraph } from "../paragraph/paragraph";
+import { TableStyle } from "./table-style";
+import { VirtualFlow } from "../utils/virtual-flow";
+import { Box } from "../utils/geometry/box";
+import { InSequence } from "../utils/in-sequence";
 
 export class TableCell {
     public id: string | undefined = undefined;
