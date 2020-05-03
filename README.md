@@ -1,6 +1,20 @@
 # Potlood
 
-Potlood is Dutch for Pencil.
+Library to visualize .docx files in a browser, without the use of plugins or server side components.
+
+The specification is not always interprested the same by the different editors out there. For this reason, expect slight deviations here from the layout in your editor. 
+
+Most of the basic functionality is present:
+Supported are:
+- Paragraphs
+- Numberings
+- Tables
+- Charts
+- Images
+- Drawings
+- Equations
+- Tab stops
+- 
 
 ## TODO 
 
@@ -12,23 +26,24 @@ Potlood is Dutch for Pencil.
 - Tab stop leader characters
 - Theme colors
 - Patterns
-- AutoCAD Interchange Format (*.dxf)
-- Computer Graphics Metafile (*.cgm)
-- Encapsulated Postscript (*.eps)
-- Macintosh PICT (*.pct; *.pict)
-- WordPerfect Graphics (*.wpg)
-- OS/2 Metafile (*.met)
-- QuickTime File Format (*.mov)
-- Portable Bitmap (*.pbm)
-- Zsoft Paintbrush (*.pcx)
-- Portable Document Format (*.pdf)
-- Portable Graymap (*.pgm)
-- Portable Pixelmap (*.ppm)
-- Adobe Photoshop (*.psd)
-- Sun Raster Image (*.ras)
-- StarView Metafile (*.svm)
-- Truevision Targa (*.tga)
-- X Bitmap (*.xbm)
-- X PixMap (*.xpm)
-- Kodak Photo CD (*.pcd)
+- Rare image formats:
+  - AutoCAD Interchange Format (*.dxf)
+  - Computer Graphics Metafile (*.cgm)
+  - Encapsulated Postscript (*.eps)
+  - Macintosh PICT (*.pct; *.pict)
+  - WordPerfect Graphics (*.wpg)
+  - OS/2 Metafile (*.met)
+  - QuickTime File Format (*.mov)
+  - Portable Bitmap (*.pbm)
+  - Zsoft Paintbrush (*.pcx)
+  - Portable Document Format (*.pdf)
+  - Portable Graymap (*.pgm)
+  - Portable Pixelmap (*.ppm)
+  - Adobe Photoshop (*.psd)
+  - Sun Raster Image (*.ras)
+  - StarView Metafile (*.svm)
+  - Truevision Targa (*.tga)
+  - X Bitmap (*.xbm)
+  - X PixMap (*.xpm)
+  - Kodak Photo CD (*.pcd)
 
