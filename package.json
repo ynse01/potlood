@@ -1,13 +1,10 @@
 {
   "name": "potlood",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library to visualize docx document in a browser",
-  "main": "build/main/index.js",
-  "typings": "build/main/index.d.ts",
-  "module": "build/module/index.js",
   "repository": "https://github.com/potlood/potlood.git",
   "license": "MIT",
-  "keywords": [],
+  "keywords": ["docx", "word", "office"],
   "scripts": {
     "info": "npm-scripts-info",
     "test": "echo \"Error: no test specified\" && exit 1",
