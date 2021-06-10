@@ -39,14 +39,14 @@
     "npm-scripts-info": "^0.3.9",
     "prettier": "^1.19.1",
     "trash-cli": "^4.0.0",
-    "ts-loader": "^7.0.5",
+    "ts-loader": "^9.2.3",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-immutable": "^5.0.0",
     "typedoc": "^0.13.0",
     "typescript": "^3.9.9",
-    "webpack": "^4.46.0",
-    "webpack-cli": "^3.3.12"
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.2"
   },
   "ava": {
     "failFast": true,
