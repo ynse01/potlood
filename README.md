@@ -4,6 +4,8 @@ Potlood is a library to visualize .docx files in a browser, without the use of p
 
 The specification is not always interprested the same by the different editors out there. For this reason, expect slight deviations here from the layout in your editor. 
 
+[![build](https://github.com/potlood/potlood/actions/workflows/node.js.yml/badge.svg)](https://github.com/potlood/potlood/actions/workflows/node.js.yml)
+
 ## Functionality
 Most of the basic functionality is present. This will make it usable to show most docx document out there. If not, feel free to file an issue.
 
