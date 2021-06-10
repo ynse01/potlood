@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "jszip": "^3.2.2",
-    "rtf.js": "^3.0.1",
+    "rtf.js": "^3.0.7",
     "utif": "^3.1.0"
   },
   "devDependencies": {
@@ -39,12 +39,12 @@
     "npm-scripts-info": "^0.3.9",
     "prettier": "^1.19.1",
     "trash-cli": "^1.4.0",
-    "ts-loader": "^7.0.2",
+    "ts-loader": "^7.0.5",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-immutable": "^5.0.0",
     "typedoc": "^0.13.0",
-    "typescript": "^3.7.4",
+    "typescript": "^3.9.9",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12"
   },
