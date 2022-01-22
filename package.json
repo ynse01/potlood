@@ -37,7 +37,6 @@
     "@types/jszip": "^3.4.1",
     "npm-scripts-info": "^0.3.9",
     "prettier": "^1.19.1",
-    "trash-cli": "^5.0.0",
     "ts-loader": "^9.2.3",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.17.0",
