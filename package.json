@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack/dev.config.js --progress",
     "build:prod": "webpack --config webpack/prod.config.js --progress",
-    "doc": "cpx \"dist/potlood.min.js\" ../potlood.github.io/lib -p",
+    "doc": "copyfiles -E -u 1 ./dist/potlood.min.js ./dist/potlood.min.js.map ../potlood.github.io/lib",
     "clean": "trash dist test"
   },
   "scripts-info": {
@@ -28,13 +28,13 @@
     "node": ">=8.9"
   },
   "dependencies": {
+    "copyfiles": "^2.4.1",
     "jszip": "^3.7.1",
     "rtf.js": "^3.0.7",
     "utif": "^3.1.0"
   },
   "devDependencies": {
     "@types/jszip": "^3.4.1",
-    "cpx": "^1.5.0",
     "npm-scripts-info": "^0.3.9",
     "prettier": "^1.19.1",
     "trash-cli": "^4.0.0",
