@@ -15,7 +15,7 @@
     "build": "webpack --config webpack/dev.config.js --progress",
     "build:prod": "webpack --config webpack/prod.config.js --progress",
     "doc": "copyfiles -E -u 1 ./dist/potlood.min.js ./dist/potlood.min.js.map ../potlood.github.io/lib",
-    "clean": "trash dist test"
+    "clean": "del dist -Recurse"
   },
   "scripts-info": {
     "info": "Displays usage information of the package scripts",
