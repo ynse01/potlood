@@ -44,7 +44,7 @@
     "typedoc": "^0.20.36",
     "typescript": "^3.9.9",
     "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.2"
+    "webpack-cli": "^5.0.0"
   },
   "ava": {
     "failFast": true,
